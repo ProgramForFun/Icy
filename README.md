@@ -4,7 +4,7 @@ Icy Unity Framework
 ## Roadmap
 |目标|状态|
 |---|:---:|
-|接入YooAsset|待开始|
+|接入YooAsset|✔️|
 |接入Luban|待开始|
 |接入SRDebugger|待开始|
 |接入Protobuf|待开始|
