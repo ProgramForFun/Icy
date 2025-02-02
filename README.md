@@ -1,5 +1,5 @@
 # Icy
-Icy Unity Framework
+Icy Unity Framework, 
 Unity version 2022.3.57f1
 
 ## Roadmap
@@ -9,7 +9,7 @@ Unity version 2022.3.57f1
 |接入Luban|待开始|
 |接入SRDebugger|✔️|
 |接入Protobuf|待开始|
-|接入UniTask|待开始|
+|接入UniTask|✔️|
 |Core-事件系统|待开始|
 |Core-FSM|待开始|
 |Core-基于FSM的Procedure|待开始|
@@ -34,3 +34,6 @@ Unity version 2022.3.57f1
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
 |接入HybridCLR|待开始|
+
+## Note
+本仓库中使用的各种插件仅做学习目的使用，请勿用在生产环境下，请大家支持正版
