@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package TestMsg;
+
+
+// 测试消息
+message TestMessageResult
+{
+    // 结果码。
+    int32 errorCode = 1;
+    // 消息内容。
+    string errorMsg = 2;
+}
