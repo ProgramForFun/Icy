@@ -20,7 +20,7 @@ Icy Unity Framework
 |UI-本地化|待开始|
 |UI-后退栈|待开始|
 |UI-红点|待开始|
-|UI-接入Super ScrollView|待开始|
+|UI-接入Super ScrollView|✔️|
 |UI-接入UIParticle|待开始|
 |UI-接入UIObject3D|待开始|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
