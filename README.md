@@ -8,7 +8,7 @@ Unity version 2022.3.57f1
 |接入YooAsset|✔️|
 |接入Luban|待开始|
 |接入SRDebugger|✔️|
-|接入Protobuf|待开始|
+|接入Protobuf|✔️|
 |接入UniTask|✔️|
 |Core-事件系统|待开始|
 |Core-FSM|待开始|
