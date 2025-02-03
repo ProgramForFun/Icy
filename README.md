@@ -30,7 +30,7 @@ Unity version 2022.3.57f1
 |Gameplay-技能系统|待开始|
 |Gameplay-换装系统|待开始|
 |Editor-显示当前Git分支|✔️|
-|Editor-接入Odin|待开始|
+|Editor-接入Odin|✔️|
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
 |接入HybridCLR|待开始|
