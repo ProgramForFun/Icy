@@ -27,9 +27,9 @@ Unity version 2022.3.57f1
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
 |UI-预加载但不显示UI|待开始|
 |Gameplay-基础数值系统|待开始|
-|Gameplay-技能|待开始|
+|Gameplay-技能系统|待开始|
 |Gameplay-换装系统|待开始|
-|Editor-显示当前Git分支|待开始|
+|Editor-显示当前Git分支|✔️|
 |Editor-接入Odin|待开始|
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|

@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.marijnzwemmer.unity-toolbar-extender": {
+      "version": "file:unity-toolbar-extender-1.4.3",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.tuyoogame.yooasset": {
       "version": "2.2.9",
       "depth": 0,
@@ -138,6 +144,14 @@
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "fun.program4.icy.editor": {
+      "version": "file:fun.program4.icy.editor",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.marijnzwemmer.unity-toolbar-extender": "1.4.3"
       }
     },
     "com.unity.modules.ai": {

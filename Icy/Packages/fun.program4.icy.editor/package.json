@@ -1,0 +1,14 @@
+{
+  "name": "fun.program4.icy.editor",
+  "version": "1.0.0",
+  "displayName": "Icy Editor",
+  "description": "Icy Editor",
+  "author": {
+    "name": "Icy",
+    "email": "chengshengtzss@163.com",
+    "url": "https://program4.fun"
+  },
+  "dependencies": {
+    "com.marijnzwemmer.unity-toolbar-extender": "1.4.3"
+  }
+}
