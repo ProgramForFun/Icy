@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// LogµÈ¼¶£¬ÑÏÖØ³Ì¶ÈµİÔö
+	/// Logç­‰çº§ï¼Œä¸¥é‡ç¨‹åº¦é€’å¢
 	/// </summary>
 	public enum LogLevel
 	{
@@ -17,22 +17,22 @@ namespace Icy.Base
 
 
 	/// <summary>
-	/// Ìá¹©¸ü¾«Ï¸µÄLog Level¿ØÖÆ£»
-	/// Ê¹ÓÃ±¾Logºó£¬²»Ó¦¸ÃÔÙÉèÖÃUnity Logger.filterLogType£»
+	/// æä¾›æ›´ç²¾ç»†çš„Log Levelæ§åˆ¶ï¼›
+	/// ä½¿ç”¨æœ¬Logåï¼Œä¸åº”è¯¥å†è®¾ç½®Unity Logger.filterLogTypeï¼›
 	/// </summary>
 	public static class Log
 	{
 		/// <summary>
-		/// ×îĞ¡LogµÈ¼¶
+		/// æœ€å°Logç­‰çº§
 		/// </summary>
 		public static LogLevel MinLogLevel { get; set; } = LogLevel.Info;
 		/// <summary>
-		/// Ö¸¶¨Tag¶ÀÁ¢µÄLogLevel£¬ÓÅÏÈ¼¶¸ßÓÚMinLogLevel
+		/// æŒ‡å®šTagç‹¬ç«‹çš„LogLevelï¼Œä¼˜å…ˆçº§é«˜äºMinLogLevel
 		/// </summary>
 		private static Dictionary<string, LogLevel> _OverrideTagLogLevel = new Dictionary<string, LogLevel>();
 
 		/// <summary>
-		/// ¸øÖ¸¶¨Tag¶ÀÁ¢µÄLogLevel
+		/// ç»™æŒ‡å®šTagç‹¬ç«‹çš„LogLevel
 		/// </summary>
 		public static void OverrideTagLogLevel(string tag, LogLevel logLevel)
 		{
@@ -40,7 +40,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Çå³ıËùÓĞµÄOverrideTagLogLevel
+		/// æ¸…é™¤æ‰€æœ‰çš„OverrideTagLogLevel
 		/// </summary>
 		public static void ClearOverrideTagLogLevel()
 		{

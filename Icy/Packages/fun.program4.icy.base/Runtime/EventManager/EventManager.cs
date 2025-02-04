@@ -9,19 +9,19 @@ namespace Icy.Base
 	using EventListener = Action<int, IEventParam>;
 
 	/// <summary>
-	/// ÊÂ¼ş¹ÜÀíÆ÷
-	/// TODO£ºÖ§³Ö¶àÏß³Ì
+	/// äº‹ä»¶ç®¡ç†å™¨
+	/// TODOï¼šæ”¯æŒå¤šçº¿ç¨‹
 	/// </summary>
 	public sealed class EventManager : Singleton<EventManager>
 	{
 		/// <summary>
-		/// ËùÓĞÊÂ¼şµÄÓ³Éä¹ØÏµ
+		/// æ‰€æœ‰äº‹ä»¶çš„æ˜ å°„å…³ç³»
 		/// </summary>
 		private Dictionary<int, HashSet<EventListener>> _EventListenerMap = new Dictionary<int, HashSet<EventListener>>();
 
 
 		/// <summary>
-		/// Ìí¼ÓÒ»¸öÖ¸¶¨ÊÂ¼şµÄ¼àÌı
+		/// æ·»åŠ ä¸€ä¸ªæŒ‡å®šäº‹ä»¶çš„ç›‘å¬
 		/// </summary>
 		public void AddListener(int eventID, EventListener listener)
 		{
@@ -31,7 +31,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// ÒÆ³ıÒ»¸öÖ¸¶¨ÊÂ¼şµÄ¼àÌı
+		/// ç§»é™¤ä¸€ä¸ªæŒ‡å®šäº‹ä»¶çš„ç›‘å¬
 		/// </summary>
 		public void RemoveListener(int eventID, EventListener listener)
 		{
@@ -40,7 +40,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Á¢¿Ì´¥·¢Ò»¸öÊÂ¼ş£¬Ã»ÓĞ²ÎÊı
+		/// ç«‹åˆ»è§¦å‘ä¸€ä¸ªäº‹ä»¶ï¼Œæ²¡æœ‰å‚æ•°
 		/// </summary>
 		public void FireEvent(int eventID)
 		{
@@ -48,7 +48,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Á¢¿Ì´¥·¢Ò»¸öÊÂ¼ş£¬´øÖ¸¶¨µÄ²ÎÊı
+		/// ç«‹åˆ»è§¦å‘ä¸€ä¸ªäº‹ä»¶ï¼Œå¸¦æŒ‡å®šçš„å‚æ•°
 		/// </summary>
 		public void FireEvent(int eventID, IEventParam param)
 		{
@@ -60,7 +60,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// ÑÓ³Ùµ½ÏÂÒ»Ö¡´¥·¢Ò»¸ö ²» ´ø²ÎÊıµÄÊÂ¼ş
+		/// å»¶è¿Ÿåˆ°ä¸‹ä¸€å¸§è§¦å‘ä¸€ä¸ª ä¸ å¸¦å‚æ•°çš„äº‹ä»¶
 		/// </summary>
 		public void FireEventNextFrame(int eventID)
 		{
@@ -68,7 +68,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// ÑÓ³Ùµ½ÏÂÒ»Ö¡´¥·¢Ò»¸ö´ø²ÎÊıµÄÊÂ¼ş
+		/// å»¶è¿Ÿåˆ°ä¸‹ä¸€å¸§è§¦å‘ä¸€ä¸ªå¸¦å‚æ•°çš„äº‹ä»¶
 		/// </summary>
 		public void FireEventNextFrame(int eventID, IEventParam param)
 		{
@@ -81,7 +81,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// ÑÓ³Ù´¥·¢Ò»¸ö ²» ´ø²ÎÊıµÄÊÂ¼ş£¬µ¥Î»Ãë
+		/// å»¶è¿Ÿè§¦å‘ä¸€ä¸ª ä¸ å¸¦å‚æ•°çš„äº‹ä»¶ï¼Œå•ä½ç§’
 		/// </summary>
 		public void FireEventDelay(int eventID, float delay)
 		{
@@ -89,7 +89,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// ÑÓ³Ù´¥·¢Ò»¸ö´ø²ÎÊıµÄÊÂ¼ş£¬µ¥Î»Ãë
+		/// å»¶è¿Ÿè§¦å‘ä¸€ä¸ªå¸¦å‚æ•°çš„äº‹ä»¶ï¼Œå•ä½ç§’
 		/// </summary>
 		public void FireEventDelay(int eventID, IEventParam param, float delay)
 		{

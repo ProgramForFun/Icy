@@ -2,12 +2,12 @@
 namespace Icy.Base
 {
 	/// <summary>
-	/// 和Procedure一起使用的Step
+	/// 鍜孭rocedure涓�璧蜂娇鐢ㄧ殑Step
 	/// </summary>
 	public abstract class ProcedureStep : FSMState
 	{
 		/// <summary>
-		/// 结束当前Step
+		/// 缁撴潫褰撳墠Step
 		/// </summary>
 		protected void Finish()
 		{

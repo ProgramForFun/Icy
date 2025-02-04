@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Icy.Base
 {
 	/// <summary>
-	/// ÓÃÓÚ´æ´¢Ò»Ğ©¶ÌÉúÃüÖÜÆÚµÄÒ×±äÊı¾İ
+	/// ç”¨äºå­˜å‚¨ä¸€äº›çŸ­ç”Ÿå‘½å‘¨æœŸçš„æ˜“å˜æ•°æ®
 	/// </summary>
 	public class Blackboard
 	{

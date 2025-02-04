@@ -3,28 +3,28 @@ using System.Collections.Generic;
 namespace Icy.Base
 {
 	/// <summary>
-	/// »ùÓÚFSMÊµÏÖµÄProcedure£¬ÓÃÓÚÓÃ°´ÈÎÒâË³Ğò×éºÏStep£¬È»ºóÖ´ĞĞ
+	/// åŸºäºFSMå®ç°çš„Procedureï¼Œç”¨äºç”¨æŒ‰ä»»æ„é¡ºåºç»„åˆStepï¼Œç„¶åæ‰§è¡Œ
 	/// </summary>
 	public sealed class Procedure
 	{
 		/// <summary>
-		/// ProcedureµÄÃû×Ö
+		/// Procedureçš„åå­—
 		/// </summary>
 		public string Name { get; private set; }
 		/// <summary>
-		/// »ñÈ¡¹éÒ»»¯µÄÖ´ĞĞ½ø¶È
+		/// è·å–å½’ä¸€åŒ–çš„æ‰§è¡Œè¿›åº¦
 		/// </summary>
 		public float Progress { get { return (_CurrStepIdx + 1) / _Steps.Count; } }
 		/// <summary>
-		/// ÄÚÇ¶µÄ×´Ì¬»ú
+		/// å†…åµŒçš„çŠ¶æ€æœº
 		/// </summary>
 		private FSM _FSM;
 		/// <summary>
-		/// ËùÓĞ²½Öè
+		/// æ‰€æœ‰æ­¥éª¤
 		/// </summary>
 		private List<ProcedureStep> _Steps;
 		/// <summary>
-		/// µ±Ç°Ö´ĞĞµÄStepÏÂ±ê
+		/// å½“å‰æ‰§è¡Œçš„Stepä¸‹æ ‡
 		/// </summary>
 		private int _CurrStepIdx;
 
@@ -37,7 +37,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Ìí¼ÓÒ»¸öÖ¸¶¨²½Öè
+		/// æ·»åŠ ä¸€ä¸ªæŒ‡å®šæ­¥éª¤
 		/// </summary>
 		public void AddStep(ProcedureStep step)
 		{
@@ -46,7 +46,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Æô¶¯Procedure£¬¿ªÊ¼Ö´ĞĞ
+		/// å¯åŠ¨Procedureï¼Œå¼€å§‹æ‰§è¡Œ
 		/// </summary>
 		public void Start()
 		{
@@ -55,7 +55,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Ö´ĞĞÏÂÒ»²½
+		/// æ‰§è¡Œä¸‹ä¸€æ­¥
 		/// </summary>
 		public void NextStep()
 		{

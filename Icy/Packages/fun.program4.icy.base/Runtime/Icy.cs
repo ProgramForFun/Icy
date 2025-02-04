@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// ¿ò¼ÜÈë¿Ú
+	/// æ¡†æ¶å…¥å£
 	/// </summary>
 	public sealed class Icy : MonoBehaviour
 	{
