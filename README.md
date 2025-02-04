@@ -1,6 +1,5 @@
 # Icy
-Icy Unity Framework, 
-Unity version 2022.3.57f1
+Icy Unity Framework
 
 ## Roadmap
 |目标|状态|
@@ -15,7 +14,8 @@ Unity version 2022.3.57f1
 |Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
 |Base-AssetManager|待开始|
-|Base-TCP和HTTP|待开始|
+|Network-TCP|待开始|
+|Network-HTTP|待开始|
 |UI-基础结构|待开始|
 |UI-资源管理|待开始|
 |UI-本地化|待开始|
