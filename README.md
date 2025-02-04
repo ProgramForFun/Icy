@@ -10,7 +10,7 @@ Unity version 2022.3.57f1
 |接入SRDebugger|✔️|
 |接入Protobuf|✔️|
 |接入UniTask|✔️|
-|Base-事件系统|待开始|
+|Base-事件系统|✔️|
 |Base-FSM|✔️|
 |Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
