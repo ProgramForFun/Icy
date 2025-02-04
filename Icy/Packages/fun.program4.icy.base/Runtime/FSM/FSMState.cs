@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace Icy.Base
 {
 	/// <summary>
 	/// 状态机状态的基类
 	/// </summary>
-	public class FSMState : IUpdateable, IFixedUpdateable, ILateUpdateable
+	public abstract class FSMState : IUpdateable, IFixedUpdateable, ILateUpdateable
 	{
 		/// <summary>
 		/// 此状态所属的FSM
@@ -28,20 +25,12 @@ namespace Icy.Base
 		/// <summary>
 		/// 激活状态
 		/// </summary>
-		public virtual async UniTask Activate()
-		{
-			await UniTask.Yield();
-			throw new System.NotImplementedException();
-		}
+		public abstract UniTask Activate();
 
 		/// <summary>
 		/// 解除激活状态
 		/// </summary>
-		public virtual async UniTask Deactivate()
-		{
-			await UniTask.Yield();
-			throw new System.NotImplementedException();
-		}
+		public abstract UniTask Deactivate();
 
 
 		public virtual void Update(float delta)

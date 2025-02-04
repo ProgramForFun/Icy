@@ -33,19 +33,27 @@ namespace Icy.Base
 		/// 是否已被销毁
 		/// </summary>
 		public bool IsDisposed { get; protected set; }
+		/// <summary>
+		/// 黑板数据
+		/// </summary>
+		public Blackboard Blackboard { get; protected set; }
 
 		/// <summary>
 		/// 属于此状态机的所有状态，组织形式是这些状态的GameObject都是此状态机的子节点
 		/// </summary>
-		protected List<FSMState> _AllStates = new List<FSMState>();
+		protected List<FSMState> _AllStates;
 		/// <summary>
 		/// 默认状态
 		/// </summary>
 		protected FSMState _DefaultState;
 
+
 		public FSM(string name)
 		{
 			Name = name;
+
+			Blackboard = new Blackboard();
+			_AllStates = new List<FSMState>();
 
 			Icy.Instance.AddUpdate(this);
 			Icy.Instance.AddFixedUpdate(this);
@@ -101,7 +109,7 @@ namespace Icy.Base
 
 			string logMsg = string.Format("Change FSMState from {0} to {1}"
 							, CurrState == null ? "Null" : CurrState.GetType().Name
-							, newState == null ? "Null" : CurrState.GetType().Name);
+							, newState == null ? "Null" : newState.GetType().Name);
 			Log.LogInfo(logMsg);
 
 			IsChangingState = true;
@@ -132,10 +140,10 @@ namespace Icy.Base
 					return;
 				}
 				CurrState = newState;
-				await CurrState.Activate();
+				ChangeStateEnd();
 
+				await CurrState.Activate();
 			}
-			ChangeStateEnd();
 		}
 
 		/// <summary>
