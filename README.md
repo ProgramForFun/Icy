@@ -12,7 +12,7 @@ Unity version 2022.3.57f1
 |接入UniTask|✔️|
 |Base-事件系统|待开始|
 |Base-FSM|✔️|
-|Base-基于FSM的Procedure|待开始|
+|Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
 |Base-AssetManager|待开始|
 |Base-TCP和HTTP|待开始|
