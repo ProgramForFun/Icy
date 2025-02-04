@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -93,9 +94,17 @@ namespace Icy.Base
 
 		private static string FormatByTag(string tag, string msg)
 		{
+#if UNITY_EDITOR
+			string now = DateTime.Now.ToString("HH:mm:ss.fff");
+			if (tag != null)
+				return string.Format("{0} : [{1}] {2}", now, tag, msg);
+			else
+				return string.Format("{0} : {1}", now, msg);
+#else
 			if (tag != null)
 				return string.Format("[{0}] {1}", tag, msg);
 			return msg;
+#endif
 		}
 	}
 }
