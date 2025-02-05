@@ -160,6 +160,12 @@
         "com.marijnzwemmer.unity-toolbar-extender": "1.4.3"
       }
     },
+    "fun.program4.icy.protobuf": {
+      "version": "file:fun.program4.icy.protobuf",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

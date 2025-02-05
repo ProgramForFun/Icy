@@ -1,0 +1,13 @@
+{
+  "name": "fun.program4.icy.protobuf",
+  "version": "1.0.0",
+  "displayName": "Icy Protobuf",
+  "description": "Icy Protobuf",
+  "author": {
+    "name": "Icy",
+    "email": "chengshengtzss@163.com",
+    "url": "https://program4.fun"
+  },
+  "dependencies": {
+  }
+}
