@@ -140,10 +140,10 @@ namespace Icy.Base
 					return;
 				}
 				CurrState = newState;
-				ChangeStateEnd();
 
 				await CurrState.Activate();
 			}
+			ChangeStateEnd();
 		}
 
 		/// <summary>

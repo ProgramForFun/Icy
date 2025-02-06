@@ -16,6 +16,10 @@ namespace Icy.Base
 		/// </summary>
 		public float Progress { get { return (_CurrStepIdx + 1) / _Steps.Count; } }
 		/// <summary>
+		/// 是否正在切换Step
+		/// </summary>
+		public bool IsChangingStep { get { return _FSM.IsChangingState; } }
+		/// <summary>
 		/// 内嵌的状态机
 		/// </summary>
 		private FSM _FSM;
