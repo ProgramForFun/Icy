@@ -166,6 +166,12 @@
       "source": "embedded",
       "dependencies": {}
     },
+    "fun.program4.icy.ui": {
+      "version": "file:fun.program4.icy.ui",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

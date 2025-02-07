@@ -4,15 +4,16 @@ Icy Unity Framework
 ## Roadmap
 |目标|状态|
 |---|:---:|
-|接入YooAsset|✔️|
-|接入Luban|待开始|
-|接入SRDebugger|✔️|
-|接入Protobuf|✔️|
-|接入UniTask|✔️|
+|集成YooAsset|✔️|
+|集成Luban|待开始|
+|集成SRDebugger|✔️|
+|集成Protobuf|✔️|
+|集成UniTask|✔️|
 |Base-事件系统|✔️|
 |Base-FSM|✔️|
 |Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
+|Base-Pool|✔️|
 |Base-AssetManager|待开始|
 |Network-TCP|待开始|
 |Network-HTTP|待开始|
@@ -22,19 +23,19 @@ Icy Unity Framework
 |UI-本地化|待开始|
 |UI-后退栈|待开始|
 |UI-红点|待开始|
-|UI-接入Super ScrollView|✔️|
-|UI-接入UIParticle|待开始|
-|UI-接入UIObject3D|待开始|
+|UI-集成Super ScrollView|✔️|
+|UI-集成UIParticle|待开始|
+|UI-集成UIObject3D|待开始|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
 |UI-预加载但不显示UI|待开始|
 |Gameplay-基础数值系统|待开始|
 |Gameplay-技能系统|待开始|
 |Gameplay-换装系统|待开始|
 |Editor-显示当前Git分支|✔️|
-|Editor-接入Odin|✔️|
+|Editor-集成Odin|✔️|
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
-|接入HybridCLR|待开始|
+|集成HybridCLR|待开始|
 
 ## Note
 本仓库中使用的各种插件仅做学习目的使用，请勿用在生产环境下，请大家支持正版
