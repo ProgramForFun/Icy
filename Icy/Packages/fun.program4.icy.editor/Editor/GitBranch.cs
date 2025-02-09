@@ -5,7 +5,7 @@ using UnityToolbarExtender;
 namespace Icy.Editor
 {
 	/// <summary>
-	/// 在Play按钮那一行的最左侧，显示Git分支名，方便区分分支
+	/// 鍦≒lay鎸夐挳閭ｄ竴琛岀殑鏈�宸︿晶锛屾樉绀篏it鍒嗘敮鍚嶏紝鏂逛究鍖哄垎鍒嗘敮
 	/// </summary>
 	[InitializeOnLoad]
 	public class ProjectPathViewer
@@ -22,7 +22,7 @@ namespace Icy.Editor
 			style.fontStyle = FontStyle.Bold;
 
 			string branch = GetGitBranch();
-			GUILayout.Label($"Git Brach  :  {branch}", style);
+			GUILayout.Label($"Git Branch  :  {branch}", style);
 		}
 
 		static string GetGitBranch()
