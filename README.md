@@ -33,6 +33,7 @@ Icy Unity Framework
 |Gameplay-换装系统|待开始|
 |Editor-显示当前Git分支|✔️|
 |Editor-集成Odin|✔️|
+|Editor-集成ReferenceFinder|✔️|
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
 |集成HybridCLR|待开始|
