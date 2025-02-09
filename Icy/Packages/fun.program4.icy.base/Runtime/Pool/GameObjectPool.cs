@@ -1,3 +1,4 @@
+using Icy.Base;
 using UnityEngine;
 
 /// <summary>
@@ -33,7 +34,7 @@ public class GameObjectPool : ObjectPool<GameObject>
 	public override void Dispose()
 	{
 		if (_OutPool.Count > 0)
-			Debug.LogWarning("Dispose GameObjectPool when there are GameObjects outside, first outside GameObject = " + _OutPool[0].name);
+			Log.LogWarning("Dispose GameObjectPool when there are GameObjects outside, first outside GameObject = " + _OutPool[0].name);
 
 		for (int i = 0; i < _InPool.Count; i++)
 			UnityEngine.Object.Destroy(_InPool[i]);

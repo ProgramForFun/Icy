@@ -20,9 +20,8 @@ public class ObjectPool<T> : IDisposable where T : new()
 
 	public ObjectPool(int defaultSize = 16)
 	{
-		int perSize = Mathf.CeilToInt(defaultSize * 0.5f);
-		_InPool = new List<T>(perSize);
-		_OutPool = new List<T>(perSize);
+		_InPool = new List<T>(defaultSize);
+		_OutPool = new List<T>(defaultSize);
 
 #if UNITY_EDITOR
 		if (typeof(T) == typeof(GameObject) && this.GetType() != typeof(GameObjectPool))
@@ -53,7 +52,7 @@ public class ObjectPool<T> : IDisposable where T : new()
 		if (_OutPool.Remove(obj))
 			_InPool.Add(obj);
 		else
-			Debug.LogError("Trying to put an invalid object to ObjectPool, object = " + obj.ToString());
+			Log.LogError("Trying to put an invalid object to ObjectPool, object = " + obj.ToString());
 	}
 
 	protected virtual T InstantiateOne()
@@ -64,6 +63,6 @@ public class ObjectPool<T> : IDisposable where T : new()
 	public virtual void Dispose()
 	{
 		if (_OutPool.Count > 0)
-			Debug.LogWarning("Dispose ObjectPool when there are objects outside, first outside object = " + _OutPool[0].ToString());
+			Log.LogWarning("Dispose ObjectPool when there are objects outside, first outside object = " + _OutPool[0].ToString());
 	}
 }
