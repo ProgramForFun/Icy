@@ -16,7 +16,7 @@ Icy Unity Framework
 |Base-Pool|✔️|
 |Base-AssetManager|待开始|
 |Network-TCP|待开始|
-|Network-HTTP|待开始|
+|Network-HTTP|✔️|
 |Network-RUDP|待开始|
 |UI-基础结构|待开始|
 |UI-资源管理|待开始|

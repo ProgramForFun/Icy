@@ -1,0 +1,13 @@
+{
+  "name": "fun.program4.icy.network",
+  "version": "1.0.0",
+  "displayName": "Icy Network",
+  "description": "Icy Network",
+  "author": {
+    "name": "Icy",
+    "email": "chengshengtzss@163.com",
+    "url": "https://program4.fun"
+  },
+  "dependencies": {
+  }
+}

@@ -1,0 +1,17 @@
+{
+    "name": "Icy.Network",
+    "rootNamespace": "",
+    "references": [
+        "GUID:126c885c2ce09634dafa2c7a73c2dc59",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
