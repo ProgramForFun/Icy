@@ -1,14 +1,16 @@
 #if UNITY_EDITOR
-using Icy.Base;
 
-public static class LogTest
+namespace Icy.Base
 {
-	public static void Test()
+	public static class LogTest
 	{
-		Log.MinLogLevel = LogLevel.Warning;
-		Log.LogInfo("Test Msg", "game");
-		Log.OverrideTagLogLevel("game", LogLevel.Info);
-		Log.LogInfo("Test Msg", "game");
+		public static void Test()
+		{
+			Log.MinLogLevel = LogLevel.Warning;
+			Log.LogInfo("Test Msg", "game");
+			Log.OverrideTagLogLevel("game", LogLevel.Info);
+			Log.LogInfo("Test Msg", "game");
+		}
 	}
 }
 #endif

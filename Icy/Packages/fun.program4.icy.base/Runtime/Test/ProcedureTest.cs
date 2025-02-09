@@ -1,44 +1,46 @@
 #if UNITY_EDITOR
 using Cysharp.Threading.Tasks;
-using Icy.Base;
 
-public static class ProcedureTest
+namespace Icy.Base
 {
-	public static void Test()
+	public static class ProcedureTest
 	{
-		Procedure procedure = new Procedure("TestProcedure");
-		procedure.AddStep(new StepA());
-		procedure.AddStep(new StepB());
-		procedure.Start();
-	}
-
-	public class StepA : ProcedureStep
-	{
-		public override async UniTask Activate()
+		public static void Test()
 		{
-			await UniTask.WaitForSeconds(3);
-			Log.LogInfo("Step A wait for 3");
-			Finish();
+			Procedure procedure = new Procedure("TestProcedure");
+			procedure.AddStep(new StepA());
+			procedure.AddStep(new StepB());
+			procedure.Start();
 		}
 
-		public override async UniTask Deactivate()
+		public class StepA : ProcedureStep
 		{
-			await UniTask.CompletedTask;
-		}
-	}
+			public override async UniTask Activate()
+			{
+				await UniTask.WaitForSeconds(3);
+				Log.LogInfo("Step A wait for 3");
+				Finish();
+			}
 
-	public class StepB : ProcedureStep
-	{
-		public override async UniTask Activate()
-		{
-			await UniTask.WaitForSeconds(3);
-			Log.LogInfo("Step B wait for 3");
-			Finish();
+			public override async UniTask Deactivate()
+			{
+				await UniTask.CompletedTask;
+			}
 		}
 
-		public override async UniTask Deactivate()
+		public class StepB : ProcedureStep
 		{
-			await UniTask.CompletedTask;
+			public override async UniTask Activate()
+			{
+				await UniTask.WaitForSeconds(3);
+				Log.LogInfo("Step B wait for 3");
+				Finish();
+			}
+
+			public override async UniTask Deactivate()
+			{
+				await UniTask.CompletedTask;
+			}
 		}
 	}
 }
