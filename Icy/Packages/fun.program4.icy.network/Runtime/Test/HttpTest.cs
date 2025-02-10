@@ -29,7 +29,7 @@ namespace Icy.Network
 			}
 
 			{
-				//Get成功
+				//Post成功
 				HttpRequester httpRequester = new HttpRequester();
 				Dictionary<string, string> args = new Dictionary<string, string>();
 				args["TestKey"] = "TestValue";
