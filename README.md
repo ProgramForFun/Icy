@@ -23,9 +23,10 @@ Icy Unity Framework
 |UI-本地化|待开始|
 |UI-后退栈|待开始|
 |UI-红点|待开始|
+|UI-模糊|待开始|
 |UI-集成Super ScrollView|✔️|
 |UI-集成UIParticle|✔️|
-|UI-集成UIObject3D|待开始|
+|UI-集成3DObjectImageForUGUI|✔️|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
 |UI-预加载但不显示UI|待开始|
 |Gameplay-基础数值系统|待开始|

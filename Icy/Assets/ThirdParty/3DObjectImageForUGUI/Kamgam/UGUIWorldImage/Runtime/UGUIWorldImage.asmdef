@@ -1,0 +1,28 @@
+{
+    "name": "Kamgam.UGUIWorldImage",
+    "rootNamespace": "",
+    "references": [
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.RenderPipelines.Universal.Runtime"
+	],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "0.0.1",
+            "define": "KAMGAM_RENDER_PIPELINE_HDRP"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "0.0.1",
+            "define": "KAMGAM_RENDER_PIPELINE_URP"
+        }
+    ],
+    "noEngineReferences": false
+}
