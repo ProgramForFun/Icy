@@ -14,6 +14,8 @@ Icy Unity Framework
 |Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
 |Base-Pool|✔️|
+|Base-集成LocalPreferences|✔️|
+|Base-DailyMark|待开始|
 |Base-AssetManager|待开始|
 |Network-TCP|待开始|
 |Network-HTTP|✔️|
