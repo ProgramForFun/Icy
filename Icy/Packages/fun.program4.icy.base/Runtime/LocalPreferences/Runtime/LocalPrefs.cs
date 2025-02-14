@@ -7,15 +7,15 @@ using Neonagee.LocalPreferences;
 
 public sealed class LocalPrefs : ScriptableObject
 {
-    public static readonly string defaultFileName = "PlayerData";
+    public static readonly string defaultFileName = "temp";
     public static readonly string filesExtension = ".xg";
     public string FilesPath => Application.persistentDataPath + "/";
     public static string currentFile;
 
     // Rijndael
-                                 //01234567890123456789012345678901 - key must be 32 chars
-    const string ENCRYPTION_KEY = "zK3rN5m#DhX8[CYE%'Q={?M(#`-eqYA7";
-    const string ENCRYPTION_SYMBOL = "䕡";
+                               //01234567890123456789012345678901 - key must be 32 chars
+    const string ENCRYPTION_KEY = "zK3rN5m#DhX8[CYE%'Q={?M(#`-eqSSS";
+    const string ENCRYPTION_SYMBOL = "_DI";
     public bool enableEncryption = true;
     public bool autoSaveOnQuit = true;
     static readonly Rijndael crypto = new Rijndael();
@@ -30,10 +30,12 @@ public sealed class LocalPrefs : ScriptableObject
 
     static void SaveToFile(string fileName, bool encrypt)
     {
-        if (fileName.Contains(ENCRYPTION_SYMBOL))
-        {
+		if (string.IsNullOrEmpty(fileName))
+			fileName = defaultFileName;
+
+		if (fileName.Contains(ENCRYPTION_SYMBOL))
             fileName = fileName.Replace(ENCRYPTION_SYMBOL, "");
-        }
+
         string fullName = fileName + filesExtension;
         string fullCryptoName = fileName + ENCRYPTION_SYMBOL + filesExtension;
         string filePath = Data.FilesPath + fullName;
@@ -65,11 +67,7 @@ public sealed class LocalPrefs : ScriptableObject
             onSaveFinish?.Invoke();
         }
     }
-    public static void Save(string fileName, bool encrypt)
-    {
-        SaveToFile(fileName, encrypt);
-    }
-    public static void Save(string fileName)
+    public static void Save(string fileName = null)
     {
         SaveToFile(fileName, Data.enableEncryption);
     }
@@ -100,7 +98,7 @@ public sealed class LocalPrefs : ScriptableObject
                 if (encrypt) // Save loaded file as encrypted
                 {
                     Data.enableEncryption = true;
-                    Save(fileName, encrypt);
+                    Save(fileName);
                     currentFile = fileName;
                 }
             }
@@ -152,7 +150,7 @@ public sealed class LocalPrefs : ScriptableObject
         if(!normalFileExists && !cryptoFileExists) // No file found, create new empty one
         {
             ClearAll();
-            Save(fileName, encrypt);
+            Save(fileName);
             currentFile = fileName;
         }
     }
@@ -192,7 +190,7 @@ public sealed class LocalPrefs : ScriptableObject
     }
     static bool SaveOnQuit()
     {
-        Save(currentFile, Data.enableEncryption);
+        Save(currentFile);
         return true;
     }
 

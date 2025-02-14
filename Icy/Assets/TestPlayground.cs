@@ -5,6 +5,7 @@ using Google.Protobuf;
 //using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using Icy.Network;
+using Icy.Base;
 
 public static class TestPlayground
 {
@@ -22,7 +23,8 @@ public static class TestPlayground
 		//EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
-		HttpTest.Test();
+		//HttpTest.Test();
+		LocalPrefsTest.Test();
 	}
 }
 
