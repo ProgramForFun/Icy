@@ -1,4 +1,4 @@
-﻿// Made by Neonagee https://github.com/Neonagee/LocalPreferences
+// Made by Neonagee https://github.com/Neonagee/LocalPreferences
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -178,7 +178,7 @@ namespace Neonagee.EditorInternal
                 }
 
                 GUILayout.FlexibleSpace();
-                GUILayout.Button("[" + foundItemsCount + "]", EditorStyles.centeredGreyMiniLabel);
+                GUILayout.Button("[" + foundItemsCount + "]", EditorStyles.whiteLabel);
 
                 if (GUILayout.Button(new GUIContent("", !searching ? "Clear All" : "Remove Found Items"), "WinBtnCloseMac"))
                 {
