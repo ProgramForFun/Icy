@@ -1,6 +1,12 @@
 # Icy
 Icy Unity Framework
 
+## 安装
+
+#### 以下两种方式任选其一：
+* 直接Clone本仓库，以本仓库作为基础进行开发
+* 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/ThirdPartyPlugins 这三个路径下的内容到你的项目目录的同名文件夹
+
 ## Roadmap
 |目标|状态|
 |---|:---:|
