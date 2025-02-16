@@ -7,7 +7,7 @@ Icy Unity Framework
 
 #### 以下两种方式任选其一：
 * 方式一：直接Clone本仓库，以本仓库作为基础进行开发
-* 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/ThirdPartyPlugins 这三个路径下的内容到你的项目目录的同名文件夹
+* 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
 
 &nbsp;
 
