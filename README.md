@@ -1,15 +1,20 @@
 # Icy
 Icy Unity Framework
 
+&nbsp;
+
 ## 安装
 
 #### 以下两种方式任选其一：
-* 直接Clone本仓库，以本仓库作为基础进行开发
-* 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/ThirdPartyPlugins 这三个路径下的内容到你的项目目录的同名文件夹
+* 方式一：直接Clone本仓库，以本仓库作为基础进行开发
+* 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/ThirdPartyPlugins 这三个路径下的内容到你的项目目录的同名文件夹
 
+&nbsp;
 
 ## 文档
 [How-Tos](https://github.com/ProgramForFun/Icy/wiki/How%E2%80%90tos)
+
+&nbsp;
 
 ## Roadmap
 |目标|状态|
@@ -25,7 +30,7 @@ Icy Unity Framework
 |Base-Log|✔️|
 |Base-Pool|✔️|
 |Base-集成LocalPreferences|✔️|
-|Base-DailyMark|待开始|
+|Base-PeriodicRecord|待开始|
 |Base-AssetManager|待开始|
 |Network-TCP|待开始|
 |Network-HTTP|✔️|
@@ -50,6 +55,8 @@ Icy Unity Framework
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
 |集成HybridCLR|待开始|
+
+&nbsp;
 
 ## Note
 本仓库中使用的各种插件仅做学习目的使用，请勿用在生产环境下，请大家支持正版

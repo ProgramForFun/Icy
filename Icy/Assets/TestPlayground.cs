@@ -6,6 +6,7 @@ using Google.Protobuf;
 using UnityEngine;
 using Icy.Network;
 using Icy.Base;
+using System;
 
 public static class TestPlayground
 {
@@ -24,7 +25,8 @@ public static class TestPlayground
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();
-		LocalPrefsTest.Test();
+		//LocalPrefsTest.Test();
+		PeriodicRecordTest.Test();
 	}
 }
 
