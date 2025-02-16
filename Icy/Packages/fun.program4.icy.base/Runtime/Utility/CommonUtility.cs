@@ -88,6 +88,17 @@ public static class CommonUtility
 	}
 
 	/// <summary>
+	/// 把当前DateTime转换为从1970.1.1 零点以来所有的秒数
+	/// </summary>
+	/// <param name="date"></param>
+	/// <returns></returns>
+	public static long TotalSeconds(this DateTime date)
+	{
+		TimeSpan diff = date.ToUniversalTime() - DateTime.UnixEpoch;
+		return (long)diff.TotalSeconds;
+	}
+
+	/// <summary>
 	/// 计算MD5，返回32位风格的MD5结果
 	/// </summary>
 	/// <param name="src"></param>
