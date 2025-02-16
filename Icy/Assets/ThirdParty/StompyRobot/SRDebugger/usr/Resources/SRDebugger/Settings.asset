@@ -48,7 +48,7 @@ MonoBehaviour:
   _enableBackgroundTransparency: 1
   _collapseDuplicateLogEntries: 1
   _richTextInConsole: 1
-  _requireEntryCode: 1
+  _requireEntryCode: 0
   _requireEntryCodeEveryTime: 0
   _entryCode: 03000000050000000100000005000000
   _useDebugCamera: 0
