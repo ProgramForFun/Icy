@@ -199,7 +199,8 @@ public sealed class LocalPrefs : ScriptableObject
     {
         AddPref(bools);
         AddPref(ints);
-        AddPref(floats);
+        AddPref(longs);
+		AddPref(floats);
         AddPref(vector2);
         AddPref(vector3);
         AddPref(vector4);
@@ -211,7 +212,8 @@ public sealed class LocalPrefs : ScriptableObject
     }
     public PrefsBool bools = new PrefsBool();
     public PrefsInt ints = new PrefsInt();
-    public PrefsFloat floats = new PrefsFloat();
+    public PrefsLong longs = new PrefsLong();
+	public PrefsFloat floats = new PrefsFloat();
     public PrefsVector2 vector2 = new PrefsVector2();
     public PrefsVector3 vector3 = new PrefsVector3();
     public PrefsVector4 vector4 = new PrefsVector4();
@@ -237,8 +239,18 @@ public sealed class LocalPrefs : ScriptableObject
         return Data.ints.SetPref(key, value);
     }
 
-    // Float
-    public static float GetFloat(string key, float defaultValue = default)
+	// Long
+	public static long GetLong(string key, long defaultValue = default)
+	{
+		return Data.longs.GetPref(key, defaultValue);
+	}
+	public static long SetLong(string key, long value)
+	{
+		return Data.longs.SetPref(key, value);
+	}
+
+	// Float
+	public static float GetFloat(string key, float defaultValue = default)
     {
         return Data.floats.GetPref(key, defaultValue);
     }
