@@ -30,7 +30,7 @@ Icy Unity Framework
 |Base-Log|✔️|
 |Base-Pool|✔️|
 |Base-集成LocalPreferences|✔️|
-|Base-PeriodicRecord|待开始|
+|Base-PeriodicRecord|✔️|
 |Base-AssetManager|待开始|
 |Network-TCP|待开始|
 |Network-HTTP|✔️|
