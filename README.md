@@ -29,6 +29,7 @@ Icy Unity Framework
 |Base-基于FSM的Procedure|✔️|
 |Base-Log|✔️|
 |Base-Pool|✔️|
+|Base-RingBuffer|✔️|
 |Base-集成LocalPreferences|✔️|
 |Base-PeriodicRecord|✔️|
 |Base-AssetManager|待开始|

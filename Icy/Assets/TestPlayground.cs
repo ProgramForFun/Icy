@@ -26,7 +26,8 @@ public static class TestPlayground
 		//PoolTest.Test();
 		//HttpTest.Test();
 		//LocalPrefsTest.Test();
-		PeriodicRecordTest.Test();
+		//PeriodicRecordTest.Test();
+		RingBufferTest.Test();
 	}
 }
 
