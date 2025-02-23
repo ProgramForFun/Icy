@@ -14,7 +14,11 @@ public static class TestPlayground
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 			Test();
+
+		TcpTest.Update();
 	}
+
+
 
 	//[Shortcut("TestPlayground", KeyCode.Space)]
 	public static void Test()
@@ -27,7 +31,8 @@ public static class TestPlayground
 		//HttpTest.Test();
 		//LocalPrefsTest.Test();
 		//PeriodicRecordTest.Test();
-		RingBufferTest.Test();
+		//RingBufferTest.Test();
+		TcpTest.Test();
 	}
 }
 
