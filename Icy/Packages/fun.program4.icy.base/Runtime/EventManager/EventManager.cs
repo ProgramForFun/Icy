@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 
 
 namespace Icy.Base
@@ -40,17 +39,17 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 立刻触发一个事件，没有参数
+		/// 立刻触发一个事件，不带参数
 		/// </summary>
-		public void FireEvent(int eventID)
+		public void Trigger(int eventID)
 		{
-			FireEvent(eventID, default);
+			Trigger(eventID, default);
 		}
 
 		/// <summary>
 		/// 立刻触发一个事件，带指定的参数
 		/// </summary>
-		public void FireEvent(int eventID, IEventParam param)
+		public void Trigger(int eventID, IEventParam param)
 		{
 			if (_EventListenerMap.ContainsKey(eventID))
 			{
@@ -62,43 +61,51 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟到下一帧触发一个 不 带参数的事件
 		/// </summary>
-		public void FireEventNextFrame(int eventID)
+		public void TriggerNextFrame(int eventID)
 		{
-			FireEventNextFrameAsync(eventID, default).Forget();
+			TriggerNextFrameAsync(eventID, default).Forget();
 		}
 
 		/// <summary>
 		/// 延迟到下一帧触发一个带参数的事件
 		/// </summary>
-		public void FireEventNextFrame(int eventID, IEventParam param)
+		public void TriggerNextFrame(int eventID, IEventParam param)
 		{
-			FireEventNextFrameAsync(eventID, param).Forget();
+			TriggerNextFrameAsync(eventID, param).Forget();
 		}
-		private async UniTaskVoid FireEventNextFrameAsync(int eventID, IEventParam param)
+		private async UniTaskVoid TriggerNextFrameAsync(int eventID, IEventParam param)
 		{
 			await UniTask.NextFrame();
-			FireEvent(eventID, param);
+			Trigger(eventID, param);
 		}
 
 		/// <summary>
 		/// 延迟触发一个 不 带参数的事件，单位秒
 		/// </summary>
-		public void FireEventDelay(int eventID, float delay)
+		public void TriggerDelay(int eventID, float delay)
 		{
-			FireEventDelay(eventID, default, delay);
+			TriggerDelay(eventID, default, delay);
 		}
 
 		/// <summary>
 		/// 延迟触发一个带参数的事件，单位秒
 		/// </summary>
-		public void FireEventDelay(int eventID, IEventParam param, float delay)
+		public void TriggerDelay(int eventID, IEventParam param, float delay)
 		{
-			FireEventDelayAsync(eventID, param, delay).Forget();
+			TriggerDelayAsync(eventID, param, delay).Forget();
 		}
-		private async UniTaskVoid FireEventDelayAsync(int eventID, IEventParam param, float delay)
+		private async UniTaskVoid TriggerDelayAsync(int eventID, IEventParam param, float delay)
 		{
 			await UniTask.WaitForSeconds(delay);
-			FireEvent(eventID, param);
+			Trigger(eventID, param);
+		}
+
+		/// <summary>
+		/// 清除所有的事件注册，谨慎调用！
+		/// </summary>
+		public void ClearAll()
+		{
+			_EventListenerMap.Clear();
 		}
 	}
 }

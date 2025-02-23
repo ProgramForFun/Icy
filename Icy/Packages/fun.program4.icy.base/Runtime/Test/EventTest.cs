@@ -11,23 +11,23 @@ namespace Icy.Base
 			EventManager.Instance.AddListener(0, eventCallback);
 			EventParam_String param_String = new EventParam_String();
 			param_String.Value = "100";
-			EventManager.Instance.FireEvent(0, param_String);
+			EventManager.Instance.Trigger(0, param_String);
 
 			//不应该输出
 			EventManager.Instance.RemoveListener(0, eventCallback);
-			EventManager.Instance.FireEvent(0, param_String);
+			EventManager.Instance.Trigger(0, param_String);
 
 			//应该延迟1秒输出
 			EventManager.Instance.AddListener(0, eventCallback);
 			param_String.Value = "This is a delay msg";
 			float delay = 1;
 			Log.LogInfo($"FireEventDelay, delay = {delay}");
-			EventManager.Instance.FireEventDelay(0, param_String, delay);
+			EventManager.Instance.TriggerDelay(0, param_String, delay);
 
 			//应该下一帧输出
 			EventManager.Instance.AddListener(1, frameCountEventCallback);
 			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
-			EventManager.Instance.FireEventNextFrame(1, param_String);
+			EventManager.Instance.TriggerNextFrame(1, param_String);
 		}
 
 		static void eventCallback(int eventID, IEventParam param)
