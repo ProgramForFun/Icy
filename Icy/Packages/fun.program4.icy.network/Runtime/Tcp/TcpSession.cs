@@ -96,7 +96,7 @@ public class TcpSession : IDisposable
 		{
 			_TcpClient = new TcpClient();
 			await _TcpClient.ConnectAsync(Host, Port);
-			_TcpClient.NoDelay = false;  //关闭Nagle算法
+			_TcpClient.NoDelay = true;  //关闭Nagle算法
 			_Stream = _TcpClient.GetStream();
 			IsConnected = true;
 			OnConnected?.Invoke();
