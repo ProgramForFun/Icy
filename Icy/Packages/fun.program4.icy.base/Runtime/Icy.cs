@@ -19,6 +19,7 @@ namespace Icy.Base
 		{
 			Instance = this;
 			Log.ClearOverrideTagLogLevel();
+			EventManager.ClearAll();
 		}
 
 		private void Start()

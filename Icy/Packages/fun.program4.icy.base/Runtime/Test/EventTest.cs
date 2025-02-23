@@ -8,26 +8,26 @@ namespace Icy.Base
 		public static void Test()
 		{
 			//应该输出
-			EventManager.Instance.AddListener(0, eventCallback);
+			EventManager.AddListener(0, eventCallback);
 			EventParam_String param_String = new EventParam_String();
 			param_String.Value = "100";
-			EventManager.Instance.Trigger(0, param_String);
+			EventManager.Trigger(0, param_String);
 
 			//不应该输出
-			EventManager.Instance.RemoveListener(0, eventCallback);
-			EventManager.Instance.Trigger(0, param_String);
+			EventManager.RemoveListener(0, eventCallback);
+			EventManager.Trigger(0, param_String);
 
 			//应该延迟1秒输出
-			EventManager.Instance.AddListener(0, eventCallback);
+			EventManager.AddListener(0, eventCallback);
 			param_String.Value = "This is a delay msg";
 			float delay = 1;
 			Log.LogInfo($"FireEventDelay, delay = {delay}");
-			EventManager.Instance.TriggerDelay(0, param_String, delay);
+			EventManager.TriggerDelay(0, param_String, delay);
 
 			//应该下一帧输出
-			EventManager.Instance.AddListener(1, frameCountEventCallback);
+			EventManager.AddListener(1, frameCountEventCallback);
 			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
-			EventManager.Instance.TriggerNextFrame(1, param_String);
+			EventManager.TriggerNextFrame(1, param_String);
 		}
 
 		static void eventCallback(int eventID, IEventParam param)

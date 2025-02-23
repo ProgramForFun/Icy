@@ -11,18 +11,18 @@ namespace Icy.Base
 	/// 事件管理器
 	/// TODO：支持多线程
 	/// </summary>
-	public sealed class EventManager : Singleton<EventManager>
+	public static class EventManager
 	{
 		/// <summary>
 		/// 所有事件的映射关系
 		/// </summary>
-		private Dictionary<int, HashSet<EventListener>> _EventListenerMap = new Dictionary<int, HashSet<EventListener>>();
+		private static Dictionary<int, HashSet<EventListener>> _EventListenerMap = new Dictionary<int, HashSet<EventListener>>();
 
 
 		/// <summary>
 		/// 添加一个指定事件的监听
 		/// </summary>
-		public void AddListener(int eventID, EventListener listener)
+		public static void AddListener(int eventID, EventListener listener)
 		{
 			if (!_EventListenerMap.ContainsKey(eventID))
 				_EventListenerMap[eventID] = new HashSet<EventListener>();
@@ -32,7 +32,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 移除一个指定事件的监听
 		/// </summary>
-		public void RemoveListener(int eventID, EventListener listener)
+		public static void RemoveListener(int eventID, EventListener listener)
 		{
 			if (_EventListenerMap.ContainsKey(eventID))
 				_EventListenerMap[eventID].Remove(listener);
@@ -41,7 +41,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 立刻触发一个事件，不带参数
 		/// </summary>
-		public void Trigger(int eventID)
+		public static void Trigger(int eventID)
 		{
 			Trigger(eventID, default);
 		}
@@ -49,7 +49,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 立刻触发一个事件，带指定的参数
 		/// </summary>
-		public void Trigger(int eventID, IEventParam param)
+		public static void Trigger(int eventID, IEventParam param)
 		{
 			if (_EventListenerMap.ContainsKey(eventID))
 			{
@@ -61,7 +61,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟到下一帧触发一个 不 带参数的事件
 		/// </summary>
-		public void TriggerNextFrame(int eventID)
+		public static void TriggerNextFrame(int eventID)
 		{
 			TriggerNextFrameAsync(eventID, default).Forget();
 		}
@@ -69,11 +69,11 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟到下一帧触发一个带参数的事件
 		/// </summary>
-		public void TriggerNextFrame(int eventID, IEventParam param)
+		public static void TriggerNextFrame(int eventID, IEventParam param)
 		{
 			TriggerNextFrameAsync(eventID, param).Forget();
 		}
-		private async UniTaskVoid TriggerNextFrameAsync(int eventID, IEventParam param)
+		private static async UniTaskVoid TriggerNextFrameAsync(int eventID, IEventParam param)
 		{
 			await UniTask.NextFrame();
 			Trigger(eventID, param);
@@ -82,7 +82,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟触发一个 不 带参数的事件，单位秒
 		/// </summary>
-		public void TriggerDelay(int eventID, float delay)
+		public static void TriggerDelay(int eventID, float delay)
 		{
 			TriggerDelay(eventID, default, delay);
 		}
@@ -90,11 +90,11 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟触发一个带参数的事件，单位秒
 		/// </summary>
-		public void TriggerDelay(int eventID, IEventParam param, float delay)
+		public static void TriggerDelay(int eventID, IEventParam param, float delay)
 		{
 			TriggerDelayAsync(eventID, param, delay).Forget();
 		}
-		private async UniTaskVoid TriggerDelayAsync(int eventID, IEventParam param, float delay)
+		private static async UniTaskVoid TriggerDelayAsync(int eventID, IEventParam param, float delay)
 		{
 			await UniTask.WaitForSeconds(delay);
 			Trigger(eventID, param);
@@ -103,8 +103,9 @@ namespace Icy.Base
 		/// <summary>
 		/// 清除所有的事件注册，谨慎调用！
 		/// </summary>
-		public void ClearAll()
+		public static void ClearAll()
 		{
+			Log.LogInfo("Clear EventManager");
 			_EventListenerMap.Clear();
 		}
 	}
