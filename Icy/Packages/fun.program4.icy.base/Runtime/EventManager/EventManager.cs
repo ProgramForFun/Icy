@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 
 namespace Icy.Base
@@ -107,6 +109,26 @@ namespace Icy.Base
 		{
 			Log.LogInfo("Clear EventManager");
 			_EventListenerMap.Clear();
+		}
+
+		/// <summary>
+		/// 序列化输出当前EventManager里所有注册的监听，方便调试；
+		/// 内部实现有反射，注意在性能敏感的场景使用
+		/// </summary>
+		public static string Dump()
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			foreach (var kvp in _EventListenerMap)
+			{
+				stringBuilder.AppendLine($"EventKey : {kvp.Key} ");
+				foreach (var callback in kvp.Value)
+				{
+					MethodInfo methodInfo = callback.Method;
+					stringBuilder.AppendLine($"{methodInfo.DeclaringType?.FullName}.{methodInfo.Name}");
+				}
+				stringBuilder.AppendLine();
+			}
+			return stringBuilder.ToString();
 		}
 	}
 }

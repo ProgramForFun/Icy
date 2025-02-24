@@ -28,6 +28,9 @@ namespace Icy.Base
 			EventManager.AddListener(1, frameCountEventCallback);
 			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
 			EventManager.TriggerNextFrame(1, param_String);
+
+			//输出当前EventManager里所有注册的监听，方便调试
+			Log.LogInfo(EventManager.Dump());
 		}
 
 		static void eventCallback(int eventID, IEventParam param)
