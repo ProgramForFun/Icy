@@ -28,6 +28,15 @@ namespace Icy.Base
 		{
 			if (!_EventListenerMap.ContainsKey(eventID))
 				_EventListenerMap[eventID] = new HashSet<EventListener>();
+#if UNITY_EDITOR
+			foreach (var item in _EventListenerMap[eventID])
+			{
+				//editor下支持重复注册的检查
+				MethodInfo listenerMethod = listener.Method;
+				if (item.Method == listenerMethod && item.Target == listener.Target)
+					Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", "EventManager");
+			}
+#endif
 			_EventListenerMap[eventID].Add(listener);
 		}
 
@@ -84,21 +93,21 @@ namespace Icy.Base
 		/// <summary>
 		/// 延迟触发一个 不 带参数的事件，单位秒
 		/// </summary>
-		public static void TriggerDelay(int eventID, float delay)
+		public static void TriggerDelay(int eventID, float delaySec)
 		{
-			TriggerDelay(eventID, default, delay);
+			TriggerDelay(eventID, default, delaySec);
 		}
 
 		/// <summary>
 		/// 延迟触发一个带参数的事件，单位秒
 		/// </summary>
-		public static void TriggerDelay(int eventID, IEventParam param, float delay)
+		public static void TriggerDelay(int eventID, IEventParam param, float delaySec)
 		{
-			TriggerDelayAsync(eventID, param, delay).Forget();
+			TriggerDelayAsync(eventID, param, delaySec).Forget();
 		}
-		private static async UniTaskVoid TriggerDelayAsync(int eventID, IEventParam param, float delay)
+		private static async UniTaskVoid TriggerDelayAsync(int eventID, IEventParam param, float delaySec)
 		{
-			await UniTask.WaitForSeconds(delay);
+			await UniTask.WaitForSeconds(delaySec);
 			Trigger(eventID, param);
 		}
 

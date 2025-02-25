@@ -29,6 +29,9 @@ namespace Icy.Base
 			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
 			EventManager.TriggerNextFrame(1, param_String);
 
+			//editor下支持重复注册的检查
+			EventManager.AddListener(1, frameCountEventCallback);
+
 			//输出当前EventManager里所有注册的监听，方便调试
 			Log.LogInfo(EventManager.Dump());
 		}

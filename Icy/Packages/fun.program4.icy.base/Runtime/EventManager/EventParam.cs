@@ -1,15 +1,15 @@
 
-
-using System;
-
 namespace Icy.Base
 {
-
+	/// <summary>
+	/// 所有事件参数都要实现这个接口
+	/// </summary>
 	public interface IEventParam
 	{
 
 	}
 
+	//以下是默认提供的事件参数
 	public struct EventParam_Int : IEventParam
 	{
 		public int Value;
