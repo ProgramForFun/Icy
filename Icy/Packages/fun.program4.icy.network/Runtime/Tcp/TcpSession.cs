@@ -88,7 +88,7 @@ public class TcpSession : IDisposable
 	{
 		if (IsConnected)
 		{
-			Log.LogError("[TcpSession] Duplicate Connect");
+			Log.LogError("Duplicate Connect", "TcpSession");
 			return;
 		}
 
@@ -100,11 +100,11 @@ public class TcpSession : IDisposable
 			_Stream = _TcpClient.GetStream();
 			IsConnected = true;
 			OnConnected?.Invoke();
-			Log.LogInfo("[TcpSession] Connected");
+			Log.LogInfo("Connected", "TcpSession");
 		}
 		catch (Exception ex)
 		{
-			Log.LogError($"[TcpSession] Connect exception : {ex}");
+			Log.LogError($"Connect exception : {ex}", "TcpSession");
 			OnConnectException?.Invoke(ex);
 		}
 	}
@@ -114,7 +114,7 @@ public class TcpSession : IDisposable
 	/// </summary>
 	public async UniTask Listen()
 	{
-		Log.LogInfo("[TcpSession] Start Listen");
+		Log.LogInfo("Start Listen", "TcpSession");
 		try
 		{
 			while (IsConnected)
@@ -125,7 +125,7 @@ public class TcpSession : IDisposable
 		}
 		catch (Exception ex)
 		{
-			Log.LogError($"[TcpSession] HandleReceived exception : {ex}");
+			Log.LogError($"HandleReceived exception : {ex}", "TcpSession");
 			OnHandleReceivedException?.Invoke(ex);
 		}
 	}
@@ -141,7 +141,7 @@ public class TcpSession : IDisposable
 	{
 		if (!IsConnected)
 		{
-			Log.LogError("[TcpSession] Trying to send when TCP disconnected");
+			Log.LogError("Trying to send when disconnected", "TcpSession");
 			return;
 		}
 
@@ -166,14 +166,14 @@ public class TcpSession : IDisposable
 	{
 		if (!IsConnected)
 		{
-			Log.LogError("[TcpSession] Close when disconnected");
+			Log.LogError("Close when disconnected", "TcpSession");
 			return;
 		}
 		IsConnected = false;
 		_TcpClient.Close();
 		_TcpClient = null;
 		OnDisconnected?.Invoke();
-		Log.LogInfo("[TcpSession] Close");
+		Log.LogInfo("Close", "TcpSession");
 	}
 
 	/// <summary>
@@ -222,6 +222,6 @@ public class TcpSession : IDisposable
 	{
 		if (IsConnected)
 			Close();
-		Log.LogInfo("[TcpSession] Dispose");
+		Log.LogInfo("Dispose", "TcpSession");
 	}
 }
