@@ -80,9 +80,9 @@ namespace Icy.Base
 		/// <summary>
 		/// 把数组里的一段放入RingBuffer
 		/// </summary>
-		public void Put(T[] src, int startIdx, int count)
+		public void Put(T[] src, int startIdx, int length)
 		{
-			for (int i = startIdx; i < count; ++i)
+			for (int i = startIdx; i < length; ++i)
 				Put(src[i]);
 		}
 
@@ -103,11 +103,11 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 从RingBuffer的 前面 开始，获取count个元素，填入dst数组startIdx开始的位置
+		/// 从RingBuffer的 前面 开始，获取length个元素，填入dst数组startIdx开始的位置
 		/// </summary>
-		public void Get(T[] dst, int startIdx, int count)
+		public void Get(T[] dst, int startIdx, int length)
 		{
-			for (int i = startIdx; i < count; i++)
+			for (int i = startIdx; i < length; i++)
 				dst[i] = Get();
 		}
 

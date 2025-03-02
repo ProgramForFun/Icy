@@ -136,7 +136,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 发送消息
 		/// </summary>
-		public virtual void Send(byte[] msg, int startIdx, int count)
+		public virtual void Send(byte[] msg, int startIdx, int length)
 		{
 			if (!IsConnected)
 			{
@@ -150,11 +150,11 @@ namespace Icy.Network
 			//     4      n
 
 			//1、长度 = 消息ID + 消息本体的长度
-			int len = count + MSG_LENGTH_SIZE;
+			int len = length + MSG_LENGTH_SIZE;
 			byte[] buf = BitConverter.GetBytes(len);
 			Array.Copy(buf, 0, _SendBuffer, 0, buf.Length);
 			//2、消息本体
-			Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, count);
+			Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
 			_Stream.Write(_SendBuffer, 0, len);
 		}
 

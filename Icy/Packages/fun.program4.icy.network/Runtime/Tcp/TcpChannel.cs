@@ -49,9 +49,9 @@ namespace Icy.Network
 			Sender.Encode(data, data1, data2, data3, data4);
 		}
 
-		internal new void Send(byte[] encodedData, int startIdx, int count)
+		internal new void Send(byte[] encodedData, int startIdx, int length)
 		{
-			base.Send(encodedData, startIdx, count);
+			base.Send(encodedData, startIdx, length);
 		}
 
 		protected async UniTaskVoid InitSession()

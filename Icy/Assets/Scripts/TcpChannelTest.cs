@@ -26,13 +26,13 @@ namespace Icy.Network
 
 	public class TcpReceiverProtobuf : TcpRecevier
 	{
-		public override void Decode(byte[] data, int startIdx, int count)
+		public override void Decode(byte[] data, int startIdx, int length)
 		{
 			//解析int类型的消息ID
 			Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
 			//解析protobuf消息本体
 			int protoStartIdx = startIdx + sizeof(int);
-			int protoLength = count - sizeof(int);
+			int protoLength = length - sizeof(int);
 			TestMessageResult newMessageResult = TestMessageResult.Descriptor.Parser.ParseFrom(data, protoStartIdx, protoLength) as TestMessageResult;
 			Log.LogInfo(newMessageResult.ErrorMsg);
 		}

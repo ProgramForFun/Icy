@@ -13,6 +13,6 @@ namespace Icy.Network
 			_Buffer = new byte[bufferSize];
 		}
 
-		public abstract void Decode(byte[] data, int startIdx, int count);
+		public abstract void Decode(byte[] data, int startIdx, int length);
 	}
 }

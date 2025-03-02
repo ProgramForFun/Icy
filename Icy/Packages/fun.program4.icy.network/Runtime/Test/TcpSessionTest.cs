@@ -31,10 +31,10 @@ namespace Icy.Network
 			Log.LogInfo("Tcp Disconnected");
 		}
 
-		private static void OnReceiveData(byte[] buffer, int start, int count)
+		private static void OnReceiveData(byte[] buffer, int start, int length)
 		{
-			string msg = Encoding.UTF8.GetString(buffer, start, count);
-			Log.LogInfo($"HandleReceived, len = {count}, msg = {msg}");
+			string msg = Encoding.UTF8.GetString(buffer, start, length);
+			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
 		private static void OnConnectException(Exception ex)
