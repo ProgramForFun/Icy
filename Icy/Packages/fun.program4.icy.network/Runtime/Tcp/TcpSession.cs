@@ -127,6 +127,7 @@ namespace Icy.Network
 				catch (Exception ex)
 				{
 					Log.LogError($"Listen exception : {ex}", "TcpSession");
+					Disconnect();
 					OnListenException?.Invoke(ex);
 				}
 				HandleReceived(_ReceiveBuffer, receivedSize);
@@ -159,20 +160,20 @@ namespace Icy.Network
 		}
 
 		/// <summary>
-		/// 关闭连接
+		/// 断开连接
 		/// </summary>
-		public void Close()
+		public void Disconnect()
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Close when disconnected", "TcpSession");
+				Log.LogError("Disconnect when disconnected", "TcpSession");
 				return;
 			}
 			IsConnected = false;
 			_TcpClient.Close();
 			_TcpClient = null;
 			OnDisconnected?.Invoke();
-			Log.LogInfo("Close", "TcpSession");
+			Log.LogInfo("Disconnect", "TcpSession");
 		}
 
 		/// <summary>
@@ -220,7 +221,7 @@ namespace Icy.Network
 		public virtual void Dispose()
 		{
 			if (IsConnected)
-				Close();
+				Disconnect();
 			Log.LogInfo("Dispose", "TcpSession");
 		}
 	}
