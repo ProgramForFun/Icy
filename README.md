@@ -33,7 +33,7 @@ Icy Unity Framework
 |Base-集成LocalPreferences|✔️|
 |Base-PeriodicRecord|✔️|
 |Base-AssetManager|待开始|
-|Network-TCP|待开始|
+|Network-TCP|✔️|
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
 |UI-基础结构|待开始|
