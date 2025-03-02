@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Icy.Network
 {
-	public static class TcpTest
+	public static class TcpSessionTest
 	{
 		static TcpSession _TcpSession;
 
@@ -18,7 +18,7 @@ namespace Icy.Network
 			_TcpSession.OnDisconnected += OnDisconnect;
 			_TcpSession.OnReceive += OnReceiveData;
 			_TcpSession.OnConnectException += OnConnectException;
-			_TcpSession.OnHandleReceivedException += OnHandleReceivedException;
+			_TcpSession.OnListenException += OnListenException;
 		}
 
 		private static void OnConnect()
@@ -42,7 +42,7 @@ namespace Icy.Network
 			Log.LogError($"Tcp connect excetion {ex}");
 		}
 
-		private static void OnHandleReceivedException(Exception ex)
+		private static void OnListenException(Exception ex)
 		{
 			Log.LogError($"Tcp handle received excetion {ex}");
 		}
@@ -58,7 +58,10 @@ namespace Icy.Network
 			if (Input.GetKey(KeyCode.S))
 			{
 				for (int i = 0; i < 2; i++)
-					_TcpSession.Send("abcdefghijklmnopqrstuvwxyz");
+				{
+					byte[] toSend = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
+					_TcpSession.Send(toSend, 0, toSend.Length);
+				}
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
