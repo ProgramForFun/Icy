@@ -5,7 +5,7 @@ chcp  65001
 @echo off
 
 :: 输出目录
-set "target_dir=../Icy/Assets/Scripts/Protos"
+set "target_dir=../Icy/Assets/Example/Protos"
 :: asmdef文件要保留
 set "keep_file1=Protos.asmdef"
 set "keep_file2=Protos.asmdef.meta"
