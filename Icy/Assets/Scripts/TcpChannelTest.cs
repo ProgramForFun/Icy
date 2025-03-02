@@ -93,7 +93,7 @@ namespace Icy.Network
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
-				_TcpChannel.Close();
+				_TcpChannel.Disconnect();
 		}
 	}
 }

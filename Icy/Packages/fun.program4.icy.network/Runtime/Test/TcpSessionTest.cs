@@ -65,7 +65,7 @@ namespace Icy.Network
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
-				_TcpSession.Close();
+				_TcpSession.Disconnect();
 		}
 	}
 }
