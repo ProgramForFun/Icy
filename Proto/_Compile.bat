@@ -7,17 +7,17 @@ chcp  65001
 :: 输出目录
 set "target_dir=../Icy/Assets/Example/Protos"
 :: asmdef文件要保留
-set "keep_file1=Protos.asmdef"
-set "keep_file2=Protos.asmdef.meta"
+set "keep_file=Protos.asmdef"
+set "keep_extension=.meta"
 :: 记录当前目录
 set "cur_dir=%~dp0"
 :: 切换到输出目录
 cd /d "%target_dir%"
 
 :: 删除除指定文件外的所有文件
-for %%f in (*) do (
-    if not "%%f"=="%keep_file1%" (
-        if not "%%f"=="%keep_file2%" (
+for %%f in (*.*) do (
+    if not "%%f"=="%keep_file%" (
+        if not "%%~xf"=="%keep_extension%" (
             del /q "%%f"
         )
     )
@@ -28,7 +28,7 @@ for /d %%d in (*) do (
     rd /s /q "%%d"
 )
 
-::echo 目录已清空，保留了文件 %keep_file1% 和 %keep_file2%
+::echo 目录已清空，保留了文件 %keep_file% 和 所有后缀为 %keep_extension% 的文件
 cd /d "%cur_dir%"
 
 
