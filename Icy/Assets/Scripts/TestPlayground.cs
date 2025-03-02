@@ -15,7 +15,8 @@ public static class TestPlayground
 		if (Input.GetKeyDown(KeyCode.Space))
 			Test();
 
-		TcpTest.Update();
+		//TcpSessionTest.Update();
+		TcpChannelTest.Update();
 	}
 
 
@@ -32,7 +33,8 @@ public static class TestPlayground
 		//LocalPrefsTest.Test();
 		//PeriodicRecordTest.Test();
 		//RingBufferTest.Test();
-		TcpTest.Test();
+		//TcpSessionTest.Test();
+		TcpChannelTest.Test();
 	}
 }
 
