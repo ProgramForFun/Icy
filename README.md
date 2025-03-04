@@ -20,7 +20,7 @@ Icy Unity Framework
 |目标|状态|
 |---|:---:|
 |集成YooAsset|✔️|
-|集成Luban|待开始|
+|集成Luban|✔️|
 |集成SRDebugger|✔️|
 |集成Protobuf|✔️|
 |集成UniTask|✔️|
