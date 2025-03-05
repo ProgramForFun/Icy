@@ -14,9 +14,9 @@ namespace Icy.Base
 			PeriodicRecord.RecordThisMonth(key);
 			PeriodicRecord.RecordThisYear(key);
 			//记录一个从现在开始3600秒内有效的key
-			PeriodicRecord.RecordSeconds(key, 3600);
+			PeriodicRecord.RecordDuration(key, 3600);
 			//记录一个指定时间戳之前有效的key
-			PeriodicRecord.RecordTimestamp(key, 1739721600);
+			PeriodicRecord.RecordUntil(key, 1739721600);
 
 			//查询一个key是否还有效
 			bool isValid = PeriodicRecord.IsValid(key);

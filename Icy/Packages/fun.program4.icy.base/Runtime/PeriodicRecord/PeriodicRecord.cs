@@ -20,16 +20,16 @@ namespace Icy.Base
 		/// <summary>
 		/// 记录指定的key，有效期为从现在开始持续seconds秒
 		/// </summary>
-		public static void RecordSeconds(string key, long durationSeconds)
+		public static void RecordDuration(string key, long durationSeconds)
 		{
 			long now = DateTimeOffset.Now.ToUnixTimeSeconds();
-			RecordTimestamp(key, now + durationSeconds);
+			RecordUntil(key, now + durationSeconds);
 		}
 
 		/// <summary>
 		/// 记录指定的key，有效期为指定的时间戳
 		/// </summary>
-		public static void RecordTimestamp(string key, long timestamp)
+		public static void RecordUntil(string key, long timestamp)
 		{
 			LocalPrefs.SetLong(LOCAL_PREFIX + key, timestamp);
 			LocalPrefs.Save();
@@ -41,7 +41,7 @@ namespace Icy.Base
 		public static void RecordToday(string key)
 		{
 			DateTime today24 = DateTime.Today.AddDays(1);
-			RecordTimestamp(key, today24.TotalSeconds());
+			RecordUntil(key, today24.TotalSeconds());
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace Icy.Base
 		{
 			DateTime now = DateTime.Now;
 			DateTime thisMonthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
-			RecordTimestamp(key, thisMonthStart.AddMonths(1).TotalSeconds());
+			RecordUntil(key, thisMonthStart.AddMonths(1).TotalSeconds());
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Icy.Base
 		{
 			DateTime now = DateTime.Now;
 			DateTime thisYearStart = new DateTime(now.Year, 1, 1, 0, 0, 0);
-			RecordTimestamp(key, thisYearStart.AddYears(1).TotalSeconds());
+			RecordUntil(key, thisYearStart.AddYears(1).TotalSeconds());
 		}
 
 		/// <summary>
