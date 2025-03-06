@@ -16,7 +16,7 @@ public sealed partial class RewardCfg : Luban.BeanBase
 {
     public RewardCfg(ByteBuf _buf) 
     {
-        Id = _buf.ReadInt();
+        Sn = _buf.ReadInt();
         Name = _buf.ReadString();
         Desc = _buf.ReadString();
         Count = _buf.ReadInt();
@@ -28,9 +28,9 @@ public sealed partial class RewardCfg : Luban.BeanBase
     }
 
     /// <summary>
-    /// id
+    /// sn
     /// </summary>
-    public readonly int Id;
+    public readonly int Sn;
     /// <summary>
     /// 名字
     /// </summary>
@@ -54,7 +54,7 @@ public sealed partial class RewardCfg : Luban.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "id:" + Id + ","
+        + "sn:" + Sn + ","
         + "name:" + Name + ","
         + "desc:" + Desc + ","
         + "count:" + Count + ","

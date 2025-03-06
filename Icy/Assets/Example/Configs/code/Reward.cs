@@ -27,7 +27,7 @@ public partial class Reward
             RewardCfg _v;
             _v = RewardCfg.DeserializeRewardCfg(_buf);
             _dataList.Add(_v);
-            _dataMap.Add(_v.Id, _v);
+            _dataMap.Add(_v.Sn, _v);
         }
     }
 
