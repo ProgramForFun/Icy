@@ -170,6 +170,8 @@ namespace Icy.UI
 			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 			ui.Canvas.overrideSorting = true;
 			ui.Canvas.sortingOrder = (int)ui.UILayer + _SortingOrderOffset[ui.UILayer];
+
+			Log.LogInfo($"Show {ui.UIName}", "UIManager");
 		}
 
 		internal void Hide(UIBase ui)
@@ -207,10 +209,8 @@ namespace Icy.UI
 			{
 				_Stack.Push(_UIMap[ui]);
 				RemoveDuplicateInStack();
-				Log.LogInfo($"PushStack, count = {_Stack.Count}", "UIManager");
+				Log.LogInfo($"Push {ui.UIName}, stack count = {_Stack.Count}", "UIManager");
 			}
-			else
-				Log.LogInfo($"PushStack failed", "UIManager");
 		}
 
 		private UIData PopStack()
@@ -220,12 +220,10 @@ namespace Icy.UI
 				UIData top = _Stack.Peek();
 				if (_StackBottomUI == null || top.Name != _StackBottomUI.Name)
 				{
-					Log.LogInfo($"PopStack, count = {_Stack.Count - 1}", "UIManager");
+					Log.LogInfo($"Pop {top.Name}, stack count = {_Stack.Count - 1}", "UIManager");
 					return _Stack.Pop();
 				}
 			}
-			else
-				Log.LogInfo($"PopStack failed", "UIManager");
 			return null;
 		}
 
