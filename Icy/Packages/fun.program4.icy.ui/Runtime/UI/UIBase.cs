@@ -58,6 +58,10 @@ namespace Icy.UI
 		/// HideType为MoveOutScreen，移动到的位置
 		/// </summary>
 		protected static readonly Vector3 MOVE_OUT_POS = new Vector3(0.0f, 10240.0f, 0.0f);
+		/// <summary>
+		/// 是否正在退出editor的play模式
+		/// </summary>
+		private bool _IsExitingPlayMode;
 
 
 		public virtual void OnCreate()
@@ -75,6 +79,7 @@ namespace Icy.UI
 			IsShowing = false;
 			IsDestroyed = false;
 			_OriginalAlpha = _CanvasGroup.alpha;
+			_IsExitingPlayMode = false;
 		}
 
 		public virtual void Show(IUIParam param = null)
@@ -165,8 +170,26 @@ namespace Icy.UI
 
 		protected void OnDestroy()
 		{
-			if (!IsDestroyed)
-				Log.LogError($"GameObject of UI {GetType().Name} is unexpected destroyed");
+			if (!IsDestroyed && !_IsExitingPlayMode)
+				Log.LogError($"UI GameObject of {GetType().Name} is unexpected destroyed");
 		}
+
+#if UNITY_EDITOR
+		protected void OnEnable()
+		{
+			UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+		}
+
+		private void OnDisable()
+		{
+			UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+		}
+
+		private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
+		{
+			if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+				_IsExitingPlayMode = true;
+		}
+#endif
 	}
 }
