@@ -36,7 +36,7 @@ Icy Unity Framework
 |Network-TCP|✔️|
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
-|UI-基础结构|待开始|
+|UI-基础结构|✔️|
 |UI-资源管理|待开始|
 |UI-UIText|待开始|
 |UI-UIButton|待开始|
@@ -49,7 +49,7 @@ Icy Unity Framework
 |UI-集成UIParticle|✔️|
 |UI-集成3DObjectImageForUGUI|✔️|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
-|UI-预加载但不显示UI|待开始|
+|UI-预加载但不显示UI|✔️|
 |UI-新手引导|待开始|
 |Gameplay-基础数值系统|待开始|
 |Gameplay-技能系统|待开始|

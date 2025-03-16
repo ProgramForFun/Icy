@@ -3,17 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using Icy.Base;
 using Cysharp.Threading.Tasks;
+using Icy.UI;
 
 public class ExampleRoot : MonoBehaviour
 {
+	[SerializeField] private Camera Camera3D;
+
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
-		
+		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
+
+		UILogin uiLogin = null;
+		UIManager.Instance.Get<UILogin>((UIBase ui) =>
+		{
+			uiLogin = ui as UILogin;
+			uiLogin.Show();
+		});
+
+
+		await UniTask.WaitForSeconds(1);
+		//uiLogin.Hide();
+		uiLogin.Destroy();
+
+
+		UIExample uIExample = null;
+		UIManager.Instance.Get<UIExample>((UIBase ui) =>
+		{
+			uIExample = ui as UIExample;
+			uIExample.Show();
+		});
+
+		await UniTask.WaitForSeconds(1);
+
+		//uIExample.HideToPrev();
+		uIExample.DestroyToPrev();
 	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
 #if UNITY_EDITOR
 		TestPlayground.Update();
