@@ -9,9 +9,9 @@ public class ExampleRoot : MonoBehaviour
 {
 	[SerializeField] private Camera Camera3D;
 
-    // Start is called before the first frame update
-    async void Start()
-    {
+	// Start is called before the first frame update
+	async void Start()
+	{
 		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
 
 		UILogin uiLogin = null;
@@ -19,6 +19,7 @@ public class ExampleRoot : MonoBehaviour
 		{
 			uiLogin = ui as UILogin;
 			uiLogin.Show();
+			Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
 		});
 
 

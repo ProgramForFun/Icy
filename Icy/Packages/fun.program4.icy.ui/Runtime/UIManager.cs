@@ -111,6 +111,32 @@ namespace Icy.UI
 		}
 
 		/// <summary>
+		/// 指定UI是否已经创建出来，无关显示与否
+		/// </summary>
+		public bool IsCreated<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Key is T)
+					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// 指定UI是否正在显示
+		/// </summary>
+		public bool IsShowing<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Key is T)
+					return item.Key.IsShowing;
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// 设置栈底UI，既在回退栈中一直存在的UI，一般就是游戏主界面
 		/// </summary>
 		public void SetStackBottomUI<T>() where T: UIBase
@@ -167,9 +193,9 @@ namespace Icy.UI
 			UIData uiState = _UIMap[ui];
 			uiState.Param = param;
 
-			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 			ui.Canvas.overrideSorting = true;
 			ui.Canvas.sortingOrder = (int)ui.UILayer + _SortingOrderOffset[ui.UILayer];
+			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 
 			Log.LogInfo($"Show {ui.UIName}", "UIManager");
 		}
