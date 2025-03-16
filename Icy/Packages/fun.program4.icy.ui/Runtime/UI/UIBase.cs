@@ -35,9 +35,13 @@ namespace Icy.UI
 		/// </summary>
 		public bool IsDestroyed { get; protected set; }
 		/// <summary>
+		/// 界面根节点的RectTransform
+		/// </summary>
+		public RectTransform RectTransform { get; private set; }
+		/// <summary>
 		/// 当前界面的CanvasGroup
 		/// </summary>
-		public Canvas Canvas { get; protected set; }
+		public Canvas Canvas { get; private set; }
 		/// <summary>
 		/// 当前界面的CanvasGroup
 		/// </summary>
@@ -58,6 +62,12 @@ namespace Icy.UI
 
 		public virtual void OnCreate()
 		{
+			RectTransform = transform as RectTransform;
+			RectTransform.anchorMin = Vector2.zero;
+			RectTransform.anchorMax = Vector2.one;
+			RectTransform.offsetMin = Vector2.zero;
+			RectTransform.offsetMax = Vector2.zero;
+
 			Canvas = gameObject.GetOrAddComponent<Canvas>();
 			_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
 
