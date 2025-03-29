@@ -27,6 +27,13 @@ namespace Icy.Base
 
 			LocalPrefs.Save();
 			Log.LogInfo($"LocalPrefs.GetVector3 {LocalPrefs.GetVector3("TestLocalSave_Vector3")}");
+
+			//Prefix
+			int palyerID = 123456;
+			LocalPrefs.SetKeyPrefix(palyerID + "_");
+			LocalPrefs.SetInt("PrefixText_int", 100);
+			Log.LogInfo($"LocalPrefs.GetInt {LocalPrefs.GetInt("PrefixText_int")}");
+			Log.LogInfo($"Key with prefix {LocalPrefs.Data.ints.KeyByValue(100)}");
 		}
 	}
 }

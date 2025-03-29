@@ -12,8 +12,10 @@ public sealed class LocalPrefs : ScriptableObject
     public string FilesPath => Application.persistentDataPath + "/";
     public static string currentFile;
 
+	public static string KeyPrefix { get; private set; } = null;
+
     // Rijndael
-                               //01234567890123456789012345678901 - key must be 32 chars
+                                 //01234567890123456789012345678901 - key must be 32 chars
     const string ENCRYPTION_KEY = "zK3rN5m#DhX8[CYE%'Q={?M(#`-eqSSS";
     const string ENCRYPTION_SYMBOL = "_DI";
     public bool enableEncryption = true;
@@ -67,10 +69,29 @@ public sealed class LocalPrefs : ScriptableObject
             onSaveFinish?.Invoke();
         }
     }
+
+	/// <summary>
+	/// 为key设一个前缀；
+	/// 这在按账号区分本地记录数据的时候很有用
+	/// </summary>
+	public static void SetKeyPrefix(string prefix)
+	{
+		KeyPrefix = prefix;
+	}
+
+	/// <summary>
+	/// 清除掉key前缀
+	/// </summary>
+	public static void ClearKeyPrefix()
+	{
+		KeyPrefix = null;
+	}
+
     public static void Save(string fileName = null)
     {
         SaveToFile(fileName, Data.enableEncryption);
     }
+
     public static void Load(string fileName, bool encrypt = false)
     {
         if (fileName.Contains(ENCRYPTION_SYMBOL))
@@ -154,6 +175,7 @@ public sealed class LocalPrefs : ScriptableObject
             currentFile = fileName;
         }
     }
+
     static string Decrypt(string filePath)
     {
         byte[] encryptedData = File.ReadAllBytes(filePath);

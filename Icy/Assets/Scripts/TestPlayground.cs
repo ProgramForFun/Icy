@@ -30,12 +30,12 @@ public static class TestPlayground
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();
-		//LocalPrefsTest.Test();
+		LocalPrefsTest.Test();
 		//PeriodicRecordTest.Test();
 		//RingBufferTest.Test();
 		//TcpSessionTest.Test();
 		//TcpChannelTest.Test();
-		ConfigTest.Test();
+		//ConfigTest.Test();
 	}
 }
 

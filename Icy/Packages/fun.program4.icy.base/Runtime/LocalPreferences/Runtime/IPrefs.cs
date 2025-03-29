@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -44,34 +44,46 @@ namespace Neonagee.LocalPreferences
         public int Length { get { return keys.Length; } }
         public int Count { get { return dictionary.Count; } }
         public Type type { get; } = typeof(T);
-        public T GetPref(string prefName, T defaultValue)
+
+		private string GetKey(string key)
+		{
+			if (key != null && !string.IsNullOrEmpty(LocalPrefs.KeyPrefix))
+				key = LocalPrefs.KeyPrefix + key;
+			return key;
+		}
+
+        public T GetPref(string key, T defaultValue)
         {
-            if (dictionary.TryGetValue(prefName, out T value))
+			key = GetKey(key);
+            if (dictionary.TryGetValue(key, out T value))
                 return value;
             else
-                return SetPref(prefName, defaultValue);
+                return SetPref(key, defaultValue);
         }
-        public object GetPref(string prefName, object defaultValue)
+        public object GetPref(string key, object defaultValue)
         {
-            if (dictionary.TryGetValue(prefName, out T value))
-                return value;
+			key = GetKey(key);
+            if (dictionary.TryGetValue(key, out T value))
+				return value;
             else
-                return SetPref(prefName, (T)defaultValue);
+                return SetPref(key, (T)defaultValue);
         }
-        public T SetPref(string prefName, T newValue)
+        public T SetPref(string key, T newValue)
         {
-            if (dictionary.ContainsKey(prefName))
-                dictionary[prefName] = newValue;
+			key = GetKey(key);
+            if (dictionary.ContainsKey(key))
+				dictionary[key] = newValue;
             else
-                dictionary.Add(prefName, newValue);
+                dictionary.Add(key, newValue);
             return newValue;
         }
-        public object SetPref(string prefName, object newValue)
+        public object SetPref(string key, object newValue)
         {
-            if (dictionary.ContainsKey(prefName))
-                dictionary[prefName] = (T)newValue;
+			key = GetKey(key);
+            if (dictionary.ContainsKey(key))
+				dictionary[key] = (T)newValue;
             else
-                dictionary.Add(prefName, (T)newValue);
+                dictionary.Add(key, (T)newValue);
             return newValue;
         }
         public string[] AllKeys(Type type)
@@ -93,8 +105,10 @@ namespace Neonagee.LocalPreferences
         }
         public string ChangeKey(string oldKey, string newKey)
         {
-            if (dictionary.TryGetValue(oldKey, out T value))
-            {
+			oldKey = GetKey(oldKey);
+			newKey = GetKey(newKey);
+			if (dictionary.TryGetValue(oldKey, out T value))
+			{
                 dictionary.Remove(oldKey);
                 dictionary.Add(newKey, value);
                 return newKey;
@@ -126,8 +140,9 @@ namespace Neonagee.LocalPreferences
         }
         public bool RemoveKey(string key)
         {
+			key = GetKey(key);
             if (dictionary.ContainsKey(key))
-            {
+			{
                 dictionary.Remove(key);
                 return true;
             }
@@ -135,26 +150,35 @@ namespace Neonagee.LocalPreferences
         }
         public void RemoveKeys(List<string> keys)
         {
-            for (int k = 0; k < keys.Count; k++)
-                if (keys[k] != default)
-                    dictionary.Remove(keys[k]);
+			for (int k = 0; k < keys.Count; k++)
+			{
+				if (keys[k] != default)
+				{
+					string key = GetKey(keys[k]);
+					dictionary.Remove(key);
+				}
+			}
         }
-        public void Add(string name, T value)
+        public void Add(string key, T value)
         {
-            dictionary.Add(name, value);
+			key = GetKey(key);
+            dictionary.Add(key, value);
         }
         public void Remove(string key)
         {
+			key = GetKey(key);
             dictionary.Remove(key);
-        }
+		}
         public bool TryGetValue(string key, out T value)
         {
+			key = GetKey(key);
             return dictionary.TryGetValue(key, out value);
-        }
+		}
         public bool ContainsKey(string key)
         {
+			key = GetKey(key);
             return dictionary.ContainsKey(key);
-        }
+		}
         public bool ContainsValue(T value)
         {
             return dictionary.ContainsValue(value);

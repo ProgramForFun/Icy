@@ -20,6 +20,7 @@ namespace Icy.Base
 			Instance = this;
 			Log.ClearOverrideTagLogLevel();
 			EventManager.ClearAll();
+			LocalPrefs.ClearKeyPrefix();
 		}
 
 		private void Start()
