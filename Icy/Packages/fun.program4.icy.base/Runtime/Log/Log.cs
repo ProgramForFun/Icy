@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading;
 using UnityEngine;
 
 namespace Icy.Base
@@ -30,6 +33,46 @@ namespace Icy.Base
 		/// 指定Tag独立的LogLevel，优先级高于MinLogLevel
 		/// </summary>
 		private static Dictionary<string, LogLevel> _OverrideTagLogLevel = new Dictionary<string, LogLevel>();
+
+		#region WriteLog2File
+		/// <summary>
+		/// Log文件的目录
+		/// </summary>
+		private static string LOG_ROOT_DIR = Application.persistentDataPath + "/Log/";
+		/// <summary>
+		/// Log队列
+		/// </summary>
+		private static Queue<string> _LogQueue;
+		/// <summary>
+		/// Log队列的锁
+		/// </summary>
+		private static object _Lock;
+		/// <summary>
+		/// 停止线程令牌
+		/// </summary>
+		private static CancellationTokenSource _CancellationTokenSource;
+		/// <summary>
+		/// 写入文件的线程
+		/// </summary>
+		private static Thread _Write2FileThread;
+		#endregion
+
+		public static void Init(bool write2File)
+		{
+			ClearOverrideTagLogLevel();
+
+			#region WriteLog2File
+			if (write2File)
+			{
+				_Lock = new object();
+				_LogQueue = new Queue<string>();
+				_CancellationTokenSource = new CancellationTokenSource();
+				_Write2FileThread = new Thread(ConsumeLog);
+				_Write2FileThread.Start();
+				Application.logMessageReceivedThreaded += OnLog;
+			}
+			#endregion
+		}
 
 		/// <summary>
 		/// 给指定Tag独立的LogLevel
@@ -106,5 +149,101 @@ namespace Icy.Base
 			return msg;
 #endif
 		}
+
+		#region WriteLog2File
+		/// <summary>
+		/// 每次启动，删除最旧的一个Log文件，再新建一个文件作为本次启动要写入的
+		/// </summary>
+		private static string DeleteAndNewLogFile()
+		{
+			if (!Directory.Exists(LOG_ROOT_DIR))
+				Directory.CreateDirectory(LOG_ROOT_DIR);
+
+			string[] allFiles = Directory.GetFiles(LOG_ROOT_DIR);
+			Array.Sort(allFiles);
+			Array.Reverse(allFiles);
+
+			for (int i = allFiles.Length - 1; i >= 0; i--)
+			{
+				//算上马上要新创建的，最多存在3个，所以这里留2个
+				if (i >= 2)
+					File.Delete(allFiles[i]);
+			}
+
+			string newFilePath = string.Format("{0}{1}.txt", LOG_ROOT_DIR, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+			File.Create(newFilePath).Dispose();
+			return newFilePath;
+		}
+
+		/// <summary>
+		/// 监听Unity的log
+		/// </summary>
+		private static void OnLog(string condition, string stackTrace, LogType type)
+		{
+			lock (_Lock)
+			{
+				_LogQueue.Enqueue(condition);
+				if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
+					_LogQueue.Enqueue(stackTrace);
+				Monitor.Pulse(_Lock);
+			}
+
+		}
+
+		/// <summary>
+		/// 消费者函数，从队列里读取log，写入文件
+		/// </summary>
+		private static void ConsumeLog()
+		{
+			string newLogFilePath = DeleteAndNewLogFile();
+			StreamWriter sw = new StreamWriter(newLogFilePath, true, Encoding.UTF8);
+			try
+			{
+				while (!_CancellationTokenSource.Token.IsCancellationRequested)
+				{
+					string log = null;
+					lock (_Lock)
+					{
+						while (_LogQueue.Count == 0)
+							Monitor.Wait(_Lock);
+						log = _LogQueue.Dequeue();
+					}
+
+					if (!string.IsNullOrEmpty(log))
+					{
+						sw.WriteLine(log);
+						sw.Flush();
+					}
+				}
+				Log.LogInfo("Write to file thread stopped", "Log");
+			}
+			catch (Exception ex)
+			{
+				LogError($"Write log to file exception : {ex}", "Log");
+			}
+			finally
+			{
+				sw.Close();
+			}
+		}
+
+		/// <summary>
+		/// 停止写入文件线程
+		/// </summary>
+		public static void StopLog2FileThread()
+		{
+			if (_Write2FileThread != null && _CancellationTokenSource != null)
+			{
+				_CancellationTokenSource.Cancel();
+				lock (_Lock)
+				{
+					//令牌取消后，线程函数实际还Wait在锁上，这里要写入一行log、调用Pulse，以唤起线程函数来继续向下执行，才能停止
+					_LogQueue.Enqueue("EOF");
+					Monitor.Pulse(_Lock);
+				}
+				_Write2FileThread.Join(1000);
+			}
+		}
+		#endregion
 	}
 }

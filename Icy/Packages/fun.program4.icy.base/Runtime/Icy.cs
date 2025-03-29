@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ namespace Icy.Base
 		private void Awake()
 		{
 			Instance = this;
-			Log.ClearOverrideTagLogLevel();
+			Log.Init(true);
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
 		}
@@ -77,6 +78,11 @@ namespace Icy.Base
 			float delta = Time.deltaTime;
 			for (int i = 0; i < _LateUpdateables.Count; i++)
 				_LateUpdateables[i]?.LateUpdate(delta);
+		}
+
+		private void OnApplicationQuit()
+		{
+			Log.StopLog2FileThread();
 		}
 	}
 }
