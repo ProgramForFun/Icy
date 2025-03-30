@@ -21,4 +21,18 @@ public static class FrequentlyUsedPath
 		else
 			Debug.LogError($"Can not find {Application.streamingAssetsPath}");
 	}
+
+	[MenuItem("Icy/Path/EditorLog")]
+	static void OpenEditorLogPath()
+	{
+		string editorLogPath;
+#if UNITY_EDITOR_WIN
+		string userDir = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+		editorLogPath = Path.Combine(userDir, "Unity", "Editor").Replace("\\", "/");
+#else
+		Debug.LogError("OpenEditorLogPath can only available on Windows as present");
+#endif
+		if (!string.IsNullOrEmpty(editorLogPath))
+			System.Diagnostics.Process.Start(editorLogPath);
+	}
 }
