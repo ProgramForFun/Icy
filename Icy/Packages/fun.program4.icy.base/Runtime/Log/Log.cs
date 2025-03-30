@@ -59,8 +59,6 @@ namespace Icy.Base
 
 		public static void Init(bool write2File)
 		{
-			ClearOverrideTagLogLevel();
-
 			#region WriteLog2File
 			if (write2File)
 			{

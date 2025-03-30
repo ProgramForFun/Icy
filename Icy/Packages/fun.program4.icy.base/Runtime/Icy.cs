@@ -8,25 +8,17 @@ namespace Icy.Base
 	/// <summary>
 	/// 框架入口
 	/// </summary>
-	public sealed class Icy : MonoBehaviour
+	public sealed class Icy : PersistentMonoSingleton<Icy>
 	{
-		public static Icy Instance { get; private set; }
-
 		private List<IUpdateable> _Updateables = new List<IUpdateable>();
 		private List<IFixedUpdateable> _FixedUpdateables = new List<IFixedUpdateable>();
 		private List<ILateUpdateable> _LateUpdateables = new List<ILateUpdateable>();
 
-		private void Awake()
+		public void Init()
 		{
-			Instance = this;
-			Log.Init(true);
+			Log.ClearOverrideTagLogLevel();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
-		}
-
-		private void Start()
-		{
-
 		}
 
 		public void AddUpdate(IUpdateable updateable)

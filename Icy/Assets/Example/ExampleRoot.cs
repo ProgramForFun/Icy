@@ -12,7 +12,12 @@ public class ExampleRoot : MonoBehaviour
 	// Start is called before the first frame update
 	async void Start()
 	{
+		//框架相关初始化
+		GameObject icyGo = new GameObject("Icy", typeof(Icy.Base.Icy));
+		Icy.Base.Icy.Instance.Init();
+		Log.Init(true);
 		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
+
 
 		UILogin uiLogin = null;
 		UIManager.Instance.Get<UILogin>((UIBase ui) =>
