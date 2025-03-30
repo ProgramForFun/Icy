@@ -8,7 +8,7 @@ namespace Icy.Base
 	/// <summary>
 	/// 框架入口
 	/// </summary>
-	public sealed class Icy : PersistentMonoSingleton<Icy>
+	public sealed class IcyFrame : PersistentMonoSingleton<IcyFrame>
 	{
 		private List<IUpdateable> _Updateables = new List<IUpdateable>();
 		private List<IFixedUpdateable> _FixedUpdateables = new List<IFixedUpdateable>();

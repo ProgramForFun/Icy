@@ -55,9 +55,9 @@ namespace Icy.Base
 			Blackboard = new Blackboard();
 			_AllStates = new List<FSMState>();
 
-			Icy.Instance.AddUpdate(this);
-			Icy.Instance.AddFixedUpdate(this);
-			Icy.Instance.AddLateUpdate(this);
+			IcyFrame.Instance.AddUpdate(this);
+			IcyFrame.Instance.AddFixedUpdate(this);
+			IcyFrame.Instance.AddLateUpdate(this);
 		}
 
 		/// <summary>
@@ -176,9 +176,9 @@ namespace Icy.Base
 
 		public void Dispose()
 		{
-			Icy.Instance.RemoveUpdate(this);
-			Icy.Instance.RemoveFixedUpdate(this);
-			Icy.Instance.RemoveLateUpdate(this);
+			IcyFrame.Instance.RemoveUpdate(this);
+			IcyFrame.Instance.RemoveFixedUpdate(this);
+			IcyFrame.Instance.RemoveLateUpdate(this);
 			IsDisposed = true;
 		}
 	}

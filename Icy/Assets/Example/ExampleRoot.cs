@@ -13,8 +13,8 @@ public class ExampleRoot : MonoBehaviour
 	async void Start()
 	{
 		//框架相关初始化
-		GameObject icyGo = new GameObject("Icy", typeof(Icy.Base.Icy));
-		Icy.Base.Icy.Instance.Init();
+		GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
+		IcyFrame.Instance.Init();
 		Log.Init(true);
 		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
 
