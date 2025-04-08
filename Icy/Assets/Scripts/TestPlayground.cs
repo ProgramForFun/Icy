@@ -26,11 +26,11 @@ public static class TestPlayground
 	{
 		//LogTest.Test();
 		//ProcedureTest.Test();
-		//EventTest.Test();
+		EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();
-		LocalPrefsTest.Test();
+		//LocalPrefsTest.Test();
 		//PeriodicRecordTest.Test();
 		//RingBufferTest.Test();
 		//TcpSessionTest.Test();

@@ -22,21 +22,35 @@ namespace Icy.Base
 
 
 		/// <summary>
+		/// 指定listener是否已经在监听指定event了
+		/// </summary>
+		public static bool HasAlreadyListened(int eventID, EventListener listener)
+		{
+			if (!_EventListenerMap.ContainsKey(eventID))
+				return false;
+
+			foreach (var item in _EventListenerMap[eventID])
+			{
+				if (item == listener)
+					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// 添加一个指定事件的监听
 		/// </summary>
 		public static void AddListener(int eventID, EventListener listener)
 		{
+			if (HasAlreadyListened(eventID, listener))
+			{
+				MethodInfo listenerMethod = listener.Method;
+				Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", "EventManager");
+				return;
+			}
+
 			if (!_EventListenerMap.ContainsKey(eventID))
 				_EventListenerMap[eventID] = new HashSet<EventListener>();
-#if UNITY_EDITOR
-			foreach (var item in _EventListenerMap[eventID])
-			{
-				//editor下支持重复注册的检查
-				MethodInfo listenerMethod = listener.Method;
-				if (item.Method == listenerMethod && item.Target == listener.Target)
-					Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", "EventManager");
-			}
-#endif
 			_EventListenerMap[eventID].Add(listener);
 		}
 
