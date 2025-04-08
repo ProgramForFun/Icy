@@ -19,18 +19,18 @@ public class ExampleRoot : MonoBehaviour
 		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
 
 
-		UILogin uiLogin = null;
-		UIManager.Instance.Get<UILogin>((UIBase ui) =>
-		{
-			uiLogin = ui as UILogin;
-			uiLogin.Show();
-			Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
-		});
+		//UILogin uiLogin = null;
+		//UIManager.Instance.Get<UILogin>((UIBase ui) =>
+		//{
+		//	uiLogin = ui as UILogin;
+		//	uiLogin.Show();
+		//	Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
+		//});
 
 
 		await UniTask.WaitForSeconds(1);
 		//uiLogin.Hide();
-		uiLogin.Destroy();
+		//uiLogin.Destroy();
 
 
 		UIExample uIExample = null;

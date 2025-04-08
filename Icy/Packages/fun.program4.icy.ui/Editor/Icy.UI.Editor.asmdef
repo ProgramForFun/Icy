@@ -2,7 +2,8 @@
     "name": "Icy.UI.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:126c885c2ce09634dafa2c7a73c2dc59"
+        "GUID:126c885c2ce09634dafa2c7a73c2dc59",
+        "GUID:dfc6066d78d122542992ca22c092c908"
     ],
     "includePlatforms": [
         "Editor"
