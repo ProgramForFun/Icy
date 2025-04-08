@@ -182,7 +182,7 @@ namespace Icy.UI
 			CommonUtility.SetParent(layerGo, newUI.gameObject);
 
 			newUI.UIName = uiName;
-			newUI.OnCreate();
+			newUI.Init();
 			newUI.DoHide();
 		}
 

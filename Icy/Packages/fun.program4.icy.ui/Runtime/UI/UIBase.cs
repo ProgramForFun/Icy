@@ -55,6 +55,10 @@ namespace Icy.UI
 		/// </summary>
 		protected IUIParam _Param;
 		/// <summary>
+		/// 是否已初始化
+		/// </summary>
+		protected bool _Inited = false;
+		/// <summary>
 		/// HideType为MoveOutScreen，移动到的位置
 		/// </summary>
 		protected static readonly Vector3 MOVE_OUT_POS = new Vector3(0.0f, 10240.0f, 0.0f);
@@ -64,8 +68,16 @@ namespace Icy.UI
 		private bool _IsExitingPlayMode;
 
 
-		public virtual void OnCreate()
+		/// <summary>
+		/// 框架会自动调用，无需业务侧调用
+		/// </summary>
+		public virtual void Init()
 		{
+			if (_Inited)
+			{
+				Log.LogError("Duplicate call Init, UIName = " + UIName, "UIBase");
+				return;
+			}
 			RectTransform = transform as RectTransform;
 			RectTransform.anchorMin = Vector2.zero;
 			RectTransform.anchorMax = Vector2.one;
@@ -80,6 +92,8 @@ namespace Icy.UI
 			IsDestroyed = false;
 			_OriginalAlpha = _CanvasGroup.alpha;
 			_IsExitingPlayMode = false;
+
+			_Inited = true;
 		}
 
 		public virtual void Show(IUIParam param = null)
@@ -134,7 +148,7 @@ namespace Icy.UI
 					_CanvasGroup.interactable = false;
 					break;
 				default:
-					Log.LogError($"Invalid HideType {HideType}");
+					Log.LogError($"Invalid HideType {HideType}", "UIBase");
 					break;
 			}
 		}
@@ -149,7 +163,7 @@ namespace Icy.UI
 		{
 			if (IsDestroyed)
 			{
-				Log.LogError($"Duplicate Destroy to {GetType().Name}");
+				Log.LogError($"Duplicate Destroy to {GetType().Name}", "UIBase");
 				return;
 			}
 
@@ -171,7 +185,7 @@ namespace Icy.UI
 		protected void OnDestroy()
 		{
 			if (!IsDestroyed && !_IsExitingPlayMode)
-				Log.LogError($"UI GameObject of {GetType().Name} is unexpected destroyed");
+				Log.LogError($"UI GameObject of {GetType().Name} is unexpected destroyed", "UIBase");
 		}
 
 #if UNITY_EDITOR

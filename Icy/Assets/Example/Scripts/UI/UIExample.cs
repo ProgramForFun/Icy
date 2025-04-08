@@ -10,9 +10,9 @@ public class UIExample : UIBase
 {
 	[SerializeField] private Image _Icon;
 
-	public override void OnCreate()
+	public override void Init()
 	{
-		base.OnCreate();
+		base.Init();
 
 	}
 
