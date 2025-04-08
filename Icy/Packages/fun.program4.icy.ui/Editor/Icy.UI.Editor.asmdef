@@ -1,0 +1,18 @@
+{
+    "name": "Icy.UI.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:126c885c2ce09634dafa2c7a73c2dc59"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
