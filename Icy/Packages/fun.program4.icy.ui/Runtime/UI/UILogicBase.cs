@@ -6,7 +6,7 @@ namespace Icy.UI
 	/// <summary>
 	/// UI逻辑的基类
 	/// </summary>
-	public abstract class UILogicBase : IUpdateable, IDisposable
+	public abstract class UILogicBase : IUpdateable
 	{
 		public virtual void Init()
 		{
@@ -18,7 +18,7 @@ namespace Icy.UI
 			
 		}
 
-		public virtual void Dispose()
+		public virtual void Destroy()
 		{
 			IcyFrame.Instance.RemoveUpdate(this);
 		}
