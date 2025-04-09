@@ -150,6 +150,11 @@ namespace Icy.UI
 
 			if (generator.Components.Count > 0)
 				generator.ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = generator.Components[0] });
+
+			EditorApplication.delayCall += () =>
+			{ 
+				Selection.activeGameObject = generator.gameObject;
+			};
 		}
 		#endregion
 #else
