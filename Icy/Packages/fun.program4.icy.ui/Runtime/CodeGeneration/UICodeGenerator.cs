@@ -9,6 +9,11 @@ using Sirenix.OdinInspector.Editor;
 namespace Icy.UI
 {
 #if UNITY_EDITOR
+	/// <summary>
+	/// 生成UI代码的挂载在prefab上的Editor UI部分；
+	/// 因为要挂在prefab上，所以没有放到Editor目录下；
+	/// 具体的生成逻辑见UICodeGeneratorEditor类
+	/// </summary>
 	[HideMonoScript]
 	public sealed class UICodeGenerator : MonoBehaviour
 	{

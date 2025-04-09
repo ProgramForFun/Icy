@@ -1,21 +1,43 @@
 using Icy.Base;
+using System;
 using System.IO;
 using System.Text;
 using UnityEditor;
+using UnityEngine;
 
 namespace Icy.UI.Editor
 {
+	/// <summary>
+	/// UI代码生成器的逻辑部分，Editor UI部分见UICodeGenerator类
+	/// </summary>
 	[InitializeOnLoad]
-	public static class UICodeGeneratorEditor
+	public class UICodeGeneratorEditor
 	{
+		private const string GENERATING_UI_NAME_KEY = "_Icy_GeneratingUIName";
+
 		static UICodeGeneratorEditor()
 		{
+			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
+			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
+
 			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUICode, GenerateUICode))
 				EventManager.AddListener(EventDefine.GenerateUICode, GenerateUICode);
 			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUILogicCode, GenerateUILogicCode))
 				EventManager.AddListener(EventDefine.GenerateUILogicCode, GenerateUILogicCode);
 			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUICodeAll, GenerateAll))
 				EventManager.AddListener(EventDefine.GenerateUICodeAll, GenerateAll);
+		}
+
+		private static void OnAllAssemblyReload()
+		{
+			string generatingUIName = LocalPrefs.GetString(GENERATING_UI_NAME_KEY, "");
+			if (!string.IsNullOrEmpty(generatingUIName))
+			{
+				CopySerializeField("UI" + generatingUIName);
+
+				LocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
+				LocalPrefs.Save();
+			}
 		}
 
 		private static void GenerateUICode(int eventID, IEventParam param)
@@ -25,6 +47,8 @@ namespace Icy.UI.Editor
 				UICodeGenerator generator = paramGenerator.Value;
 				DoGenerateUICode(generator);
 				AssetDatabase.Refresh();
+				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, generator.UIName);
+				LocalPrefs.Save();
 			}
 		}
 		private static void DoGenerateUICode(UICodeGenerator generator)
@@ -75,6 +99,8 @@ namespace Icy.UI.Editor
 				DoGenerateUICode(paramGenerator.Value);
 				DoGenerateUILogicCode(paramGenerator.Value.UIName);
 				AssetDatabase.Refresh();
+				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
+				LocalPrefs.Save();
 			}
 		}
 
@@ -109,85 +135,53 @@ namespace Icy.UI.Editor
 				Directory.CreateDirectory(folderPath);
 			return filePath;
 		}
+
+		/// <summary>
+		/// 把序列化引用，从UICodeGenerator，copy到生成的UI类上
+		/// </summary>
+		private static void CopySerializeField(string uiTypeName)
+		{
+			//string filter = $"\"{uiTypeName}\" t:prefab";
+			//string[] guids = AssetDatabase.FindAssets(filter);
+			//string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+			//GameObject uiPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+
+			GameObject prefabInstance = Selection.activeGameObject;
+			UIBase ui = prefabInstance.GetComponent(uiTypeName) as UIBase;
+			if (ui == null)
+			{
+				string typeName = string.Format("{0}, Assembly-CSharp", uiTypeName);
+				Type type = Type.GetType(typeName);
+				if (type == null)
+				{
+					Log.LogError("Get type just generated failed, type name = " + typeName, "UICodeGeneratorEditor");
+					return;
+				}
+				//不能直接用prefabInstance.AddComponent，会Inspector刷新不及时，看不到新挂上的UI脚本
+				ui = Undo.AddComponent(prefabInstance, type) as UIBase;
+			}
+
+			//复制序列化的引用
+			UICodeGenerator generator = prefabInstance.GetComponent<UICodeGenerator>();
+			SerializedObject target = new SerializedObject(ui);
+			target.Update();
+
+			for (int i = 0; i < generator.Components.Count; i++)
+			{
+				string fieldName = "_" + generator.Components[i].Name;
+				SerializedProperty p = target.FindProperty(fieldName);
+				if (p == null)
+				{
+					Log.LogError("Copy serialized field failed, filed name = " + fieldName, "UICodeGeneratorEditor");
+					continue;
+				}
+
+				p.objectReferenceValue = generator.Components[i].Object;
+			}
+
+			target.ApplyModifiedPropertiesWithoutUndo();
+
+			PrefabUtility.RecordPrefabInstancePropertyModifications(prefabInstance);
+		}
 	}
-
-	//public class ClassA : MonoBehaviour
-	//{
-	//	[SerializeField] private int number = 10;
-	//	[SerializeField] private string text = "Hello";
-	//}
-
-	//public class ClassB : MonoBehaviour
-	//{
-	//	[SerializeField] private int number = 10;
-	//	[SerializeField] private string text = "Hello";
-	//}
-
-	//public class ClassGeneratorEditor__ : EditorWindow
-	//{
-	//	[MenuItem("Tools/Generate ClassB")]
-	//	public static void GenerateClassB()
-	//	{
-	//		string scriptPath = Path.Combine(Application.dataPath, "Scripts/ClassB.cs");
-
-	//		string code = @"
-	//using UnityEngine;
-
-	//public class ClassB : MonoBehaviour
-	//{
-	//    [SerializeField] private int number;
-	//    [SerializeField] private string text;
-	//}";
-
-	//		File.WriteAllText(scriptPath, code);
-	//		AssetDatabase.Refresh();
-
-	//		// 记录需要迁移的实例
-	//		var instances = FindObjectsOfType<ClassA>();
-	//		foreach (var instance in instances)
-	//		{
-	//			// 标记对象为脏以保存状态
-	//			EditorUtility.SetDirty(instance.gameObject);
-	//		}
-
-	//		// 监听编译完成事件
-	//		EditorApplication.update += WaitForCompilation;
-	//	}
-
-	//	private static void WaitForCompilation()
-	//	{
-	//		if (EditorApplication.isCompiling) return;
-
-	//		EditorApplication.update -= WaitForCompilation;
-	//		MigrateData();
-	//	}
-
-	//	private static void MigrateData()
-	//	{
-	//		foreach (var oldComponent in FindObjectsOfType<ClassA>())
-	//		{
-	//			var go = oldComponent.gameObject;
-
-	//			// 创建ClassB并复制数据
-	//			ClassB newComponent = go.AddComponent<ClassB>();
-	//			SerializedObject source = new SerializedObject(oldComponent);
-	//			SerializedObject dest = new SerializedObject(newComponent);
-
-	//			// 复制所有序列化属性
-	//			SerializedProperty prop = source.GetIterator();
-	//			while (prop.NextVisible(true))
-	//			{
-	//				if (prop.name == "m_Script") continue;
-	//				dest.CopyFromSerializedProperty(prop);
-	//			}
-
-	//			dest.ApplyModifiedProperties();
-
-	//			// 移除旧组件
-	//			DestroyImmediate(oldComponent);
-	//		}
-
-	//		AssetDatabase.SaveAssets();
-	//	}
-	//}
 }

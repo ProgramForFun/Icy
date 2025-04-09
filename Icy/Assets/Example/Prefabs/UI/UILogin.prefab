@@ -265,7 +265,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3477627446884125884}
   - component: {fileID: 7144021193448441104}
-  - component: {fileID: 5207580997786539499}
   m_Layer: 5
   m_Name: UILogin
   m_TagString: Untagged
@@ -316,23 +315,6 @@ MonoBehaviour:
     Name: Button
     Component: {fileID: 5566719931547290517}
   UIName: Login
---- !u!114 &5207580997786539499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6549373054899784437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d55279984c5fc47a20b60b71b6e5bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Type: 0
-  _Layer: 2000
-  _Bg: {fileID: 0}
-  _Title: {fileID: 0}
-  _Button: {fileID: 0}
 --- !u!1 &6661228815176786390
 GameObject:
   m_ObjectHideFlags: 0
