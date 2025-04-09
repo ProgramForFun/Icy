@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Icy.Base;
+
 #if UNITY_EDITOR
+using UnityEditor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 #endif
@@ -36,6 +38,9 @@ namespace Icy.UI
 				_Inited = true;
 				_Disposed = false;
 			}
+
+			if (Components.Count > 0)
+				ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
@@ -109,6 +114,44 @@ namespace Icy.UI
 				_Inited = false;
 			}
 		}
+
+		#region 快捷添加
+		/// <summary>
+		/// 选中UI节点，右键快加添加生成器，支持多选；
+		/// 或者选中后按回车
+		/// </summary>
+		[MenuItem("GameObject/Add To UI Code Generator _SPACE", false, -100)]
+		private static void AddComponentByEditorSelection()
+		{
+			UICodeGenerator generator = null;
+			GameObject[] allSelect = Selection.gameObjects;
+			for (int i = 0; i < allSelect.Length; i++)
+			{
+				Transform parent = allSelect[i].transform.parent;
+				while(parent != null)
+				{
+					generator = parent.gameObject.GetComponent<UICodeGenerator>();
+					if (generator != null)
+						break;
+					parent = parent.parent;
+				}
+
+				if (generator != null)
+				{
+					UICodeGeneratorItem item = new UICodeGeneratorItem();
+					generator.Components.Add(item);
+					item.Object = allSelect[i];
+					item.Name = allSelect[i].name;
+				}
+			}
+
+			EditorUtility.SetDirty(generator.gameObject);
+			AssetDatabase.SaveAssets();
+
+			if (generator.Components.Count > 0)
+				generator.ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = generator.Components[0] });
+		}
+		#endregion
 #else
 		public sealed class UICodeGenerator : MonoBehaviour
 		{
