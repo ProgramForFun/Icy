@@ -41,6 +41,17 @@ namespace Icy.UI
 
 			if (Components.Count > 0)
 				ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
+
+			string goName = gameObject.name;
+			if (goName.StartsWith("UI"))
+			{
+				UIName = goName.Substring(2);
+			}
+			else
+			{
+				EditorUtility.DisplayDialog("Error", "UI prefab的命名应该以UI作为前缀", "这就改");
+				UIName = "UI prefab的命名应该以UI作为前缀";
+			}	
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
@@ -53,9 +64,10 @@ namespace Icy.UI
 		}
 
 		[Space(10)]
-		[InfoBox("For instance, if you want to generate codes for UISetting, input *Setting* here, WITHOUT prefix UI")]
+		[InfoBox("UI name is just the UI prefab name without prefix 'UI'")]
 		[LabelText("UI Name :")]
 		[LabelWidth(80)]
+		[ReadOnly]
 		public string UIName;
 
 		/// <summary>
