@@ -34,7 +34,7 @@ namespace Icy.UI
 		public GameObject Object;
 
 		/// <summary>
-		/// 组件的名称
+		/// 生成到C#代码的变量名
 		/// </summary>
 		[Delayed]
 		[GUIColor("GetNameColor")]
@@ -42,7 +42,7 @@ namespace Icy.UI
 		public string Name;
 
 		/// <summary>
-		/// 组件的类型
+		/// 生成到C#代码的变量类型
 		/// </summary>
 		[ValueDropdown("_AllComponents", IsUniqueList = true)]
 		public UnityEngine.Object Component;

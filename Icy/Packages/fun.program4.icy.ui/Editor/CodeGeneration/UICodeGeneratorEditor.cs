@@ -1,5 +1,6 @@
 using Icy.Base;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -53,7 +54,7 @@ namespace Icy.UI.Editor
 		}
 		private static void DoGenerateUICode(UICodeGenerator generator)
 		{
-			string filePath = CheckGenerateCondition(generator.UIName, "");
+			string filePath = CheckGenerateCondition(generator.UIName, "", generator.Components);
 			if (filePath != null)
 			{
 				StringBuilder builder = new StringBuilder();
@@ -105,9 +106,9 @@ namespace Icy.UI.Editor
 		}
 
 		/// <summary>
-		///  检查生成代码的前置条件
+		/// 检查生成代码的前置条件
 		/// </summary>
-		private static string CheckGenerateCondition(string uiName, string typeName)
+		private static string CheckGenerateCondition(string uiName, string typeName, List<UICodeGeneratorItem> components = null)
 		{
 			string uiRootPath = LocalPrefs.GetString("_Icy_UIRootPath", "");
 			if (string.IsNullOrEmpty(uiRootPath))
@@ -129,6 +130,19 @@ namespace Icy.UI.Editor
 			{
 				Log.LogError($"Generate UI {typeName} code failed, {filePath} is alreay exist");
 				return null;
+			}
+
+			if (components != null)
+			{
+				int count = components.Count;
+				for (int i = 0; i < count; i++)
+				{
+					if (!CSharpVariableValidator.IsValidCSharpVariableName(components[i].Name))
+					{
+						Log.LogError($"Generate UI {typeName} code failed, {components[i].Name} is NOT a valid C# variable name");
+						return null;
+					}
+				}
 			}
 
 			if (!Directory.Exists(folderPath))

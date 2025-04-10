@@ -34,13 +34,13 @@ namespace Icy.UI
 		{
 			if (!_Inited)
 			{
-				EventManager.AddListener(EventDefine.UICodeGeneratorNameChanged, ValidateDuplicateName);
+				EventManager.AddListener(EventDefine.UICodeGeneratorNameChanged, ValidateName);
 				_Inited = true;
 				_Disposed = false;
 			}
 
 			if (Components.Count > 0)
-				ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
+				ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
@@ -48,7 +48,7 @@ namespace Icy.UI
 			if (info.ChangeType == CollectionChangeType.RemoveValue || info.ChangeType == CollectionChangeType.RemoveKey || info.ChangeType == CollectionChangeType.RemoveIndex)
 			{
 				if (Components.Count > 0)
-					ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
+					ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 有字段重名时，红色提示
 		/// </summary>
-		private void ValidateDuplicateName(int eventID, IEventParam item)
+		private void ValidateName(int eventID, IEventParam item)
 		{
 			if (item is EventParam<UICodeGeneratorItem> eventParam)
 			{
@@ -71,8 +71,14 @@ namespace Icy.UI
 					for (int i = 0; i < Components.Count; i++)
 					{
 						Components[i].RedName = false;
-
 						string name = Components[i].Name;
+
+						//检测命名合法性
+						bool isValidName = CSharpVariableValidator.IsValidCSharpVariableName(name);
+						if (!isValidName)
+							Components[i].RedName = true;
+
+						//检测重名
 						if (_ForDuplicateName.ContainsKey(name))
 						{
 							Components[i].RedName = true;
@@ -109,7 +115,7 @@ namespace Icy.UI
 		{
 			if (!_Disposed)
 			{
-				EventManager.RemoveListener(EventDefine.UICodeGeneratorNameChanged, ValidateDuplicateName);
+				EventManager.RemoveListener(EventDefine.UICodeGeneratorNameChanged, ValidateName);
 				_Disposed = true;
 				_Inited = false;
 			}
@@ -149,7 +155,7 @@ namespace Icy.UI
 			AssetDatabase.SaveAssets();
 
 			if (generator.Components.Count > 0)
-				generator.ValidateDuplicateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = generator.Components[0] });
+				generator.ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = generator.Components[0] });
 
 			EditorApplication.delayCall += () =>
 			{ 
