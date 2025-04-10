@@ -103,24 +103,22 @@ namespace Icy.UI
 			}
 		}
 
-		[ButtonGroup]
-		[Button("Generate UI Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		public void GenerateUICode()
-		{
-			EventManager.Trigger(EventDefine.GenerateUICode, new EventParam<UICodeGenerator> { Value = this});
-		}
-
-		[ButtonGroup]
 		[Button("Generate Logic Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		public void GenerateLogicCode()
 		{
 			EventManager.Trigger(EventDefine.GenerateUILogicCode, new EventParam_String { Value = UIName });
 		}
 
-		[Button("Generate All", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		public void GenerateAll()
+		[Button("Generate UI Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		public void GenerateUICode()
 		{
-			EventManager.Trigger(EventDefine.GenerateUICodeAll, new EventParam<UICodeGenerator> { Value = this });
+			EventManager.Trigger(EventDefine.GenerateUICode, new EventParam<UICodeGenerator> { Value = this });
+		}
+
+		[Button("Generate Both", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		public void GenerateBoth()
+		{
+			EventManager.Trigger(EventDefine.GenerateUICodeBoth, new EventParam<UICodeGenerator> { Value = this });
 		}
 
 		private void OnInspectorDispose()

@@ -25,8 +25,8 @@ namespace Icy.UI.Editor
 				EventManager.AddListener(EventDefine.GenerateUICode, GenerateUICode);
 			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUILogicCode, GenerateUILogicCode))
 				EventManager.AddListener(EventDefine.GenerateUILogicCode, GenerateUILogicCode);
-			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUICodeAll, GenerateAll))
-				EventManager.AddListener(EventDefine.GenerateUICodeAll, GenerateAll);
+			if (!EventManager.HasAlreadyListened(EventDefine.GenerateUICodeBoth, GenerateBoth))
+				EventManager.AddListener(EventDefine.GenerateUICodeBoth, GenerateBoth);
 		}
 
 		private static void OnAllAssemblyReload()
@@ -97,7 +97,7 @@ namespace Icy.UI.Editor
 			}
 		}
 
-		private static void GenerateAll(int eventID, IEventParam param)
+		private static void GenerateBoth(int eventID, IEventParam param)
 		{
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
