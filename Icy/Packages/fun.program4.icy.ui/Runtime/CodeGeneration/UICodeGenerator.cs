@@ -131,6 +131,8 @@ namespace Icy.UI
 		{
 			UICodeGenerator generator = null;
 			GameObject[] allSelect = Selection.gameObjects;
+			if (allSelect.Length == 0)
+				return;
 			for (int i = 0; i < allSelect.Length; i++)
 			{
 				Transform parent = allSelect[i].transform.parent;
