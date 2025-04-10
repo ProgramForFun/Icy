@@ -44,7 +44,8 @@ namespace Icy.UI
 		/// <summary>
 		/// 生成到C#代码的变量类型
 		/// </summary>
-		[ValueDropdown("_AllComponents", IsUniqueList = true)]
+		[ValueDropdown("_AllComponents", IsUniqueList = true, DropdownWidth = 200)]
+		[TableColumnWidth(100)]
 		public UnityEngine.Object Component;
 
 		/// <summary>
