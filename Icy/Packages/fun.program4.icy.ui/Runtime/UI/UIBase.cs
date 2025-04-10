@@ -6,6 +6,7 @@ namespace Icy.UI
 	/// <summary>
 	/// UI基类
 	/// </summary>
+	[RequireComponent(typeof(UICodeGenerator))]
 	public abstract class UIBase : MonoBehaviour
 	{
 		/// <summary>

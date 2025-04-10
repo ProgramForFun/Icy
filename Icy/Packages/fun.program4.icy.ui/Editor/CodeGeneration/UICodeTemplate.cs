@@ -11,7 +11,6 @@ using Icy.UI;
 using Sirenix.OdinInspector;
 
 
-[RequireComponent(typeof(UICodeGenerator))]
 public class UI{0} : UIBase
 {{
 //=========================== Generated code area，Don't put your business code in this ===========================
