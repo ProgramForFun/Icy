@@ -31,7 +31,6 @@ public class UI{0}Logic : UILogicBase
 		base.Destroy();
 	}}
 }}
-
 ";
 	}
 }
