@@ -60,7 +60,7 @@ namespace Icy.UI
 		{
 			if (Object != null)
 			{
-				Component[] all = Object.GetComponentsInChildren<Component>();
+				Component[] all = Object.GetComponents<Component>();
 				_AllComponents = new ValueDropdownList<UnityEngine.Object>();
 				for (int i = 0; i < all.Length; i++)
 				{
