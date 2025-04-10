@@ -46,13 +46,14 @@ namespace Icy.UI.Editor
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
 				UICodeGenerator generator = paramGenerator.Value;
-				DoGenerateUICode(generator);
+				bool isLogicFileExist = IsLogicFileExist(generator.UIName);
+				DoGenerateUICode(generator, isLogicFileExist);
 				AssetDatabase.Refresh();
 				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, generator.UIName);
 				LocalPrefs.Save();
 			}
 		}
-		private static void DoGenerateUICode(UICodeGenerator generator)
+		private static void DoGenerateUICode(UICodeGenerator generator, bool withLogic)
 		{
 			string filePath = CheckGenerateCondition(generator.UIName, "", generator.Components);
 			if (filePath != null)
@@ -69,7 +70,10 @@ namespace Icy.UI.Editor
 						builder.AppendLine(line);
 				}
 
-				string code = string.Format(UICodeTemplate.Code, generator.UIName, builder.ToString());
+				string logicTypeName = string.Format("UI{0}Logic", generator.UIName);
+				string logicDecl = withLogic ? string.Format("\r\n	private {0} _Logic;\r\n", logicTypeName) : "";
+				string logicAssign = withLogic ? "		_Logic = new();\r\n		_Logic.Init();\r\n" : "";
+				string code = string.Format(UICodeTemplate.Code, generator.UIName, builder.ToString(), logicDecl, logicAssign);
 				File.WriteAllText(filePath, code);
 			}
 		}
@@ -97,8 +101,8 @@ namespace Icy.UI.Editor
 		{
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
-				DoGenerateUICode(paramGenerator.Value);
 				DoGenerateUILogicCode(paramGenerator.Value.UIName);
+				DoGenerateUICode(paramGenerator.Value, true);
 				AssetDatabase.Refresh();
 				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
 				LocalPrefs.Save();
@@ -161,6 +165,8 @@ namespace Icy.UI.Editor
 			//GameObject uiPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
 
 			GameObject prefabInstance = Selection.activeGameObject;
+			if (prefabInstance == null)
+				return;
 			UIBase ui = prefabInstance.GetComponent(uiTypeName) as UIBase;
 			if (ui == null)
 			{
@@ -196,6 +202,17 @@ namespace Icy.UI.Editor
 			target.ApplyModifiedPropertiesWithoutUndo();
 
 			PrefabUtility.RecordPrefabInstancePropertyModifications(prefabInstance);
+		}
+
+		private static bool IsLogicFileExist(string uiName)
+		{
+			string uiRootPath = LocalPrefs.GetString("_Icy_UIRootPath", "");
+			if (string.IsNullOrEmpty(uiRootPath))
+				return false;//其他地方有log，这里就不输出了
+
+			string fileName = string.Format("UI{0}Logic.cs", uiName);
+			string filePath = Path.Combine(uiRootPath, uiName, fileName);
+			return File.Exists(filePath);
 		}
 	}
 }

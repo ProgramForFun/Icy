@@ -16,11 +16,11 @@ public class UI{0} : UIBase
 //=========================== Generated code area，Don't put your business code in this ===========================
 {1}
 //=========================== Generated code area，Don't put your business code in this ===========================
-
+{2}
 	public override void Init()
 	{{
 		base.Init();
-		
+{3}
 	}}
 
 	public override void Show(IUIParam param = null)
