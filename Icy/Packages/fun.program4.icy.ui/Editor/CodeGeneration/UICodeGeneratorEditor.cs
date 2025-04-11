@@ -64,7 +64,7 @@ namespace Icy.UI.Editor
 				for (int i = 0; i < count; i++)
 				{
 					string className = generator.Components[i].Component.GetType().FullName;
-					string line = string.Format("[SerializeField, ReadOnly] {0} _{1};", className, generator.Components[i].Name);
+					string line = string.Format("	[SerializeField, ReadOnly] {0} _{1};", className, generator.Components[i].Name);
 					if (i >= count - 1)
 						builder.Append(line);
 					else
