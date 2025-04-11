@@ -8,6 +8,9 @@ namespace Icy.UI.Editor
 		public readonly static string Code =
 @"using Icy.UI;
 
+/// <summary>
+/// 
+/// </summary>
 public class UI{0}Logic : UILogicBase
 {{
 	public override void Init()
