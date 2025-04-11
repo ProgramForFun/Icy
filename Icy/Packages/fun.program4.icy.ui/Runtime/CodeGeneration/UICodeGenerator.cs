@@ -175,14 +175,14 @@ namespace Icy.UI
 			};
 		}
 		#endregion
-#else
-		public sealed class UICodeGenerator : MonoBehaviour
-		{
-			private void Awake()
-			{
-				Destroy(this);
-			}
-		}
-#endif
 	}
+#else
+	public sealed class UICodeGenerator : MonoBehaviour
+	{
+		private void Awake()
+		{
+			Destroy(this);
+		}
+	}
+#endif
 }
