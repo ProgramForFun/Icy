@@ -13,9 +13,9 @@ using Sirenix.OdinInspector;
 
 public class UI{0} : UIBase
 {{
-//=========================== Generated code area，Don't put your business code in this ===========================
+//↓=========================== Generated code area，Don't put your business code in this ===========================↓
 {1}
-//=========================== Generated code area，Don't put your business code in this ===========================
+//↑=========================== Generated code area，Don't put your business code in this ===========================↑
 {2}
 	public override void Init()
 	{{

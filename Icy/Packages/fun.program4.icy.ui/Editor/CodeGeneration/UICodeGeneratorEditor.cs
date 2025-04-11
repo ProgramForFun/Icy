@@ -58,6 +58,7 @@ namespace Icy.UI.Editor
 			string filePath = CheckGenerateCondition(generator.UIName, "", generator.Components);
 			if (filePath != null)
 			{
+				//生成所有组件的代码
 				StringBuilder builder = new StringBuilder();
 				int count = generator.Components.Count;
 				for (int i = 0; i < count; i++)
@@ -70,11 +71,45 @@ namespace Icy.UI.Editor
 						builder.AppendLine(line);
 				}
 
-				string logicTypeName = string.Format("UI{0}Logic", generator.UIName);
-				string logicDecl = withLogic ? string.Format("\r\n	private {0} _Logic;\r\n", logicTypeName) : "";
-				string logicAssign = withLogic ? "		_Logic = new();\r\n		_Logic.Init();\r\n" : "";
-				string code = string.Format(UICodeTemplate.Code, generator.UIName, builder.ToString(), logicDecl, logicAssign);
-				File.WriteAllText(filePath, code);
+				if (!File.Exists(filePath))
+				{
+					//不存在文件就是全新生成
+					string logicTypeName = string.Format("UI{0}Logic", generator.UIName);
+					string logicDecl = withLogic ? string.Format("\r\n	private {0} _Logic;\r\n", logicTypeName) : "";
+					string logicAssign = withLogic ? "		_Logic = new();\r\n		_Logic.Init();\r\n" : "";
+					string code = string.Format(UICodeTemplate.Code, generator.UIName, builder.ToString(), logicDecl, logicAssign);
+					File.WriteAllText(filePath, code);
+				}
+				else
+				{
+					//存在的话，替换组件部分代码
+					string[] oldLines = File.ReadAllLines(filePath);
+					List<string> newlines = new List<string>();
+
+					//组件代码之前的内容，原样保留
+					int i = 0;
+					for (;i < oldLines.Length;i++)
+					{
+						newlines.Add(oldLines[i]);
+						if (oldLines[i].StartsWith("//↓="))
+							break;
+					}
+
+					//插入新的组件代码
+					newlines.Add(builder.ToString());
+
+					bool foundGeneratedAreaEnd = false;
+					for (; i < oldLines.Length; i++)
+					{
+						if (oldLines[i].StartsWith("//↑=") && !foundGeneratedAreaEnd)
+							foundGeneratedAreaEnd = true;
+
+						if (foundGeneratedAreaEnd)
+							newlines.Add(oldLines[i]);
+					}
+
+					File.WriteAllLines(filePath, newlines);
+				}
 			}
 		}
 
@@ -130,7 +165,7 @@ namespace Icy.UI.Editor
 			string fileName = string.Format("UI{0}{1}.cs", uiName, typeName);
 			string folderPath = Path.Combine(uiRootPath, uiName);
 			string filePath = Path.Combine(uiRootPath, uiName, fileName);
-			if (File.Exists(filePath))
+			if (File.Exists(filePath) && !string.IsNullOrEmpty(typeName))
 			{
 				Log.LogError($"Generate UI {typeName} code failed, {filePath} is alreay exist");
 				return null;
