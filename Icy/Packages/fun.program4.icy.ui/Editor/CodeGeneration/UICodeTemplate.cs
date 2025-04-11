@@ -10,7 +10,6 @@ namespace Icy.UI.Editor
 using Icy.UI;
 using Sirenix.OdinInspector;
 
-
 /// <summary>
 /// 
 /// </summary>
