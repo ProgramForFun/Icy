@@ -1,11 +1,13 @@
 using UnityEngine;
 using Icy.Base;
+using Sirenix.OdinInspector;
 
 namespace Icy.UI
 {
 	/// <summary>
 	/// UI基类
 	/// </summary>
+	[InfoBox("Modifying component directly is disabled, re-generate ui code to achieve it")]
 	[RequireComponent(typeof(UICodeGenerator))]
 	public abstract class UIBase : MonoBehaviour
 	{
