@@ -23,11 +23,6 @@ public class UI{0}Logic : UILogicBase
 
 
 
-	public override void Update(float delta)
-	{{
-		
-	}}
-
 	public override void Destroy()
 	{{
 		
