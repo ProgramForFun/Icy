@@ -16,7 +16,8 @@ public class UI{0}Logic : UILogicBase
 	public override void Init()
 	{{
 		base.Init();
-		
+		//EnableUpdate();
+
 	}}
 
 
