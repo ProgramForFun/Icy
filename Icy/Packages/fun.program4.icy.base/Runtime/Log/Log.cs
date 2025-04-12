@@ -116,7 +116,7 @@ namespace Icy.Base
 			Debug.Assert(condition, msg);
 #else
 			if (!condition)
-				Debug.LogError("[ASSERT] " + msg);
+				LogError("[ASSERT] " + msg);
 #endif
 		}
 
