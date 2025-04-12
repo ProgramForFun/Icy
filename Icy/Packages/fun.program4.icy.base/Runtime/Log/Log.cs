@@ -114,6 +114,8 @@ namespace Icy.Base
 		{
 #if UNITY_EDITOR
 			Debug.Assert(condition, msg);
+			UnityEditor.EditorApplication.isPaused = true;
+			UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
 #else
 			if (!condition)
 				LogError("[ASSERT] " + msg);
