@@ -91,7 +91,7 @@ namespace Icy.Base
 
 			if (gotoIdx == -1)
 			{
-				Log.LogError($"{typeof(T).Name} is not belonged of Procedure {Name}", "Procedure");
+				Log.LogError($"{typeof(T).Name} is not belonged to Procedure {Name}", "Procedure");
 				return;
 			}
 
