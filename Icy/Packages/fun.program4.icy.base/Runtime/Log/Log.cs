@@ -110,16 +110,16 @@ namespace Icy.Base
 			Debug.LogError(FormatByTag(tag, msg));
 		}
 
-		public static void Assert(bool condition, string msg)
+		public static void Assert(bool condition, string msg, string tag = null)
 		{
-#if UNITY_EDITOR
-			Debug.Assert(condition, msg);
-			UnityEditor.EditorApplication.isPaused = true;
-			UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
-#else
 			if (!condition)
-				LogError("[ASSERT] " + msg);
+			{
+				LogError("[ASSERT] " + msg, tag);
+#if UNITY_EDITOR
+				UnityEditor.EditorApplication.isPaused = true;
+				UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
 #endif
+			}
 		}
 
 		private static bool IsMatchLogLevel(string tag)
