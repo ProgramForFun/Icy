@@ -12,6 +12,10 @@ namespace Icy.Base
 		/// </summary>
 		public string Name { get; private set; }
 		/// <summary>
+		/// 黑板数据
+		/// </summary>
+		public Blackboard Blackboard { get { return _FSM.Blackboard; } }
+		/// <summary>
 		/// 获取归一化的执行进度
 		/// </summary>
 		public float Progress { get { return (_CurrStepIdx + 1) / _Steps.Count; } }
