@@ -73,5 +73,30 @@ namespace Icy.Base
 			else
 				Log.LogInfo($"Procedure {_FSM.Name} finished");
 		}
+
+		/// <summary>
+		/// 跳转到指定Step
+		/// </summary>
+		public void GotoStep<T>() where T : ProcedureStep
+		{
+			int gotoIdx = -1;
+			for (int i = 0; i < _Steps.Count; i++)
+			{
+				if (_Steps[i] is T)
+				{
+					gotoIdx = i;
+					break;
+				}
+			}
+
+			if (gotoIdx == -1)
+			{
+				Log.LogError($"{typeof(T).Name} is not belonged of Procedure {Name}", "Procedure");
+				return;
+			}
+
+			_CurrStepIdx = gotoIdx;
+			_FSM.ChangeState(_Steps[_CurrStepIdx]);
+		}
 	}
 }

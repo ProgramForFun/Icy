@@ -10,6 +10,8 @@ namespace Icy.Base
 			Procedure procedure = new Procedure("TestProcedure");
 			procedure.AddStep(new StepA());
 			procedure.AddStep(new StepB());
+			procedure.AddStep(new StepC());
+			procedure.AddStep(new StepD());
 			procedure.Start();
 		}
 
@@ -19,7 +21,7 @@ namespace Icy.Base
 			{
 				await UniTask.WaitForSeconds(3);
 				Log.LogInfo("Step A wait for 3");
-				Finish();
+				FinishAndGoto<StepC>();
 			}
 
 			public override async UniTask Deactivate()
@@ -34,6 +36,36 @@ namespace Icy.Base
 			{
 				await UniTask.WaitForSeconds(3);
 				Log.LogInfo("Step B wait for 3");
+				Finish();
+			}
+
+			public override async UniTask Deactivate()
+			{
+				await UniTask.CompletedTask;
+			}
+		}
+
+		public class StepC : ProcedureStep
+		{
+			public override async UniTask Activate()
+			{
+				await UniTask.WaitForSeconds(3);
+				Log.LogInfo("Step C wait for 3");
+				Finish();
+			}
+
+			public override async UniTask Deactivate()
+			{
+				await UniTask.CompletedTask;
+			}
+		}
+
+		public class StepD : ProcedureStep
+		{
+			public override async UniTask Activate()
+			{
+				await UniTask.WaitForSeconds(3);
+				Log.LogInfo("Step D wait for 3");
 				Finish();
 			}
 

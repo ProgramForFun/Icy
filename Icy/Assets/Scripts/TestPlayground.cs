@@ -25,8 +25,8 @@ public static class TestPlayground
 	public static void Test()
 	{
 		//LogTest.Test();
-		//ProcedureTest.Test();
-		EventTest.Test();
+		ProcedureTest.Test();
+		//EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();

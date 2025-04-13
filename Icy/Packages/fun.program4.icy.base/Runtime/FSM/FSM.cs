@@ -51,6 +51,8 @@ namespace Icy.Base
 		public FSM(string name)
 		{
 			Name = name;
+			IsChangingState = false;
+			IsDisposed = false;
 
 			Blackboard = new Blackboard();
 			_AllStates = new List<FSMState>();
