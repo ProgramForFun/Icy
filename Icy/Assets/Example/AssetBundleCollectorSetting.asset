@@ -15,4 +15,25 @@ MonoBehaviour:
   ShowPackageView: 0
   ShowEditorAlias: 0
   UniqueBundleName: 0
-  Packages: []
+  Packages:
+  - PackageName: DefaultPackage
+    PackageDesc: 
+    EnableAddressable: 1
+    LocationToLower: 0
+    IncludeAssetGUID: 0
+    AutoCollectShaders: 1
+    IgnoreRuleName: NormalIgnoreRule
+    Groups:
+    - GroupName: 'UIPrefab   '
+      GroupDesc: UI
+      AssetTags: ui_prefab
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/Example/Prefabs/UI
+        CollectorGUID: 01fd24fda0bcf504384e54be9580d14c
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectPrefab
+        AssetTags: 
+        UserData: 

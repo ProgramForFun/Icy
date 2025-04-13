@@ -163,6 +163,12 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "fun.program4.icy.asset": {
+      "version": "file:fun.program4.icy.asset",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "fun.program4.icy.base": {
       "version": "file:fun.program4.icy.base",
       "depth": 0,

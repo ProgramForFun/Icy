@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using Icy.Asset;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 namespace Icy.UI
@@ -98,11 +98,15 @@ namespace Icy.UI
 				}
 			}
 
-			//Test
-			GameObject uiGo = AssetDatabase.LoadAssetAtPath<GameObject>($"Assets\\Example\\Prefabs\\UI\\{uiName}.prefab");
-			uiGo = GameObject.Instantiate<GameObject>(uiGo);
-			//Test End
+			LoadUI(uiName, callback).Forget();
+		}
 
+		private async UniTask LoadUI(string uiName, Action<UIBase> callback)
+		{
+			AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(uiName);
+			await assetRef;
+
+			GameObject uiGo = GameObject.Instantiate(assetRef.AssetObject as GameObject);
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");

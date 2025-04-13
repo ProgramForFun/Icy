@@ -4,10 +4,13 @@ using UnityEngine;
 using Icy.Base;
 using Cysharp.Threading.Tasks;
 using Icy.UI;
+using Icy.Asset;
+using YooAsset;
 
 public class ExampleRoot : MonoBehaviour
 {
-	[SerializeField] private Camera Camera3D;
+	[SerializeField] private EPlayMode _AssetMode;
+	[SerializeField] private Camera _Camera3D;
 
 	// Start is called before the first frame update
 	async void Start()
@@ -16,20 +19,30 @@ public class ExampleRoot : MonoBehaviour
 		GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
 		IcyFrame.Instance.Init();
 		Log.Init(true);
-		UIRoot.Instance.AddUICameraToCameraStack(Camera3D);
+		UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
 
+		//×ÊÔ´
+		bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage");
+		if (!assetMgrInitSucceed)
+		{
+			Log.Assert(false, "AssetManager init failed!");
+			return;
+		}
 
-		//UILogin uiLogin = null;
-		//UIManager.Instance.Get<UILogin>((UIBase ui) =>
-		//{
-		//	uiLogin = ui as UILogin;
-		//	uiLogin.Show();
-		//	Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
-		//});
+		await AssetManager.Instance.StartPatch();
+
+		//ÏÔÊ¾UI
+		UILogin uiLogin = null;
+		UIManager.Instance.Get<UILogin>((UIBase ui) =>
+		{
+			uiLogin = ui as UILogin;
+			uiLogin.Show();
+			Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
+		});
 
 
 		await UniTask.WaitForSeconds(1);
-		//uiLogin.Hide();
+		uiLogin.Hide();
 		//uiLogin.Destroy();
 
 

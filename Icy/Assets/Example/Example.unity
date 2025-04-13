@@ -390,7 +390,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c4d84430006f54ab4de411cc30edd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera3D: {fileID: 961739752}
+  _AssetMode: 0
+  _Camera3D: {fileID: 961739752}
 --- !u!1001 &5316455585404322065
 PrefabInstance:
   m_ObjectHideFlags: 0

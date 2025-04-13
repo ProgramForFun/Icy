@@ -1,0 +1,13 @@
+{
+  "name": "fun.program4.icy.asset",
+  "version": "1.0.0",
+  "displayName": "Icy Asset",
+  "description": "Icy Asset",
+  "author": {
+    "name": "Icy",
+    "email": "chengshengtzss@163.com",
+    "url": "https://program4.fun"
+  },
+  "dependencies": {
+  }
+}
