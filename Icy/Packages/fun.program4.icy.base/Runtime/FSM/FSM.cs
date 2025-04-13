@@ -122,6 +122,27 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// FSM是否包含指定FSMState对象
+		/// </summary>
+		public bool ContainsState(FSMState state)
+		{
+			return _AllStates.Contains(state);
+		}
+
+		/// <summary>
+		/// FSM是否包含指定类型的FSMState
+		/// </summary>
+		public bool ContainsState<T>() where T : FSMState
+		{
+			for (int i = 0; i < _AllStates.Count; i++)
+			{
+				if (_AllStates[i] is T)
+					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
 		/// 真正负责切换状态的协程
 		/// </summary>
 		private async UniTaskVoid DoChangeState(FSMState newState)
