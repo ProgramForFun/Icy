@@ -21,8 +21,7 @@ namespace Icy.Asset
 
 			Log.LogInfo($"Start patch procedure", "AssetPatcher");
 			Procedure patchProcedure = new Procedure("AssetPatcher");
-			patchProcedure.AddStep(new RequestPackageVersionStep());
-			patchProcedure.AddStep(new RequestPackageManifestStep());
+			patchProcedure.AddStep(new RequestAssetPatchInfoStep());
 
 			patchProcedure.Blackboard.WriteObject("AssetPatcher", this);
 			patchProcedure.Start();

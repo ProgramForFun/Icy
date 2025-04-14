@@ -26,10 +26,9 @@ namespace Icy.Asset
 		{
 			YooAssets.Initialize();
 
-			ResourcePackage package;
-			package = YooAssets.TryGetPackage(defaultPackageName);
-			if (package == null)
-				package = YooAssets.CreatePackage(defaultPackageName);
+			_Package = YooAssets.TryGetPackage(defaultPackageName);
+			if (_Package == null)
+				_Package = YooAssets.CreatePackage(defaultPackageName);
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
@@ -39,7 +38,7 @@ namespace Icy.Asset
 				string packageRoot = buildResult.PackageRootDirectory;
 				EditorSimulateModeParameters createParameters = new EditorSimulateModeParameters();
 				createParameters.EditorFileSystemParameters = FileSystemParameters.CreateDefaultEditorFileSystemParameters(packageRoot);
-				initializationOperation = package.InitializeAsync(createParameters);
+				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
 			// 单机运行模式
@@ -47,7 +46,7 @@ namespace Icy.Asset
 			{
 				OfflinePlayModeParameters createParameters = new OfflinePlayModeParameters();
 				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
-				initializationOperation = package.InitializeAsync(createParameters);
+				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
 			// 联机运行模式
@@ -59,7 +58,7 @@ namespace Icy.Asset
 				HostPlayModeParameters createParameters = new HostPlayModeParameters();
 				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
 				createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
-				initializationOperation = package.InitializeAsync(createParameters);
+				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
 			// WebGL运行模式
@@ -76,7 +75,7 @@ namespace Icy.Asset
 #else
 				WebPlayModeParameters createParameters = new WebPlayModeParameters();
 				createParameters.WebServerFileSystemParameters = FileSystemParameters.CreateDefaultWebServerFileSystemParameters();
-				initializationOperation = package.InitializeAsync(createParameters);
+				initializationOperation = _Package.InitializeAsync(createParameters);
 #endif
 			}
 			await initializationOperation;
