@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace Icy.Base
@@ -7,6 +8,14 @@ namespace Icy.Base
 	/// </summary>
 	public sealed class Procedure
 	{
+		public enum StateType
+		{
+			NotStart,
+			Running,
+			Finishing,
+			Finished,
+		}
+
 		/// <summary>
 		/// Procedure的名字
 		/// </summary>
@@ -15,6 +24,14 @@ namespace Icy.Base
 		/// 黑板数据
 		/// </summary>
 		public Blackboard Blackboard { get { return _FSM.Blackboard; } }
+		/// <summary>
+		/// Procedure的当前状态
+		/// </summary>
+		public StateType State { get; private set; }
+		/// <summary>
+		/// Procedure是否已经执行完
+		/// </summary>
+		public bool IsFinished { get { return State == StateType.Finished; } }
 		/// <summary>
 		/// 获取归一化的执行进度
 		/// </summary>
@@ -39,6 +56,7 @@ namespace Icy.Base
 		public Procedure(string name)
 		{
 			Name = name;
+			State = StateType.NotStart;
 			_FSM = new FSM(name);
 			_FSM.Blackboard.WriteObject("Procedure", this);
 			_Steps = new List<ProcedureStep>();
@@ -58,6 +76,7 @@ namespace Icy.Base
 		/// </summary>
 		public void Start()
 		{
+			State = StateType.Running;
 			_CurrStepIdx = 0;
 			_FSM.Start();
 		}
@@ -67,11 +86,17 @@ namespace Icy.Base
 		/// </summary>
 		public void NextStep()
 		{
+			if (State == StateType.Finishing || State == StateType.Finished)
+				return;
+
 			_CurrStepIdx++;
 			if (_CurrStepIdx < _Steps.Count)
 				_FSM.ChangeState(_Steps[_CurrStepIdx]);
 			else
+			{
+				State = StateType.Finished;
 				Log.LogInfo($"Procedure {_FSM.Name} finished");
+			}
 		}
 
 		/// <summary>
@@ -79,6 +104,9 @@ namespace Icy.Base
 		/// </summary>
 		public void GotoStep<T>() where T : ProcedureStep
 		{
+			if (State == StateType.Finishing || State == StateType.Finished)
+				return;
+
 			int gotoIdx = -1;
 			for (int i = 0; i < _Steps.Count; i++)
 			{
@@ -97,6 +125,22 @@ namespace Icy.Base
 
 			_CurrStepIdx = gotoIdx;
 			_FSM.ChangeState(_Steps[_CurrStepIdx]);
+		}
+
+		/// <summary>
+		/// 等当前状态切换完成后，直接结束本Procedure
+		/// </summary>
+		public void Finish()
+		{
+			State = StateType.Finishing;
+			DoFinish().Forget();
+		}
+
+		private async UniTaskVoid DoFinish()
+		{
+			await UniTask.WaitUntil(() => !IsChangingStep);
+			State = StateType.Finished;
+			Log.LogInfo($"Procedure {_FSM.Name} finished by Finish()");
 		}
 	}
 }
