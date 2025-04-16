@@ -4,6 +4,9 @@ using YooAsset;
 
 namespace Icy.Asset
 {
+	/// <summary>
+	/// 负责资源的热更新
+	/// </summary>
 	internal sealed class AssetPatcher
 	{
 		/// <summary>
