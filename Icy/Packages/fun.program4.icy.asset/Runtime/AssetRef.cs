@@ -12,9 +12,6 @@ namespace Icy.Asset
 	/// </summary>
 	public class AssetRef
 	{
-		//UniTask支持
-
-
 		public float Progress => _AssetHandle.Progress;
 		public bool IsDone => _AssetHandle.IsDone;
 		public bool IsValid => _AssetHandle.IsValid;
@@ -96,11 +93,9 @@ namespace Icy.Asset
 				_AssetHandle.Release();
 		}
 
-		public UniTask.Awaiter GetAwaiter()
-		{
-			return _AssetHandle.GetAwaiter();
-		}
-
+		/// <summary>
+		/// UniTask支持
+		/// </summary>
 		public UniTask ToUniTask(IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
 			return _AssetHandle.ToUniTask(progress, timing);
