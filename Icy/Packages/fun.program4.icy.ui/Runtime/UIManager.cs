@@ -74,7 +74,7 @@ namespace Icy.UI
 		/// </summary>
 		public async UniTask<T> GetAsync<T>() where T : UIBase
 		{
-			return await new UniTask<T>();
+			return await LoadUI(typeof(T).Name) as T;
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace Icy.UI
 			LoadUI(uiName, callback).Forget();
 		}
 
-		private async UniTask LoadUI(string uiName, Action<UIBase> callback)
+		private async UniTask<UIBase> LoadUI(string uiName, Action<UIBase> callback = null)
 		{
 			AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(uiName);
 			await assetRef;
@@ -112,6 +112,7 @@ namespace Icy.UI
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
 			InitUI(uiName, uiBase);
 			callback?.Invoke(uiBase);
+			return uiBase;
 		}
 
 		/// <summary>
