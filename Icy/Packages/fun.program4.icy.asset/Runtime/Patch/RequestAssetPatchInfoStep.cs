@@ -14,7 +14,7 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			Log.LogInfo($"Activate RequestAssetPatchInfoStep", "RequestAssetPatchInfoStep");
+			Log.LogInfo($"Activate RequestAssetPatchInfoStep", "AssetPatcher");
 			_Patcher = _Procedure.Blackboard.ReadObject("AssetPatcher") as AssetPatcher;
 			await UpdatePackageVersion();
 		}
@@ -39,7 +39,7 @@ namespace Icy.Asset
 				await UpdatePackageManifest();
 			}
 			else
-				Log.LogError($"UpdatePackageVersion failed, error = {operation.Error}", "RequestAssetPatchInfoStep");
+				Log.LogError($"UpdatePackageVersion failed, error = {operation.Error}", "AssetPatcher");
 
 			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
 		}
@@ -58,7 +58,7 @@ namespace Icy.Asset
 				Finish();
 			}
 			else
-				Log.LogError($"UpdatePackageManifest failed, error = {operation.Error}", "RequestAssetPatchInfoStep");
+				Log.LogError($"UpdatePackageManifest failed, error = {operation.Error}", "AssetPatcher");
 
 			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
 		}
