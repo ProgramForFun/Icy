@@ -49,7 +49,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 资源更新完成
 		/// </summary>
-		public static readonly int AssetPatchFinish = -1111;
+		public static readonly int AssetPatchFinish = -1105;
 		#endregion
 	}
 }
