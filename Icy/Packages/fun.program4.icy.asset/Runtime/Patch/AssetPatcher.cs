@@ -32,7 +32,7 @@ namespace Icy.Asset
 			Procedure patchProcedure = new Procedure("AssetPatcher");
 			patchProcedure.AddStep(new RequestAssetPatchInfoStep());
 			patchProcedure.AddStep(new DownloadAssetPatchStep());
-
+			patchProcedure.AddStep(new AssetPatchFinishStep());
 			patchProcedure.Blackboard.WriteObject("AssetPatcher", this);
 			patchProcedure.Start();
 
