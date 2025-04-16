@@ -4,6 +4,9 @@ using YooAsset;
 
 namespace Icy.Asset
 {
+	/// <summary>
+	/// 从远端获取资源热更信息
+	/// </summary>
 	public class RequestAssetPatchInfoStep : ProcedureStep
 	{
 		private AssetPatcher _Patcher;
@@ -16,11 +19,14 @@ namespace Icy.Asset
 			await UpdatePackageVersion();
 		}
 
-		public override UniTask Deactivate()
+		public override async UniTask Deactivate()
 		{
-			return UniTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 
+		/// <summary>
+		/// 获取资源版本号
+		/// </summary>
 		private async UniTask UpdatePackageVersion()
 		{
 			RequestPackageVersionOperation operation = _Patcher.Package.RequestPackageVersionAsync();
@@ -28,26 +34,33 @@ namespace Icy.Asset
 
 			if (operation.Status == EOperationStatus.Succeed)
 			{
+				Log.LogInfo($"UpdatePackageVersion succeed", "AssetPatcher");
 				_PackageVersion = operation.PackageVersion;
 				await UpdatePackageManifest();
 			}
 			else
 				Log.LogError($"UpdatePackageVersion failed, error = {operation.Error}", "RequestAssetPatchInfoStep");
 
-			EventManager.Trigger(EventDefine.UpdateAssetVersionEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
+			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
 		}
 
+		/// <summary>
+		/// 获取资源Manifest
+		/// </summary>
 		private async UniTask UpdatePackageManifest()
 		{
 			UpdatePackageManifestOperation operation = _Patcher.Package.UpdatePackageManifestAsync(_PackageVersion);
 			await operation.ToUniTask();
 
 			if (operation.Status == EOperationStatus.Succeed)
+			{
+				Log.LogInfo($"UpdatePackageManifest succeed", "AssetPatcher");
 				Finish();
+			}
 			else
-				Log.LogError($"UpdatePackageManifest failed, error = {operation.Error}", "RequestPackageManifestStep");
+				Log.LogError($"UpdatePackageManifest failed, error = {operation.Error}", "RequestAssetPatchInfoStep");
 
-			EventManager.Trigger(EventDefine.UpdateAssetManifestEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
+			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, new EventParam_Bool() { Value = operation.Status == EOperationStatus.Succeed });
 		}
 	}
 }

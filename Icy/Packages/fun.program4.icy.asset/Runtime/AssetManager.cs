@@ -160,7 +160,7 @@ namespace Icy.Asset
 		public async UniTask StartPatch()
 		{
 			_Patcher = new AssetPatcher(_Package);
-			while (!_Patcher.IsDone)
+			while (!_Patcher.IsFinished)
 				await UniTask.NextFrame();
 		}
 		#endregion

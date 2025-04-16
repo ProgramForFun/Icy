@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using Icy.Base;
 using YooAsset;
 
@@ -12,19 +13,30 @@ namespace Icy.Asset
 		/// <summary>
 		/// 是否完成
 		/// </summary>
-		public bool IsDone { get; internal set; }
+		public bool IsFinished { get; internal set; }
 
 		internal AssetPatcher(ResourcePackage package)
 		{
 			Package = package;
-			IsDone = false;
+			IsFinished = false;
 
 			Log.LogInfo($"Start patch procedure", "AssetPatcher");
+			Start().Forget();
+		}
+
+		private async UniTaskVoid Start()
+		{
 			Procedure patchProcedure = new Procedure("AssetPatcher");
 			patchProcedure.AddStep(new RequestAssetPatchInfoStep());
+			patchProcedure.AddStep(new DownloadAssetPatchStep());
 
 			patchProcedure.Blackboard.WriteObject("AssetPatcher", this);
 			patchProcedure.Start();
+
+			while(!patchProcedure.IsFinished)
+				await UniTask.NextFrame();
+
+			IsFinished = true;
 		}
 	}
 }
