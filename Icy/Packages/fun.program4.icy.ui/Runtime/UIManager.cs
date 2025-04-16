@@ -74,6 +74,13 @@ namespace Icy.UI
 		/// </summary>
 		public async UniTask<T> GetAsync<T>() where T : UIBase
 		{
+			string uiName = typeof(T).Name;
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Value.Name == uiName)
+					return item.Key as T;
+			}
+
 			return await LoadUI(typeof(T).Name) as T;
 		}
 
