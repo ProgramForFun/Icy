@@ -22,6 +22,10 @@ namespace Icy.UI
 			/// UI的打开参数
 			/// </summary>
 			public IUIParam Param;
+			/// <summary>
+			/// 资源句柄引用
+			/// </summary>
+			public AssetRef AssetRef;
 		}
 
 
@@ -117,7 +121,7 @@ namespace Icy.UI
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
-			InitUI(uiName, uiBase);
+			InitUI(uiName, uiBase, assetRef);
 			callback?.Invoke(uiBase);
 			return uiBase;
 		}
@@ -180,7 +184,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 初始化UI
 		/// </summary>
-		private void InitUI(string uiName, UIBase newUI)
+		private void InitUI(string uiName, UIBase newUI, AssetRef assetRef)
 		{
 			if (newUI == null)
 				return;
@@ -188,6 +192,7 @@ namespace Icy.UI
 			UIData newUIState = new UIData();
 			newUIState.Name = uiName;
 			newUIState.Param = null;
+			newUIState.AssetRef = assetRef;
 			_UIMap[newUI] = newUIState;
 
 			GameObject layerGo = UIRoot.Instance.GetLayerGameObject(newUI.UILayer);
@@ -238,7 +243,11 @@ namespace Icy.UI
 		internal void Destroy(UIBase ui)
 		{
 			if (_UIMap.ContainsKey(ui))
+			{
+				UIData uiData = _UIMap[ui];
 				_UIMap.Remove(ui);
+				uiData.AssetRef.Release();
+			}
 		}
 
 		private void PushStack(UIBase ui)
