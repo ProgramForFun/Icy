@@ -1,3 +1,5 @@
+#define AssetRef_Log
+
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
@@ -8,23 +10,71 @@ using YooAsset;
 namespace Icy.Asset
 {
 	/// <summary>
-	/// 
+	/// Bundle资源的引用
 	/// </summary>
 	public class AssetRef
 	{
+		/// <summary>
+		/// 当前加载的进度
+		/// </summary>
 		public float Progress => _AssetHandle.Progress;
+		/// <summary>
+		/// 是否已加载完成
+		/// </summary>
 		public bool IsDone => _AssetHandle.IsDone;
+		/// <summary>
+		/// 当前AssetRef是否还有效
+		/// </summary>
 		public bool IsValid => _AssetHandle.IsValid;
 
+		/// <summary>
+		/// 内部持有的YooAsset资源句柄
+		/// </summary>
 		protected HandleBase _AssetHandle;
+		/// <summary>
+		/// 引用计数
+		/// </summary>
 		protected int _RefCount;
 
-		internal AssetRef(HandleBase handle)
+		internal AssetRef(AssetHandle handle)
+		{
+			Init(handle);
+			handle.Completed += OnAnyAssetCompleted;
+		}
+
+		internal AssetRef(AllAssetsHandle handle)
+		{
+			Init(handle);
+			handle.Completed += OnAnyAssetCompleted;
+		}
+
+		internal AssetRef(SubAssetsHandle handle)
+		{
+			Init(handle);
+			handle.Completed += OnAnyAssetCompleted;
+		}
+
+		internal AssetRef(SceneHandle handle)
+		{
+			Init(handle);
+			handle.Completed += OnAnyAssetCompleted;
+		}
+
+		internal AssetRef(RawFileHandle handle)
+		{
+			Init(handle);
+			handle.Completed += OnAnyAssetCompleted;
+		}
+
+		private void Init(HandleBase handle)
 		{
 			_AssetHandle = handle;
 			_RefCount = 1;
 		}
 
+		/// <summary>
+		/// 使用AssetManager.LoadAssetAsync加载的资源，使用此属性获取资源
+		/// </summary>
 		public UnityEngine.Object AssetObject
 		{
 			get
@@ -37,7 +87,10 @@ namespace Icy.Asset
 			}
 		}
 
-		public IReadOnlyList<UnityEngine.Object> AssetObjects
+		/// <summary>
+		/// 使用AssetManager.LoadAllAssetsAsync 和 AssetManager.LoadSubAssetsAsync加载的资源，使用此属性获取资源
+		/// </summary>
+		public IReadOnlyList<UnityEngine.Object> AllAssetObjects
 		{
 			get
 			{
@@ -51,6 +104,9 @@ namespace Icy.Asset
 			}
 		}
 
+		/// <summary>
+		/// 使用AssetManager.LoadSceneAsync加载的场景资源，使用此属性获取场景
+		/// </summary>
 		public Scene SceneObject
 		{
 			get
@@ -63,6 +119,9 @@ namespace Icy.Asset
 			}
 		}
 
+		/// <summary>
+		/// 使用AssetManager.LoadRawFileAsync加载的原生资源，使用此属性获取原生数据
+		/// </summary>
 		public byte[] RawData
 		{
 			get
@@ -84,13 +143,18 @@ namespace Icy.Asset
 		}
 
 		/// <summary>
-		/// 引用计数-1，如果<=0会释放资源
+		/// 引用计数-1，计数<=0释放资源
 		/// </summary>
 		public void Release()
 		{
 			_RefCount--;
 			if (_RefCount <= 0)
+			{
+#if AssetRef_Log
+				Log.LogInfo($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", "AssetRef");
+#endif
 				_AssetHandle.Release();
+			}
 		}
 
 		/// <summary>
@@ -99,6 +163,13 @@ namespace Icy.Asset
 		public UniTask ToUniTask(IProgress<float> progress = null, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
 			return _AssetHandle.ToUniTask(progress, timing);
+		}
+
+		private void OnAnyAssetCompleted(HandleBase handle)
+		{
+#if AssetRef_Log
+			Log.LogInfo($"Asset {handle.GetAssetInfo().Address} loaded", "AssetRef");
+#endif
 		}
 	}
 }
