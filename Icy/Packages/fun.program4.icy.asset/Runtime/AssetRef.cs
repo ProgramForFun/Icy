@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
 
@@ -151,6 +152,7 @@ namespace Icy.Asset
 			if (_RefCount <= 0)
 			{
 #if AssetRef_Log
+				Log.SetColorOnce(Color.yellow);
 				Log.LogInfo($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", "AssetRef");
 #endif
 				_AssetHandle.Release();
@@ -168,6 +170,7 @@ namespace Icy.Asset
 		private void OnAnyAssetCompleted(HandleBase handle)
 		{
 #if AssetRef_Log
+			Log.SetColorOnce(Color.yellow);
 			Log.LogInfo($"Asset {handle.GetAssetInfo().Address} loaded", "AssetRef");
 #endif
 		}
