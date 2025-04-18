@@ -24,6 +24,7 @@ Icy Unity Framework
 |集成SRDebugger|✔️|
 |集成Protobuf|✔️|
 |集成UniTask|✔️|
+|集成Obfuz|待开始|
 |Base-事件系统|✔️|
 |Base-FSM|✔️|
 |Base-基于FSM的Procedure|✔️|
