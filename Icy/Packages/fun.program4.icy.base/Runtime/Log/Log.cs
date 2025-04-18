@@ -33,6 +33,12 @@ namespace Icy.Base
 		/// 指定Tag独立的LogLevel，优先级高于MinLogLevel
 		/// </summary>
 		private static Dictionary<string, LogLevel> _OverrideTagLogLevel = new Dictionary<string, LogLevel>();
+#if UNITY_EDITOR
+		/// <summary>
+		/// Log颜色，只在editor下生效
+		/// </summary>
+		private static string _ColorOnce;
+#endif
 
 		#region WriteLog2File
 		/// <summary>
@@ -122,6 +128,16 @@ namespace Icy.Base
 			}
 		}
 
+		/// <summary>
+		/// 设置Editor下的Log颜色，只作用于下一条Log
+		/// </summary>
+		public static void SetColorOnce(Color color)
+		{
+#if UNITY_EDITOR
+			_ColorOnce = ColorUtility.ToHtmlStringRGB(color);
+#endif
+		}
+
 		private static bool IsMatchLogLevel(string tag)
 		{
 			if (tag != null && _OverrideTagLogLevel.ContainsKey(tag))
@@ -139,10 +155,21 @@ namespace Icy.Base
 		{
 #if UNITY_EDITOR
 			string now = DateTime.Now.ToString("HH:mm:ss.fff");
+			string logWithTagAndTime;
 			if (tag != null)
-				return string.Format("{0} : [{1}] {2}", now, tag, msg);
+				logWithTagAndTime = string.Format("{0} : [{1}] {2}", now, tag, msg);
 			else
-				return string.Format("{0} : {1}", now, msg);
+				logWithTagAndTime = string.Format("{0} : {1}", now, msg);
+
+			//颜色
+			if (string.IsNullOrEmpty(_ColorOnce))
+				return logWithTagAndTime;
+			else
+			{
+				string color = _ColorOnce;
+				_ColorOnce = null;
+				return string.Format("<color=#{0}>{1}</color>", color, logWithTagAndTime);
+			}
 #else
 			if (tag != null)
 				return string.Format("[{0}] {1}", tag, msg);
