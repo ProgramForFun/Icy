@@ -6,7 +6,7 @@ namespace Icy.Editor
 {
 	/// <summary>
 	/// 不 进行Domain Reload，直接进入Play状态；
-	/// 如果你不知道这个功能的原理和限制，就不要使用这个功能
+	/// 使用这个功能需要知道其原理和限制，否则请不要使用这个功能
 	/// </summary>
 	[InitializeOnLoad]
 	public class QuickPlayViewer
@@ -34,7 +34,7 @@ namespace Icy.Editor
 				fixedWidth = 70
 			};
 
-			if (GUILayout.Button(new GUIContent("QuickPlay", "快速进入Play状态，如果你不知道这个功能的原理和限制，就不要使用这个功能"), style))
+			if (GUILayout.Button(new GUIContent("QuickPlay", "快速进入Play状态；\n使用这个功能需要知道其原理和限制，否则请不要使用这个功能"), style))
 				QuickPlay();
 
 			GUI.backgroundColor = originalBackgroundColor;
