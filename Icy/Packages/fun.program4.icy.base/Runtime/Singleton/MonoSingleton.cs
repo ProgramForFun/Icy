@@ -85,6 +85,11 @@ namespace Icy.Base
             }
         }
 
+		protected virtual void OnDestroy()
+		{
+			DestroyInstance();
+		}
+
         #endregion
 
         #region Protected Methods
