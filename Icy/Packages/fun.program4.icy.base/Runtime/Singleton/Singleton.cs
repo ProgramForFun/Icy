@@ -87,7 +87,11 @@ namespace Icy.Base
                 return;
             }
 
-            this.initializationStatus = SingletonInitializationStatus.Initializing;
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+
+			this.initializationStatus = SingletonInitializationStatus.Initializing;
             OnInitializing();
             this.initializationStatus = SingletonInitializationStatus.Initialized;
             OnInitialized();
@@ -110,10 +114,17 @@ namespace Icy.Base
 
             instance.ClearSingleton();
             instance = default(T);
-        }
+		}
 
-        #endregion
+		#endregion
 
-    }
-
+#if UNITY_EDITOR
+		private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
+		{
+			UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+				DestroyInstance();
+		}
+#endif
+	}
 }
