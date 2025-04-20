@@ -1,12 +1,14 @@
+using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 using Random = UnityEngine.Random;
-using Toggle = UnityEngine.UI.Toggle;
 
 public static class CommonUtility
 {
@@ -641,6 +643,72 @@ public static class CommonUtility
 			return true;
 
 		return false;
+	}
+
+	/// <summary>
+	/// 加载StreamingAssets目录下的资源（Coroutine + 回调版本）
+	/// </summary>
+	/// <param name="filePath">相对于SteamingAssets的目录</param>
+	/// <param name="onSuccess">成功回调</param>
+	/// <param name="onError">失败回调</param>
+	public static IEnumerator LoadStreamingAsset(string filePath, Action<string, byte[]> onSuccess, Action<string, string> onError = null)
+	{
+		string fullPath = Path.Combine(Application.streamingAssetsPath, filePath);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+		using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+		{
+			request.downloadHandler = new DownloadHandlerBuffer();
+			yield return request.SendWebRequest();
+
+			if (request.result == UnityWebRequest.Result.Success)
+				onSuccess?.Invoke(filePath, request.downloadHandler.data);
+			else
+				onError?.Invoke(filePath, request.error);
+		}
+#else
+		if (File.Exists(fullPath))
+		{
+			byte[] bytes = File.ReadAllBytes(fullPath);
+			onSuccess?.Invoke(filePath, bytes);
+		}
+		else
+			onError?.Invoke(filePath, $"File not found: {fullPath}");
+		yield return null;
+#endif
+	}
+
+	/// <summary>
+	/// 加载StreamingAssets目录下的资源（UniTask版本）
+	/// </summary>
+	/// <param name="filePath">相对于SteamingAssets的目录</param>
+	public static async UniTask<byte[]> LoadStreamingAsset(string filePath)
+	{
+		string fullPath = Path.Combine(Application.streamingAssetsPath, filePath);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+		using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+		{
+			request.downloadHandler = new DownloadHandlerBuffer();
+			await request.SendWebRequest();
+
+			if (request.result == UnityWebRequest.Result.Success)
+				return request.downloadHandler.data;
+			else
+				return null;
+		}
+#else
+		if (File.Exists(fullPath))
+		{
+			byte[] bytes = File.ReadAllBytes(fullPath);
+			return bytes;
+		}
+		else
+		{
+			await UniTask.CompletedTask;
+			return null;
+		}
+#endif
 	}
 	#endregion
 }
