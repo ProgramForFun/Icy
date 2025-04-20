@@ -31,12 +31,14 @@ cd /d "%cur_dir%"
 
 @echo.
 @echo 正在编译proto文件，请稍候...
+@echo.
 
 @call ..\protoc\bin\protoc.exe  --csharp_out "%target_dir%" *.proto
 
-@echo.
-@echo ====================
-@echo ===== 编译完成 =====
-@echo ====================
+if %ERRORLEVEL%==0 (
+	@echo ====================
+	@echo ===== 编译完成 =====
+	@echo ====================
+)
 
 pause
