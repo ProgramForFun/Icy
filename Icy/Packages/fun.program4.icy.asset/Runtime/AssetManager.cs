@@ -53,8 +53,8 @@ namespace Icy.Asset
 			// 联机运行模式
 			if (playMode == EPlayMode.HostPlayMode)
 			{
-				string defaultHostServer = GetHostServerURL();
-				string fallbackHostServer = GetHostServerURL();
+				string defaultHostServer = GetHostServerURL(true);
+				string fallbackHostServer = GetHostServerURL(false);
 				IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 				HostPlayModeParameters createParameters = new HostPlayModeParameters();
 				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
@@ -67,8 +67,8 @@ namespace Icy.Asset
 			{
 #if UNITY_WEBGL && WEIXINMINIGAME && !UNITY_EDITOR
 				WebPlayModeParameters createParameters = new WebPlayModeParameters();
-				string defaultHostServer = GetHostServerURL();
-				string fallbackHostServer = GetHostServerURL();
+				string defaultHostServer = GetHostServerURL(true);
+				string fallbackHostServer = GetHostServerURL(false);
 				string packageRoot = $"{WeChatWASM.WX.env.USER_DATA_PATH}/__GAME_FILE_CACHE"; //注意：如果有子目录，请修改此处！
 				IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 				createParameters.WebServerFileSystemParameters = WechatFileSystemCreater.CreateFileSystemParameters(packageRoot, remoteServices);
@@ -89,9 +89,9 @@ namespace Icy.Asset
 		/// <summary>
 		/// 获取资源服务器地址
 		/// </summary>
-		private string GetHostServerURL()
+		private string GetHostServerURL(bool isMain)
 		{
-			string hostServerAddress = GetAssetHostServerAddressFromSetting();
+			string hostServerAddress = GetAssetHostServerAddressFromSetting(isMain);
 			if (string.IsNullOrEmpty(hostServerAddress))
 			{
 				Log.LogError("Asset host server address is empty, open Icy/Asset/Setting to set it");
@@ -120,14 +120,14 @@ namespace Icy.Asset
 #endif
 		}
 
-		private string GetAssetHostServerAddressFromSetting()
+		private string GetAssetHostServerAddressFromSetting(bool isMain)
 		{
 			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
-				AssetSetting uiSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
-				return uiSetting.AssetHostServerAddress;
+				AssetSetting assetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+				return isMain ? assetSetting.AssetHostServerAddressMain : assetSetting.AssetHostServerAddressStandby;
 			}
 			else
 				return null;

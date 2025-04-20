@@ -24,12 +24,13 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCIuCgxBc3NldFNldHRp",
-            "bmcSHgoWQXNzZXRIb3N0U2VydmVyQWRkcmVzcxgBIAEoCWIGcHJvdG8z"));
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCJZCgxBc3NldFNldHRp",
+            "bmcSIgoaQXNzZXRIb3N0U2VydmVyQWRkcmVzc01haW4YASABKAkSJQodQXNz",
+            "ZXRIb3N0U2VydmVyQWRkcmVzc1N0YW5kYnkYAiABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddress" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby" }, null, null, null, null)
           }));
     }
     #endregion
@@ -71,7 +72,8 @@ namespace Icy.Asset {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public AssetSetting(AssetSetting other) : this() {
-      assetHostServerAddress_ = other.assetHostServerAddress_;
+      assetHostServerAddressMain_ = other.assetHostServerAddressMain_;
+      assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -81,18 +83,33 @@ namespace Icy.Asset {
       return new AssetSetting(this);
     }
 
-    /// <summary>Field number for the "AssetHostServerAddress" field.</summary>
-    public const int AssetHostServerAddressFieldNumber = 1;
-    private string assetHostServerAddress_ = "";
+    /// <summary>Field number for the "AssetHostServerAddressMain" field.</summary>
+    public const int AssetHostServerAddressMainFieldNumber = 1;
+    private string assetHostServerAddressMain_ = "";
     /// <summary>
-    ///热更新资源Host地址
+    ///热更新资源Host地址（主）
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string AssetHostServerAddress {
-      get { return assetHostServerAddress_; }
+    public string AssetHostServerAddressMain {
+      get { return assetHostServerAddressMain_; }
       set {
-        assetHostServerAddress_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        assetHostServerAddressMain_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "AssetHostServerAddressStandby" field.</summary>
+    public const int AssetHostServerAddressStandbyFieldNumber = 2;
+    private string assetHostServerAddressStandby_ = "";
+    /// <summary>
+    ///热更新资源Host地址（备）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AssetHostServerAddressStandby {
+      get { return assetHostServerAddressStandby_; }
+      set {
+        assetHostServerAddressStandby_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -111,7 +128,8 @@ namespace Icy.Asset {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (AssetHostServerAddress != other.AssetHostServerAddress) return false;
+      if (AssetHostServerAddressMain != other.AssetHostServerAddressMain) return false;
+      if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -119,7 +137,8 @@ namespace Icy.Asset {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      if (AssetHostServerAddress.Length != 0) hash ^= AssetHostServerAddress.GetHashCode();
+      if (AssetHostServerAddressMain.Length != 0) hash ^= AssetHostServerAddressMain.GetHashCode();
+      if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -138,9 +157,13 @@ namespace Icy.Asset {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      if (AssetHostServerAddress.Length != 0) {
+      if (AssetHostServerAddressMain.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(AssetHostServerAddress);
+        output.WriteString(AssetHostServerAddressMain);
+      }
+      if (AssetHostServerAddressStandby.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AssetHostServerAddressStandby);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -152,9 +175,13 @@ namespace Icy.Asset {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (AssetHostServerAddress.Length != 0) {
+      if (AssetHostServerAddressMain.Length != 0) {
         output.WriteRawTag(10);
-        output.WriteString(AssetHostServerAddress);
+        output.WriteString(AssetHostServerAddressMain);
+      }
+      if (AssetHostServerAddressStandby.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AssetHostServerAddressStandby);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -166,8 +193,11 @@ namespace Icy.Asset {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      if (AssetHostServerAddress.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetHostServerAddress);
+      if (AssetHostServerAddressMain.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetHostServerAddressMain);
+      }
+      if (AssetHostServerAddressStandby.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetHostServerAddressStandby);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -181,8 +211,11 @@ namespace Icy.Asset {
       if (other == null) {
         return;
       }
-      if (other.AssetHostServerAddress.Length != 0) {
-        AssetHostServerAddress = other.AssetHostServerAddress;
+      if (other.AssetHostServerAddressMain.Length != 0) {
+        AssetHostServerAddressMain = other.AssetHostServerAddressMain;
+      }
+      if (other.AssetHostServerAddressStandby.Length != 0) {
+        AssetHostServerAddressStandby = other.AssetHostServerAddressStandby;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -200,7 +233,11 @@ namespace Icy.Asset {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            AssetHostServerAddress = input.ReadString();
+            AssetHostServerAddressMain = input.ReadString();
+            break;
+          }
+          case 18: {
+            AssetHostServerAddressStandby = input.ReadString();
             break;
           }
         }
@@ -219,7 +256,11 @@ namespace Icy.Asset {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 10: {
-            AssetHostServerAddress = input.ReadString();
+            AssetHostServerAddressMain = input.ReadString();
+            break;
+          }
+          case 18: {
+            AssetHostServerAddressStandby = input.ReadString();
             break;
           }
         }

@@ -5,6 +5,8 @@ package Icy.Asset;
 
 message AssetSetting
 {
-    //热更新资源Host地址
-    string AssetHostServerAddress = 1;
+    //热更新资源Host地址（主）
+    string AssetHostServerAddressMain = 1;
+    //热更新资源Host地址（备）
+    string AssetHostServerAddressStandby = 2;
 }

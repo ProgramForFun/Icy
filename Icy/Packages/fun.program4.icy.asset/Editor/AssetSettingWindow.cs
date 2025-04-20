@@ -15,11 +15,17 @@ namespace Icy.Asset.Editor
 	{
 		private static AssetSettingWindow _AssetSettingWindow;
 
-		[InfoBox("热更新资源Host地址")]
+		[InfoBox("热更新资源Host地址（主）")]
 		[DelayedProperty]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
-		[OnValueChanged("OnAssetHostServerAddressChanged")]
-		public string AssetHostServerAddress;
+		[OnValueChanged("OnAssetHostServerAddressMainChanged")]
+		public string AssetHostServerAddressMain;
+
+		[InfoBox("热更新资源Host地址（备）")]
+		[DelayedProperty]
+		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
+		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		public string AssetHostServerAddressStandby;
 
 
 		[MenuItem("Icy/Asset/Setting")]
@@ -33,23 +39,52 @@ namespace Icy.Asset.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
+			AssetSetting assetSetting = GetAssetSetting();
+			if (assetSetting != null)
+			{
+				AssetHostServerAddressMain = assetSetting.AssetHostServerAddressMain;
+				AssetHostServerAddressStandby = assetSetting.AssetHostServerAddressStandby;
+			}
+		}
+
+		private AssetSetting GetAssetSetting()
+		{
 			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
-				AssetSetting uiSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
-				AssetHostServerAddress = uiSetting.AssetHostServerAddress;
+				AssetSetting assetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+				return assetSetting;
 			}
+			return null;
 		}
 
-		private void OnAssetHostServerAddressChanged()
+		private void OnAssetHostServerAddressMainChanged()
+		{
+			OnAssetHostServerAddressChanged(true);
+		}
+
+		private void OnAssetHostServerAddressStandbyChanged()
+		{
+			OnAssetHostServerAddressChanged(false);
+		}
+
+		private void OnAssetHostServerAddressChanged(bool isMain)
 		{
 			string targetDir = Path.Combine(Application.streamingAssetsPath, "IcySettings");
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
 
-			AssetSetting assetSetting = new AssetSetting();
-			assetSetting.AssetHostServerAddress = AssetHostServerAddress;
+			AssetSetting assetSetting = GetAssetSetting();
+			if (assetSetting == null)
+				assetSetting = new AssetSetting();
+			else
+			{
+				if (isMain)
+					assetSetting.AssetHostServerAddressMain = AssetHostServerAddressMain;
+				else
+					assetSetting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
+			}
 			string targetPath = Path.Combine(targetDir, "AssetSetting.bin");
 			File.WriteAllBytes(targetPath, assetSetting.ToByteArray());
 		}
