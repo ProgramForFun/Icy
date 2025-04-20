@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package Icy.UI;
+
+
+message UISetting
+{
+    //UI类文件的根目录
+    string UIRootDir = 1;
+}
