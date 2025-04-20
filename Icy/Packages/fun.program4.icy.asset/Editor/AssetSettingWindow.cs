@@ -15,13 +15,13 @@ namespace Icy.Asset.Editor
 	{
 		private static AssetSettingWindow _AssetSettingWindow;
 
-		[InfoBox("热更新资源Host地址（主）")]
+		[Title("热更新资源Host地址（主）")]
 		[DelayedProperty]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
 		[OnValueChanged("OnAssetHostServerAddressMainChanged")]
 		public string AssetHostServerAddressMain;
 
-		[InfoBox("热更新资源Host地址（备）")]
+		[Title("热更新资源Host地址（备）")]
 		[DelayedProperty]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]

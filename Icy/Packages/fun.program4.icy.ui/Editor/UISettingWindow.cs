@@ -14,7 +14,7 @@ namespace Icy.UI.Editor
 	{
 		private static UISettingWindow _UISettingWindow;
 
-		[InfoBox("UI类文件的根目录")]
+		[Title("UI类文件的根目录")]
 		[FolderPath]
 		[OnValueChanged("OnUIRootPathChanged")]
 		public string UIRootPath;
