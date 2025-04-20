@@ -15,9 +15,12 @@ namespace Icy.UI.Editor
 	public class UICodeGeneratorEditor
 	{
 		private const string GENERATING_UI_NAME_KEY = "_Icy_GeneratingUIName";
+		private static string _UIRootDir;
 
 		static UICodeGeneratorEditor()
 		{
+			_UIRootDir = GetUIRootDir();
+
 			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
 			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
 
@@ -149,8 +152,7 @@ namespace Icy.UI.Editor
 		/// </summary>
 		private static string CheckGenerateCondition(string uiName, string typeName, List<UICodeGeneratorItem> components = null)
 		{
-			string uiRootPath = LocalPrefs.GetString("_Icy_UIRootPath", "");
-			if (string.IsNullOrEmpty(uiRootPath))
+			if (string.IsNullOrEmpty(_UIRootDir))
 			{
 				Log.LogError($"Generate UI {typeName} code failed, please set UI root path first. Go to menu Icy/UI/Setting to set it");
 				return null;
@@ -163,8 +165,8 @@ namespace Icy.UI.Editor
 			}
 
 			string fileName = string.Format("UI{0}{1}.cs", uiName, typeName);
-			string folderPath = Path.Combine(uiRootPath, uiName);
-			string filePath = Path.Combine(uiRootPath, uiName, fileName);
+			string folderPath = Path.Combine(_UIRootDir, uiName);
+			string filePath = Path.Combine(_UIRootDir, uiName, fileName);
 			if (File.Exists(filePath) && !string.IsNullOrEmpty(typeName))
 			{
 				Log.LogError($"Generate UI {typeName} code failed, {filePath} is alreay exist");
@@ -241,13 +243,25 @@ namespace Icy.UI.Editor
 
 		private static bool IsLogicFileExist(string uiName)
 		{
-			string uiRootPath = LocalPrefs.GetString("_Icy_UIRootPath", "");
-			if (string.IsNullOrEmpty(uiRootPath))
+			if (string.IsNullOrEmpty(_UIRootDir))
 				return false;//其他地方有log，这里就不输出了
 
 			string fileName = string.Format("UI{0}Logic.cs", uiName);
-			string filePath = Path.Combine(uiRootPath, uiName, fileName);
+			string filePath = Path.Combine(_UIRootDir, uiName, fileName);
 			return File.Exists(filePath);
+		}
+
+		private static string GetUIRootDir()
+		{
+			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "UISetting.bin");
+			if (File.Exists(fullPath))
+			{
+				byte[] bytes = File.ReadAllBytes(fullPath);
+				UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+				return uiSetting.UIRootDir;
+			}
+			else
+				return null;
 		}
 	}
 }

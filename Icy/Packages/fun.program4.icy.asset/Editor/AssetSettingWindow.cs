@@ -1,9 +1,12 @@
+using Google.Protobuf;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System;
+using System.IO;
 using UnityEditor;
+using UnityEngine;
 
-namespace Icy.UI.Editor
+namespace Icy.Asset.Editor
 {
 	/// <summary>
 	/// 资源相关的设置窗口
@@ -12,7 +15,7 @@ namespace Icy.UI.Editor
 	{
 		private static AssetSettingWindow _AssetSettingWindow;
 
-		[InfoBox("资源Host地址")]
+		[InfoBox("热更新资源Host地址")]
 		[DelayedProperty]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
 		[OnValueChanged("OnAssetHostServerAddressChanged")]
@@ -30,13 +33,25 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			AssetHostServerAddress = LocalPrefs.GetString("_Icy_AssetHostServerAddress", "");
+			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
+			if (File.Exists(fullPath))
+			{
+				byte[] bytes = File.ReadAllBytes(fullPath);
+				AssetSetting uiSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+				AssetHostServerAddress = uiSetting.AssetHostServerAddress;
+			}
 		}
 
 		private void OnAssetHostServerAddressChanged()
 		{
-			LocalPrefs.SetString("_Icy_AssetHostServerAddress", AssetHostServerAddress);
-			LocalPrefs.Save();
+			string targetDir = Path.Combine(Application.streamingAssetsPath, "IcySettings");
+			if (!Directory.Exists(targetDir))
+				Directory.CreateDirectory(targetDir);
+
+			AssetSetting assetSetting = new AssetSetting();
+			assetSetting.AssetHostServerAddress = AssetHostServerAddress;
+			string targetPath = Path.Combine(targetDir, "AssetSetting.bin");
+			File.WriteAllBytes(targetPath, assetSetting.ToByteArray());
 		}
 
 		private bool IsValidHttpOrHttpsUrl(string url)

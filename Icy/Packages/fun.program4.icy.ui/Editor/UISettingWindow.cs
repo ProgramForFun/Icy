@@ -1,7 +1,9 @@
+using Google.Protobuf;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using System;
+using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace Icy.UI.Editor
 {
@@ -29,13 +31,25 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			UIRootPath = LocalPrefs.GetString("_Icy_UIRootPath", "");
+			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "UISetting.bin");
+			if (File.Exists(fullPath))
+			{
+				byte[] bytes = File.ReadAllBytes(fullPath);
+				UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+				UIRootPath = uiSetting.UIRootDir;
+			}
 		}
 
 		private void OnUIRootPathChanged()
 		{
-			LocalPrefs.SetString("_Icy_UIRootPath", UIRootPath);
-			LocalPrefs.Save();
+			string targetDir = Path.Combine(Application.streamingAssetsPath, "IcySettings");
+			if (!Directory.Exists(targetDir))
+				Directory.CreateDirectory(targetDir);
+
+			UISetting uiSetting = new UISetting();
+			uiSetting.UIRootDir = UIRootPath;
+			string targetPath = Path.Combine(targetDir, "UISetting.bin");
+			File.WriteAllBytes(targetPath, uiSetting.ToByteArray());
 		}
 	}
 }

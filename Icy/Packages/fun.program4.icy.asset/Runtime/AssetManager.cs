@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System.IO;
 using UnityEngine;
 using YooAsset;
 
@@ -90,8 +91,8 @@ namespace Icy.Asset
 		/// </summary>
 		private string GetHostServerURL()
 		{
-			string hostServerIP = LocalPrefs.GetString("_Icy_AssetHostServerAddress", "");
-			if (string.IsNullOrEmpty(hostServerIP))
+			string hostServerAddress = GetAssetHostServerAddressFromSetting();
+			if (string.IsNullOrEmpty(hostServerAddress))
 			{
 				Log.LogError("Asset host server address is empty, open Icy/Asset/Setting to set it");
 				return null;
@@ -100,13 +101,13 @@ namespace Icy.Asset
 
 #if UNITY_EDITOR
 			if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
-				return $"{hostServerIP}/CDN/Android/{appVersion}";
+				return $"{hostServerAddress}/CDN/Android/{appVersion}";
 			else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
-				return $"{hostServerIP}/CDN/IPhone/{appVersion}";
+				return $"{hostServerAddress}/CDN/IPhone/{appVersion}";
 			else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
-				return $"{hostServerIP}/CDN/WebGL/{appVersion}";
+				return $"{hostServerAddress}/CDN/WebGL/{appVersion}";
 			else
-				return $"{hostServerIP}/CDN/PC/{appVersion}";
+				return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #else
         if (Application.platform == RuntimePlatform.Android)
             return $"{hostServerIP}/CDN/Android/{appVersion}";
@@ -117,6 +118,19 @@ namespace Icy.Asset
         else
             return $"{hostServerIP}/CDN/PC/{appVersion}";
 #endif
+		}
+
+		private string GetAssetHostServerAddressFromSetting()
+		{
+			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
+			if (File.Exists(fullPath))
+			{
+				byte[] bytes = File.ReadAllBytes(fullPath);
+				AssetSetting uiSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+				return uiSetting.AssetHostServerAddress;
+			}
+			else
+				return null;
 		}
 
 		/// <summary>
