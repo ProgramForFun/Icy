@@ -153,27 +153,25 @@ namespace Icy.Base
 
 		private static string FormatByTag(string tag, string msg)
 		{
-#if UNITY_EDITOR
 			string now = DateTime.Now.ToString("HH:mm:ss.fff");
-			string logWithTagAndTime;
+			string logFormatted;
 			if (tag != null)
-				logWithTagAndTime = string.Format("{0} : [{1}] {2}", now, tag, msg);
+				logFormatted = string.Format("{0} : [{1}] {2}", now, tag, msg);
 			else
-				logWithTagAndTime = string.Format("{0} : {1}", now, msg);
+				logFormatted = string.Format("{0} : {1}", now, msg);
 
+#if UNITY_EDITOR
 			//颜色
 			if (string.IsNullOrEmpty(_ColorOnce))
-				return logWithTagAndTime;
+				return logFormatted;
 			else
 			{
 				string color = _ColorOnce;
 				_ColorOnce = null;
-				return string.Format("<color=#{0}>{1}</color>", color, logWithTagAndTime);
+				return string.Format("<color=#{0}>{1}</color>", color, logFormatted);
 			}
 #else
-			if (tag != null)
-				return string.Format("[{0}] {1}", tag, msg);
-			return msg;
+			return logFormatted;
 #endif
 		}
 
