@@ -98,6 +98,17 @@ namespace Icy.UI
 			Get(uiType.Name, callback);
 		}
 
+		/// <summary>
+		/// 获取并等待predicate满足，然后显示UI
+		/// </summary>
+		public async UniTask<T> GetAndShowUntil<T>(IUIParam param, Func<bool> predicate) where T : UIBase
+		{
+			UIBase ui = await GetAsync<T>();
+			await UniTask.WaitUntil(predicate);
+			ui.Show(param);
+			return ui as T;
+		}
+
 		private void Get(string uiName, Action<UIBase> callback)
 		{
 			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
