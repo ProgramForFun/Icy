@@ -42,6 +42,7 @@ namespace Icy.UI
 			if (Components.Count > 0)
 				ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
 
+			//检查prefab前缀
 			string goName = gameObject.name;
 			if (goName.StartsWith("UI"))
 			{
@@ -51,7 +52,16 @@ namespace Icy.UI
 			{
 				EditorUtility.DisplayDialog("Error", "UI prefab的命名应该以UI作为前缀", "这就改");
 				UIName = "UI prefab的命名应该以UI作为前缀";
-			}	
+			}
+
+			//检查类名和prefab是否一致
+			UIBase uiBase = gameObject.GetComponent<UIBase>();
+			if (uiBase != null)
+			{
+				string className = uiBase.GetType().Name;
+				if (goName != className)
+					Log.Assert(false, $"UI Prefab and UI class must have the same name, prefab = {goName}, class = {className}");
+			}
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
