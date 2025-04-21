@@ -16,6 +16,14 @@ namespace Icy.Asset
 	public class AssetRef
 	{
 		/// <summary>
+		/// 可寻址地址
+		/// </summary>
+		public string Address => _AssetHandle.GetAssetInfo().Address;
+		/// <summary>
+		/// 资源完整路径
+		/// </summary>
+		public string AssetPath => _AssetHandle.GetAssetInfo().AssetPath;
+		/// <summary>
 		/// 当前加载的进度
 		/// </summary>
 		public float Progress => _AssetHandle.Progress;
@@ -37,40 +45,23 @@ namespace Icy.Asset
 		/// </summary>
 		protected int _RefCount;
 
-		internal AssetRef(AssetHandle handle)
+		internal AssetRef(HandleBase handleBase)
 		{
-			Init(handle);
-			handle.Completed += OnAnyAssetCompleted;
-		}
+			_AssetHandle = handleBase;
+			_RefCount = 0;
 
-		internal AssetRef(AllAssetsHandle handle)
-		{
-			Init(handle);
-			handle.Completed += OnAnyAssetCompleted;
-		}
-
-		internal AssetRef(SubAssetsHandle handle)
-		{
-			Init(handle);
-			handle.Completed += OnAnyAssetCompleted;
-		}
-
-		internal AssetRef(SceneHandle handle)
-		{
-			Init(handle);
-			handle.Completed += OnAnyAssetCompleted;
-		}
-
-		internal AssetRef(RawFileHandle handle)
-		{
-			Init(handle);
-			handle.Completed += OnAnyAssetCompleted;
-		}
-
-		private void Init(HandleBase handle)
-		{
-			_AssetHandle = handle;
-			_RefCount = 1;
+			if (handleBase is AssetHandle assetHandle)
+				assetHandle.Completed += OnAnyAssetLoadCompleted;
+			else if (handleBase is AllAssetsHandle allAssetsHandle)
+				allAssetsHandle.Completed += OnAnyAssetLoadCompleted;
+			else if (handleBase is SubAssetsHandle subAssetsHandle)
+				subAssetsHandle.Completed += OnAnyAssetLoadCompleted;
+			else if (handleBase is SceneHandle sceneHandle)
+				sceneHandle.Completed += OnAnyAssetLoadCompleted;
+			else if (handleBase is RawFileHandle rawFileHandle)
+				rawFileHandle.Completed += OnAnyAssetLoadCompleted;
+			else
+				Log.Assert(false, $"Unsupported HandleBase derived class {handleBase.GetType().Name}");
 		}
 
 		/// <summary>
@@ -155,7 +146,7 @@ namespace Icy.Asset
 				Log.SetColorOnce(Color.yellow);
 				Log.LogInfo($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", "AssetRef");
 #endif
-				_AssetHandle.Release();
+				AssetManager.Instance.ReleaseAsset(_AssetHandle);
 			}
 		}
 
@@ -167,7 +158,7 @@ namespace Icy.Asset
 			return _AssetHandle.ToUniTask(progress, timing);
 		}
 
-		private void OnAnyAssetCompleted(HandleBase handle)
+		private void OnAnyAssetLoadCompleted(HandleBase handle)
 		{
 #if AssetRef_Log
 			Log.SetColorOnce(Color.yellow);

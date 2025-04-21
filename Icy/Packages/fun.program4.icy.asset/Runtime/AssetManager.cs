@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using YooAsset;
@@ -12,12 +13,18 @@ namespace Icy.Asset
 	/// </summary>
 	public sealed class AssetManager : Singleton<AssetManager>
 	{
-		//一个加载请求没完成时，其他重复请求的处理：不去真的重复请求，而是记下来等唯一的一个加载完成后，分发给所有的重复请求
-		//一个加载请求没完成时，取消操作的处理：Unity没有真的取消的接口，记下来加载完成后不增加引用计数，直接丢弃即可
-		//HostServerURL改为EditorWindow配置
-
+		/// <summary>
+		/// YooAsset Package
+		/// </summary>
 		private ResourcePackage _Package;
+		/// <summary>
+		/// 资源更新脚本
+		/// </summary>
 		private AssetPatcher _Patcher;
+		/// <summary>
+		/// 当前正在加载或已加载的资源
+		/// </summary>
+		private Dictionary<string, AssetRef> _Cached;
 
 		#region Init
 		/// <summary>
@@ -80,6 +87,8 @@ namespace Icy.Asset
 #endif
 			}
 			await initializationOperation;
+
+			_Cached = new Dictionary<string, AssetRef>();
 
 			Log.LogInfo($"AssetManager init end, {initializationOperation.Status}", "AssetManager");
 			return initializationOperation.Status == EOperationStatus.Succeed;
@@ -186,32 +195,71 @@ namespace Icy.Asset
 		#region Load
 		public AssetRef LoadAssetAsync(string asset)
 		{
-			AssetHandle handle = _Package.LoadAssetAsync(asset);
-			return new AssetRef(handle);
+			if (_Cached.ContainsKey(asset))
+				return _Cached[asset];
+			else
+			{
+				AssetHandle handle = _Package.LoadAssetAsync(asset);
+				return CreateAssetRef(handle);
+			}
 		}
 
 		public AssetRef LoadAllAssetsAsync(string asset)
 		{
-			AllAssetsHandle handle = _Package.LoadAllAssetsAsync(asset);
-			return new AssetRef(handle);
+			if (_Cached.ContainsKey(asset))
+				return _Cached[asset];
+			else
+			{
+				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(asset);
+				return CreateAssetRef(handle);
+			}
 		}
 
 		public AssetRef LoadSubAssetsAsync(string asset)
 		{
-			SubAssetsHandle handle = _Package.LoadSubAssetsAsync(asset);
-			return new AssetRef(handle);
+			if (_Cached.ContainsKey(asset))
+				return _Cached[asset];
+			else
+			{
+				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(asset);
+				return CreateAssetRef(handle);
+			}
 		}
 
 		public AssetRef LoadSceneAsync(string asset)
 		{
-			SceneHandle handle = _Package.LoadSceneAsync(asset);
-			return new AssetRef(handle);
+			if (_Cached.ContainsKey(asset))
+				return _Cached[asset];
+			else
+			{
+				SceneHandle handle = _Package.LoadSceneAsync(asset);
+				return CreateAssetRef(handle);
+			}
 		}
 
 		public AssetRef LoadRawFileAsync(string asset)
 		{
-			RawFileHandle handle = _Package.LoadRawFileAsync(asset);
-			return new AssetRef(handle);
+			if (_Cached.ContainsKey(asset))
+				return _Cached[asset];
+			else
+			{
+				RawFileHandle handle = _Package.LoadRawFileAsync(asset);
+				return CreateAssetRef(handle);
+			}
+		}
+
+		internal void ReleaseAsset(HandleBase handleBase)
+		{
+			_Cached.Remove(handleBase.GetAssetInfo().Address);
+			handleBase.Release();
+		}
+
+		private AssetRef CreateAssetRef<T>(T handle) where T : HandleBase
+		{
+			AssetRef assetRef = new AssetRef(handle);
+			string assetAddress = handle.GetAssetInfo().Address;
+			_Cached.Add(assetAddress, assetRef);
+			return assetRef;
 		}
 		#endregion
 	}

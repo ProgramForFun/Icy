@@ -116,6 +116,7 @@ namespace Icy.UI
 		{
 			AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(uiName);
 			await assetRef.ToUniTask();
+			assetRef.Retain();
 
 			GameObject uiGo = GameObject.Instantiate(assetRef.AssetObject as GameObject);
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
