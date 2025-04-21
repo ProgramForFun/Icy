@@ -25,6 +25,7 @@ Icy Unity Framework
 |集成Protobuf|✔️|
 |集成UniTask|✔️|
 |集成Obfuz|待开始|
+|集成HybridCLR|待开始|
 |Base-事件系统|✔️|
 |Base-FSM|✔️|
 |Base-基于FSM的Procedure|✔️|
@@ -33,7 +34,7 @@ Icy Unity Framework
 |Base-RingBuffer|✔️|
 |Base-集成LocalPreferences|✔️|
 |Base-PeriodicRecord|✔️|
-|Base-AssetManager|待开始|
+|Base-AssetManager|✔️|
 |Network-TCP|✔️|
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
@@ -60,7 +61,6 @@ Icy Unity Framework
 |Editor-集成ReferenceFinder|✔️|
 |Editor-C#热重载|待开始|
 |CI/CD-集成Jenkins|待开始|
-|集成HybridCLR|待开始|
 
 &nbsp;
 
