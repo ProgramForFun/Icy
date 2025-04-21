@@ -101,6 +101,8 @@ namespace Icy.UI
 		/// <summary>
 		/// 获取并等待predicate满足，然后显示UI
 		/// </summary>
+		/// <param name="param">UI显示时传入的参数</param>
+		/// <param name="predicate">显示的条件</param>
 		public async UniTask<T> GetAndShowUntil<T>(IUIParam param, Func<bool> predicate) where T : UIBase
 		{
 			UIBase ui = await GetAsync<T>();
@@ -175,6 +177,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 清空回退栈，除了参数里的
 		/// </summary>
+		/// <param name="except">不清除的UI集合</param>
 		public void ClearStackExcept(HashSet<Type> except)
 		{
 			if (except == null || except.Count == 0)
