@@ -210,13 +210,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载资源包内所有资源
 		/// </summary>
-		public AssetRef LoadAllAssetsAsync(string address)
+		public AssetRef LoadAllAssetsAsync(string anyAssetAddressInBundle)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.ContainsKey(anyAssetAddressInBundle))
+				return _Cached[anyAssetAddressInBundle];
 			else
 			{
-				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(address);
+				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(anyAssetAddressInBundle);
 				return CreateAssetRef(handle);
 			}
 		}
