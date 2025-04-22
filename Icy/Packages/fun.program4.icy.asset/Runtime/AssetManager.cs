@@ -3,6 +3,7 @@ using Icy.Base;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using YooAsset;
 
 namespace Icy.Asset
@@ -196,13 +197,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载资源
 		/// </summary>
-		public AssetRef LoadAssetAsync(string address)
+		public AssetRef LoadAssetAsync(string address, uint priority = 0)
 		{
 			if (_Cached.ContainsKey(address))
 				return _Cached[address];
 			else
 			{
-				AssetHandle handle = _Package.LoadAssetAsync(address);
+				AssetHandle handle = _Package.LoadAssetAsync(address, priority);
 				return CreateAssetRef(handle);
 			}
 		}
@@ -210,13 +211,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载资源包内所有资源
 		/// </summary>
-		public AssetRef LoadAllAssetsAsync(string anyAssetAddressInBundle)
+		public AssetRef LoadAllAssetsAsync(string anyAssetAddressInBundle, uint priority = 0)
 		{
 			if (_Cached.ContainsKey(anyAssetAddressInBundle))
 				return _Cached[anyAssetAddressInBundle];
 			else
 			{
-				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(anyAssetAddressInBundle);
+				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(anyAssetAddressInBundle, priority);
 				return CreateAssetRef(handle);
 			}
 		}
@@ -224,13 +225,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载子资源
 		/// </summary>
-		public AssetRef LoadSubAssetsAsync(string address)
+		public AssetRef LoadSubAssetsAsync(string address, uint priority = 0)
 		{
 			if (_Cached.ContainsKey(address))
 				return _Cached[address];
 			else
 			{
-				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(address);
+				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(address, priority);
 				return CreateAssetRef(handle);
 			}
 		}
@@ -238,13 +239,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载场景
 		/// </summary>
-		public AssetRef LoadSceneAsync(string address)
+		public AssetRef LoadSceneAsync(string address, LoadSceneMode sceneMode = LoadSceneMode.Single, LocalPhysicsMode physicsMode = LocalPhysicsMode.None, bool suspendLoad = false, uint priority = 0)
 		{
 			if (_Cached.ContainsKey(address))
 				return _Cached[address];
 			else
 			{
-				SceneHandle handle = _Package.LoadSceneAsync(address);
+				SceneHandle handle = _Package.LoadSceneAsync(address, sceneMode, physicsMode, suspendLoad, priority);
 				return CreateAssetRef(handle);
 			}
 		}
@@ -252,13 +253,13 @@ namespace Icy.Asset
 		/// <summary>
 		/// 异步加载原生文件
 		/// </summary>
-		public AssetRef LoadRawFileAsync(string address)
+		public AssetRef LoadRawFileAsync(string address, uint priority = 0)
 		{
 			if (_Cached.ContainsKey(address))
 				return _Cached[address];
 			else
 			{
-				RawFileHandle handle = _Package.LoadRawFileAsync(address);
+				RawFileHandle handle = _Package.LoadRawFileAsync(address, priority);
 				return CreateAssetRef(handle);
 			}
 		}
