@@ -193,57 +193,72 @@ namespace Icy.Asset
 		#endregion
 
 		#region Load
-		public AssetRef LoadAssetAsync(string asset)
+		/// <summary>
+		/// 异步加载资源
+		/// </summary>
+		public AssetRef LoadAssetAsync(string address)
 		{
-			if (_Cached.ContainsKey(asset))
-				return _Cached[asset];
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
 			else
 			{
-				AssetHandle handle = _Package.LoadAssetAsync(asset);
+				AssetHandle handle = _Package.LoadAssetAsync(address);
 				return CreateAssetRef(handle);
 			}
 		}
 
-		public AssetRef LoadAllAssetsAsync(string asset)
+		/// <summary>
+		/// 异步加载资源包内所有资源
+		/// </summary>
+		public AssetRef LoadAllAssetsAsync(string address)
 		{
-			if (_Cached.ContainsKey(asset))
-				return _Cached[asset];
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
 			else
 			{
-				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(asset);
+				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(address);
 				return CreateAssetRef(handle);
 			}
 		}
 
-		public AssetRef LoadSubAssetsAsync(string asset)
+		/// <summary>
+		/// 异步加载子资源
+		/// </summary>
+		public AssetRef LoadSubAssetsAsync(string address)
 		{
-			if (_Cached.ContainsKey(asset))
-				return _Cached[asset];
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
 			else
 			{
-				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(asset);
+				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(address);
 				return CreateAssetRef(handle);
 			}
 		}
 
-		public AssetRef LoadSceneAsync(string asset)
+		/// <summary>
+		/// 异步加载场景
+		/// </summary>
+		public AssetRef LoadSceneAsync(string address)
 		{
-			if (_Cached.ContainsKey(asset))
-				return _Cached[asset];
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
 			else
 			{
-				SceneHandle handle = _Package.LoadSceneAsync(asset);
+				SceneHandle handle = _Package.LoadSceneAsync(address);
 				return CreateAssetRef(handle);
 			}
 		}
 
-		public AssetRef LoadRawFileAsync(string asset)
+		/// <summary>
+		/// 异步加载原生文件
+		/// </summary>
+		public AssetRef LoadRawFileAsync(string address)
 		{
-			if (_Cached.ContainsKey(asset))
-				return _Cached[asset];
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
 			else
 			{
-				RawFileHandle handle = _Package.LoadRawFileAsync(asset);
+				RawFileHandle handle = _Package.LoadRawFileAsync(address);
 				return CreateAssetRef(handle);
 			}
 		}
