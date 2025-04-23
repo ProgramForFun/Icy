@@ -28,9 +28,13 @@ namespace Icy.Asset
 		/// </summary>
 		public float Progress => _AssetHandle.Progress;
 		/// <summary>
-		/// 是否已加载完成
+		/// 是否已加载结束，不关心成功还是失败
 		/// </summary>
-		public bool IsCompleted => _AssetHandle.IsDone;
+		public bool IsFinish => _AssetHandle.IsDone;
+		/// <summary>
+		/// 是否已加载成功
+		/// </summary>
+		public bool IsSucceed => _AssetHandle.Status == EOperationStatus.Succeed;
 		/// <summary>
 		/// 当前AssetRef是否还有效
 		/// </summary>
@@ -38,15 +42,15 @@ namespace Icy.Asset
 		/// <summary>
 		/// 加载完成的回调
 		/// </summary>
-		public event Action<AssetRef> OnComplete
+		public event Action<AssetRef> OnFinish
 		{
 			add
 			{
-				_OnComplete += value;
-				if (IsCompleted)
+				_OnFinish += value;
+				if (IsFinish)
 					value?.Invoke(this);
 			}
-			remove => _OnComplete -= value;
+			remove => _OnFinish -= value;
 		}
 
 		/// <summary>
@@ -60,7 +64,7 @@ namespace Icy.Asset
 		/// <summary>
 		/// 加载完成的回调
 		/// </summary>
-		protected Action<AssetRef> _OnComplete;
+		protected Action<AssetRef> _OnFinish;
 
 		internal AssetRef(HandleBase handleBase)
 		{
@@ -177,7 +181,7 @@ namespace Icy.Asset
 
 		private void OnAnyAssetLoadCompleted(HandleBase handle)
 		{
-			_OnComplete?.Invoke(this);
+			_OnFinish?.Invoke(this);
 #if AssetRef_Log
 			Log.SetColorOnce(Color.yellow);
 			Log.LogInfo($"Asset {handle.GetAssetInfo().Address} loaded", "AssetRef");
