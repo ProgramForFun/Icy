@@ -30,11 +30,24 @@ namespace Icy.Asset
 		/// <summary>
 		/// 是否已加载完成
 		/// </summary>
-		public bool IsDone => _AssetHandle.IsDone;
+		public bool IsCompleted => _AssetHandle.IsDone;
 		/// <summary>
 		/// 当前AssetRef是否还有效
 		/// </summary>
 		public bool IsValid => _AssetHandle.IsValid;
+		/// <summary>
+		/// 加载完成的回调
+		/// </summary>
+		public event Action<AssetRef> OnComplete
+		{
+			add
+			{
+				_OnComplete += value;
+				if (IsCompleted)
+					value?.Invoke(this);
+			}
+			remove => _OnComplete -= value;
+		}
 
 		/// <summary>
 		/// 内部持有的YooAsset资源句柄
@@ -44,6 +57,10 @@ namespace Icy.Asset
 		/// 引用计数
 		/// </summary>
 		protected int _RefCount;
+		/// <summary>
+		/// 加载完成的回调
+		/// </summary>
+		protected Action<AssetRef> _OnComplete;
 
 		internal AssetRef(HandleBase handleBase)
 		{
@@ -160,6 +177,7 @@ namespace Icy.Asset
 
 		private void OnAnyAssetLoadCompleted(HandleBase handle)
 		{
+			_OnComplete?.Invoke(this);
 #if AssetRef_Log
 			Log.SetColorOnce(Color.yellow);
 			Log.LogInfo($"Asset {handle.GetAssetInfo().Address} loaded", "AssetRef");
