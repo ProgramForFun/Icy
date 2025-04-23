@@ -28,7 +28,10 @@ namespace Icy.UI
 			public AssetRef AssetRef;
 		}
 
-
+		/// <summary>
+		/// UI相机
+		/// </summary>
+		public Camera UICamera => UIRoot.Instance.UICamera;
 		/// <summary>
 		/// 当前未销毁的所有UI
 		/// </summary>
