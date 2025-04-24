@@ -120,13 +120,13 @@ namespace Icy.Asset
 				return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #else
         if (Application.platform == RuntimePlatform.Android)
-            return $"{hostServerIP}/CDN/Android/{appVersion}";
+            return $"{hostServerAddress}/CDN/Android/{appVersion}";
         else if (Application.platform == RuntimePlatform.IPhonePlayer)
-            return $"{hostServerIP}/CDN/IPhone/{appVersion}";
+            return $"{hostServerAddress}/CDN/IPhone/{appVersion}";
         else if (Application.platform == RuntimePlatform.WebGLPlayer)
-            return $"{hostServerIP}/CDN/WebGL/{appVersion}";
+            return $"{hostServerAddress}/CDN/WebGL/{appVersion}";
         else
-            return $"{hostServerIP}/CDN/PC/{appVersion}";
+            return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #endif
 		}
 
