@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowPackageView: 0
   ShowEditorAlias: 0
-  UniqueBundleName: 0
+  UniqueBundleName: 1
   Packages:
   - PackageName: DefaultPackage
     PackageDesc: 
@@ -35,5 +35,13 @@ MonoBehaviour:
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectPrefab
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Example/UISprites
+        CollectorGUID: 4d13bc6a51ee12a45a2adfec9cce0168
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
         AssetTags: 
         UserData: 

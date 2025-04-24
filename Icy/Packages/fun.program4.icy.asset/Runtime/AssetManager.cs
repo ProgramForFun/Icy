@@ -167,6 +167,9 @@ namespace Icy.Asset
 		}
 		#endregion
 
+		/// <summary>
+		/// 切换Package
+		/// </summary>
 		public void SetPackage(string packageName, bool isDefaultPackage = false)
 		{
 			_Package = YooAssets.GetPackage(packageName);
@@ -176,6 +179,9 @@ namespace Icy.Asset
 				YooAssets.SetDefaultPackage(_Package);
 		}
 
+		/// <summary>
+		/// 获取当前Package的名字
+		/// </summary>
 		public string GetCurrentPackageName()
 		{
 			return _Package == null ? string.Empty : _Package.PackageName;
@@ -278,5 +284,17 @@ namespace Icy.Asset
 			return assetRef;
 		}
 		#endregion
+
+		internal Sprite GetSprite(string spriteName)
+		{
+			AssetHandle loadHandle = _Package.LoadAssetSync<Sprite>(spriteName);
+			return loadHandle.AssetObject as Sprite;
+		}
+
+		internal Texture GetTexture(string textureName)
+		{
+			AssetHandle loadHandle = _Package.LoadAssetSync<Texture>(textureName);
+			return loadHandle.AssetObject as Texture;
+		}
 	}
 }

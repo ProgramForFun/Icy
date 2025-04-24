@@ -1,6 +1,7 @@
 using UnityEngine;
 using Icy.UI;
 using Sirenix.OdinInspector;
+using Icy.Asset;
 
 
 /// <summary>
@@ -27,7 +28,7 @@ public class UILogin : UIBase
 	public override void Show(IUIParam param = null)
 	{
 		base.Show(param);
-		
+		_Bg.SetSprite("icon_loading");
 	}
 
 	public override void Hide()
