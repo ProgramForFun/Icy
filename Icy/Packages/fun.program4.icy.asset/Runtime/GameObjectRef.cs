@@ -1,6 +1,8 @@
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Icy.Asset
 {
@@ -13,11 +15,47 @@ namespace Icy.Asset
 		/// 持有的GameObject，命名遵循Unity
 		/// </summary>
 		public GameObject gameObject { get; protected set; }
-		/// <summary>
-		/// 便利转发，命名遵循Unity
-		/// </summary>
+		#region 便利转发，命名遵循Unity
+		// 属性
 		public Transform transform => gameObject.transform;
+		public int layer { get => gameObject.layer; set => gameObject.layer = value; }
+		public string tag { get => gameObject.tag; set => gameObject.tag = value; }
+		public bool activeSelf => gameObject.activeSelf;
+		public bool activeInHierarchy => gameObject.activeInHierarchy;
+		public bool isStatic { get => gameObject.isStatic; set => gameObject.isStatic = value; }
+		public Scene scene => gameObject.scene;
+		public string name { get => gameObject.name; set => gameObject.name = value; }
+		public HideFlags hideFlags { get => gameObject.hideFlags; set => gameObject.hideFlags = value; }
 
+		// 实例方法
+		public Component AddComponent(Type type) => gameObject.AddComponent(type);
+		public T AddComponent<T>() where T : Component => gameObject.AddComponent<T>();
+		public void BroadcastMessage(string methodName, object parameter = null, SendMessageOptions options = SendMessageOptions.RequireReceiver) => gameObject.BroadcastMessage(methodName, parameter, options);
+		public bool CompareTag(string tag) => gameObject.CompareTag(tag);
+		public Component GetComponent(string type) => gameObject.GetComponent(type);
+		public T GetComponent<T>() => gameObject.GetComponent<T>();
+		public Component GetComponentInChildren(Type type, bool includeInactive = false) => gameObject.GetComponentInChildren(type, includeInactive);
+		public T GetComponentInChildren<T>(bool includeInactive = false) => gameObject.GetComponentInChildren<T>(includeInactive);
+		public Component GetComponentInParent(Type type) => gameObject.GetComponentInParent(type);
+		public T GetComponentInParent<T>() => gameObject.GetComponentInParent<T>();
+		public Component[] GetComponents(Type type) => gameObject.GetComponents(type);
+		public void GetComponents(Type type, List<Component> results) => gameObject.GetComponents(type, results);
+		public T[] GetComponents<T>() => gameObject.GetComponents<T>();
+		public void GetComponents<T>(List<T> results) => gameObject.GetComponents<T>(results);
+		public Component[] GetComponentsInChildren(Type type, bool includeInactive = false) => gameObject.GetComponentsInChildren(type, includeInactive);
+		public T[] GetComponentsInChildren<T>(bool includeInactive = false) => gameObject.GetComponentsInChildren<T>(includeInactive);
+		public Component[] GetComponentsInParent(Type type, bool includeInactive = false) => gameObject.GetComponentsInParent(type, includeInactive);
+		public T[] GetComponentsInParent<T>(bool includeInactive = false) => gameObject.GetComponentsInParent<T>(includeInactive);
+		public void SendMessage(string methodName, object value = null, SendMessageOptions options = SendMessageOptions.RequireReceiver) => gameObject.SendMessage(methodName, value, options);
+		public void SendMessageUpwards(string methodName, object value = null, SendMessageOptions options = SendMessageOptions.RequireReceiver) => gameObject.SendMessageUpwards(methodName, value, options);
+		public void SetActive(bool value) => gameObject.SetActive(value);
+
+		// 静态方法
+		public static GameObject Find(string name) => GameObject.Find(name);
+		public static GameObject[] FindGameObjectsWithTag(string tag) => GameObject.FindGameObjectsWithTag(tag);
+		public static GameObject FindWithTag(string tag) => GameObject.FindGameObjectWithTag(tag);
+		public static GameObject CreatePrimitive(PrimitiveType type) => GameObject.CreatePrimitive(type);
+		#endregion
 		/// <summary>
 		/// 是否已加载结束，不关心成功还是失败
 		/// </summary>
