@@ -67,12 +67,26 @@ namespace Icy.Asset
 		/// <summary>
 		/// 加载完成的回调
 		/// </summary>
-		public event Action<bool> OnLoadFinish;
+		public event Action<bool> OnLoadFinish
+		{
+			add
+			{
+				_OnFinish += value;
+				if (IsFinish)
+					value?.Invoke(IsSucceed);
+			}
+			remove => _OnFinish -= value;
+		}
 
 		/// <summary>
 		/// 内部持有的AssetRef
 		/// </summary>
 		protected AssetRef _AssetRef;
+		/// <summary>
+		/// 加载完成的回调
+		/// </summary>
+		protected Action<bool> _OnFinish;
+
 
 		public GameObjectRef(string address)
 		{
@@ -93,7 +107,7 @@ namespace Icy.Asset
 		{
 			if (assetRef.IsSucceed)
 				gameObject = GameObject.Instantiate(assetRef.AssetObject) as GameObject;
-			OnLoadFinish?.Invoke(assetRef.IsSucceed);
+			_OnFinish?.Invoke(assetRef.IsSucceed);
 		}
 
 		public void Destroy()
