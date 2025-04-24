@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// GameObject专用池
+	/// GameObject专用池，接受GameObject作为模板
 	/// </summary>
 	public class GameObjectPool : ObjectPool<GameObject>
 	{
@@ -12,7 +12,8 @@ namespace Icy.Base
 		public GameObjectPool(GameObject template, int defaultSize = 16) : base(defaultSize)
 		{
 			_Template = template;
-			_Template.SetActive(false);
+			if (_Template != null)
+				_Template.SetActive(false);
 		}
 
 		public override GameObject Get()
