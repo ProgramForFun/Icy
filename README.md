@@ -39,7 +39,7 @@ Icy Unity Framework
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
 |UI-基础结构|✔️|
-|UI-资源管理|待开始|
+|UI-资源管理|✔️|
 |UI-UIText|待开始|
 |UI-UIButton|待开始|
 |UI-本地化|待开始|
