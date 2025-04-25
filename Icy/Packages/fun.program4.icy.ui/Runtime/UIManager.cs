@@ -58,12 +58,19 @@ namespace Icy.UI
 		/// </summary>
 		private const int SORTING_ORDER_OFFSET_PER_UI = 20;
 
+		/// <summary>
+		/// 运行时为Image、RawImage加载的的Sprite和Texture和所属UI的映射关系
+		/// </summary>
+		private Dictionary<UIBase, Dictionary<string, AssetRef>> _SpriteTextureOfUI;
+
+
 		protected override void OnInitialized()
 		{
 			_UIMap = new Dictionary<UIBase, UIData>();
 			_Stack = new Stack<UIData>();
 			_StackTmp = new Stack<UIData>();
 			_SortingOrderOffset = new Dictionary<UILayer, int>();
+			_SpriteTextureOfUI = new Dictionary<UIBase, Dictionary<string, AssetRef>>();
 
 			Type UILayerType = typeof(UILayer);
 			Array renderQueues = Enum.GetValues(UILayerType);
@@ -266,6 +273,13 @@ namespace Icy.UI
 				_UIMap.Remove(ui);
 				uiData.AssetRef.Release();
 			}
+
+			if (_SpriteTextureOfUI.ContainsKey(ui))
+			{
+				foreach (KeyValuePair<string, AssetRef> item in _SpriteTextureOfUI[ui])
+					item.Value.Release();
+				_SpriteTextureOfUI.Remove(ui);
+			}
 		}
 
 		private void PushStack(UIBase ui)
@@ -329,16 +343,34 @@ namespace Icy.UI
 			_SortingOrderOffset[layer] = maxSortingOrder;
 		}
 
-		internal Sprite GetSprite(string spriteName)
+		internal Sprite GetSprite(UIBase ui, string spriteName)
 		{
-			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
-			return spriteAsset.AssetObject as Sprite;
+			if (_SpriteTextureOfUI.ContainsKey(ui) && _SpriteTextureOfUI[ui].ContainsKey(spriteName))
+				return _SpriteTextureOfUI[ui][spriteName].AssetObject as Sprite;
+			else
+			{
+				AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
+				spriteAsset.Retain();
+				if (!_SpriteTextureOfUI.ContainsKey(ui))
+					_SpriteTextureOfUI[ui] = new Dictionary<string, AssetRef>();
+				_SpriteTextureOfUI[ui].Add(spriteName, spriteAsset);
+				return spriteAsset.AssetObject as Sprite;
+			}
 		}
 
-		internal Texture GetTexture(string textureName)
+		internal Texture GetTexture(UIBase ui, string textureName)
 		{
-			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(textureName);
-			return spriteAsset.AssetObject as Texture;
+			if (_SpriteTextureOfUI.ContainsKey(ui) && _SpriteTextureOfUI[ui].ContainsKey(textureName))
+				return _SpriteTextureOfUI[ui][textureName].AssetObject as Texture;
+			else
+			{
+				AssetRef textureAsset = AssetManager.Instance.LoadAsset(textureName);
+				textureAsset.Retain();
+				if (!_SpriteTextureOfUI.ContainsKey(ui))
+					_SpriteTextureOfUI[ui] = new Dictionary<string, AssetRef>();
+				_SpriteTextureOfUI[ui].Add(textureName, textureAsset);
+				return textureAsset.AssetObject as Texture;
+			}
 		}
 	}
 }
