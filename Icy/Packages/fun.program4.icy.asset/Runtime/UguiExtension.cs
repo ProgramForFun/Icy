@@ -1,7 +1,7 @@
 
 namespace Icy.Asset
 {
-	public static class SpriteExtension
+	public static class UguiExtension
 	{
 		/// <summary>
 		/// 扩展方法，以便直接用sprite名字通过资源系统切换Image
