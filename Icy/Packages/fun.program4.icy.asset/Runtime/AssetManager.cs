@@ -285,6 +285,32 @@ namespace Icy.Asset
 		}
 		#endregion
 
+		#region Unload
+		/// <summary>
+		/// 卸载所有没有引用的AB
+		/// </summary>
+		public async UniTaskVoid UnloadUnusedAssets()
+		{
+			await _Package.UnloadUnusedAssetsAsync().ToUniTask();
+		}
+
+		/// <summary>
+		/// 强制卸载所有AB，谨慎调用
+		/// </summary>
+		public async UniTaskVoid ForceUnloadAllAssets()
+		{
+			await _Package.UnloadAllAssetsAsync().ToUniTask();
+		}
+
+		/// <summary>
+		/// 尝试卸载指定的资源，如果该资源还有引用，什么都不做
+		/// </summary>
+		public void TryUnloadUnusedAsset(string address)
+		{
+			_Package.TryUnloadUnusedAsset(address);
+		}
+		#endregion
+
 		internal Sprite GetSprite(string spriteName)
 		{
 			AssetHandle loadHandle = _Package.LoadAssetSync<Sprite>(spriteName);
