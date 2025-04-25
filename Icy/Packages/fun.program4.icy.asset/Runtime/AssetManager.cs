@@ -26,14 +26,22 @@ namespace Icy.Asset
 		/// 当前正在加载或已加载的资源
 		/// </summary>
 		private Dictionary<string, AssetRef> _Cached;
+		/// <summary>
+		/// 间隔多长时间自动执行一次UnloadUnusedAssets，单位秒
+		/// </summary>
+		private int _AutoUnloadUnusedAssetsInterval;
 
 		#region Init
 		/// <summary>
 		/// 初始化资源系统
 		/// </summary>
-		public async UniTask<bool> Init(EPlayMode playMode, string defaultPackageName)
+		/// <param name="playMode">管理器的运行模式</param>
+		/// <param name="defaultPackageName">默认的Package名字</param>
+		/// <param name="autoUnloadUnusedAssetsInterval">间隔多长时间自动执行一次UnloadUnusedAssets，单位秒</param>
+		public async UniTask<bool> Init(EPlayMode playMode, string defaultPackageName, int autoUnloadUnusedAssetsInterval)
 		{
 			YooAssets.Initialize();
+			_AutoUnloadUnusedAssetsInterval = autoUnloadUnusedAssetsInterval;
 
 			_Package = YooAssets.TryGetPackage(defaultPackageName);
 			if (_Package == null)
@@ -92,13 +100,18 @@ namespace Icy.Asset
 			_Cached = new Dictionary<string, AssetRef>();
 
 			Log.LogInfo($"AssetManager init end, {initializationOperation.Status}", "AssetManager");
-			return initializationOperation.Status == EOperationStatus.Succeed;
-			//SetPackage(defaultPackageName, true);
+			bool initSucceed = initializationOperation.Status == EOperationStatus.Succeed;
+
+			if (initSucceed)
+				Timer.RepeatByTime(UnloadUnusedAssetsWrap, autoUnloadUnusedAssetsInterval, 0);
+
+			return initSucceed;
 		}
 
 		/// <summary>
 		/// 获取资源服务器地址
 		/// </summary>
+		/// <param name="isMain">是主地址还是备地址</param>
 		private string GetHostServerURL(bool isMain)
 		{
 			string hostServerAddress = GetAssetHostServerAddressFromSetting(isMain);
@@ -326,6 +339,11 @@ namespace Icy.Asset
 		public void TryUnloadUnusedAsset(string address)
 		{
 			_Package.TryUnloadUnusedAsset(address);
+		}
+
+		private void UnloadUnusedAssetsWrap()
+		{
+			UnloadUnusedAssets().Forget();
 		}
 		#endregion
 	}

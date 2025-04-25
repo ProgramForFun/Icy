@@ -22,7 +22,7 @@ public class ExampleRoot : MonoBehaviour
 		UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
 
 		//资源热更
-		bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage");
+		bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage", 30);
 		if (!assetMgrInitSucceed)
 		{
 			Log.Assert(false, "AssetManager init failed!");
@@ -44,17 +44,17 @@ public class ExampleRoot : MonoBehaviour
 
 
 		await UniTask.WaitForSeconds(1);
-		uiLogin.Hide();
-		//uiLogin.Destroy();
+		//uiLogin.Hide();
+		uiLogin.Destroy();
 
 		//UniTask风格加载
-		UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
-		uiExample.Show();
+		//UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
+		//uiExample.Show();
 
-		await UniTask.WaitForSeconds(1);
+		//await UniTask.WaitForSeconds(1);
 
-		//uiExample.HideToPrev();
-		uiExample.DestroyToPrev();
+		////uiExample.HideToPrev();
+		//uiExample.DestroyToPrev();
 	}
 
 	// Update is called once per frame
