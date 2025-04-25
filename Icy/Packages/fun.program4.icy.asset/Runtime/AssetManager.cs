@@ -307,7 +307,7 @@ namespace Icy.Asset
 		/// <summary>
 		/// 卸载所有没有引用的AB
 		/// </summary>
-		public async UniTaskVoid UnloadUnusedAssets()
+		public async UniTask UnloadUnusedAssets()
 		{
 			await _Package.UnloadUnusedAssetsAsync().ToUniTask();
 		}
@@ -315,7 +315,7 @@ namespace Icy.Asset
 		/// <summary>
 		/// 强制卸载所有AB，谨慎调用
 		/// </summary>
-		public async UniTaskVoid ForceUnloadAllAssets()
+		public async UniTask ForceUnloadAllAssets()
 		{
 			await _Package.UnloadAllAssetsAsync().ToUniTask();
 		}
