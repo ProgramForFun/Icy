@@ -270,6 +270,20 @@ namespace Icy.Asset
 			}
 		}
 
+		/// <summary>
+		/// 同步加载资源
+		/// </summary>
+		public AssetRef LoadAsset(string address)
+		{
+			if (_Cached.ContainsKey(address))
+				return _Cached[address];
+			else
+			{
+				AssetHandle handle = _Package.LoadAssetSync(address);
+				return CreateAssetRef(handle);
+			}
+		}
+
 		internal void ReleaseAsset(HandleBase handleBase)
 		{
 			_Cached.Remove(handleBase.GetAssetInfo().Address);
@@ -314,17 +328,5 @@ namespace Icy.Asset
 			_Package.TryUnloadUnusedAsset(address);
 		}
 		#endregion
-
-		internal Sprite GetSprite(string spriteName)
-		{
-			AssetHandle loadHandle = _Package.LoadAssetSync<Sprite>(spriteName);
-			return loadHandle.AssetObject as Sprite;
-		}
-
-		internal Texture GetTexture(string textureName)
-		{
-			AssetHandle loadHandle = _Package.LoadAssetSync<Texture>(textureName);
-			return loadHandle.AssetObject as Texture;
-		}
 	}
 }

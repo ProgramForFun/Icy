@@ -1,5 +1,5 @@
 
-namespace Icy.Asset
+namespace Icy.UI
 {
 	public static class UguiExtension
 	{
@@ -8,7 +8,7 @@ namespace Icy.Asset
 		/// </summary>
 		public static void SetSprite(this UnityEngine.UI.Image image, string spriteName)
 		{
-			image.sprite = AssetManager.Instance.GetSprite(spriteName);
+			image.sprite = UIManager.Instance.GetSprite(spriteName);
 		}
 
 		/// <summary>
@@ -16,7 +16,7 @@ namespace Icy.Asset
 		/// </summary>
 		public static void SetTexture(this UnityEngine.UI.RawImage image, string textureName)
 		{
-			image.texture = AssetManager.Instance.GetTexture(textureName);
+			image.texture = UIManager.Instance.GetTexture(textureName);
 		}
 	}
 }

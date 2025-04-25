@@ -328,5 +328,17 @@ namespace Icy.UI
 			}
 			_SortingOrderOffset[layer] = maxSortingOrder;
 		}
+
+		internal Sprite GetSprite(string spriteName)
+		{
+			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
+			return spriteAsset.AssetObject as Sprite;
+		}
+
+		internal Texture GetTexture(string textureName)
+		{
+			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(textureName);
+			return spriteAsset.AssetObject as Texture;
+		}
 	}
 }
