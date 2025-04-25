@@ -25,7 +25,7 @@ public static class TestPlayground
 	public static void Test()
 	{
 		//LogTest.Test();
-		ProcedureTest.Test();
+		//ProcedureTest.Test();
 		//EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
@@ -36,6 +36,7 @@ public static class TestPlayground
 		//TcpSessionTest.Test();
 		//TcpChannelTest.Test();
 		//ConfigTest.Test();
+		TimerTest.Test();
 	}
 }
 
