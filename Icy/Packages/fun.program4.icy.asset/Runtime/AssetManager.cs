@@ -273,7 +273,11 @@ namespace Icy.Asset
 		internal void ReleaseAsset(HandleBase handleBase)
 		{
 			_Cached.Remove(handleBase.GetAssetInfo().Address);
-			handleBase.Release();
+			//场景的卸载，YooAsset有自己特有的方法
+			if (handleBase is SceneHandle sceneHandle)
+				sceneHandle.UnloadAsync();
+			else
+				handleBase.Release();
 		}
 
 		private AssetRef CreateAssetRef<T>(T handle) where T : HandleBase
