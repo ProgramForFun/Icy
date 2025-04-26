@@ -33,7 +33,7 @@ MonoBehaviour:
         CollectorGUID: 01fd24fda0bcf504384e54be9580d14c
         CollectorType: 0
         AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
+        PackRuleName: PackSeparately
         FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 
