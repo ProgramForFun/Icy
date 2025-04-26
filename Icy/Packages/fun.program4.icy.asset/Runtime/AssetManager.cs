@@ -102,9 +102,6 @@ namespace Icy.Asset
 			Log.LogInfo($"AssetManager init end, {initializationOperation.Status}", "AssetManager");
 			bool initSucceed = initializationOperation.Status == EOperationStatus.Succeed;
 
-			if (initSucceed)
-				Timer.RepeatByTime(UnloadUnusedAssetsWrap, autoUnloadUnusedAssetsInterval, 0);
-
 			return initSucceed;
 		}
 
@@ -209,6 +206,8 @@ namespace Icy.Asset
 			_Patcher = new AssetPatcher(_Package);
 			while (!_Patcher.IsFinished)
 				await UniTask.NextFrame();
+
+			Timer.RepeatByTime(UnloadUnusedAssetsWrap, _AutoUnloadUnusedAssetsInterval, 0);
 		}
 		#endregion
 
