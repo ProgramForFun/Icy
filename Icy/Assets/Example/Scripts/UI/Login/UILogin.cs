@@ -1,7 +1,6 @@
 using UnityEngine;
 using Icy.UI;
 using Sirenix.OdinInspector;
-using Icy.Asset;
 
 
 /// <summary>

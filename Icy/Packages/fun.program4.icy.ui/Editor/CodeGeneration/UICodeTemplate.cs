@@ -7,7 +7,6 @@ namespace Icy.UI.Editor
 	{
 		public readonly static string Code =
 @"using UnityEngine;
-using Icy.Asset;
 using Icy.UI;
 using Sirenix.OdinInspector;
 
