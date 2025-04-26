@@ -55,7 +55,10 @@ namespace Icy.Editor
 			if (state == PlayModeStateChange.ExitingPlayMode)
 			{
 				if (EditorSettings.enterPlayModeOptionsEnabled)
+				{
 					EditorSettings.enterPlayModeOptionsEnabled = false;
+					EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.None;
+				}
 			}
 		}
 	}
