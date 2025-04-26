@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 
 namespace Icy.Base
@@ -29,11 +30,15 @@ namespace Icy.Base
 		/// </summary>
 		public StateType State { get; private set; }
 		/// <summary>
+		/// Procedure结束的回调
+		/// </summary>
+		public event Action OnFinish;
+		/// <summary>
 		/// Procedure是否已经执行完
 		/// </summary>
 		public bool IsFinished { get { return State == StateType.Finished; } }
 		/// <summary>
-		/// 获取归一化的执行进度
+		/// 获取归一化的执行进度，跳转Step也包括
 		/// </summary>
 		public float Progress { get { return (_CurrStepIdx + 1) / _Steps.Count; } }
 		/// <summary>
@@ -95,6 +100,7 @@ namespace Icy.Base
 			else
 			{
 				State = StateType.Finished;
+				OnFinish?.Invoke();
 				Log.LogInfo($"Procedure {_FSM.Name} finished");
 			}
 		}
@@ -140,6 +146,7 @@ namespace Icy.Base
 		{
 			await UniTask.WaitUntil(() => !IsChangingStep);
 			State = StateType.Finished;
+			OnFinish?.Invoke();
 			Log.LogInfo($"Procedure {_FSM.Name} finished by Finish()");
 		}
 	}
