@@ -142,6 +142,10 @@ namespace Icy.UI
 			assetRef.Retain();
 
 			GameObject uiGo = GameObject.Instantiate(assetRef.AssetObject as GameObject);
+			string uiGoName = uiGo.name;
+			if (uiGoName.EndsWith("(Clone)"))
+				uiGo.name = uiGoName.Substring(0, uiGoName.Length - 7);//"(Clone)"的长度
+
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
