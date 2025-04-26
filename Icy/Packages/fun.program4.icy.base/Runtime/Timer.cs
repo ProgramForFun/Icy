@@ -10,22 +10,25 @@ namespace Icy.Base
 	/// </summary>
 	public static class Timer
 	{
+		private const float MIN_REPEAT_TIME_INTERVAL = 0.005f;
+		private const int MIN_REPEAT_FRAME_INTERVAL = 1;
+
 		/// <summary>
-		/// 延迟指定时间后，执行action
+		/// 延迟指定时间后，执行 action
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <param name="delaySeconds">要延迟的时间，单位秒</param>
-		/// <param name="ignorTimeScale">是否忽略TimeScale</param>
+		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		/// <returns>取消令牌</returns>
-		public static CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignorTimeScale = false)
+		public static CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignoreTimeScale = false)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoDelayByTime(action, delaySeconds, cts, ignorTimeScale).Forget();
+			DoDelayByTime(action, delaySeconds, cts, ignoreTimeScale).Forget();
 			return cts;
 		}
 
 		/// <summary>
-		/// 延迟指定帧数后，执行action
+		/// 延迟指定帧数后，执行 action
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <param name="frameCount">要延迟的帧数</param>
@@ -38,7 +41,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 延迟到下一帧，执行action
+		/// 延迟到下一帧，执行 action
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <returns>取消令牌</returns>
@@ -50,24 +53,39 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的时间间隔，执行一次action
+		/// 每隔指定的时间间隔，执行一次 action
 		/// </summary>
-		/// <param name="action">要间隔执行的action</param>
+		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
 		/// <param name="repeatCount">执行的次数；如果<=0，则次数为无限</param>
-		/// <param name="ignorTimeScale">是否忽略TimeScale</param>
+		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		/// <returns>取消令牌</returns>
-		public static CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignorTimeScale = false)
+		public static CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoRepeatByTime(action, perSeconds, repeatCount, cts, ignorTimeScale).Forget();
+			DoRepeatByTime(action, perSeconds, repeatCount, cts, ignoreTimeScale).Forget();
 			return cts;
 		}
 
 		/// <summary>
-		/// 每隔指定的帧数，执行一次action
+		/// 每隔指定的时间间隔，执行一次 action
 		/// </summary>
-		/// <param name="action">要间隔执行的action</param>
+		/// <param name="action">要间隔执行的 action</param>
+		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
+		/// <param name="predicate">返回 true时，repeat停止</param>
+		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
+		/// <returns>取消令牌</returns>
+		public static CancellationTokenSource RepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, bool ignoreTimeScale = false)
+		{
+			CancellationTokenSource cts = new CancellationTokenSource();
+			DoRepeatByTimeUntil(action, perSeconds, predicate, cts, ignoreTimeScale).Forget();
+			return cts;
+		}
+
+		/// <summary>
+		/// 每隔指定的帧数，执行一次 action
+		/// </summary>
+		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
 		/// <param name="repeatCount">执行的次数；如果<=0，则次数为无限</param>
 		/// <returns>取消令牌</returns>
@@ -78,10 +96,24 @@ namespace Icy.Base
 			return cts;
 		}
 
-		#region Implementation
-		private static async UniTaskVoid DoDelayByTime(Action action, float delaySeconds, CancellationTokenSource cts, bool ignorTimeScale = false)
+		/// <summary>
+		/// 每隔指定的帧数，执行一次 action
+		/// </summary>
+		/// <param name="action">要间隔执行的 action</param>
+		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
+		/// <param name="predicate">返回 true时，repeat停止</param>
+		/// <returns>取消令牌</returns>
+		public static CancellationTokenSource RepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate)
 		{
-			await UniTask.Delay(Mathf.RoundToInt(delaySeconds * 1000), ignorTimeScale, PlayerLoopTiming.Update, cts.Token);
+			CancellationTokenSource cts = new CancellationTokenSource();
+			DoRepeatByFrameUntil(action, perFrames, predicate, cts).Forget();
+			return cts;
+		}
+
+		#region Implementation
+		private static async UniTaskVoid DoDelayByTime(Action action, float delaySeconds, CancellationTokenSource cts, bool ignoreTimeScale = false)
+		{
+			await UniTask.Delay(Mathf.RoundToInt(delaySeconds * 1000), ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
 			action?.Invoke();
 		}
 
@@ -97,17 +129,32 @@ namespace Icy.Base
 			action?.Invoke();
 		}
 
-		private static async UniTaskVoid DoRepeatByTime(Action action, float perSeconds, int repeatCount, CancellationTokenSource cts, bool ignorTimeScale = false)
+		private static async UniTaskVoid DoRepeatByTime(Action action, float perSeconds, int repeatCount, CancellationTokenSource cts, bool ignoreTimeScale = false)
 		{
 			if (perSeconds <= 0)
-				perSeconds = 0.005f;
+				perSeconds = MIN_REPEAT_TIME_INTERVAL;
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
 			while ((repeatCount <= 0 || count < repeatCount) && !cts.IsCancellationRequested)
 			{
 				action?.Invoke();
-				await UniTask.Delay(intervalMs, ignorTimeScale, PlayerLoopTiming.Update, cts.Token);
+				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
+				count++;
+			}
+		}
+
+		private static async UniTaskVoid DoRepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, CancellationTokenSource cts, bool ignoreTimeScale = false)
+		{
+			if (perSeconds <= 0)
+				perSeconds = MIN_REPEAT_TIME_INTERVAL;
+
+			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
+			int count = 0;
+			while (!predicate() && !cts.IsCancellationRequested)
+			{
+				action?.Invoke();
+				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
 				count++;
 			}
 		}
@@ -115,10 +162,24 @@ namespace Icy.Base
 		private static async UniTaskVoid DoRepeatByFrame(Action action, int perFrames, int repeatCount, CancellationTokenSource cts)
 		{
 			if (perFrames <= 0)
-				perFrames = 1;
+				perFrames = MIN_REPEAT_FRAME_INTERVAL;
 
 			int count = 0;
 			while ((repeatCount <= 0 || count < repeatCount) && !cts.IsCancellationRequested)
+			{
+				action?.Invoke();
+				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);
+				count++;
+			}
+		}
+
+		private static async UniTaskVoid DoRepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate, CancellationTokenSource cts)
+		{
+			if (perFrames <= 0)
+				perFrames = MIN_REPEAT_FRAME_INTERVAL;
+
+			int count = 0;
+			while (!predicate() && !cts.IsCancellationRequested)
 			{
 				action?.Invoke();
 				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);
