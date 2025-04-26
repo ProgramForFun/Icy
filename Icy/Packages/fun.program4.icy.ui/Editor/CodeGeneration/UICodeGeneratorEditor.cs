@@ -62,16 +62,13 @@ namespace Icy.UI.Editor
 			if (filePath != null)
 			{
 				//生成所有组件的代码
-				StringBuilder builder = new StringBuilder();
+				List<string> componentCode = new List<string>(8);
 				int count = generator.Components.Count;
 				for (int i = 0; i < count; i++)
 				{
 					string className = generator.Components[i].Component.GetType().FullName;
 					string line = string.Format("	[SerializeField, ReadOnly] {0} _{1};", className, generator.Components[i].Name);
-					if (i >= count - 1)
-						builder.Append(line);
-					else
-						builder.AppendLine(line);
+					componentCode.Add(line);
 				}
 
 				if (!File.Exists(filePath))
@@ -80,38 +77,58 @@ namespace Icy.UI.Editor
 					string logicTypeName = string.Format("UI{0}Logic", generator.UIName);
 					string logicDecl = withLogic ? string.Format("\r\n	private {0} _Logic;\r\n", logicTypeName) : "";
 					string logicAssign = withLogic ? "		_Logic = new();\r\n		_Logic.Init();\r\n" : "";
-					string code = string.Format(UICodeTemplate.Code, generator.UIName, builder.ToString(), logicDecl, logicAssign);
-					File.WriteAllText(filePath, code);
+					string componentCodeToMultiLine = string.Join("\r\n", componentCode);
+					string finalCodes = string.Format(UICodeTemplate.Code, generator.UIName, componentCodeToMultiLine, logicDecl, logicAssign);
+					File.WriteAllText(filePath, finalCodes);
 				}
 				else
 				{
 					//存在的话，替换组件部分代码
 					string[] oldLines = File.ReadAllLines(filePath);
-					List<string> newlines = new List<string>();
+					List<string> newlines = new List<string>(128);
 
 					//组件代码之前的内容，原样保留
-					int i = 0;
-					for (;i < oldLines.Length;i++)
+					int lineIdx = 0;
+					for (;lineIdx < oldLines.Length; lineIdx++)
 					{
-						newlines.Add(oldLines[i]);
-						if (oldLines[i].StartsWith("//↓="))
+						newlines.Add(oldLines[lineIdx]);
+						if (oldLines[lineIdx].StartsWith("//↓="))
 							break;
 					}
 
 					//插入新的组件代码
-					newlines.Add(builder.ToString());
+					newlines.AddRange(componentCode);
 
 					bool foundGeneratedAreaEnd = false;
-					for (; i < oldLines.Length; i++)
+					for (; lineIdx < oldLines.Length; lineIdx++)
 					{
-						if (oldLines[i].StartsWith("//↑=") && !foundGeneratedAreaEnd)
+						if (oldLines[lineIdx].StartsWith("//↑=") && !foundGeneratedAreaEnd)
 							foundGeneratedAreaEnd = true;
 
 						if (foundGeneratedAreaEnd)
-							newlines.Add(oldLines[i]);
+							newlines.Add(oldLines[lineIdx]);
 					}
 
-					File.WriteAllLines(filePath, newlines);
+					//有变化才写入文件，否则给出提示
+					if (oldLines.Length != newlines.Count)
+						File.WriteAllLines(filePath, newlines);
+					else
+					{
+						bool isSame = true;
+						for (int i = 0; i < oldLines.Length; i++)
+						{
+							if (oldLines[i] != newlines[i])
+							{
+								isSame = false;
+								break;
+							}
+						}
+
+						if (isSame)
+							EditorUtility.DisplayDialog("提示", "UI组件列表无变化，生成代码未执行", "OK");
+						else
+							File.WriteAllLines(filePath, newlines);
+					}
 				}
 			}
 		}
