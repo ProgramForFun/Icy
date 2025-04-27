@@ -45,7 +45,7 @@ public class ExampleRoot : MonoBehaviour
 
 		await UniTask.WaitForSeconds(1);
 		//uiLogin.Hide();
-		uiLogin.Destroy();
+		//uiLogin.Destroy();
 
 		//UniTask∑Á∏Òº”‘ÿ
 		//UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
