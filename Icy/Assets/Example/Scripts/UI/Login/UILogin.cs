@@ -12,6 +12,7 @@ public class UILogin : UIBase
 	[SerializeField, ReadOnly] UnityEngine.UI.Image _Bg;
 	[SerializeField, ReadOnly] TMPro.TextMeshProUGUI _Title;
 	[SerializeField, ReadOnly] UnityEngine.UI.Button _Button;
+	[SerializeField, ReadOnly] UnityEngine.UI.Slider _Slider;
 //↑=========================== Generated code area，do NOT put your business code in this ===========================↑
 
 	private UILoginLogic _Logic;
