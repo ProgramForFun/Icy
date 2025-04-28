@@ -15,9 +15,17 @@ namespace Icy.UI
 			UguiBindManager.Instance.Bind(image, bindableData, listener);
 			bindableData.Bind(listener);
 		}
-		public static void Unbind(this Image image, BindableData<string> bindableData)
+
+		public static void Bind<T>(this Image rawImage, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
 		{
-			Action<string> listener = UguiBindManager.Instance.Unbind(image, bindableData) as Action<string>;
+			Action<T> listener = (T newValue) => { rawImage.SetSprite(predicate(bindableData)); };
+			UguiBindManager.Instance.Bind(rawImage, bindableData, listener);
+			bindableData.Bind(listener);
+		}
+
+		public static void Unbind<T>(this Image image, BindableData<T> bindableData)
+		{
+			Action<T> listener = UguiBindManager.Instance.Unbind(image, bindableData) as Action<T>;
 			bindableData.Unbind(listener);
 		}
 	}

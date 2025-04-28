@@ -15,9 +15,17 @@ namespace Icy.UI
 			UguiBindManager.Instance.Bind(toggle, bindableData, listener);
 			bindableData.Bind(listener);
 		}
-		public static void Unbind(this Toggle toggle, BindableData<bool> bindableData)
+
+		public static void Bind<T>(this Toggle toggle, BindableData<T> bindableData, Func<BindableData<T>, bool> predicate)
 		{
-			Action<bool> listener = UguiBindManager.Instance.Unbind(toggle, bindableData) as Action<bool>;
+			Action<T> listener = (T newValue) => { toggle.isOn = predicate(bindableData); };
+			UguiBindManager.Instance.Bind(toggle, bindableData, listener);
+			bindableData.Bind(listener);
+		}
+
+		public static void Unbind<T>(this Toggle toggle, BindableData<T> bindableData)
+		{
+			Action<T> listener = UguiBindManager.Instance.Unbind(toggle, bindableData) as Action<T>;
 			bindableData.Unbind(listener);
 		}
 	}
