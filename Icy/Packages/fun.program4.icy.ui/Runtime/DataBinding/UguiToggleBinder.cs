@@ -13,20 +13,17 @@ namespace Icy.UI
 		{
 			Action<bool> listener = (bool newValue) => { toggle.isOn = newValue; };
 			UguiBindManager.Instance.Bind(toggle, bindableData, listener);
-			bindableData.Bind(listener);
 		}
 
 		public static void Bind<T>(this Toggle toggle, BindableData<T> bindableData, Func<BindableData<T>, bool> predicate)
 		{
 			Action<T> listener = (T newValue) => { toggle.isOn = predicate(bindableData); };
 			UguiBindManager.Instance.Bind(toggle, bindableData, listener);
-			bindableData.Bind(listener);
 		}
 
 		public static void Unbind<T>(this Toggle toggle, BindableData<T> bindableData)
 		{
-			Action<T> listener = UguiBindManager.Instance.Unbind(toggle, bindableData) as Action<T>;
-			bindableData.Unbind(listener);
+			UguiBindManager.Instance.Unbind(toggle, bindableData);
 		}
 	}
 }

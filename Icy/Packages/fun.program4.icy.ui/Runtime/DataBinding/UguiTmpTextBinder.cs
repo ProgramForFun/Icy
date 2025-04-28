@@ -13,20 +13,17 @@ namespace Icy.UI
 		{
 			Action<T> listener = (T newValue) => { tmp.text = newValue.ToString(); };
 			UguiBindManager.Instance.Bind(tmp, bindableData, listener);
-			bindableData.Bind(listener);
 		}
 
 		public static void Bind<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
 		{
 			Action<T> listener = (T newValue) => { tmp.text = predicate(bindableData); };
 			UguiBindManager.Instance.Bind(tmp, bindableData, listener);
-			bindableData.Bind(listener);
 		}
 
 		public static void Unbind<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData)
 		{
-			Action<T> listener = UguiBindManager.Instance.Unbind(tmp, bindableData) as Action<T>;
-			bindableData.Unbind(listener);
+			UguiBindManager.Instance.Unbind(tmp, bindableData);
 		}
 	}
 }

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 可绑定的数据，数据变化时会调用绑定上来的事件
+	/// 可绑定的数据，数据变化时会调用绑定上来的事件；
+	/// 也重载了必要的operator，在大部分场景可以像直接使用持有的T一样使用，比如和T做比较等等
 	/// </summary>
 	public class BindableData<T>
 	{

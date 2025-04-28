@@ -1,4 +1,5 @@
 using Icy.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Icy.UI
@@ -41,31 +42,39 @@ namespace Icy.UI
 		/// <summary>
 		/// Bind指定的Ugui组件和数据
 		/// </summary>
-		internal void Bind(object uguiComp, object bindableData, object listener)
+		internal void Bind<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
 		{
 			if (!AlreadyBinded(uguiComp, bindableData))
 			{
 				_UguiCompList.Add(uguiComp);
 				_BindableList.Add(bindableData);
 				_ListenerList.Add(listener);
+					
+				bindableData.Bind(listener);
 			}
+#if UNITY_EDITOR
+			else
+			{
+				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, value = {bindableData}", "BindableData");
+			}
+#endif
 		}
 
 		/// <summary>
 		/// 解除Bind指定的Ugui组件和数据
 		/// </summary>
-		internal object Unbind(object uguiComp, object bindableData)
+		internal void Unbind<T>(object uguiComp, BindableData<T> bindableData)
 		{
 			if (AlreadyBinded(uguiComp, bindableData))
 			{
 				int idx = _UguiCompList.IndexOf(uguiComp);
-				object rtn = _ListenerList[idx];
+				Action<T> listener = _ListenerList[idx] as Action<T>;
 				_UguiCompList.RemoveAt(idx);
 				_BindableList.RemoveAt(idx);
 				_ListenerList.RemoveAt(idx);
-				return rtn;
+
+				bindableData.Unbind(listener);
 			}
-			return null;
 		}
 	}
 }

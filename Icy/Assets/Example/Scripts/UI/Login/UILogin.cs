@@ -48,7 +48,7 @@ public class UILogin : UIBase
 		await UniTask.WaitForSeconds(1);
 		BgName.SetData("icon_loading");
 
-		_Slider.Bind(SliderValue, (BindableData<float> a)=> { return a * 8; });
+		_Slider.Bind(SliderValue, (BindableData<float> a) => { return a * 8; });
 		await UniTask.WaitForSeconds(1);
 		SliderValue.SetData(0.1f);
 
