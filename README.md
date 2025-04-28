@@ -41,6 +41,7 @@ Icy Unity Framework
 |Network-RUDP|待开始|
 |UI-基础结构|✔️|
 |UI-资源管理|✔️|
+|UI-数据绑定|✔️|
 |UI-UIText|待开始|
 |UI-UIButton|待开始|
 |UI-本地化|待开始|
