@@ -345,5 +345,50 @@ namespace Icy.Asset
 			UnloadUnusedAssets().Forget();
 		}
 		#endregion
+
+		#region Clear
+		/// <summary>
+		/// 以当前激活的资源清单为准，清理该资源清单内未在使用的缓存Bundle文件
+		/// </summary>
+		public async UniTask<bool> ClearUnusedCachedBundleFiles()
+		{
+			return await ClearCachedFiles(EFileClearMode.ClearUnusedBundleFiles);
+		}
+
+		/// <summary>
+		/// 清理文件系统所有的缓存Bundle文件，谨慎调用
+		/// </summary>
+		public async UniTask<bool> ClearAllCachedBundleFiles()
+		{
+			return await ClearCachedFiles(EFileClearMode.ClearAllBundleFiles);
+		}
+
+		/// <summary>
+		/// 清理文件系统未使用的缓存Manifest文件
+		/// </summary>
+		public async UniTask<bool> ClearUnusedCachedManifestFiles()
+		{
+			return await ClearCachedFiles(EFileClearMode.ClearUnusedManifestFiles);
+		}
+
+		/// <summary>
+		/// 清理文件系统所有的缓存Manifest文件
+		/// </summary>
+		public async UniTask<bool> ClearAllCachedManifestFiles()
+		{
+			return await ClearCachedFiles(EFileClearMode.ClearAllManifestFiles);
+		}
+
+		private async UniTask<bool> ClearCachedFiles(EFileClearMode clearMode)
+		{
+			ClearCacheFilesOperation operation = _Package.ClearCacheFilesAsync(clearMode);
+			await operation.ToUniTask();
+			if (operation.Status == EOperationStatus.Succeed)
+				Log.LogInfo($"ClearCachedFiles succedd, mode = {clearMode}", "AssetManager");
+			else
+				Log.LogError($"ClearCachedFiles failed, mode = {clearMode}", "AssetManager");
+			return operation.Status == EOperationStatus.Succeed;
+		}
+		#endregion
 	}
 }
