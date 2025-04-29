@@ -11,10 +11,15 @@ namespace Icy.Editor
 	[InitializeOnLoad]
 	public class QuickPlayViewer
 	{
+		private static Texture _Icon;
+
 		static QuickPlayViewer()
 		{
 			ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
 			EditorApplication.playModeStateChanged += ClearPlayMode;
+
+			if (_Icon == null)
+				_Icon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/fun.program4.icy.editor/Editor/Res/QuickIcon.png");
 		}
 
 		static void OnToolbarGUI()
@@ -29,12 +34,14 @@ namespace Icy.Editor
 			{
 				fontSize = 13,
 				alignment = TextAnchor.MiddleCenter,
-				imagePosition = ImagePosition.ImageAbove,
+				imagePosition = ImagePosition.ImageLeft,
 				fontStyle = FontStyle.Normal,
-				fixedWidth = 70
+				fixedWidth = 83,
+				fixedHeight = 20,
+				padding = new RectOffset(0, 0, 3, 3)
 			};
 
-			if (GUILayout.Button(new GUIContent("QuickPlay", "不 进行Domain Reload，直接进入Play状态；\n使用这个功能需要知道其原理和限制，否则请不要使用这个功能"), style))
+			if (GUILayout.Button(new GUIContent("QuickPlay", _Icon, "不 进行Domain Reload，直接进入Play状态；\n使用这个功能需要知道其原理和限制，否则请不要使用这个功能"), style))
 				QuickPlay();
 
 			GUI.backgroundColor = originalBackgroundColor;
