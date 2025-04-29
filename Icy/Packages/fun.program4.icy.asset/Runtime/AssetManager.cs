@@ -27,6 +27,10 @@ namespace Icy.Asset
 		/// </summary>
 		private Dictionary<string, AssetRef> _Cached;
 		/// <summary>
+		/// 默认Package名字
+		/// </summary>
+		private string _DefaultPackageName;
+		/// <summary>
 		/// 间隔多长时间自动执行一次UnloadUnusedAssets，单位秒
 		/// </summary>
 		private int _AutoUnloadUnusedAssetsInterval;
@@ -41,11 +45,15 @@ namespace Icy.Asset
 		public async UniTask<bool> Init(EPlayMode playMode, string defaultPackageName, int autoUnloadUnusedAssetsInterval)
 		{
 			YooAssets.Initialize();
+			_DefaultPackageName = defaultPackageName;
 			_AutoUnloadUnusedAssetsInterval = autoUnloadUnusedAssetsInterval;
 
 			_Package = YooAssets.TryGetPackage(defaultPackageName);
 			if (_Package == null)
+			{
 				_Package = YooAssets.CreatePackage(defaultPackageName);
+				YooAssets.SetDefaultPackage(_Package);
+			}
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
@@ -178,15 +186,20 @@ namespace Icy.Asset
 		#endregion
 
 		/// <summary>
-		/// 切换Package
+		/// 切换Package到指定名字的Package
 		/// </summary>
-		public void SetPackage(string packageName, bool isDefaultPackage = false)
+		public void SwitchPackageTo(string packageName)
 		{
 			_Package = YooAssets.GetPackage(packageName);
-			Log.Assert(_Package != null, $"AssetManager SetPackage to {packageName} failed!");
+			Log.Assert(_Package != null, $"AssetManager SwitchPackageTo {packageName} failed!");
+		}
 
-			if (isDefaultPackage)
-				YooAssets.SetDefaultPackage(_Package);
+		/// <summary>
+		/// 切换Package到默认Package
+		/// </summary>
+		public void SwitchPackageToDefault()
+		{
+			_Package = YooAssets.GetPackage(_DefaultPackageName);
 		}
 
 		/// <summary>
