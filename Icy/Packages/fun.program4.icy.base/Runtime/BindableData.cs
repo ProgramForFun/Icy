@@ -17,6 +17,10 @@ namespace Icy.Base
 		/// 绑定上来的事件
 		/// </summary>
 		private List<Action<T>> _Listeners = new List<Action<T>>();
+		/// <summary>
+		/// 绑定上来的其他BindableData<T>
+		/// </summary>
+		private List<BindableData<T>> _Others = new List<BindableData<T>>();
 
 		public BindableData()
 		{
@@ -34,25 +38,64 @@ namespace Icy.Base
 		public void SetData(T data)
 		{
 			_Data = data;
+
 			for (int i = 0; i < _Listeners.Count; i++)
 				_Listeners[i]?.Invoke(_Data);
+			for (int i = 0; i < _Others.Count; i++)
+				_Others[i].SetData(data);
 		}
 
 		/// <summary>
 		/// 把一个事件绑定到BindableData，BindableData修改时调用这个事件
 		/// </summary>
-		public void Bind(Action<T> listener)
+		public bool Bind(Action<T> listener)
 		{
 			if (!_Listeners.Contains(listener))
+			{
 				_Listeners.Add(listener);
+				return true;
+			}
+
+			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
+			return false;
 		}
 
 		/// <summary>
-		/// 解除Bind
+		/// 把我 Bind 到other，other变化时会通知我
+		/// </summary>
+		public bool Bind(BindableData<T> other)
+		{
+			//避免死循环
+			if (_Others.Contains(other))
+			{
+				Log.LogError($"Binding lead to endless loop, BindableData T = {typeof(T).Name}", "BindableData");
+				return false;
+			}
+
+			if (!other._Others.Contains(this))
+			{
+				other._Others.Add(this);
+				return true;
+			}
+
+			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}", "BindableData");
+			return false;
+		}
+
+		/// <summary>
+		/// 解除Bind一个Listener
 		/// </summary>
 		public void Unbind(Action<T> listener)
 		{
 			_Listeners.Remove(listener);
+		}
+
+		/// <summary>
+		/// 解除Bind一个其他BindableData<T>
+		/// </summary>
+		public void Unbind(BindableData<T> other)
+		{
+			_Others.Remove(other);
 		}
 
 		#region Override

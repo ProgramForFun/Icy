@@ -20,6 +20,7 @@ public class UILogin : UIBase
 	private UILoginLogic _Logic;
 	private BindableData<string> BgName = new BindableData<string>("");
 	private BindableData<float> SliderValue = new BindableData<float>(0);
+	private BindableData<float> SliderValue2 = new BindableData<float>(0);
 
 	public override void Init()
 	{
@@ -43,6 +44,8 @@ public class UILogin : UIBase
 
 	private async UniTaskVoid TestBindAsync()
 	{
+		SliderValue.Bind(SliderValue2);
+
 		_Bg.Bind(BgName);
 		_Title.Bind(BgName);
 		await UniTask.WaitForSeconds(1);
@@ -50,7 +53,7 @@ public class UILogin : UIBase
 
 		_Slider.Bind(SliderValue, (BindableData<float> a) => { return a * 8; });
 		await UniTask.WaitForSeconds(1);
-		SliderValue.SetData(0.1f);
+		SliderValue2.SetData(0.1f);
 
 		_Slider.Unbind(SliderValue);
 		await UniTask.WaitForSeconds(1);
