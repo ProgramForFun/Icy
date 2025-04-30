@@ -54,13 +54,9 @@ namespace Icy.UI
 
 				return true;
 			}
-#if UNITY_EDITOR
-			else
-			{
-				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
-				return false;
-			}
-#endif
+
+			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
+			return false;
 		}
 
 		/// <summary>
