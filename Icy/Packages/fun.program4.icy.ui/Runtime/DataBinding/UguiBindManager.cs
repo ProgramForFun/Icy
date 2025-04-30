@@ -54,9 +54,7 @@ namespace Icy.UI
 			}
 #if UNITY_EDITOR
 			else
-			{
-				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, value = {bindableData}", "BindableData");
-			}
+				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
 #endif
 		}
 
