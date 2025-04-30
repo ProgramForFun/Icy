@@ -40,7 +40,11 @@ namespace Icy.Base
         {
             get
             {
-                if (instance == null)
+#if UNITY_EDITOR
+				UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+				UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+				if (instance == null)
                 {
                     //ensure that only one thread can execute
                     lock (typeof(T))
@@ -87,10 +91,6 @@ namespace Icy.Base
                 return;
             }
 
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-#endif
-
 			this.initializationStatus = SingletonInitializationStatus.Initializing;
             OnInitializing();
             this.initializationStatus = SingletonInitializationStatus.Initialized;
@@ -119,7 +119,7 @@ namespace Icy.Base
 		#endregion
 
 #if UNITY_EDITOR
-		private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
+		private static void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
 		{
 			UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
 			if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
