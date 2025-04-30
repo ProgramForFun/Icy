@@ -42,26 +42,31 @@ namespace Icy.UI
 		/// <summary>
 		/// Bind指定的Ugui组件和数据
 		/// </summary>
-		internal void Bind<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
+		internal bool Bind<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
 		{
 			if (!AlreadyBinded(uguiComp, bindableData))
 			{
 				_UguiCompList.Add(uguiComp);
 				_BindableList.Add(bindableData);
 				_ListenerList.Add(listener);
-					
+
 				bindableData.Bind(listener);
+
+				return true;
 			}
 #if UNITY_EDITOR
 			else
+			{
 				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
+				return false;
+			}
 #endif
 		}
 
 		/// <summary>
 		/// 解除Bind指定的Ugui组件和数据
 		/// </summary>
-		internal void Unbind<T>(object uguiComp, BindableData<T> bindableData)
+		internal bool Unbind<T>(object uguiComp, BindableData<T> bindableData)
 		{
 			if (AlreadyBinded(uguiComp, bindableData))
 			{
@@ -72,7 +77,9 @@ namespace Icy.UI
 				_ListenerList.RemoveAt(idx);
 
 				bindableData.Unbind(listener);
+				return true;
 			}
+			return false;
 		}
 	}
 }
