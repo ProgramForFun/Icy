@@ -1,6 +1,7 @@
 # Icy
-Icy Unity Framework
+Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设施
 
+![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
 &nbsp;
 
 ## 安装
