@@ -65,6 +65,13 @@ namespace Icy.Base
 		/// </summary>
 		public bool Bind(BindableData<T> other)
 		{
+			//不能Bind自己
+			if (other == this)
+			{
+				Log.LogError($"Invalid binding to this, BindableData T = {typeof(T).Name}", "BindableData");
+				return false;
+			}
+
 			//避免死循环
 			if (_Others.Contains(other))
 			{
