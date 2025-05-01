@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +17,18 @@ namespace Icy.Base
 			Log.ClearOverrideTagLogLevel();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
+		}
+
+		/// <summary>
+		/// 获取框架Setting的根目录
+		/// </summary>
+		public string GetSettingDir()
+		{
+#if UNITY_EDITOR
+			return "IcySettings";
+#else
+			return Path.Combine(Application.streamingAssetsPath, "IcySettings");
+#endif
 		}
 
 		public void AddUpdate(IUpdateable updateable)

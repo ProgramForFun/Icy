@@ -1,4 +1,5 @@
 using Google.Protobuf;
+using Icy.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System.IO;
@@ -31,7 +32,7 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "UISetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "UISetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -42,7 +43,7 @@ namespace Icy.UI.Editor
 
 		private void OnUIRootPathChanged()
 		{
-			string targetDir = Path.Combine(Application.streamingAssetsPath, "IcySettings");
+			string targetDir = IcyFrame.Instance.GetSettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
 

@@ -1,4 +1,5 @@
 using Google.Protobuf;
+using Icy.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System;
@@ -49,7 +50,7 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -71,7 +72,7 @@ namespace Icy.Asset.Editor
 
 		private void OnAssetHostServerAddressChanged(bool isMain)
 		{
-			string targetDir = Path.Combine(Application.streamingAssetsPath, "IcySettings");
+			string targetDir = IcyFrame.Instance.GetSettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
 

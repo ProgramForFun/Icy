@@ -270,7 +270,7 @@ namespace Icy.UI.Editor
 
 		private static string GetUIRootDir()
 		{
-			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "UISetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "UISetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);

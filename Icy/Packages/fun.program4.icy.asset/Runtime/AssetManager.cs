@@ -150,7 +150,7 @@ namespace Icy.Asset
 
 		private string GetAssetHostServerAddressFromSetting(bool isMain)
 		{
-			string fullPath = Path.Combine(Application.streamingAssetsPath, "IcySettings", "AssetSetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -397,7 +397,7 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Package.ClearCacheFilesAsync(clearMode);
 			await operation.ToUniTask();
 			if (operation.Status == EOperationStatus.Succeed)
-				Log.LogInfo($"ClearCachedFiles succedd, mode = {clearMode}", "AssetManager");
+				Log.LogInfo($"ClearCachedFiles succeed, mode = {clearMode}", "AssetManager");
 			else
 				Log.LogError($"ClearCachedFiles failed, mode = {clearMode}", "AssetManager");
 			return operation.Status == EOperationStatus.Succeed;
