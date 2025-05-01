@@ -42,7 +42,7 @@ namespace Icy.UI
 		/// <summary>
 		/// Bind指定的Ugui组件和数据
 		/// </summary>
-		internal bool Bind<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
+		internal bool BindTo<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
 		{
 			if (!AlreadyBinded(uguiComp, bindableData))
 			{
@@ -50,7 +50,7 @@ namespace Icy.UI
 				_BindableList.Add(bindableData);
 				_ListenerList.Add(listener);
 
-				bindableData.Bind(listener);
+				bindableData.BindTo(listener);
 
 				return true;
 			}
@@ -62,7 +62,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 解除Bind指定的Ugui组件和数据
 		/// </summary>
-		internal bool Unbind<T>(object uguiComp, BindableData<T> bindableData)
+		internal bool UnbindTo<T>(object uguiComp, BindableData<T> bindableData)
 		{
 			if (AlreadyBinded(uguiComp, bindableData))
 			{
@@ -72,7 +72,7 @@ namespace Icy.UI
 				_BindableList.RemoveAt(idx);
 				_ListenerList.RemoveAt(idx);
 
-				bindableData.Unbind(listener);
+				bindableData.UnbindTo(listener);
 				return true;
 			}
 			return false;

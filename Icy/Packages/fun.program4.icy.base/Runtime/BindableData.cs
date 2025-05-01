@@ -48,7 +48,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 把一个事件绑定到BindableData，BindableData修改时调用这个事件
 		/// </summary>
-		public bool Bind(Action<T> listener)
+		public bool BindTo(Action<T> listener)
 		{
 			if (!_Listeners.Contains(listener))
 			{
@@ -63,7 +63,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 把我 Bind 到other，other变化时会通知我
 		/// </summary>
-		public bool Bind(BindableData<T> other)
+		public bool BindTo(BindableData<T> other)
 		{
 			//不能Bind自己
 			if (other == this)
@@ -92,7 +92,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 解除Bind一个Listener
 		/// </summary>
-		public void Unbind(Action<T> listener)
+		public void UnbindTo(Action<T> listener)
 		{
 			_Listeners.Remove(listener);
 		}
@@ -100,7 +100,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 解除Bind一个其他BindableData<T>
 		/// </summary>
-		public void Unbind(BindableData<T> other)
+		public void UnbindTo(BindableData<T> other)
 		{
 			_Others.Remove(other);
 		}

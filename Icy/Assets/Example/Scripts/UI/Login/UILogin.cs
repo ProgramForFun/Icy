@@ -44,22 +44,22 @@ public class UILogin : UIBase
 
 	private async UniTaskVoid TestBindAsync()
 	{
-		SliderValue.Bind(SliderValue2);
+		SliderValue.BindTo(SliderValue2);
 
-		_Bg.Bind(BgName);
-		_Title.Bind(BgName);
+		_Bg.BindTo(BgName);
+		_Title.BindTo(BgName);
 		await UniTask.WaitForSeconds(1);
 		BgName.SetData("icon_loading");
 
-		_Slider.Bind(SliderValue, (BindableData<float> a) => { return a * 8; });
+		_Slider.BindTo(SliderValue, (BindableData<float> a) => { return a * 8; });
 		await UniTask.WaitForSeconds(1);
 		SliderValue2.SetData(0.1f);
 
-		_Slider.Unbind(SliderValue);
+		_Slider.UnbindTo(SliderValue);
 		await UniTask.WaitForSeconds(1);
 		SliderValue.SetData(0.0f);
 
-		_Title.Unbind(BgName);
+		_Title.UnbindTo(BgName);
 	}
 
 	public override void Destroy()

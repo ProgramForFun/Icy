@@ -9,21 +9,21 @@ namespace Icy.UI
 	/// </summary>
 	public static class UguiTmpTextBinder
 	{
-		public static void Bind<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData)
+		public static void BindTo<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData)
 		{
 			Action<T> listener = (T newValue) => { tmp.text = newValue.ToString(); };
-			UguiBindManager.Instance.Bind(tmp, bindableData, listener);
+			UguiBindManager.Instance.BindTo(tmp, bindableData, listener);
 		}
 
-		public static void Bind<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
+		public static void BindTo<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
 		{
 			Action<T> listener = (T newValue) => { tmp.text = predicate(bindableData); };
-			UguiBindManager.Instance.Bind(tmp, bindableData, listener);
+			UguiBindManager.Instance.BindTo(tmp, bindableData, listener);
 		}
 
-		public static void Unbind<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData)
+		public static void UnbindTo<T>(this TextMeshProUGUI tmp, BindableData<T> bindableData)
 		{
-			UguiBindManager.Instance.Unbind(tmp, bindableData);
+			UguiBindManager.Instance.UnbindTo(tmp, bindableData);
 		}
 	}
 }
