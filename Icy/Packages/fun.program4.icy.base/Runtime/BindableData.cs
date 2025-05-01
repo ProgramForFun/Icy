@@ -66,7 +66,7 @@ namespace Icy.Base
 		public bool BindTo(BindableData<T> other)
 		{
 			//不能Bind自己
-			if (other == this)
+			if (object.ReferenceEquals(other, this))
 			{
 				Log.LogError($"Invalid binding to this, BindableData T = {typeof(T).Name}", "BindableData");
 				return false;
