@@ -66,7 +66,7 @@ namespace Icy.Base
 		public bool BindTo(BindableData<T> other)
 		{
 			//不能Bind自己
-			if (object.ReferenceEquals(other, this))
+			if (other == this)
 			{
 				Log.LogError($"Invalid binding to this, BindableData T = {typeof(T).Name}", "BindableData");
 				return false;
@@ -106,9 +106,9 @@ namespace Icy.Base
 		}
 
 		#region Override
-		public static implicit operator T(BindableData<T> a)
+		public static implicit operator T(BindableData<T> data)
 		{
-			return a._Data;
+			return data._Data;
 		}
 
 		//不能提供T到BindableData的隐式转换，因为这样就允许了直接通过 = 给BindableData赋值
@@ -118,25 +118,6 @@ namespace Icy.Base
 		//{
 		//	return new BindableData<T>(data);
 		//}
-
-		public static bool operator ==(BindableData<T> left, BindableData<T> right)
-		{
-			return left._Data.Equals(right._Data);
-		}
-
-		public static bool operator !=(BindableData<T> left, BindableData<T> right)
-		{
-			return !(left == right);
-		}
-
-		public override bool Equals(object obj)
-		{
-			return obj is BindableData<T> other && _Data.Equals(other._Data);
-		}
-		public override int GetHashCode()
-		{
-			return _Data.GetHashCode();
-		}
 
 		public override string ToString()
 		{
