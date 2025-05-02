@@ -36,7 +36,8 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 |Base-RingBuffer|✔️|
 |Base-集成LocalPreferences|✔️|
 |Base-PeriodicRecord|✔️|
-|Base-AssetManager|✔️|
+|Asset-AssetManager|✔️|
+|Asset-可定制的打包流程|待开始|
 |Network-TCP|✔️|
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
@@ -54,7 +55,7 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 |UI-集成UIParticle|✔️|
 |UI-集成3DObjectImageForUGUI|✔️|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
-|UI-预加载但不显示UI|✔️|
+|UI-UI的预加载|✔️|
 |UI-新手引导|待开始|
 |Gameplay-基础数值系统|待开始|
 |Gameplay-技能系统|待开始|
@@ -63,7 +64,6 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 |Editor-集成Odin|✔️|
 |Editor-集成ReferenceFinder|✔️|
 |Editor-C#热重载|待开始|
-|CI/CD-集成Jenkins|待开始|
 
 &nbsp;
 
