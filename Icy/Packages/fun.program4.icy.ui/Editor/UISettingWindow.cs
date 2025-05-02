@@ -14,6 +14,7 @@ namespace Icy.UI.Editor
 	public class UISettingWindow : OdinEditorWindow
 	{
 		private static UISettingWindow _UISettingWindow;
+		private UISetting _Setting;
 
 		[Title("UI类文件的根目录")]
 		[FolderPath]
@@ -36,21 +37,20 @@ namespace Icy.UI.Editor
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
-				UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
-				UIRootPath = uiSetting.UIRootDir;
+				_Setting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+				UIRootPath = _Setting.UIRootDir;
 			}
 		}
 
 		private void OnUIRootPathChanged()
 		{
+			_Setting.UIRootDir = UIRootPath;
+
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
-
-			UISetting uiSetting = new UISetting();
-			uiSetting.UIRootDir = UIRootPath;
 			string targetPath = Path.Combine(targetDir, "UISetting.bin");
-			File.WriteAllBytes(targetPath, uiSetting.ToByteArray());
+			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
 		}
 	}
 }

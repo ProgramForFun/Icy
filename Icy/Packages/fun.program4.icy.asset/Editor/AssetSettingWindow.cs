@@ -15,6 +15,7 @@ namespace Icy.Asset.Editor
 	public class AssetSettingWindow : OdinEditorWindow
 	{
 		private static AssetSettingWindow _AssetSettingWindow;
+		private AssetSetting _Setting;
 
 		[Title("热更新资源Host地址（主）")]
 		[DelayedProperty]
@@ -40,12 +41,9 @@ namespace Icy.Asset.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			AssetSetting assetSetting = GetAssetSetting();
-			if (assetSetting != null)
-			{
-				AssetHostServerAddressMain = assetSetting.AssetHostServerAddressMain;
-				AssetHostServerAddressStandby = assetSetting.AssetHostServerAddressStandby;
-			}
+			_Setting = GetAssetSetting();
+			AssetHostServerAddressMain = _Setting.AssetHostServerAddressMain;
+			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
 		}
 
 		private AssetSetting GetAssetSetting()
@@ -57,7 +55,7 @@ namespace Icy.Asset.Editor
 				AssetSetting assetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
 				return assetSetting;
 			}
-			return null;
+			return new AssetSetting();
 		}
 
 		private void OnAssetHostServerAddressMainChanged()
@@ -72,22 +70,16 @@ namespace Icy.Asset.Editor
 
 		private void OnAssetHostServerAddressChanged(bool isMain)
 		{
+			if (isMain)
+				_Setting.AssetHostServerAddressMain = AssetHostServerAddressMain;
+			else
+				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
+
 			string targetDir = IcyFrame.Instance.GetSettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
-
-			AssetSetting assetSetting = GetAssetSetting();
-			if (assetSetting == null)
-				assetSetting = new AssetSetting();
-			else
-			{
-				if (isMain)
-					assetSetting.AssetHostServerAddressMain = AssetHostServerAddressMain;
-				else
-					assetSetting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
-			}
 			string targetPath = Path.Combine(targetDir, "AssetSetting.bin");
-			File.WriteAllBytes(targetPath, assetSetting.ToByteArray());
+			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
 		}
 
 		private bool IsValidHttpOrHttpsUrl(string url)
