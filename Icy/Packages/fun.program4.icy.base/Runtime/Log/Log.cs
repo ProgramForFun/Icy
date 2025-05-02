@@ -122,8 +122,11 @@ namespace Icy.Base
 			{
 				LogError("[ASSERT] " + msg, tag);
 #if UNITY_EDITOR
-				Debug.Break();
-				UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
+				if (!Application.isBatchMode)
+				{
+					Debug.Break();
+					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
+				}
 #endif
 			}
 		}
