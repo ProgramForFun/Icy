@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace Icy.Base
@@ -29,6 +30,14 @@ namespace Icy.Base
 #else
 			return Path.Combine(Application.streamingAssetsPath, "IcySettings");
 #endif
+		}
+
+		/// <summary>
+		/// 获取框架EditorOnly Setting的根目录
+		/// </summary>
+		public string GetEditorOnlySettingDir()
+		{
+			return Path.Combine(GetSettingDir(), "EditorOnly");
 		}
 
 		public void AddUpdate(IUpdateable updateable)

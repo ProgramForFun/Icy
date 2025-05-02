@@ -32,7 +32,7 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "UISetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.bin");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -43,7 +43,7 @@ namespace Icy.UI.Editor
 
 		private void OnUIRootPathChanged()
 		{
-			string targetDir = IcyFrame.Instance.GetSettingDir();
+			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
 
