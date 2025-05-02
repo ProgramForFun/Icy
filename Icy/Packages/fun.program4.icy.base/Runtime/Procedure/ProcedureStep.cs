@@ -34,13 +34,19 @@ namespace Icy.Base
 
 		private async UniTaskVoid DoFinish()
 		{
-			await UniTask.WaitUntil(()=> !_Procedure.IsChangingStep);
+			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
+			//await UniTask.WaitUntil(()=> !_Procedure.IsChangingStep);
+			while (_Procedure.IsChangingStep)
+				await UniTask.NextFrame();
 			_Procedure.NextStep();
 		}
 
 		private async UniTaskVoid DoFinishAndGoto<T>() where T : ProcedureStep
 		{
-			await UniTask.WaitUntil(() => !_Procedure.IsChangingStep);
+			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
+			//await UniTask.WaitUntil(() => !_Procedure.IsChangingStep);
+			while (_Procedure.IsChangingStep)
+				await UniTask.NextFrame();
 			_Procedure.GotoStep<T>();
 		}
 	}
