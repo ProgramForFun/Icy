@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package Icy.Asset;
+
+
+message BuildSetting
+{
+	//包名
+	string ApplicationIdentifier = 1;
+	//展示给玩家的名字
+	string ProductName = 2;
+	//公司名
+	string CompanyName = 3;
+	//版本号
+	string Version = 4;
+    //Build输出目录
+    string OutputDir = 5;
+}
