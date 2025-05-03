@@ -173,6 +173,41 @@ public static class CommonUtility
 		return true;
 	}
 
+	/// <summary>
+	/// 复制目录
+	/// </summary>
+	/// <param name="sourceDirPath">要复制的目录</param>
+	/// <param name="destDirPath">复制到的目标目录</param>
+	/// <param name="copySubDirs">是否复制子文件夹</param>
+	public static bool CopyDir(string sourceDirPath, string destDirPath, bool copySubDirs = true)
+	{
+		DirectoryInfo sourceDir = new DirectoryInfo(sourceDirPath);
+
+		if (!sourceDir.Exists)
+		{
+			Log.LogError(sourceDirPath + " does not exist", "CopyDir");
+			return false;
+		}
+
+		Directory.CreateDirectory(destDirPath);
+
+		foreach (FileInfo file in sourceDir.GetFiles())
+		{
+			string destFilePath = Path.Combine(destDirPath, file.Name);
+			file.CopyTo(destFilePath, true); // 覆盖已存在文件
+		}
+
+		if (copySubDirs)
+		{
+			foreach (DirectoryInfo subDir in sourceDir.GetDirectories())
+			{
+				string destSubDirPath = Path.Combine(destDirPath, subDir.Name);
+				CopyDir(subDir.FullName, destSubDirPath, copySubDirs);
+			}
+		}
+		return true;
+	}
+
 	#region Vector
 	/// <summary>
 	/// 在一个Rect范围内随机一个点
