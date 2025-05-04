@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -37,6 +38,23 @@ namespace Icy.Base
 			return Path.Combine(GetSettingDir(), "EditorOnly");
 		}
 
+		/// <summary>
+		/// 加载框架设置
+		/// </summary>
+		/// <param name="fileNameWithExtension"></param>
+		public async UniTask<byte[]> LoadSetting(string fileNameWithExtension)
+		{
+			string path = Path.Combine(GetSettingDir(), fileNameWithExtension);
+#if UNITY_EDITOR
+			byte[] bytes = File.ReadAllBytes(path);
+			await UniTask.CompletedTask;
+#else
+			byte[] bytes = await CommonUtility.LoadStreamingAsset(path);
+#endif
+			return bytes;
+		}
+
+		#region Update
 		public void AddUpdate(IUpdateable updateable)
 		{
 			_Updateables.Add(updateable);
@@ -87,6 +105,7 @@ namespace Icy.Base
 			for (int i = 0; i < _LateUpdateables.Count; i++)
 				_LateUpdateables[i]?.LateUpdate(delta);
 		}
+		#endregion
 
 		private void OnApplicationQuit()
 		{
