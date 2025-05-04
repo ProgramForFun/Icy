@@ -12,7 +12,7 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			string dest = Path.Combine(Application.streamingAssetsPath, "IcySettings");
+			string dest = Path.Combine(Application.streamingAssetsPath, IcyFrame.Instance.GetSettingDir());
 			bool succeed = CommonUtility.CopyDir(IcyFrame.Instance.GetSettingDir(), dest, false);
 			if (!succeed)
 			{

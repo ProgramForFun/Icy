@@ -21,15 +21,12 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 获取框架Setting的根目录
+		/// 获取框架Setting的根目录；
+		/// Editor下是相对于项目根目录的相对路径，其他情况下是相对于SteamingAssets的相对路径
 		/// </summary>
 		public string GetSettingDir()
 		{
-#if UNITY_EDITOR
 			return "IcySettings";
-#else
-			return Path.Combine(Application.streamingAssetsPath, "IcySettings");
-#endif
 		}
 
 		/// <summary>
