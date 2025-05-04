@@ -181,7 +181,7 @@ namespace Icy.Asset.Editor
 				Type type = Type.GetType(typeWithNameSpace);
 				if (type == null)
 				{
-					Log.Assert(false, $"Can not found BuildProcedure step {typeWithNameSpace}");
+					Log.Assert(false, $"Can not find BuildProcedure step {typeWithNameSpace}");
 					return;
 				}
 
