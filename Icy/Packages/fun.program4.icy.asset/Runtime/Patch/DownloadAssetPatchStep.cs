@@ -41,7 +41,7 @@ namespace Icy.Asset
 			{
 				Log.LogInfo($"AssetPatchFinish, no assets needs to patch", "AssetPatcher");
 				EventManager.Trigger(EventDefine.AssetPatchFinish, new EventParam_Bool() { Value = false });
-				_Procedure.Finish();
+				_Procedure.Abort();
 			}
 			else
 			{

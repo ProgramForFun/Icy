@@ -17,7 +17,7 @@ namespace Icy.Asset.Editor
 			if (!succeed)
 			{
 				Log.Assert(false, "Copy setting files failed", "CopySettingsStep");
-				_Procedure.Finish();
+				_Procedure.Abort();
 				return;
 			}
 

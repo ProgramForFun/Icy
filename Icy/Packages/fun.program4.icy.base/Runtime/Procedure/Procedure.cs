@@ -30,9 +30,9 @@ namespace Icy.Base
 		/// </summary>
 		public StateType State { get; private set; }
 		/// <summary>
-		/// Procedure结束的回调
+		/// Procedure结束的回调，true是正常执行完，false是调用Abort退出了
 		/// </summary>
-		public event Action OnFinish;
+		public event Action<bool> OnFinish;
 		/// <summary>
 		/// Procedure是否已经执行完
 		/// </summary>
@@ -100,7 +100,7 @@ namespace Icy.Base
 			else
 			{
 				State = StateType.Finished;
-				OnFinish?.Invoke();
+				OnFinish?.Invoke(true);
 				Log.LogInfo($"Procedure {_FSM.Name} finished");
 			}
 		}
@@ -136,18 +136,18 @@ namespace Icy.Base
 		/// <summary>
 		/// 等当前状态切换完成后，直接结束本Procedure
 		/// </summary>
-		public void Finish()
+		public void Abort()
 		{
 			State = StateType.Finishing;
-			DoFinish().Forget();
+			DoAbort().Forget();
 		}
 
-		private async UniTaskVoid DoFinish()
+		private async UniTaskVoid DoAbort()
 		{
 			await UniTask.WaitUntil(() => !IsChangingStep);
 			State = StateType.Finished;
-			OnFinish?.Invoke();
-			Log.LogInfo($"Procedure {_FSM.Name} finished by Finish()");
+			OnFinish?.Invoke(false);
+			Log.LogInfo($"Procedure {_FSM.Name} aborted");
 		}
 	}
 }
