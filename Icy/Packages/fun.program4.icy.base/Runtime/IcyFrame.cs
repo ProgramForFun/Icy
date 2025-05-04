@@ -21,11 +21,12 @@ namespace Icy.Base
 			LocalPrefs.ClearKeyPrefix();
 		}
 
+		#region Setting
 		/// <summary>
 		/// 获取框架Setting的根目录；
 		/// Editor下是相对于项目根目录的相对路径，其他情况下是相对于SteamingAssets的相对路径
 		/// </summary>
-		public string GetSettingDir()
+		internal string GetSettingDir()
 		{
 			return "IcySettings";
 		}
@@ -33,7 +34,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 获取框架EditorOnly Setting的根目录
 		/// </summary>
-		public string GetEditorOnlySettingDir()
+		internal string GetEditorOnlySettingDir()
 		{
 			return Path.Combine(GetSettingDir(), "EditorOnly");
 		}
@@ -42,7 +43,7 @@ namespace Icy.Base
 		/// 加载框架设置
 		/// </summary>
 		/// <param name="fileNameWithExtension"></param>
-		public async UniTask<byte[]> LoadSetting(string fileNameWithExtension)
+		internal async UniTask<byte[]> LoadSetting(string fileNameWithExtension)
 		{
 			string path = Path.Combine(GetSettingDir(), fileNameWithExtension);
 #if UNITY_EDITOR
@@ -53,6 +54,7 @@ namespace Icy.Base
 #endif
 			return bytes;
 		}
+		#endregion
 
 		#region Update
 		public void AddUpdate(IUpdateable updateable)
