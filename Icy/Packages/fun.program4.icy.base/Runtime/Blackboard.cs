@@ -7,9 +7,20 @@ namespace Icy.Base
 	/// </summary>
 	public class Blackboard
 	{
+		protected Dictionary<string, int> _IntBlackboard = new Dictionary<string, int>();
 		protected Dictionary<string, float> _FloatBlackboard = new Dictionary<string, float>();
 		protected Dictionary<string, string> _StringBlackboard = new Dictionary<string, string>();
 		protected Dictionary<string, object> _ObjectBlackboard = new Dictionary<string, object>();
+
+		public void WriteInt(string key, int value)
+		{
+			_IntBlackboard[key] = value;
+		}
+
+		public int ReadInt(string key)
+		{
+			return _IntBlackboard[key];
+		}
 
 		public void WriteFloat(string key, float value)
 		{
