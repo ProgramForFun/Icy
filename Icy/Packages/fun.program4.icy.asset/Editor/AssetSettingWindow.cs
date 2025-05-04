@@ -48,7 +48,7 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.json");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -78,7 +78,7 @@ namespace Icy.Asset.Editor
 			string targetDir = IcyFrame.Instance.GetSettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, "AssetSetting.bin");
+			string targetPath = Path.Combine(targetDir, "AssetSetting.json");
 			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
 		}
 

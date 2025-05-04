@@ -150,7 +150,7 @@ namespace Icy.Asset
 
 		private string GetAssetHostServerAddressFromSetting(bool isMain)
 		{
-			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.json");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);

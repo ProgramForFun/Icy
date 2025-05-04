@@ -33,7 +33,7 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -49,7 +49,7 @@ namespace Icy.UI.Editor
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, "UISetting.bin");
+			string targetPath = Path.Combine(targetDir, "UISetting.json");
 			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
 		}
 	}

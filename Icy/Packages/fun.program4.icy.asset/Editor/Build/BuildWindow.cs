@@ -130,7 +130,7 @@ namespace Icy.Asset.Editor
 			//		break;
 			//}
 
-			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.bin");
+			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.json");
 			if (File.Exists(fullPath))
 			{
 				byte[] bytes = File.ReadAllBytes(fullPath);
@@ -157,7 +157,7 @@ namespace Icy.Asset.Editor
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
 			if (!Directory.Exists(targetDir))
 				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, $"BuildSetting{_CurrPlatform}.bin");
+			string targetPath = Path.Combine(targetDir, $"BuildSetting{_CurrPlatform}.json");
 			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
 		}
 
