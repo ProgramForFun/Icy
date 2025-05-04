@@ -7,49 +7,77 @@ namespace Icy.Base
 	/// </summary>
 	public class Blackboard
 	{
-		protected Dictionary<string, int> _IntBlackboard = new Dictionary<string, int>();
-		protected Dictionary<string, float> _FloatBlackboard = new Dictionary<string, float>();
-		protected Dictionary<string, string> _StringBlackboard = new Dictionary<string, string>();
-		protected Dictionary<string, object> _ObjectBlackboard = new Dictionary<string, object>();
+		protected Dictionary<string, int> _Int;
+		protected Dictionary<string, float> _Float;
+		protected Dictionary<string, string> _String;
+		protected Dictionary<string, object> _Object;
 
 		public void WriteInt(string key, int value)
 		{
-			_IntBlackboard[key] = value;
+			TryToLazyAllocate<int>();
+			_Int[key] = value;
 		}
 
 		public int ReadInt(string key)
 		{
-			return _IntBlackboard[key];
+			return _Int[key];
 		}
 
 		public void WriteFloat(string key, float value)
 		{
-			_FloatBlackboard[key] = value;
+			TryToLazyAllocate<float>();
+			_Float[key] = value;
 		}
 
 		public float ReadFloat(string key)
 		{
-			return _FloatBlackboard[key];
+			return _Float[key];
 		}
 
 		public void WriteString(string key, string value)
 		{
-			_StringBlackboard[key] = value;
+			TryToLazyAllocate<string>();
+			_String[key] = value;
 		}
 
 		public string ReadString(string key)
 		{
-			return _StringBlackboard[key];
+			return _String[key];
 		}
 
 		public void WriteObject(string key, object value)
 		{
-			_ObjectBlackboard[key] = value;
+			TryToLazyAllocate<object>();
+			_Object[key] = value;
 		}
 
 		public object ReadObject(string key)
 		{
-			return _ObjectBlackboard[key];
+			return _Object[key];
+		}
+
+		private void TryToLazyAllocate<T>()
+		{
+			if (typeof(T) == typeof(int))
+			{
+				if (_Int == null)
+					_Int = new Dictionary<string, int>();
+			}
+			else if (typeof(T) == typeof(float))
+			{
+				if (_Float == null)
+					_Float = new Dictionary<string, float>();
+			}
+			else if (typeof(T) == typeof(string))
+			{
+				if (_String == null)
+					_String = new Dictionary<string, string>();
+			}
+			else if (typeof(object) == typeof(object))
+			{
+				if (_Object == null)
+					_Object = new Dictionary<string, object>();
+			}
 		}
 	}
 }
