@@ -208,6 +208,17 @@ public static class CommonUtility
 		return true;
 	}
 
+	/// <summary>
+	/// 逐byte异或一个byte数组
+	/// </summary>
+	/// <param name="array">要异或的byte数组</param>
+	/// <param name="xorWith">用来做异或运算的数值</param>
+	public static void xor(byte[] array, byte xorWith = 101)
+	{
+		for (int i = 0; i < array.Length; i++)
+			array[i] ^= xorWith;
+	}
+
 	#region Vector
 	/// <summary>
 	/// 在一个Rect范围内随机一个点
