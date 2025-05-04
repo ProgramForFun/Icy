@@ -130,15 +130,12 @@ namespace Icy.Asset.Editor
 			//		break;
 			//}
 
-			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.json");
-			if (File.Exists(fullPath))
-			{
-				byte[] bytes = File.ReadAllBytes(fullPath);
-				_Setting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
-				return _Setting;
-			}
-			else
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.json");
+			if (bytes == null)
 				_Setting = new BuildSetting();
+			else
+				_Setting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
+
 			return _Setting;
 		}
 
@@ -155,10 +152,7 @@ namespace Icy.Asset.Editor
 		private void SaveSetting()
 		{
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
-			if (!Directory.Exists(targetDir))
-				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, $"BuildSetting{_CurrPlatform}.json");
-			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatform}.json", _Setting.ToByteArray());
 		}
 
 		[Title("打包")]

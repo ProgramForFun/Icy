@@ -33,10 +33,11 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
-			if (File.Exists(fullPath))
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
+			if (bytes == null)
+				_Setting = new UISetting();
+			else
 			{
-				byte[] bytes = File.ReadAllBytes(fullPath);
 				_Setting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
 				UIRootPath = _Setting.UIRootDir;
 			}
@@ -47,10 +48,7 @@ namespace Icy.UI.Editor
 			_Setting.UIRootDir = UIRootPath;
 
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
-			if (!Directory.Exists(targetDir))
-				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, "UISetting.json");
-			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, "UISetting.json", _Setting.ToByteArray());
 		}
 	}
 }

@@ -40,9 +40,9 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 加载框架设置
+		/// 加载框架Setting
 		/// </summary>
-		/// <param name="fileNameWithExtension"></param>
+		/// <param name="fileNameWithExtension">setting文件名</param>
 		internal async UniTask<byte[]> LoadSetting(string fileNameWithExtension)
 		{
 			string path = Path.Combine(GetSettingDir(), fileNameWithExtension);
@@ -52,7 +52,42 @@ namespace Icy.Base
 #else
 			byte[] bytes = await CommonUtility.LoadStreamingAsset(path);
 #endif
+			CommonUtility.xor(bytes);
 			return bytes;
+		}
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// 直接同步加载框架Setting，editor专用
+		/// </summary>
+		/// <param name="dir">Setting文件所在的目录</param>
+		/// <param name="fileNameWithExtension">setting文件名</param>
+		internal byte[] LoadSettingEditor(string dir, string fileNameWithExtension)
+		{
+			string path = Path.Combine(dir, fileNameWithExtension);
+			if (File.Exists(path))
+			{
+				byte[] bytes = File.ReadAllBytes(path);
+				CommonUtility.xor(bytes);
+				return bytes;
+			}
+			return null;
+		}
+#endif
+
+		/// <summary>
+		/// 保存框架Setting
+		/// </summary>
+		/// <param name="dir">要保存到的目录</param>
+		/// <param name="fileNameWithExtension">setting文件名</param>
+		/// <param name="bytes">setting的byte数组数据</param>
+		internal void SaveSetting(string dir, string fileNameWithExtension, byte[] bytes)
+		{
+			if (!Directory.Exists(dir))
+				Directory.CreateDirectory(dir);
+			string targetPath = Path.Combine(dir, fileNameWithExtension);
+			CommonUtility.xor(bytes);
+			File.WriteAllBytes(targetPath, bytes);
 		}
 		#endregion
 

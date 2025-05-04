@@ -48,14 +48,12 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			string fullPath = Path.Combine(IcyFrame.Instance.GetSettingDir(), "AssetSetting.json");
-			if (File.Exists(fullPath))
-			{
-				byte[] bytes = File.ReadAllBytes(fullPath);
-				AssetSetting assetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
-				return assetSetting;
-			}
-			return new AssetSetting();
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), "AssetSetting.json");
+			if (bytes == null)
+				_Setting = new AssetSetting();
+			else
+				_Setting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+			return _Setting;
 		}
 
 		private void OnAssetHostServerAddressMainChanged()
@@ -76,10 +74,7 @@ namespace Icy.Asset.Editor
 				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 
 			string targetDir = IcyFrame.Instance.GetSettingDir();
-			if (!Directory.Exists(targetDir))
-				Directory.CreateDirectory(targetDir);
-			string targetPath = Path.Combine(targetDir, "AssetSetting.json");
-			File.WriteAllBytes(targetPath, _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
 		}
 
 		private bool IsValidHttpOrHttpsUrl(string url)
