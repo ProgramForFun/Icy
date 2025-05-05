@@ -1,5 +1,6 @@
-
 using Cysharp.Threading.Tasks;
+using System;
+using UnityEngine;
 
 namespace Icy.Base
 {
@@ -34,20 +35,41 @@ namespace Icy.Base
 
 		private async UniTaskVoid DoFinish()
 		{
-			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
-			//await UniTask.WaitUntil(()=> !_Procedure.IsChangingStep);
-			while (OwnerProcedure.IsChangingStep)
-				await UniTask.NextFrame();
+			await WaitChangeStepFinish();
 			OwnerProcedure.NextStep();
 		}
 
 		private async UniTaskVoid DoFinishAndGoto<T>() where T : ProcedureStep
 		{
-			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
-			//await UniTask.WaitUntil(() => !_Procedure.IsChangingStep);
-			while (OwnerProcedure.IsChangingStep)
-				await UniTask.NextFrame();
+			await WaitChangeStepFinish();
 			OwnerProcedure.GotoStep<T>();
+		}
+
+		private async UniTask WaitChangeStepFinish()
+		{
+#if UNITY_EDITOR
+			if (Application.isPlaying)
+				await UniTask.WaitUntil(IsChangingStepFinish);
+			else
+			{
+				//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，这里改成Warning
+				try
+				{
+					await UniTask.WaitUntil(IsChangingStepFinish);
+				}
+				catch (Exception e)
+				{
+					Log.LogWarning($"{GetType().Name} step UniTask.WaitUntil exception, {e}");
+				}
+			}
+#else
+			await UniTask.WaitUntil(IsChangingStepFinish);
+#endif
+		}
+
+		private bool IsChangingStepFinish()
+		{
+			return !OwnerProcedure.IsChangingStep;
 		}
 	}
 }
