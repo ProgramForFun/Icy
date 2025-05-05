@@ -34,6 +34,10 @@ namespace Icy.Base
 		/// </summary>
 		public event Action<bool> OnFinish;
 		/// <summary>
+		/// 切换一个新Step的回调，参数是新的Step，但是可能还没切换完成
+		/// </summary>
+		public event Action<ProcedureStep> OnChangeStep;
+		/// <summary>
 		/// Procedure是否已经执行完
 		/// </summary>
 		public bool IsFinished { get { return State == StateType.Finished; } }
@@ -96,7 +100,10 @@ namespace Icy.Base
 
 			_CurrStepIdx++;
 			if (_CurrStepIdx < _Steps.Count)
+			{
+				OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
 				_FSM.ChangeState(_Steps[_CurrStepIdx]);
+			}
 			else
 			{
 				State = StateType.Finished;
@@ -130,6 +137,7 @@ namespace Icy.Base
 			}
 
 			_CurrStepIdx = gotoIdx;
+			OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
 			_FSM.ChangeState(_Steps[_CurrStepIdx]);
 		}
 
