@@ -1,4 +1,5 @@
 [
 	"Icy.Asset.Editor.CopySettingsStep",
+	"Icy.Asset.Editor.ApplyPlayerSettingsStep",
 	"Icy.Asset.Editor.BuildPlayerStep",
 ]
