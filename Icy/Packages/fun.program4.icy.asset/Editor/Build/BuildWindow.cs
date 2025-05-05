@@ -17,7 +17,6 @@ namespace Icy.Asset.Editor
 	public class BuildWindow : OdinEditorWindow
 	{
 		private static BuildWindow _BuildWindow;
-		private BuildSetting _Setting;
 
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
@@ -70,8 +69,22 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnSettingChanged")]
 		public string OutputDir;
 
+		/// <summary>
+		/// 当前选中平台的BuildTarget
+		/// </summary>
+		private BuildTarget _CurrBuildTarget;
+		/// <summary>
+		/// 当前选中平台的Setting文件
+		/// </summary>
+		private BuildSetting _Setting;
+		/// <summary>
+		/// Odin Tab组件
+		/// </summary>
 		private InspectorProperty _TabGroupProperty;
-		private string _CurrPlatform;
+		/// <summary>
+		/// 当前选中平台的名字
+		/// </summary>
+		private string _CurrPlatformName;
 
 
 		[MenuItem("Icy/Build")]
@@ -93,9 +106,9 @@ namespace Icy.Asset.Editor
 			if (_TabGroupProperty != null)
 			{
 				string currTabName = _TabGroupProperty.State.Get<string>("CurrentTabName");
-				if (_CurrPlatform != currTabName)
+				if (_CurrPlatformName != currTabName)
 				{
-					_CurrPlatform = currTabName;
+					_CurrPlatformName = currTabName;
 					OnTabChanged(currTabName);
 				}
 			}
@@ -117,18 +130,21 @@ namespace Icy.Asset.Editor
 
 		private BuildSetting GetBuildSetting(string platform)
 		{
-			//switch (platform)
-			//{
-			//	case "Android":
-			//		break;
-			//	case "iOS":
-			//		break;
-			//	case "Win64":
-			//		break;
-			//	default:
-			//		Log.Assert(false, $"Unsupported platform {platform}");
-			//		break;
-			//}
+			switch (platform)
+			{
+				case "Android":
+					_CurrBuildTarget = BuildTarget.Android;
+					break;
+				case "iOS":
+					_CurrBuildTarget = BuildTarget.iOS;
+					break;
+				case "Win64":
+					_CurrBuildTarget = BuildTarget.StandaloneWindows64;
+					break;
+				default:
+					Log.Assert(false, $"Unsupported platform {platform}");
+					break;
+			}
 
 			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.json");
 			if (bytes == null)
@@ -152,13 +168,19 @@ namespace Icy.Asset.Editor
 		private void SaveSetting()
 		{
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
-			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatform}.json", _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatformName}.json", _Setting.ToByteArray());
 		}
 
 		[Title("打包")]
 		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		private void Build()
 		{
+			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
+			{
+				Log.Assert(false, $"打包未执行；不推荐在打包时切换BuildTarget平台，请先切换完毕再打包；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 选择的打包平台 = {_CurrBuildTarget}");
+				return;
+			}
+
 			SaveSetting();
 
 			JSONArray jsonArray;
@@ -182,6 +204,8 @@ namespace Icy.Asset.Editor
 				ProcedureStep step = Activator.CreateInstance(type) as ProcedureStep;
 				procedure.AddStep(step);
 			}
+
+			procedure.Blackboard.WriteInt("BuildTarget", (int)_CurrBuildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", _Setting);
 			procedure.Start();
 		}
