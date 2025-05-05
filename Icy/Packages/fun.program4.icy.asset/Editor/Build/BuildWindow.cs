@@ -207,7 +207,20 @@ namespace Icy.Asset.Editor
 
 			procedure.Blackboard.WriteInt("BuildTarget", (int)_CurrBuildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", _Setting);
+			procedure.OnChangeStep += OnChangeBuildStep;
+			procedure.OnFinish += OnBuildProcedureFinish;
 			procedure.Start();
+		}
+
+		private void OnChangeBuildStep(ProcedureStep step)
+		{
+			string info = $"Current build step : {step.GetType().Name}";
+			EditorUtility.DisplayProgressBar("Build Player", info, step.OwnerProcedure.Progress);
+		}
+
+		private void OnBuildProcedureFinish(bool _)
+		{
+			EditorUtility.ClearProgressBar();
 		}
 	}
 }
