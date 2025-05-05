@@ -97,11 +97,13 @@ namespace Icy.Asset.Editor
 
 		private void Update()
 		{
+#pragma warning disable CS0618
 			if (_TabGroupProperty == null)
 			{
 				if (PropertyTree != null && PropertyTree.RootProperty != null)
 					_TabGroupProperty = PropertyTree.RootProperty.Children.FirstOrDefault(p => p.Attributes.HasAttribute<TabGroupAttribute>());
 			}
+#pragma warning restore CS0618
 
 			if (_TabGroupProperty != null)
 			{
