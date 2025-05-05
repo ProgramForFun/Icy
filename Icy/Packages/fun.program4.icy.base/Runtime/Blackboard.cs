@@ -18,6 +18,11 @@ namespace Icy.Base
 			_Int[key] = value;
 		}
 
+		public bool HasInt(string key)
+		{
+			return _Int != null && _Int.ContainsKey(key);
+		}
+
 		public int ReadInt(string key)
 		{
 			return _Int[key];
@@ -27,6 +32,11 @@ namespace Icy.Base
 		{
 			TryToLazyAllocate<float>();
 			_Float[key] = value;
+		}
+
+		public bool HasFloat(string key)
+		{
+			return _Float != null && _Float.ContainsKey(key);
 		}
 
 		public float ReadFloat(string key)
@@ -40,6 +50,11 @@ namespace Icy.Base
 			_String[key] = value;
 		}
 
+		public bool HasString(string key)
+		{
+			return _String != null && _String.ContainsKey(key);
+		}
+
 		public string ReadString(string key)
 		{
 			return _String[key];
@@ -49,6 +64,11 @@ namespace Icy.Base
 		{
 			TryToLazyAllocate<object>();
 			_Object[key] = value;
+		}
+
+		public bool HasObject(string key)
+		{
+			return _Object != null && _Object.ContainsKey(key);
 		}
 
 		public object ReadObject(string key)
