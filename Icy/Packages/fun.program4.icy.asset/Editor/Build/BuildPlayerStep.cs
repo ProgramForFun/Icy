@@ -16,7 +16,7 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Activate()
 		{
-			_BuildSetting = _Procedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
+			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
 
 			await Build();
 

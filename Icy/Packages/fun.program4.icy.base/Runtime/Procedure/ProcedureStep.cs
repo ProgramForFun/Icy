@@ -8,12 +8,12 @@ namespace Icy.Base
 	/// </summary>
 	public abstract class ProcedureStep : FSMState
 	{
-		protected Procedure _Procedure;
+		public Procedure OwnerProcedure { get; protected set; }
 
 		public override void Init(FSM owner)
 		{
 			base.Init(owner);
-			_Procedure = OwnerFSM.Blackboard.ReadObject("Procedure") as Procedure;
+			OwnerProcedure = OwnerFSM.Blackboard.ReadObject("Procedure") as Procedure;
 		}
 
 		/// <summary>
@@ -36,18 +36,18 @@ namespace Icy.Base
 		{
 			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
 			//await UniTask.WaitUntil(()=> !_Procedure.IsChangingStep);
-			while (_Procedure.IsChangingStep)
+			while (OwnerProcedure.IsChangingStep)
 				await UniTask.NextFrame();
-			_Procedure.NextStep();
+			OwnerProcedure.NextStep();
 		}
 
 		private async UniTaskVoid DoFinishAndGoto<T>() where T : ProcedureStep
 		{
 			//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，所以改成了While
 			//await UniTask.WaitUntil(() => !_Procedure.IsChangingStep);
-			while (_Procedure.IsChangingStep)
+			while (OwnerProcedure.IsChangingStep)
 				await UniTask.NextFrame();
-			_Procedure.GotoStep<T>();
+			OwnerProcedure.GotoStep<T>();
 		}
 	}
 }

@@ -17,12 +17,12 @@ namespace Icy.Asset.Editor
 			if (!succeed)
 			{
 				Log.Assert(false, "Copy setting files failed", "CopySettingsStep");
-				_Procedure.Abort();
+				OwnerProcedure.Abort();
 				return;
 			}
 
-			Finish();
 			await UniTask.CompletedTask;
+			Finish();
 		}
 
 		public override async UniTask Deactivate()

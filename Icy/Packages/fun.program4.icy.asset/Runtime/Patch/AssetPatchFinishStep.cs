@@ -13,7 +13,7 @@ public class AssetPatchFinishStep : ProcedureStep
 	public override async UniTask Activate()
 	{
 		Log.LogInfo($"Activate AssetPatchFinishStep", "AssetPatcher");
-		_Patcher = _Procedure.Blackboard.ReadObject("AssetPatcher") as AssetPatcher;
+		_Patcher = OwnerProcedure.Blackboard.ReadObject("AssetPatcher") as AssetPatcher;
 		await Clear();
 	}
 

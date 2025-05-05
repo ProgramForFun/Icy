@@ -14,8 +14,8 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Activate()
 		{
-			_BuildTarget = (BuildTarget)_Procedure.Blackboard.ReadInt("BuildTarget");
-			_BuildSetting = _Procedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
+			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget");
+			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
 
 			if (_BuildSetting != null)
 			{
@@ -46,8 +46,11 @@ namespace Icy.Asset.Editor
 				}
 			}
 
-			Finish();
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+
 			await UniTask.CompletedTask;
+			Finish();
 		}
 
 		public override async UniTask Deactivate()

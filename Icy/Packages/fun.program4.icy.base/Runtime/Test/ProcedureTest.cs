@@ -67,7 +67,7 @@ namespace Icy.Base
 			{
 				await UniTask.WaitForSeconds(2);
 				Log.LogInfo("Step D wait for 2");
-				_Procedure.Abort();
+				OwnerProcedure.Abort();
 			}
 
 			public override async UniTask Deactivate()
