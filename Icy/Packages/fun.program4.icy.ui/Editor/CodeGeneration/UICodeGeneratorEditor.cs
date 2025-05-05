@@ -19,8 +19,6 @@ namespace Icy.UI.Editor
 
 		static UICodeGeneratorEditor()
 		{
-			_UIRootDir = GetUIRootDir();
-
 			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
 			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
 
@@ -169,7 +167,8 @@ namespace Icy.UI.Editor
 		/// </summary>
 		private static string CheckGenerateCondition(string uiName, string typeName, List<UICodeGeneratorItem> components = null)
 		{
-			if (string.IsNullOrEmpty(_UIRootDir))
+			string uiRootDir = GetUIRootDir();
+			if (string.IsNullOrEmpty(uiRootDir))
 			{
 				Log.LogError($"Generate UI {typeName} code failed, please set UI root path first. Go to menu Icy/UI/Setting to set it");
 				return null;
@@ -182,8 +181,8 @@ namespace Icy.UI.Editor
 			}
 
 			string fileName = string.Format("UI{0}{1}.cs", uiName, typeName);
-			string folderPath = Path.Combine(_UIRootDir, uiName);
-			string filePath = Path.Combine(_UIRootDir, uiName, fileName);
+			string folderPath = Path.Combine(uiRootDir, uiName);
+			string filePath = Path.Combine(uiRootDir, uiName, fileName);
 			if (File.Exists(filePath) && !string.IsNullOrEmpty(typeName))
 			{
 				Log.LogError($"Generate UI {typeName} code failed, {filePath} is alreay exist");
@@ -260,25 +259,30 @@ namespace Icy.UI.Editor
 
 		private static bool IsLogicFileExist(string uiName)
 		{
-			if (string.IsNullOrEmpty(_UIRootDir))
+			string uiRootDir = GetUIRootDir();
+			if (string.IsNullOrEmpty(uiRootDir))
 				return false;//其他地方有log，这里就不输出了
 
 			string fileName = string.Format("UI{0}Logic.cs", uiName);
-			string filePath = Path.Combine(_UIRootDir, uiName, fileName);
+			string filePath = Path.Combine(uiRootDir, uiName, fileName);
 			return File.Exists(filePath);
 		}
 
 		private static string GetUIRootDir()
 		{
-			string fullPath = Path.Combine(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
-			if (File.Exists(fullPath))
+			if (string.IsNullOrEmpty(_UIRootDir))
 			{
-				byte[] bytes = File.ReadAllBytes(fullPath);
-				UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
-				return uiSetting.UIRootDir;
+				byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
+				if (bytes != null)
+				{
+					UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+					return uiSetting.UIRootDir;
+				}
+				else
+					return null;
 			}
 			else
-				return null;
+				return _UIRootDir;
 		}
 	}
 }
