@@ -9,7 +9,7 @@ namespace Icy.Editor
 	/// </summary>
 	public static class FrequentlyUsedPath
 	{
-		[MenuItem("Icy/Path/Persistent")]
+		[MenuItem("Icy/Path/Persistent", false, 10)]
 		static void OpenPersistentDataPath()
 		{
 			System.Diagnostics.Process.Start(Application.persistentDataPath);

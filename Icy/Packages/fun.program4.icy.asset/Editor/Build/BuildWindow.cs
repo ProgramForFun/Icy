@@ -87,7 +87,7 @@ namespace Icy.Asset.Editor
 		private string _CurrPlatformName;
 
 
-		[MenuItem("Icy/Build")]
+		[MenuItem("Icy/Build &B", false, 1000)]
 		public static void Open()
 		{
 			if (_BuildWindow != null)

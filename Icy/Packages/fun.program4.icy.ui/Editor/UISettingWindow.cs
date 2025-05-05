@@ -22,7 +22,7 @@ namespace Icy.UI.Editor
 		public string UIRootPath;
 
 
-		[MenuItem("Icy/UI/Setting")]
+		[MenuItem("Icy/UI/Setting", false, 40)]
 		public static void Open()
 		{
 			if (_UISettingWindow != null)

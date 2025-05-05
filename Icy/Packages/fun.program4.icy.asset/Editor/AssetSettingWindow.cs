@@ -30,7 +30,7 @@ namespace Icy.Asset.Editor
 		public string AssetHostServerAddressStandby;
 
 
-		[MenuItem("Icy/Asset/Setting")]
+		[MenuItem("Icy/Asset/Setting", false, 30)]
 		public static void Open()
 		{
 			if (_AssetSettingWindow != null)
