@@ -48,11 +48,33 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Android")]
 		[TabGroup("", "iOS")]
 		[TabGroup("", "Win64")]
-		[Title("版本号")]
+		[Title("string版本号（PlayerSettings.bundleVersion）")]
 		[ShowInInspector]
 		[Delayed]
 		[OnValueChanged("OnSettingChanged")]
-		public string Version;
+		public string BundleVersion;
+
+		[TabGroup("", "Android")]
+		[TabGroup("", "iOS")]
+		[Title("数字版本号（PlayerSettings.Android.bundleVersionCode、PlayerSettings.iOS.buildNumber）")]
+		[ShowInInspector]
+		[Delayed]
+		[OnValueChanged("OnSettingChanged")]
+		public int BundleNumber;
+
+		[TabGroup("", "Android")]
+		[Title("KeyStore密码")]
+		[ShowInInspector]
+		[Delayed]
+		[OnValueChanged("OnSettingChanged")]
+		public string KeyStorePassword;
+
+		[TabGroup("", "iOS")]
+		[Title("自动签名")]
+		[ShowInInspector]
+		[Delayed]
+		[OnValueChanged("OnSettingChanged")]
+		public bool AutoSigning;
 
 		[TabGroup("", "Android")]
 		[TabGroup("", "iOS")]
@@ -125,7 +147,10 @@ namespace Icy.Asset.Editor
 				ApplicationIdentifier = buildSetting.ApplicationIdentifier;
 				ProductName = buildSetting.ProductName;
 				CompanyName = buildSetting.CompanyName;
-				Version = buildSetting.Version;
+				BundleVersion = buildSetting.BundleVersion;
+				BundleNumber = buildSetting.BundleNumber;
+				KeyStorePassword = buildSetting.KeyStorePassword;
+				AutoSigning = buildSetting.AutoSigning;
 				OutputDir = buildSetting.OutputDir;
 			}
 		}
@@ -162,7 +187,10 @@ namespace Icy.Asset.Editor
 			_Setting.ApplicationIdentifier = ApplicationIdentifier;
 			_Setting.ProductName = ProductName;
 			_Setting.CompanyName = CompanyName;
-			_Setting.Version = Version;
+			_Setting.BundleVersion = BundleVersion;
+			_Setting.BundleNumber = BundleNumber;
+			_Setting.KeyStorePassword = KeyStorePassword.ToString();
+			_Setting.AutoSigning = AutoSigning;
 			_Setting.OutputDir = OutputDir;
 			SaveSetting();
 		}

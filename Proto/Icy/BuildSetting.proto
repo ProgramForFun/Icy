@@ -11,8 +11,14 @@ message BuildSetting
 	string ProductName = 2;
 	//公司名
 	string CompanyName = 3;
-	//版本号
-	string Version = 4;
+	//string版本号
+	string BundleVersion = 4;
+	//数字版本号
+	int32 BundleNumber = 5;
     //Build输出目录
-    string OutputDir = 5;
+    string OutputDir = 6;
+	//是否自动签名（iOS）
+	bool AutoSigning = 7;
+	//KeyStore密码（Android）
+	string KeyStorePassword = 8;
 }

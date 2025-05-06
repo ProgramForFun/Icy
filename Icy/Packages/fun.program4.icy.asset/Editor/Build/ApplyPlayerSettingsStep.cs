@@ -28,16 +28,18 @@ namespace Icy.Asset.Editor
 				if (!string.IsNullOrEmpty(_BuildSetting.CompanyName))
 					PlayerSettings.companyName = _BuildSetting.CompanyName;
 
-				if (!string.IsNullOrEmpty(_BuildSetting.Version))
-					PlayerSettings.bundleVersion = _BuildSetting.Version;
+				if (!string.IsNullOrEmpty(_BuildSetting.BundleVersion))
+					PlayerSettings.bundleVersion = _BuildSetting.BundleVersion;
 
 				switch (_BuildTarget)
 				{
 					case BuildTarget.Android:
-						//PlayerSettings.Android.keyaliasPass = "";
-						//PlayerSettings.Android.keystorePass = "";
+						PlayerSettings.Android.bundleVersionCode = _BuildSetting.BundleNumber;
+						PlayerSettings.Android.keystorePass = _BuildSetting.KeyStorePassword;
 						break;
 					case BuildTarget.iOS:
+						PlayerSettings.iOS.buildNumber = _BuildSetting.BundleNumber.ToString();
+						PlayerSettings.iOS.appleEnableAutomaticSigning = _BuildSetting.AutoSigning;
 						break;
 					case BuildTarget.StandaloneWindows64:
 						break;

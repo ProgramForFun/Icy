@@ -24,14 +24,16 @@ namespace Icy.Asset {
     static BuildSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCJ7CgxCdWlsZFNldHRp",
-            "bmcSHQoVQXBwbGljYXRpb25JZGVudGlmaWVyGAEgASgJEhMKC1Byb2R1Y3RO",
-            "YW1lGAIgASgJEhMKC0NvbXBhbnlOYW1lGAMgASgJEg8KB1ZlcnNpb24YBCAB",
-            "KAkSEQoJT3V0cHV0RGlyGAUgASgJYgZwcm90bzM="));
+            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCLGAQoMQnVpbGRTZXR0",
+            "aW5nEh0KFUFwcGxpY2F0aW9uSWRlbnRpZmllchgBIAEoCRITCgtQcm9kdWN0",
+            "TmFtZRgCIAEoCRITCgtDb21wYW55TmFtZRgDIAEoCRIVCg1CdW5kbGVWZXJz",
+            "aW9uGAQgASgJEhQKDEJ1bmRsZU51bWJlchgFIAEoBRIRCglPdXRwdXREaXIY",
+            "BiABKAkSEwoLQXV0b1NpZ25pbmcYByABKAgSGAoQS2V5U3RvcmVQYXNzd29y",
+            "ZBgIIAEoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "Version", "OutputDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword" }, null, null, null, null)
           }));
     }
     #endregion
@@ -76,8 +78,11 @@ namespace Icy.Asset {
       applicationIdentifier_ = other.applicationIdentifier_;
       productName_ = other.productName_;
       companyName_ = other.companyName_;
-      version_ = other.version_;
+      bundleVersion_ = other.bundleVersion_;
+      bundleNumber_ = other.bundleNumber_;
       outputDir_ = other.outputDir_;
+      autoSigning_ = other.autoSigning_;
+      keyStorePassword_ = other.keyStorePassword_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -132,23 +137,38 @@ namespace Icy.Asset {
       }
     }
 
-    /// <summary>Field number for the "Version" field.</summary>
-    public const int VersionFieldNumber = 4;
-    private string version_ = "";
+    /// <summary>Field number for the "BundleVersion" field.</summary>
+    public const int BundleVersionFieldNumber = 4;
+    private string bundleVersion_ = "";
     /// <summary>
-    ///版本号
+    ///string版本号
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Version {
-      get { return version_; }
+    public string BundleVersion {
+      get { return bundleVersion_; }
       set {
-        version_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        bundleVersion_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "BundleNumber" field.</summary>
+    public const int BundleNumberFieldNumber = 5;
+    private int bundleNumber_;
+    /// <summary>
+    ///数字版本号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int BundleNumber {
+      get { return bundleNumber_; }
+      set {
+        bundleNumber_ = value;
       }
     }
 
     /// <summary>Field number for the "OutputDir" field.</summary>
-    public const int OutputDirFieldNumber = 5;
+    public const int OutputDirFieldNumber = 6;
     private string outputDir_ = "";
     /// <summary>
     ///Build输出目录
@@ -159,6 +179,36 @@ namespace Icy.Asset {
       get { return outputDir_; }
       set {
         outputDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "AutoSigning" field.</summary>
+    public const int AutoSigningFieldNumber = 7;
+    private bool autoSigning_;
+    /// <summary>
+    ///是否自动签名（iOS）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AutoSigning {
+      get { return autoSigning_; }
+      set {
+        autoSigning_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "KeyStorePassword" field.</summary>
+    public const int KeyStorePasswordFieldNumber = 8;
+    private string keyStorePassword_ = "";
+    /// <summary>
+    ///KeyStore密码（Android）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string KeyStorePassword {
+      get { return keyStorePassword_; }
+      set {
+        keyStorePassword_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -180,8 +230,11 @@ namespace Icy.Asset {
       if (ApplicationIdentifier != other.ApplicationIdentifier) return false;
       if (ProductName != other.ProductName) return false;
       if (CompanyName != other.CompanyName) return false;
-      if (Version != other.Version) return false;
+      if (BundleVersion != other.BundleVersion) return false;
+      if (BundleNumber != other.BundleNumber) return false;
       if (OutputDir != other.OutputDir) return false;
+      if (AutoSigning != other.AutoSigning) return false;
+      if (KeyStorePassword != other.KeyStorePassword) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -192,8 +245,11 @@ namespace Icy.Asset {
       if (ApplicationIdentifier.Length != 0) hash ^= ApplicationIdentifier.GetHashCode();
       if (ProductName.Length != 0) hash ^= ProductName.GetHashCode();
       if (CompanyName.Length != 0) hash ^= CompanyName.GetHashCode();
-      if (Version.Length != 0) hash ^= Version.GetHashCode();
+      if (BundleVersion.Length != 0) hash ^= BundleVersion.GetHashCode();
+      if (BundleNumber != 0) hash ^= BundleNumber.GetHashCode();
       if (OutputDir.Length != 0) hash ^= OutputDir.GetHashCode();
+      if (AutoSigning != false) hash ^= AutoSigning.GetHashCode();
+      if (KeyStorePassword.Length != 0) hash ^= KeyStorePassword.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -224,13 +280,25 @@ namespace Icy.Asset {
         output.WriteRawTag(26);
         output.WriteString(CompanyName);
       }
-      if (Version.Length != 0) {
+      if (BundleVersion.Length != 0) {
         output.WriteRawTag(34);
-        output.WriteString(Version);
+        output.WriteString(BundleVersion);
+      }
+      if (BundleNumber != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(BundleNumber);
       }
       if (OutputDir.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(50);
         output.WriteString(OutputDir);
+      }
+      if (AutoSigning != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(AutoSigning);
+      }
+      if (KeyStorePassword.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(KeyStorePassword);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -254,13 +322,25 @@ namespace Icy.Asset {
         output.WriteRawTag(26);
         output.WriteString(CompanyName);
       }
-      if (Version.Length != 0) {
+      if (BundleVersion.Length != 0) {
         output.WriteRawTag(34);
-        output.WriteString(Version);
+        output.WriteString(BundleVersion);
+      }
+      if (BundleNumber != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(BundleNumber);
       }
       if (OutputDir.Length != 0) {
-        output.WriteRawTag(42);
+        output.WriteRawTag(50);
         output.WriteString(OutputDir);
+      }
+      if (AutoSigning != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(AutoSigning);
+      }
+      if (KeyStorePassword.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(KeyStorePassword);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -281,11 +361,20 @@ namespace Icy.Asset {
       if (CompanyName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CompanyName);
       }
-      if (Version.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Version);
+      if (BundleVersion.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BundleVersion);
+      }
+      if (BundleNumber != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(BundleNumber);
       }
       if (OutputDir.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(OutputDir);
+      }
+      if (AutoSigning != false) {
+        size += 1 + 1;
+      }
+      if (KeyStorePassword.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(KeyStorePassword);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -308,11 +397,20 @@ namespace Icy.Asset {
       if (other.CompanyName.Length != 0) {
         CompanyName = other.CompanyName;
       }
-      if (other.Version.Length != 0) {
-        Version = other.Version;
+      if (other.BundleVersion.Length != 0) {
+        BundleVersion = other.BundleVersion;
+      }
+      if (other.BundleNumber != 0) {
+        BundleNumber = other.BundleNumber;
       }
       if (other.OutputDir.Length != 0) {
         OutputDir = other.OutputDir;
+      }
+      if (other.AutoSigning != false) {
+        AutoSigning = other.AutoSigning;
+      }
+      if (other.KeyStorePassword.Length != 0) {
+        KeyStorePassword = other.KeyStorePassword;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -342,11 +440,23 @@ namespace Icy.Asset {
             break;
           }
           case 34: {
-            Version = input.ReadString();
+            BundleVersion = input.ReadString();
             break;
           }
-          case 42: {
+          case 40: {
+            BundleNumber = input.ReadInt32();
+            break;
+          }
+          case 50: {
             OutputDir = input.ReadString();
+            break;
+          }
+          case 56: {
+            AutoSigning = input.ReadBool();
+            break;
+          }
+          case 66: {
+            KeyStorePassword = input.ReadString();
             break;
           }
         }
@@ -377,11 +487,23 @@ namespace Icy.Asset {
             break;
           }
           case 34: {
-            Version = input.ReadString();
+            BundleVersion = input.ReadString();
             break;
           }
-          case 42: {
+          case 40: {
+            BundleNumber = input.ReadInt32();
+            break;
+          }
+          case 50: {
             OutputDir = input.ReadString();
+            break;
+          }
+          case 56: {
+            AutoSigning = input.ReadBool();
+            break;
+          }
+          case 66: {
+            KeyStorePassword = input.ReadString();
             break;
           }
         }
