@@ -16,7 +16,7 @@ namespace Icy.Asset.Editor
 	/// </summary>
 	public class BuildWindow : OdinEditorWindow
 	{
-		private static BuildWindow _BuildWindow;
+		protected static BuildWindow _BuildWindow;
 
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
@@ -94,19 +94,19 @@ namespace Icy.Asset.Editor
 		/// <summary>
 		/// 当前选中平台的BuildTarget
 		/// </summary>
-		private BuildTarget _CurrBuildTarget;
+		protected BuildTarget _CurrBuildTarget;
 		/// <summary>
 		/// 当前选中平台的Setting文件
 		/// </summary>
-		private BuildSetting _Setting;
+		protected BuildSetting _Setting;
 		/// <summary>
 		/// Odin Tab组件
 		/// </summary>
-		private InspectorProperty _TabGroupProperty;
+		protected InspectorProperty _TabGroupProperty;
 		/// <summary>
 		/// 当前选中平台的名字
 		/// </summary>
-		private string _CurrPlatformName;
+		protected string _CurrPlatformName;
 
 
 		[MenuItem("Icy/Build &B", false, 1000)]
@@ -117,7 +117,7 @@ namespace Icy.Asset.Editor
 			_BuildWindow = GetWindow<BuildWindow>();
 		}
 
-		private void Update()
+		protected virtual void Update()
 		{
 #pragma warning disable CS0618
 			if (_TabGroupProperty == null)
@@ -138,7 +138,7 @@ namespace Icy.Asset.Editor
 			}
 		}
 
-		private void OnTabChanged(string tabName)
+		protected virtual void OnTabChanged(string tabName)
 		{
 			Log.LogInfo($"Switch to platform {tabName}");
 			BuildSetting buildSetting = GetBuildSetting(tabName);
@@ -155,7 +155,7 @@ namespace Icy.Asset.Editor
 			}
 		}
 
-		private BuildSetting GetBuildSetting(string platform)
+		protected virtual BuildSetting GetBuildSetting(string platform)
 		{
 			switch (platform)
 			{
@@ -182,7 +182,7 @@ namespace Icy.Asset.Editor
 			return _Setting;
 		}
 
-		private void OnSettingChanged()
+		protected virtual void OnSettingChanged()
 		{
 			_Setting.ApplicationIdentifier = ApplicationIdentifier;
 			_Setting.ProductName = ProductName;
@@ -195,7 +195,7 @@ namespace Icy.Asset.Editor
 			SaveSetting();
 		}
 
-		private void SaveSetting()
+		protected virtual void SaveSetting()
 		{
 			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
 			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatformName}.json", _Setting.ToByteArray());
@@ -203,7 +203,7 @@ namespace Icy.Asset.Editor
 
 		[Title("打包")]
 		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
-		private void Build()
+		protected virtual void Build()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
 			{
@@ -242,13 +242,13 @@ namespace Icy.Asset.Editor
 			procedure.Start();
 		}
 
-		private void OnChangeBuildStep(ProcedureStep step)
+		protected virtual void OnChangeBuildStep(ProcedureStep step)
 		{
 			string info = $"Current build step : {step.GetType().Name}";
 			EditorUtility.DisplayProgressBar("Build Player", info, step.OwnerProcedure.Progress);
 		}
 
-		private void OnBuildProcedureFinish(bool _)
+		protected virtual void OnBuildProcedureFinish(bool _)
 		{
 			EditorUtility.ClearProgressBar();
 		}
