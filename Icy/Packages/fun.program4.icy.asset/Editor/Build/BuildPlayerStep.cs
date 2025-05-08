@@ -53,13 +53,12 @@ namespace Icy.Asset.Editor
 			//	PlayerSettings.Android.keyaliasPass = "your_password";
 			//}
 
-			string path = GetLocationPathName(buildTarget, outputDir);
-			BuildPipeline.BuildPlayer(
-				scenes.ToArray(),
-				path,
-				buildTarget,
-				options
-			);
+			BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+			buildPlayerOptions.target = buildTarget;
+			buildPlayerOptions.options = options;
+			buildPlayerOptions.scenes = scenes.ToArray();
+			buildPlayerOptions.locationPathName = GetLocationPathName(buildTarget, outputDir);
+			BuildPipeline.BuildPlayer(buildPlayerOptions);
 
 			while (BuildPipeline.isBuildingPlayer)
 				await UniTask.Yield();
