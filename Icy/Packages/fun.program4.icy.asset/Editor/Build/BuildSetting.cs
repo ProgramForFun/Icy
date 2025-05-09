@@ -24,16 +24,18 @@ namespace Icy.Asset {
     static BuildSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCLGAQoMQnVpbGRTZXR0",
+            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKtAgoMQnVpbGRTZXR0",
             "aW5nEh0KFUFwcGxpY2F0aW9uSWRlbnRpZmllchgBIAEoCRITCgtQcm9kdWN0",
             "TmFtZRgCIAEoCRITCgtDb21wYW55TmFtZRgDIAEoCRIVCg1CdW5kbGVWZXJz",
             "aW9uGAQgASgJEhQKDEJ1bmRsZU51bWJlchgFIAEoBRIRCglPdXRwdXREaXIY",
             "BiABKAkSEwoLQXV0b1NpZ25pbmcYByABKAgSGAoQS2V5U3RvcmVQYXNzd29y",
-            "ZBgIIAEoCWIGcHJvdG8z"));
+            "ZBgIIAEoCRIYChBEZXZlbG9wbWVudEJ1aWxkGAkgASgIEhcKD1NjcmlwdERl",
+            "YnVnZ2luZxgKIAEoCBIbChNBdXRvQ29ubmVjdFByb2ZpbGVyGAsgASgIEhUK",
+            "DURlZXBQcm9maWxpbmcYDCABKAhiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword", "DevelopmentBuild", "ScriptDebugging", "AutoConnectProfiler", "DeepProfiling" }, null, null, null, null)
           }));
     }
     #endregion
@@ -83,6 +85,10 @@ namespace Icy.Asset {
       outputDir_ = other.outputDir_;
       autoSigning_ = other.autoSigning_;
       keyStorePassword_ = other.keyStorePassword_;
+      developmentBuild_ = other.developmentBuild_;
+      scriptDebugging_ = other.scriptDebugging_;
+      autoConnectProfiler_ = other.autoConnectProfiler_;
+      deepProfiling_ = other.deepProfiling_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -212,6 +218,66 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "DevelopmentBuild" field.</summary>
+    public const int DevelopmentBuildFieldNumber = 9;
+    private bool developmentBuild_;
+    /// <summary>
+    ///打Dev版本
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool DevelopmentBuild {
+      get { return developmentBuild_; }
+      set {
+        developmentBuild_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ScriptDebugging" field.</summary>
+    public const int ScriptDebuggingFieldNumber = 10;
+    private bool scriptDebugging_;
+    /// <summary>
+    ///允许调试代码
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ScriptDebugging {
+      get { return scriptDebugging_; }
+      set {
+        scriptDebugging_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "AutoConnectProfiler" field.</summary>
+    public const int AutoConnectProfilerFieldNumber = 11;
+    private bool autoConnectProfiler_;
+    /// <summary>
+    ///启动时自动连接Profiler
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AutoConnectProfiler {
+      get { return autoConnectProfiler_; }
+      set {
+        autoConnectProfiler_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "DeepProfiling" field.</summary>
+    public const int DeepProfilingFieldNumber = 12;
+    private bool deepProfiling_;
+    /// <summary>
+    ///开启Deep Profiling
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool DeepProfiling {
+      get { return deepProfiling_; }
+      set {
+        deepProfiling_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -235,6 +301,10 @@ namespace Icy.Asset {
       if (OutputDir != other.OutputDir) return false;
       if (AutoSigning != other.AutoSigning) return false;
       if (KeyStorePassword != other.KeyStorePassword) return false;
+      if (DevelopmentBuild != other.DevelopmentBuild) return false;
+      if (ScriptDebugging != other.ScriptDebugging) return false;
+      if (AutoConnectProfiler != other.AutoConnectProfiler) return false;
+      if (DeepProfiling != other.DeepProfiling) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -250,6 +320,10 @@ namespace Icy.Asset {
       if (OutputDir.Length != 0) hash ^= OutputDir.GetHashCode();
       if (AutoSigning != false) hash ^= AutoSigning.GetHashCode();
       if (KeyStorePassword.Length != 0) hash ^= KeyStorePassword.GetHashCode();
+      if (DevelopmentBuild != false) hash ^= DevelopmentBuild.GetHashCode();
+      if (ScriptDebugging != false) hash ^= ScriptDebugging.GetHashCode();
+      if (AutoConnectProfiler != false) hash ^= AutoConnectProfiler.GetHashCode();
+      if (DeepProfiling != false) hash ^= DeepProfiling.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -300,6 +374,22 @@ namespace Icy.Asset {
         output.WriteRawTag(66);
         output.WriteString(KeyStorePassword);
       }
+      if (DevelopmentBuild != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(DevelopmentBuild);
+      }
+      if (ScriptDebugging != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(ScriptDebugging);
+      }
+      if (AutoConnectProfiler != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(AutoConnectProfiler);
+      }
+      if (DeepProfiling != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(DeepProfiling);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -342,6 +432,22 @@ namespace Icy.Asset {
         output.WriteRawTag(66);
         output.WriteString(KeyStorePassword);
       }
+      if (DevelopmentBuild != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(DevelopmentBuild);
+      }
+      if (ScriptDebugging != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(ScriptDebugging);
+      }
+      if (AutoConnectProfiler != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(AutoConnectProfiler);
+      }
+      if (DeepProfiling != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(DeepProfiling);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -375,6 +481,18 @@ namespace Icy.Asset {
       }
       if (KeyStorePassword.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(KeyStorePassword);
+      }
+      if (DevelopmentBuild != false) {
+        size += 1 + 1;
+      }
+      if (ScriptDebugging != false) {
+        size += 1 + 1;
+      }
+      if (AutoConnectProfiler != false) {
+        size += 1 + 1;
+      }
+      if (DeepProfiling != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -411,6 +529,18 @@ namespace Icy.Asset {
       }
       if (other.KeyStorePassword.Length != 0) {
         KeyStorePassword = other.KeyStorePassword;
+      }
+      if (other.DevelopmentBuild != false) {
+        DevelopmentBuild = other.DevelopmentBuild;
+      }
+      if (other.ScriptDebugging != false) {
+        ScriptDebugging = other.ScriptDebugging;
+      }
+      if (other.AutoConnectProfiler != false) {
+        AutoConnectProfiler = other.AutoConnectProfiler;
+      }
+      if (other.DeepProfiling != false) {
+        DeepProfiling = other.DeepProfiling;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -459,6 +589,22 @@ namespace Icy.Asset {
             KeyStorePassword = input.ReadString();
             break;
           }
+          case 72: {
+            DevelopmentBuild = input.ReadBool();
+            break;
+          }
+          case 80: {
+            ScriptDebugging = input.ReadBool();
+            break;
+          }
+          case 88: {
+            AutoConnectProfiler = input.ReadBool();
+            break;
+          }
+          case 96: {
+            DeepProfiling = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -504,6 +650,22 @@ namespace Icy.Asset {
           }
           case 66: {
             KeyStorePassword = input.ReadString();
+            break;
+          }
+          case 72: {
+            DevelopmentBuild = input.ReadBool();
+            break;
+          }
+          case 80: {
+            ScriptDebugging = input.ReadBool();
+            break;
+          }
+          case 88: {
+            AutoConnectProfiler = input.ReadBool();
+            break;
+          }
+          case 96: {
+            DeepProfiling = input.ReadBool();
             break;
           }
         }

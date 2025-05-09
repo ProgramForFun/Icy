@@ -42,16 +42,14 @@ namespace Icy.Asset.Editor
 
 			// 构建选项配置
 			BuildOptions options = BuildOptions.None;
-			//options |= BuildOptions.Development;  // 开发构建
-			//options |= BuildOptions.AllowDebugging; // 允许调试
-
-			// 平台特定设置
-			//if (target == BuildTarget.Android)
-			//{
-			//	EditorUserBuildSettings.buildAppBundle = false; // 生成APK
-			//	PlayerSettings.Android.keystorePass = "your_password";
-			//	PlayerSettings.Android.keyaliasPass = "your_password";
-			//}
+			if (_BuildSetting.DevelopmentBuild)
+				options |= BuildOptions.Development;
+			if (_BuildSetting.ScriptDebugging)
+				options |= BuildOptions.AllowDebugging;
+			if (_BuildSetting.DeepProfiling)
+				options |= BuildOptions.EnableDeepProfilingSupport;
+			if (_BuildSetting.AutoConnectProfiler)
+				options |= BuildOptions.ConnectWithProfiler;
 
 			BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
 			buildPlayerOptions.target = buildTarget;

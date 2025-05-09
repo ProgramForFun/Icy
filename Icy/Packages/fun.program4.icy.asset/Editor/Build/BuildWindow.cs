@@ -79,17 +79,23 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Android")]
 		[TabGroup("", "iOS")]
 		[TabGroup("", "Win64")]
-		[ShowInInspector]
-		[OnValueChanged("OnSettingChanged")]
-		public bool DevelopmentBuild = false;
-
-		[TabGroup("", "Android")]
-		[TabGroup("", "iOS")]
-		[TabGroup("", "Win64")]
 		[Title("Build输出目录")]
 		[FolderPath]
 		[OnValueChanged("OnSettingChanged")]
 		public string OutputDir;
+
+		[ShowInInspector]
+		[OnValueChanged("OnSettingChanged")]
+		public bool DevelopmentBuild = false;
+		[ShowInInspector]
+		[OnValueChanged("OnSettingChanged")]
+		public bool ScriptDebugging = false;
+		[ShowInInspector]
+		[OnValueChanged("OnSettingChanged")]
+		public bool AutoConnectProfiler = false;
+		[ShowInInspector]
+		[OnValueChanged("OnSettingChanged")]
+		public bool DeepProfiling = false;
 
 		/// <summary>
 		/// 当前选中平台的BuildTarget
@@ -152,6 +158,11 @@ namespace Icy.Asset.Editor
 				KeyStorePassword = buildSetting.KeyStorePassword;
 				AutoSigning = buildSetting.AutoSigning;
 				OutputDir = buildSetting.OutputDir;
+
+				DevelopmentBuild = buildSetting.DevelopmentBuild;
+				ScriptDebugging = buildSetting.ScriptDebugging;
+				AutoConnectProfiler = buildSetting.AutoConnectProfiler;
+				DeepProfiling = buildSetting.DeepProfiling;
 			}
 		}
 
@@ -192,6 +203,11 @@ namespace Icy.Asset.Editor
 			_Setting.KeyStorePassword = KeyStorePassword.ToString();
 			_Setting.AutoSigning = AutoSigning;
 			_Setting.OutputDir = OutputDir;
+
+			_Setting.DevelopmentBuild = DevelopmentBuild;
+			_Setting.ScriptDebugging = ScriptDebugging;
+			_Setting.AutoConnectProfiler = AutoConnectProfiler;
+			_Setting.DeepProfiling = DeepProfiling;
 			SaveSetting();
 		}
 

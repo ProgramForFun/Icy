@@ -21,4 +21,13 @@ message BuildSetting
 	bool AutoSigning = 7;
 	//KeyStore密码（Android）
 	string KeyStorePassword = 8;
+
+	//打Dev版本
+	bool DevelopmentBuild = 9;
+	//允许调试代码
+	bool ScriptDebugging = 10;
+	//启动时自动连接Profiler
+	bool AutoConnectProfiler = 11;
+	//开启Deep Profiling
+	bool DeepProfiling = 12;
 }
