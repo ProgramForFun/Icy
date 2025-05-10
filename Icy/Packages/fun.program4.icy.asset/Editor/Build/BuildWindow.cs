@@ -84,18 +84,10 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnSettingChanged")]
 		public string OutputDir;
 
-		[ShowInInspector]
+		[Title("调试选项")]
+		[EnumToggleButtons, HideLabel]
 		[OnValueChanged("OnSettingChanged")]
-		public bool DevelopmentBuild = false;
-		[ShowInInspector]
-		[OnValueChanged("OnSettingChanged")]
-		public bool ScriptDebugging = false;
-		[ShowInInspector]
-		[OnValueChanged("OnSettingChanged")]
-		public bool AutoConnectProfiler = false;
-		[ShowInInspector]
-		[OnValueChanged("OnSettingChanged")]
-		public bool DeepProfiling = false;
+		public BuildOptionDev DevOptions;
 
 		/// <summary>
 		/// 当前选中平台的BuildTarget
@@ -146,7 +138,7 @@ namespace Icy.Asset.Editor
 
 		protected virtual void OnTabChanged(string tabName)
 		{
-			Log.LogInfo($"Switch to platform {tabName}");
+			Log.LogInfo($"Switch to platform {tabName}", "BuildWindow");
 			BuildSetting buildSetting = GetBuildSetting(tabName);
 			if (buildSetting != null)
 			{
@@ -159,10 +151,14 @@ namespace Icy.Asset.Editor
 				AutoSigning = buildSetting.AutoSigning;
 				OutputDir = buildSetting.OutputDir;
 
-				DevelopmentBuild = buildSetting.DevelopmentBuild;
-				ScriptDebugging = buildSetting.ScriptDebugging;
-				AutoConnectProfiler = buildSetting.AutoConnectProfiler;
-				DeepProfiling = buildSetting.DeepProfiling;
+				if (buildSetting.DevelopmentBuild)
+					DevOptions |= BuildOptionDev.DevelopmentBuild;
+				if (buildSetting.ScriptDebugging)
+					DevOptions |= BuildOptionDev.ScriptDebugging;
+				if (buildSetting.AutoConnectProfiler)
+					DevOptions |= BuildOptionDev.AutoConnectProfiler;
+				if (buildSetting.DeepProfiling)
+					DevOptions |= BuildOptionDev.DeepProfiling;
 			}
 		}
 
@@ -204,10 +200,11 @@ namespace Icy.Asset.Editor
 			_Setting.AutoSigning = AutoSigning;
 			_Setting.OutputDir = OutputDir;
 
-			_Setting.DevelopmentBuild = DevelopmentBuild;
-			_Setting.ScriptDebugging = ScriptDebugging;
-			_Setting.AutoConnectProfiler = AutoConnectProfiler;
-			_Setting.DeepProfiling = DeepProfiling;
+			_Setting.DevelopmentBuild = (DevOptions & BuildOptionDev.DevelopmentBuild) == BuildOptionDev.DevelopmentBuild;
+			_Setting.ScriptDebugging = (DevOptions & BuildOptionDev.ScriptDebugging) == BuildOptionDev.ScriptDebugging;
+			_Setting.AutoConnectProfiler = (DevOptions & BuildOptionDev.AutoConnectProfiler) == BuildOptionDev.AutoConnectProfiler;
+			_Setting.DeepProfiling = (DevOptions & BuildOptionDev.DeepProfiling) == BuildOptionDev.DeepProfiling;
+
 			SaveSetting();
 		}
 
