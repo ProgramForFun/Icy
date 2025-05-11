@@ -31,17 +31,14 @@ namespace Icy.Asset
 		/// </summary>
 		private string _DefaultPackageName;
 		/// <summary>
+		/// 资源相关设置
+		/// </summary>
+		private AssetSetting _AssetSetting;
+		/// <summary>
 		/// 间隔多长时间自动执行一次UnloadUnusedAssets，单位秒
 		/// </summary>
 		private int _AutoUnloadUnusedAssetsInterval;
-		/// <summary>
-		/// 热更新资源Host地址（主）
-		/// </summary>
-		private string _AssetHostServerAddressMain;
-		/// <summary>
-		/// 热更新资源Host地址（备）
-		/// </summary>
-		private string _AssetHostServerAddressStandby;
+
 
 		#region Init
 		/// <summary>
@@ -63,8 +60,8 @@ namespace Icy.Asset
 				YooAssets.SetDefaultPackage(_Package);
 			}
 
-			_AssetHostServerAddressMain = await GetAssetHostServerAddressFromSetting(true);
-			_AssetHostServerAddressStandby = await GetAssetHostServerAddressFromSetting(false);
+			byte[] bytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
+			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
@@ -130,7 +127,7 @@ namespace Icy.Asset
 		/// <param name="isMain">是主地址还是备地址</param>
 		private string GetHostServerURL(bool isMain)
 		{
-			string hostServerAddress = isMain ? _AssetHostServerAddressMain : _AssetHostServerAddressStandby;
+			string hostServerAddress = isMain ? _AssetSetting.AssetHostServerAddressMain : _AssetSetting.AssetHostServerAddressStandby;
 			if (string.IsNullOrEmpty(hostServerAddress))
 			{
 				Log.LogError("Asset host server address is empty, open Icy/Asset/Setting to set it");
@@ -157,13 +154,6 @@ namespace Icy.Asset
         else
             return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #endif
-		}
-
-		private async UniTask<string> GetAssetHostServerAddressFromSetting(bool isMain)
-		{
-			byte[] bytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
-			AssetSetting assetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
-			return isMain ? assetSetting.AssetHostServerAddressMain : assetSetting.AssetHostServerAddressStandby;
 		}
 
 		/// <summary>
