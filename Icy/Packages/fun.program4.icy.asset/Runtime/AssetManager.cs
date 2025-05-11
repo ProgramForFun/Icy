@@ -81,7 +81,7 @@ namespace Icy.Asset
 			if (playMode == EPlayMode.OfflinePlayMode)
 			{
 				OfflinePlayModeParameters createParameters = new OfflinePlayModeParameters();
-				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
+				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(new DecryptionOffset());
 				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
@@ -92,7 +92,7 @@ namespace Icy.Asset
 				string fallbackHostServer = GetHostServerURL(false);
 				IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 				HostPlayModeParameters createParameters = new HostPlayModeParameters();
-				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters();
+				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(new DecryptionOffset());
 				createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
 				initializationOperation = _Package.InitializeAsync(createParameters);
 			}

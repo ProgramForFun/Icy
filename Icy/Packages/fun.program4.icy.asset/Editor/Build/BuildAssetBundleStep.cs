@@ -62,7 +62,7 @@ namespace Icy.Asset.Editor
 			buildParameters.FileNameStyle = EFileNameStyle.HashName;
 			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.None;
 			buildParameters.BuildinFileCopyParams = string.Empty;
-			//buildParameters.EncryptionServices = CreateEncryptionInstance();//如果要加密，开启这里，需要提供一个加密的Service
+			buildParameters.EncryptionServices = new EncryptionOffset();//如果要加密，开启这里，需要提供一个加密的Service
 			buildParameters.CompressOption = ECompressOption.LZ4;
 			buildParameters.BuiltinShadersBundleName = GetBuiltinShaderBundleName();
 			buildParameters.ClearBuildCacheFiles = clearBuildCacheFiles; //不清理构建缓存，启用增量构建，可以提高打包速度！
