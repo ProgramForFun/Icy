@@ -196,7 +196,7 @@ namespace Icy.Asset.Editor
 					break;
 			}
 
-			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), $"BuildSetting{platform}.json");
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), $"BuildSetting{platform}.json");
 			if (bytes == null)
 				_Setting = new BuildSetting();
 			else
@@ -230,7 +230,7 @@ namespace Icy.Asset.Editor
 
 		protected virtual void SaveSetting()
 		{
-			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
+			string targetDir = IcyFrame.Instance.GetSettingDir();
 			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatformName}.json", _Setting.ToByteArray());
 		}
 
