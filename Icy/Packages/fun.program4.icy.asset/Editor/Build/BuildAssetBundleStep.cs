@@ -24,28 +24,33 @@ namespace Icy.Asset.Editor
 			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget");
 			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
 
-			bool succeed = BuildAssetBundle(_BuildTarget);
-			if (succeed)
+			if (_BuildSetting.BuildAssetBundle)
 			{
-				await UniTask.Yield();
-				ClearStreamingAssetsAndCopyNew();
-				await UniTask.Yield();
-				Finish();
+				bool succeed = BuildAssetBundle(_BuildTarget, true, _BuildSetting.ClearAssetBundleCache);
+				if (succeed)
+				{
+					await UniTask.Yield();
+					ClearStreamingAssetsAndCopyNew();
+					await UniTask.Yield();
+					Finish();
+				}
+				else
+					OwnerProcedure.Abort();
 			}
 			else
-				OwnerProcedure.Abort();
+				Finish();
 		}
 
 		private static bool BuildAssetBundle(BuildTarget buildTarget, bool useAssetDependencyDB = true, bool clearBuildCacheFiles = false)
 		{
 			Log.LogInfo($"Start build asset bundle, platform = {buildTarget}");
 
-			string buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
+			string buildOutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
 			string streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
 
 			// 构建参数
 			ScriptableBuildParameters buildParameters = new ScriptableBuildParameters();
-			buildParameters.BuildOutputRoot = buildoutputRoot;
+			buildParameters.BuildOutputRoot = buildOutputRoot;
 			buildParameters.BuildinFileRoot = streamingAssetsRoot;
 			buildParameters.BuildPipeline = EBuildPipeline.ScriptableBuildPipeline.ToString();
 			buildParameters.BuildBundleType = (int)EBuildBundleType.AssetBundle; //必须指定资源包类型

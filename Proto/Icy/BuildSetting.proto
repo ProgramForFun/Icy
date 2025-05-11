@@ -30,4 +30,11 @@ message BuildSetting
 	bool AutoConnectProfiler = 11;
 	//开启Deep Profiling
 	bool DeepProfiling = 12;
+
+	//是否打包AssetBundle
+	bool BuildAssetBundle = 13;
+	//是否清除缓存、打全量AssetBundle
+	bool ClearAssetBundleCache = 14;
+	//是否启动AssetBundle加密
+	bool EncryptAssetBundle = 15;
 }

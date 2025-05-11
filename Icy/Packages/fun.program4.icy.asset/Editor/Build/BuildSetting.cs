@@ -24,18 +24,20 @@ namespace Icy.Asset {
     static BuildSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKtAgoMQnVpbGRTZXR0",
+            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKCAwoMQnVpbGRTZXR0",
             "aW5nEh0KFUFwcGxpY2F0aW9uSWRlbnRpZmllchgBIAEoCRITCgtQcm9kdWN0",
             "TmFtZRgCIAEoCRITCgtDb21wYW55TmFtZRgDIAEoCRIVCg1CdW5kbGVWZXJz",
             "aW9uGAQgASgJEhQKDEJ1bmRsZU51bWJlchgFIAEoBRIRCglPdXRwdXREaXIY",
             "BiABKAkSEwoLQXV0b1NpZ25pbmcYByABKAgSGAoQS2V5U3RvcmVQYXNzd29y",
             "ZBgIIAEoCRIYChBEZXZlbG9wbWVudEJ1aWxkGAkgASgIEhcKD1NjcmlwdERl",
             "YnVnZ2luZxgKIAEoCBIbChNBdXRvQ29ubmVjdFByb2ZpbGVyGAsgASgIEhUK",
-            "DURlZXBQcm9maWxpbmcYDCABKAhiBnByb3RvMw=="));
+            "DURlZXBQcm9maWxpbmcYDCABKAgSGAoQQnVpbGRBc3NldEJ1bmRsZRgNIAEo",
+            "CBIdChVDbGVhckFzc2V0QnVuZGxlQ2FjaGUYDiABKAgSGgoSRW5jcnlwdEFz",
+            "c2V0QnVuZGxlGA8gASgIYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword", "DevelopmentBuild", "ScriptDebugging", "AutoConnectProfiler", "DeepProfiling" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword", "DevelopmentBuild", "ScriptDebugging", "AutoConnectProfiler", "DeepProfiling", "BuildAssetBundle", "ClearAssetBundleCache", "EncryptAssetBundle" }, null, null, null, null)
           }));
     }
     #endregion
@@ -89,6 +91,9 @@ namespace Icy.Asset {
       scriptDebugging_ = other.scriptDebugging_;
       autoConnectProfiler_ = other.autoConnectProfiler_;
       deepProfiling_ = other.deepProfiling_;
+      buildAssetBundle_ = other.buildAssetBundle_;
+      clearAssetBundleCache_ = other.clearAssetBundleCache_;
+      encryptAssetBundle_ = other.encryptAssetBundle_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -278,6 +283,51 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "BuildAssetBundle" field.</summary>
+    public const int BuildAssetBundleFieldNumber = 13;
+    private bool buildAssetBundle_;
+    /// <summary>
+    ///是否打包AssetBundle
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool BuildAssetBundle {
+      get { return buildAssetBundle_; }
+      set {
+        buildAssetBundle_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ClearAssetBundleCache" field.</summary>
+    public const int ClearAssetBundleCacheFieldNumber = 14;
+    private bool clearAssetBundleCache_;
+    /// <summary>
+    ///是否清除缓存、打全量AssetBundle
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ClearAssetBundleCache {
+      get { return clearAssetBundleCache_; }
+      set {
+        clearAssetBundleCache_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "EncryptAssetBundle" field.</summary>
+    public const int EncryptAssetBundleFieldNumber = 15;
+    private bool encryptAssetBundle_;
+    /// <summary>
+    ///是否启动AssetBundle加密
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool EncryptAssetBundle {
+      get { return encryptAssetBundle_; }
+      set {
+        encryptAssetBundle_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -305,6 +355,9 @@ namespace Icy.Asset {
       if (ScriptDebugging != other.ScriptDebugging) return false;
       if (AutoConnectProfiler != other.AutoConnectProfiler) return false;
       if (DeepProfiling != other.DeepProfiling) return false;
+      if (BuildAssetBundle != other.BuildAssetBundle) return false;
+      if (ClearAssetBundleCache != other.ClearAssetBundleCache) return false;
+      if (EncryptAssetBundle != other.EncryptAssetBundle) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -324,6 +377,9 @@ namespace Icy.Asset {
       if (ScriptDebugging != false) hash ^= ScriptDebugging.GetHashCode();
       if (AutoConnectProfiler != false) hash ^= AutoConnectProfiler.GetHashCode();
       if (DeepProfiling != false) hash ^= DeepProfiling.GetHashCode();
+      if (BuildAssetBundle != false) hash ^= BuildAssetBundle.GetHashCode();
+      if (ClearAssetBundleCache != false) hash ^= ClearAssetBundleCache.GetHashCode();
+      if (EncryptAssetBundle != false) hash ^= EncryptAssetBundle.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -390,6 +446,18 @@ namespace Icy.Asset {
         output.WriteRawTag(96);
         output.WriteBool(DeepProfiling);
       }
+      if (BuildAssetBundle != false) {
+        output.WriteRawTag(104);
+        output.WriteBool(BuildAssetBundle);
+      }
+      if (ClearAssetBundleCache != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(ClearAssetBundleCache);
+      }
+      if (EncryptAssetBundle != false) {
+        output.WriteRawTag(120);
+        output.WriteBool(EncryptAssetBundle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -448,6 +516,18 @@ namespace Icy.Asset {
         output.WriteRawTag(96);
         output.WriteBool(DeepProfiling);
       }
+      if (BuildAssetBundle != false) {
+        output.WriteRawTag(104);
+        output.WriteBool(BuildAssetBundle);
+      }
+      if (ClearAssetBundleCache != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(ClearAssetBundleCache);
+      }
+      if (EncryptAssetBundle != false) {
+        output.WriteRawTag(120);
+        output.WriteBool(EncryptAssetBundle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -492,6 +572,15 @@ namespace Icy.Asset {
         size += 1 + 1;
       }
       if (DeepProfiling != false) {
+        size += 1 + 1;
+      }
+      if (BuildAssetBundle != false) {
+        size += 1 + 1;
+      }
+      if (ClearAssetBundleCache != false) {
+        size += 1 + 1;
+      }
+      if (EncryptAssetBundle != false) {
         size += 1 + 1;
       }
       if (_unknownFields != null) {
@@ -541,6 +630,15 @@ namespace Icy.Asset {
       }
       if (other.DeepProfiling != false) {
         DeepProfiling = other.DeepProfiling;
+      }
+      if (other.BuildAssetBundle != false) {
+        BuildAssetBundle = other.BuildAssetBundle;
+      }
+      if (other.ClearAssetBundleCache != false) {
+        ClearAssetBundleCache = other.ClearAssetBundleCache;
+      }
+      if (other.EncryptAssetBundle != false) {
+        EncryptAssetBundle = other.EncryptAssetBundle;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -605,6 +703,18 @@ namespace Icy.Asset {
             DeepProfiling = input.ReadBool();
             break;
           }
+          case 104: {
+            BuildAssetBundle = input.ReadBool();
+            break;
+          }
+          case 112: {
+            ClearAssetBundleCache = input.ReadBool();
+            break;
+          }
+          case 120: {
+            EncryptAssetBundle = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -666,6 +776,18 @@ namespace Icy.Asset {
           }
           case 96: {
             DeepProfiling = input.ReadBool();
+            break;
+          }
+          case 104: {
+            BuildAssetBundle = input.ReadBool();
+            break;
+          }
+          case 112: {
+            ClearAssetBundleCache = input.ReadBool();
+            break;
+          }
+          case 120: {
+            EncryptAssetBundle = input.ReadBool();
             break;
           }
         }

@@ -84,10 +84,19 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnSettingChanged")]
 		public string OutputDir;
 
+		//[InlineButton("A", "?")]
+		[Title("AssetBundle选项")]
+		[EnumToggleButtons]
+		[OnValueChanged("OnSettingChanged")]
+		public BuildOptionAssetBundle AssetBundleOptions;
+
 		[Title("调试选项")]
-		[EnumToggleButtons, HideLabel]
+		[EnumToggleButtons]
 		[OnValueChanged("OnSettingChanged")]
 		public BuildOptionDev DevOptions;
+
+		//protected void A(){}
+
 
 		/// <summary>
 		/// 当前选中平台的BuildTarget
@@ -159,6 +168,13 @@ namespace Icy.Asset.Editor
 					DevOptions |= BuildOptionDev.AutoConnectProfiler;
 				if (buildSetting.DeepProfiling)
 					DevOptions |= BuildOptionDev.DeepProfiling;
+
+				if (buildSetting.BuildAssetBundle)
+					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
+				if (buildSetting.ClearAssetBundleCache)
+					AssetBundleOptions |= BuildOptionAssetBundle.ClearAssetBundleCache;
+				if (buildSetting.EncryptAssetBundle)
+					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 		}
 
@@ -204,6 +220,10 @@ namespace Icy.Asset.Editor
 			_Setting.ScriptDebugging = (DevOptions & BuildOptionDev.ScriptDebugging) == BuildOptionDev.ScriptDebugging;
 			_Setting.AutoConnectProfiler = (DevOptions & BuildOptionDev.AutoConnectProfiler) == BuildOptionDev.AutoConnectProfiler;
 			_Setting.DeepProfiling = (DevOptions & BuildOptionDev.DeepProfiling) == BuildOptionDev.DeepProfiling;
+
+			_Setting.BuildAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.BuildAssetBundle) == BuildOptionAssetBundle.BuildAssetBundle;
+			_Setting.ClearAssetBundleCache = (AssetBundleOptions & BuildOptionAssetBundle.ClearAssetBundleCache) == BuildOptionAssetBundle.ClearAssetBundleCache;
+			_Setting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
 
 			SaveSetting();
 		}
