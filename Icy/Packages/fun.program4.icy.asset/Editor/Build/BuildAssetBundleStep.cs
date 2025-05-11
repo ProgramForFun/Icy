@@ -26,7 +26,7 @@ namespace Icy.Asset.Editor
 
 			if (_BuildSetting.BuildAssetBundle)
 			{
-				bool succeed = BuildAssetBundle(_BuildTarget, true, _BuildSetting.ClearAssetBundleCache);
+				bool succeed = BuildAssetBundle(_BuildTarget, _BuildSetting.ClearAssetBundleCache, _BuildSetting.EncryptAssetBundle);
 				if (succeed)
 				{
 					await UniTask.Yield();
@@ -41,7 +41,7 @@ namespace Icy.Asset.Editor
 				Finish();
 		}
 
-		private static bool BuildAssetBundle(BuildTarget buildTarget, bool useAssetDependencyDB = true, bool clearBuildCacheFiles = false)
+		private static bool BuildAssetBundle(BuildTarget buildTarget, bool clearBuildCacheFiles = false, bool encrypt = true, bool useAssetDependencyDB = true)
 		{
 			Log.LogInfo($"Start build asset bundle, platform = {buildTarget}");
 
@@ -62,11 +62,12 @@ namespace Icy.Asset.Editor
 			buildParameters.FileNameStyle = EFileNameStyle.HashName;
 			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.None;
 			buildParameters.BuildinFileCopyParams = string.Empty;
-			buildParameters.EncryptionServices = new EncryptionOffset();//如果要加密，开启这里，需要提供一个加密的Service
 			buildParameters.CompressOption = ECompressOption.LZ4;
 			buildParameters.BuiltinShadersBundleName = GetBuiltinShaderBundleName();
 			buildParameters.ClearBuildCacheFiles = clearBuildCacheFiles; //不清理构建缓存，启用增量构建，可以提高打包速度！
 			buildParameters.UseAssetDependencyDB = useAssetDependencyDB; //使用资源依赖关系数据库，可以提高打包速度！
+			if (encrypt)
+				buildParameters.EncryptionServices = new EncryptionOffset();//如果要加密，开启这里，需要提供一个加密的Service
 
 			// 执行构建
 			ScriptableBuildPipeline pipeline = new ScriptableBuildPipeline();

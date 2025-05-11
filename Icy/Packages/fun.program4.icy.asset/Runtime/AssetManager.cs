@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
@@ -35,6 +36,10 @@ namespace Icy.Asset
 		/// </summary>
 		private AssetSetting _AssetSetting;
 		/// <summary>
+		/// Build相关设置
+		/// </summary>
+		private BuildSetting _BuildSetting;
+		/// <summary>
 		/// 间隔多长时间自动执行一次UnloadUnusedAssets，单位秒
 		/// </summary>
 		private int _AutoUnloadUnusedAssetsInterval;
@@ -60,8 +65,12 @@ namespace Icy.Asset
 				YooAssets.SetDefaultPackage(_Package);
 			}
 
-			byte[] bytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
-			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+			byte[] assetSettingBytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
+			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(assetSettingBytes) as AssetSetting;
+			byte[] buildSettingBytes = await IcyFrame.Instance.LoadSetting(GetBuildSettingName());
+			_BuildSetting = BuildSetting.Descriptor.Parser.ParseFrom(buildSettingBytes) as BuildSetting;
+
+			IDecryptionServices decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
@@ -78,7 +87,7 @@ namespace Icy.Asset
 			if (playMode == EPlayMode.OfflinePlayMode)
 			{
 				OfflinePlayModeParameters createParameters = new OfflinePlayModeParameters();
-				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(new DecryptionOffset());
+				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(decryptionServices);
 				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
@@ -89,7 +98,7 @@ namespace Icy.Asset
 				string fallbackHostServer = GetHostServerURL(false);
 				IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 				HostPlayModeParameters createParameters = new HostPlayModeParameters();
-				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(new DecryptionOffset());
+				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(decryptionServices);
 				createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
 				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
@@ -177,6 +186,37 @@ namespace Icy.Asset
 			{
 				return $"{_fallbackHostServer}/{fileName}";
 			}
+		}
+
+		private string GetBuildSettingName()
+		{
+#if UNITY_EDITOR
+			switch (EditorUserBuildSettings.activeBuildTarget)
+			{
+				case BuildTarget.Android:
+					return "BuildSettingAndroid.json";
+				case BuildTarget.iOS:
+					return "BuildSettingiOS.json";
+				case BuildTarget.StandaloneWindows64:
+					return "BuildSettingWin64";
+				default:
+					Log.Assert(false, $"Unsupported platform {EditorUserBuildSettings.activeBuildTarget}");
+					return "";
+			}
+#else
+			switch (Application.platform)
+			{
+				case RuntimePlatform.Android:
+					return "BuildSettingAndroid.json";
+				case RuntimePlatform.IPhonePlayer:
+					return "BuildSettingiOS.json";
+				case RuntimePlatform.WindowsPlayer:
+					return "BuildSettingWin64";
+				default:
+					Log.Assert(false, $"Unsupported platform {Application.platform}");
+					return "";
+			}
+#endif
 		}
 		#endregion
 
