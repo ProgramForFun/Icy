@@ -11,7 +11,7 @@ namespace Icy.Asset.Editor
 	{
 		public EncryptResult Encrypt(EncryptFileInfo fileInfo)
 		{
-			int offset = 32;
+			int offset = (int)DecryptionOffset.GetFileOffset();
 			byte[] fileData = File.ReadAllBytes(fileInfo.FileLoadPath);
 			byte[] encryptedData = new byte[fileData.Length + offset];
 			Buffer.BlockCopy(fileData, 0, encryptedData, offset, fileData.Length);

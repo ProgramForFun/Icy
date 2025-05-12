@@ -8,6 +8,10 @@ namespace Icy.Asset
 	/// </summary>
 	public class DecryptionOffset : IDecryptionServices
 	{
+		//避免静态分析
+		private const ulong _OffsetA = 29;
+		private const ulong _OffsetB = 22;
+
 		/// <summary>
 		/// 同步方式获取解密的资源包对象
 		/// 注意：加载流对象在资源包对象释放的时候会自动释放
@@ -48,9 +52,9 @@ namespace Icy.Asset
 			throw new System.NotImplementedException();
 		}
 
-		private static ulong GetFileOffset()
+		public static ulong GetFileOffset()
 		{
-			return 32;
+			return _OffsetA + _OffsetB;
 		}
 	}
 }
