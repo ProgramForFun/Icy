@@ -196,7 +196,7 @@ namespace Icy.Asset.Editor
 					break;
 			}
 
-			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), $"BuildSetting{platform}.json");
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), IcyFrame.Instance.GetBuildSettingName());
 			if (bytes == null)
 				_Setting = new BuildSetting();
 			else
@@ -231,7 +231,7 @@ namespace Icy.Asset.Editor
 		protected virtual void SaveSetting()
 		{
 			string targetDir = IcyFrame.Instance.GetSettingDir();
-			IcyFrame.Instance.SaveSetting(targetDir, $"BuildSetting{_CurrPlatformName}.json", _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, IcyFrame.Instance.GetBuildSettingName(), _Setting.ToByteArray());
 		}
 
 		[Title("打包")]

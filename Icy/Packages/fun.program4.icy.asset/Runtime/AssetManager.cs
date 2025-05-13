@@ -67,7 +67,7 @@ namespace Icy.Asset
 
 			byte[] assetSettingBytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
 			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(assetSettingBytes) as AssetSetting;
-			byte[] buildSettingBytes = await IcyFrame.Instance.LoadSetting(GetBuildSettingName());
+			byte[] buildSettingBytes = await IcyFrame.Instance.LoadSetting(IcyFrame.Instance.GetBuildSettingName());
 			_BuildSetting = BuildSetting.Descriptor.Parser.ParseFrom(buildSettingBytes) as BuildSetting;
 
 			IDecryptionServices decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
@@ -186,37 +186,6 @@ namespace Icy.Asset
 			{
 				return $"{_fallbackHostServer}/{fileName}";
 			}
-		}
-
-		private string GetBuildSettingName()
-		{
-#if UNITY_EDITOR
-			switch (EditorUserBuildSettings.activeBuildTarget)
-			{
-				case BuildTarget.Android:
-					return "BuildSettingAndroid.json";
-				case BuildTarget.iOS:
-					return "BuildSettingiOS.json";
-				case BuildTarget.StandaloneWindows64:
-					return "BuildSettingWin64";
-				default:
-					Log.Assert(false, $"Unsupported platform {EditorUserBuildSettings.activeBuildTarget}");
-					return "";
-			}
-#else
-			switch (Application.platform)
-			{
-				case RuntimePlatform.Android:
-					return "BuildSettingAndroid.json";
-				case RuntimePlatform.IPhonePlayer:
-					return "BuildSettingiOS.json";
-				case RuntimePlatform.WindowsPlayer:
-					return "BuildSettingWin64";
-				default:
-					Log.Assert(false, $"Unsupported platform {Application.platform}");
-					return "";
-			}
-#endif
 		}
 		#endregion
 

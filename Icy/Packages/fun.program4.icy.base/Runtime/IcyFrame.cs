@@ -89,6 +89,37 @@ namespace Icy.Base
 			CommonUtility.xor(bytes);
 			File.WriteAllBytes(targetPath, bytes);
 		}
+
+		public string GetBuildSettingName()
+		{
+#if UNITY_EDITOR
+			switch (UnityEditor.EditorUserBuildSettings.activeBuildTarget)
+			{
+				case UnityEditor.BuildTarget.Android:
+					return "BuildSetting_Android.json";
+				case UnityEditor.BuildTarget.iOS:
+					return "BuildSetting_iOS.json";
+				case UnityEditor.BuildTarget.StandaloneWindows64:
+					return "BuildSetting_Win64";
+				default:
+					Log.Assert(false, $"Unsupported platform {UnityEditor.EditorUserBuildSettings.activeBuildTarget}");
+					return "";
+			}
+#else
+			switch (Application.platform)
+			{
+				case RuntimePlatform.Android:
+					return "BuildSetting_Android.json";
+				case RuntimePlatform.IPhonePlayer:
+					return "BuildSetting_iOS.json";
+				case RuntimePlatform.WindowsPlayer:
+					return "BuildSetting_Win64";
+				default:
+					Log.Assert(false, $"Unsupported platform {Application.platform}");
+					return "";
+			}
+#endif
+		}
 		#endregion
 
 		#region Update
