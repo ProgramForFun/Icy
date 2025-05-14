@@ -240,9 +240,9 @@ namespace Icy.Asset.Editor
 
 			JSONArray jsonArray;
 			if (Directory.Exists("BuildProcedure"))
-				jsonArray = JSONArray.Parse(File.ReadAllText("BuildProcedure")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText("BuildProcedure")) as JSONArray;
 			else
-				jsonArray = JSONArray.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildProcedure.json")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildProcedure.json")) as JSONArray;
 
 
 			Procedure procedure = new Procedure("Build");
