@@ -24,7 +24,7 @@ namespace Icy.Asset.Editor
 		[Title("包名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string ApplicationIdentifier;
 
 		[TabGroup("", "Android")]
@@ -33,7 +33,7 @@ namespace Icy.Asset.Editor
 		[Title("展示给玩家的游戏名称")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string ProductName;
 
 		[TabGroup("", "Android")]
@@ -42,7 +42,7 @@ namespace Icy.Asset.Editor
 		[Title("公司名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string CompanyName;
 
 		[TabGroup("", "Android")]
@@ -51,7 +51,7 @@ namespace Icy.Asset.Editor
 		[Title("string版本号（PlayerSettings.bundleVersion）")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string BundleVersion;
 
 		[TabGroup("", "Android")]
@@ -59,21 +59,21 @@ namespace Icy.Asset.Editor
 		[Title("数字版本号（PlayerSettings.Android.bundleVersionCode、PlayerSettings.iOS.buildNumber）")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public int BundleNumber;
 
 		[TabGroup("", "Android")]
 		[Title("KeyStore密码")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string KeyStorePassword;
 
 		[TabGroup("", "iOS")]
 		[Title("自动签名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public bool AutoSigning;
 
 		[TabGroup("", "Android")]
@@ -81,18 +81,18 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Win64")]
 		[Title("Build输出目录")]
 		[FolderPath]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string OutputDir;
 
 		//[InlineButton("A", "?")]
 		[Title("AssetBundle选项")]
 		[EnumToggleButtons]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public BuildOptionAssetBundle AssetBundleOptions;
 
 		[Title("调试选项")]
 		[EnumToggleButtons]
-		[OnValueChanged("OnSettingChanged")]
+		[OnValueChanged("SaveSetting")]
 		public BuildOptionDev DevOptions;
 
 		//protected void A(){}
@@ -140,47 +140,15 @@ namespace Icy.Asset.Editor
 				if (_CurrPlatformName != currTabName)
 				{
 					_CurrPlatformName = currTabName;
-					OnTabChanged(currTabName);
+					LoadBuildSetting(currTabName);
 				}
 			}
 		}
 
-		protected virtual void OnTabChanged(string tabName)
+		protected virtual BuildSetting LoadBuildSetting(string tabName)
 		{
 			Log.LogInfo($"Switch to platform {tabName}", "BuildWindow");
-			BuildSetting buildSetting = GetBuildSetting(tabName);
-			if (buildSetting != null)
-			{
-				ApplicationIdentifier = buildSetting.ApplicationIdentifier;
-				ProductName = buildSetting.ProductName;
-				CompanyName = buildSetting.CompanyName;
-				BundleVersion = buildSetting.BundleVersion;
-				BundleNumber = buildSetting.BundleNumber;
-				KeyStorePassword = buildSetting.KeyStorePassword;
-				AutoSigning = buildSetting.AutoSigning;
-				OutputDir = buildSetting.OutputDir;
-
-				if (buildSetting.DevelopmentBuild)
-					DevOptions |= BuildOptionDev.DevelopmentBuild;
-				if (buildSetting.ScriptDebugging)
-					DevOptions |= BuildOptionDev.ScriptDebugging;
-				if (buildSetting.AutoConnectProfiler)
-					DevOptions |= BuildOptionDev.AutoConnectProfiler;
-				if (buildSetting.DeepProfiling)
-					DevOptions |= BuildOptionDev.DeepProfiling;
-
-				if (buildSetting.BuildAssetBundle)
-					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
-				if (buildSetting.ClearAssetBundleCache)
-					AssetBundleOptions |= BuildOptionAssetBundle.ClearAssetBundleCache;
-				if (buildSetting.EncryptAssetBundle)
-					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
-			}
-		}
-
-		protected virtual BuildSetting GetBuildSetting(string platform)
-		{
-			switch (platform)
+			switch (tabName)
 			{
 				case "Android":
 					_CurrBuildTarget = BuildTarget.Android;
@@ -192,7 +160,7 @@ namespace Icy.Asset.Editor
 					_CurrBuildTarget = BuildTarget.StandaloneWindows64;
 					break;
 				default:
-					Log.Assert(false, $"Unsupported platform {platform}");
+					Log.Assert(false, $"Unsupported platform {tabName}");
 					break;
 			}
 
@@ -202,10 +170,39 @@ namespace Icy.Asset.Editor
 			else
 				_Setting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
 
+
+			if (_Setting != null)
+			{
+				ApplicationIdentifier = _Setting.ApplicationIdentifier;
+				ProductName = _Setting.ProductName;
+				CompanyName = _Setting.CompanyName;
+				BundleVersion = _Setting.BundleVersion;
+				BundleNumber = _Setting.BundleNumber;
+				KeyStorePassword = _Setting.KeyStorePassword;
+				AutoSigning = _Setting.AutoSigning;
+				OutputDir = _Setting.OutputDir;
+
+				if (_Setting.DevelopmentBuild)
+					DevOptions |= BuildOptionDev.DevelopmentBuild;
+				if (_Setting.ScriptDebugging)
+					DevOptions |= BuildOptionDev.ScriptDebugging;
+				if (_Setting.AutoConnectProfiler)
+					DevOptions |= BuildOptionDev.AutoConnectProfiler;
+				if (_Setting.DeepProfiling)
+					DevOptions |= BuildOptionDev.DeepProfiling;
+
+				if (_Setting.BuildAssetBundle)
+					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
+				if (_Setting.ClearAssetBundleCache)
+					AssetBundleOptions |= BuildOptionAssetBundle.ClearAssetBundleCache;
+				if (_Setting.EncryptAssetBundle)
+					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
+			}
+
 			return _Setting;
 		}
 
-		protected virtual void OnSettingChanged()
+		protected virtual void SaveSetting()
 		{
 			_Setting.ApplicationIdentifier = ApplicationIdentifier;
 			_Setting.ProductName = ProductName;
@@ -225,11 +222,6 @@ namespace Icy.Asset.Editor
 			_Setting.ClearAssetBundleCache = (AssetBundleOptions & BuildOptionAssetBundle.ClearAssetBundleCache) == BuildOptionAssetBundle.ClearAssetBundleCache;
 			_Setting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
 
-			SaveSetting();
-		}
-
-		protected virtual void SaveSetting()
-		{
 			string targetDir = IcyFrame.Instance.GetSettingDir();
 			IcyFrame.Instance.SaveSetting(targetDir, IcyFrame.Instance.GetBuildSettingName(), _Setting.ToByteArray());
 		}
