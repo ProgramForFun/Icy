@@ -26,11 +26,9 @@ namespace Icy.Asset.Editor
 
 			if (_BuildSetting.BuildAssetBundle)
 			{
-				bool succeed = BuildAssetBundle(_BuildTarget, _BuildSetting.ClearAssetBundleCache, _BuildSetting.EncryptAssetBundle);
+				bool succeed = await DoBuildAssetBundle(_BuildTarget, _BuildSetting.ClearAssetBundleCache, _BuildSetting.EncryptAssetBundle);
 				if (succeed)
 				{
-					await UniTask.Yield();
-					ClearStreamingAssetsAndCopyNew();
 					await UniTask.Yield();
 					Finish();
 				}
@@ -41,7 +39,12 @@ namespace Icy.Asset.Editor
 				Finish();
 		}
 
-		private static bool BuildAssetBundle(BuildTarget buildTarget, bool clearBuildCacheFiles = false, bool encrypt = true, bool useAssetDependencyDB = true)
+		public static void BuildAssetBundle(BuildTarget buildTarget, bool clearBuildCacheFiles = false, bool encrypt = true, bool useAssetDependencyDB = true)
+		{
+			DoBuildAssetBundle(buildTarget, clearBuildCacheFiles, encrypt, useAssetDependencyDB).Forget();
+		}
+
+		private static async UniTask<bool> DoBuildAssetBundle(BuildTarget buildTarget, bool clearBuildCacheFiles = false, bool encrypt = true, bool useAssetDependencyDB = true)
 		{
 			Log.LogInfo($"Start build asset bundle, platform = {buildTarget}");
 
@@ -76,6 +79,9 @@ namespace Icy.Asset.Editor
 			{
 				Log.LogInfo($"Build asset bundle succeed : {buildResult.OutputPackageDirectory}");
 				_BuildOutputPath = buildResult.OutputPackageDirectory;
+
+				await UniTask.Yield();
+				ClearStreamingAssetsAndCopyNew();
 				return true;
 			}
 			else
@@ -103,7 +109,7 @@ namespace Icy.Asset.Editor
 			return packRuleResult.GetBundleName(_BuildPackage, uniqueBundleName);
 		}
 
-		private void ClearStreamingAssetsAndCopyNew()
+		private static void ClearStreamingAssetsAndCopyNew()
 		{
 			string assetDir = Path.Combine(Application.streamingAssetsPath, "yoo", _BuildPackage);
 			if (Directory.Exists(assetDir))
