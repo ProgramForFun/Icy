@@ -12,25 +12,21 @@ namespace Icy.Asset.Editor
 	/// </summary>
 	public class BuildPlayerStep : ProcedureStep
 	{
-		private BuildSetting _BuildSetting;
-
 		public override async UniTask Activate()
 		{
-			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
-
-			await Build();
-
+			BuildSetting buildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
+			Build(buildSetting);
 			Finish();
+			await UniTask.CompletedTask;
 		}
 
-		private async UniTask Build()
+		public static void Build(BuildSetting buildSetting)
 		{
 			BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
 
-			string outputDir = _BuildSetting.OutputDir + "/" + buildTarget.ToString();
+			string outputDir = buildSetting.OutputDir + "/" + buildTarget.ToString();
 			if (Directory.Exists(outputDir))
 				Directory.Delete(outputDir, true);
-
 
 			// 场景列表（根据项目实际场景修改）
 			List<string> scenes = new List<string>();
@@ -42,38 +38,35 @@ namespace Icy.Asset.Editor
 
 			// 构建选项配置
 			BuildOptions options = BuildOptions.None;
-			if (_BuildSetting.DevelopmentBuild)
+			if (buildSetting.DevelopmentBuild)
 				options |= BuildOptions.Development;
-			if (_BuildSetting.ScriptDebugging)
+			if (buildSetting.ScriptDebugging)
 				options |= BuildOptions.AllowDebugging;
-			if (_BuildSetting.DeepProfiling)
+			if (buildSetting.DeepProfiling)
 				options |= BuildOptions.EnableDeepProfilingSupport;
-			if (_BuildSetting.AutoConnectProfiler)
+			if (buildSetting.AutoConnectProfiler)
 				options |= BuildOptions.ConnectWithProfiler;
 
 			BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
 			buildPlayerOptions.target = buildTarget;
 			buildPlayerOptions.options = options;
 			buildPlayerOptions.scenes = scenes.ToArray();
-			buildPlayerOptions.locationPathName = GetLocationPathName(buildTarget, outputDir);
+			buildPlayerOptions.locationPathName = GetLocationPathName(buildSetting, buildTarget, outputDir);
 			BuildPipeline.BuildPlayer(buildPlayerOptions);
-
-			while (BuildPipeline.isBuildingPlayer)
-				await UniTask.Yield();
 		}
 
-		private string GetExecutableFileName()
+		private static string GetExecutableFileName(BuildSetting buildSetting)
 		{
-			string[] split = _BuildSetting.ApplicationIdentifier.Split('.');
+			string[] split = buildSetting.ApplicationIdentifier.Split('.');
 			return split[split.Length - 1];
 		}
 
 		/// <summary>
 		/// 获取包含文件名的完整输出路径
 		/// </summary>
-		private string GetLocationPathName(BuildTarget buildTarget, string outputPath)
+		private static string GetLocationPathName(BuildSetting buildSetting, BuildTarget buildTarget, string outputPath)
 		{
-			string executableFileName = GetExecutableFileName();
+			string executableFileName = GetExecutableFileName(buildSetting);
 
 			switch (buildTarget)
 			{
