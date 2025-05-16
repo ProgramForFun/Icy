@@ -12,8 +12,8 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			string dest = Path.Combine(Application.streamingAssetsPath, IcyFrame.Instance.GetSettingDir());
-			bool succeed = CommonUtility.CopyDir(IcyFrame.Instance.GetSettingDir(), dest, false);
+			string dest = Path.Combine(Application.streamingAssetsPath, SettingsHelper.GetSettingDir());
+			bool succeed = CommonUtility.CopyDir(SettingsHelper.GetSettingDir(), dest, false);
 			if (!succeed)
 			{
 				Log.Assert(false, "Copy setting files failed", "CopySettingsStep");

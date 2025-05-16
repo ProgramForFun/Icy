@@ -3,9 +3,7 @@ using Icy.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System;
-using System.IO;
 using UnityEditor;
-using UnityEngine;
 
 namespace Icy.Asset.Editor
 {
@@ -48,7 +46,7 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), "AssetSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
 			if (bytes == null)
 				_Setting = new AssetSetting();
 			else
@@ -73,8 +71,8 @@ namespace Icy.Asset.Editor
 			else
 				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 
-			string targetDir = IcyFrame.Instance.GetSettingDir();
-			IcyFrame.Instance.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
+			string targetDir = SettingsHelper.GetSettingDir();
+			SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
 		}
 
 		private bool IsValidHttpOrHttpsUrl(string url)

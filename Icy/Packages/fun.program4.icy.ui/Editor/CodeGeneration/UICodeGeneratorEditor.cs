@@ -2,7 +2,6 @@ using Icy.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -272,7 +271,7 @@ namespace Icy.UI.Editor
 		{
 			if (string.IsNullOrEmpty(_UIRootDir))
 			{
-				byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
+				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
 				if (bytes != null)
 				{
 					UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;

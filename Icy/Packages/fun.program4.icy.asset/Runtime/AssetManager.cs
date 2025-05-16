@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
@@ -65,9 +64,9 @@ namespace Icy.Asset
 				YooAssets.SetDefaultPackage(_Package);
 			}
 
-			byte[] assetSettingBytes = await IcyFrame.Instance.LoadSetting("AssetSetting.json");
+			byte[] assetSettingBytes = await SettingsHelper.LoadSetting("AssetSetting.json");
 			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(assetSettingBytes) as AssetSetting;
-			byte[] buildSettingBytes = await IcyFrame.Instance.LoadSetting(IcyFrame.Instance.GetBuildSettingName());
+			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
 			_BuildSetting = BuildSetting.Descriptor.Parser.ParseFrom(buildSettingBytes) as BuildSetting;
 
 			IDecryptionServices decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;

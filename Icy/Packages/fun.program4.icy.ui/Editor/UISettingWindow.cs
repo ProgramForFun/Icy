@@ -2,9 +2,7 @@ using Google.Protobuf;
 using Icy.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using System.IO;
 using UnityEditor;
-using UnityEngine;
 
 namespace Icy.UI.Editor
 {
@@ -33,7 +31,7 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetEditorOnlySettingDir(), "UISetting.json");
+			byte[] bytes = SettingsHelper	.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
 			if (bytes == null)
 				_Setting = new UISetting();
 			else
@@ -47,8 +45,8 @@ namespace Icy.UI.Editor
 		{
 			_Setting.UIRootDir = UIRootPath;
 
-			string targetDir = IcyFrame.Instance.GetEditorOnlySettingDir();
-			IcyFrame.Instance.SaveSetting(targetDir, "UISetting.json", _Setting.ToByteArray());
+			string targetDir = SettingsHelper.GetEditorOnlySettingDir();
+			SettingsHelper.SaveSetting(targetDir, "UISetting.json", _Setting.ToByteArray());
 		}
 	}
 }
