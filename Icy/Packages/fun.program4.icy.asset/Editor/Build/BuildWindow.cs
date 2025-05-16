@@ -137,7 +137,7 @@ namespace Icy.Asset.Editor
 			if (_TabGroupProperty != null)
 			{
 				string currTabName = _TabGroupProperty.State.Get<string>("CurrentTabName");
-				if (_CurrPlatformName != currTabName)
+				if (_CurrPlatformName != currTabName || _Setting == null)
 				{
 					_CurrPlatformName = currTabName;
 					LoadBuildSetting(currTabName);
