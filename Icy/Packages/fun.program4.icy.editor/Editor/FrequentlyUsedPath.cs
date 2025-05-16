@@ -1,3 +1,5 @@
+using Icy.Asset;
+using Icy.Base;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -9,12 +11,18 @@ namespace Icy.Editor
 	/// </summary>
 	public static class FrequentlyUsedPath
 	{
+		/// <summary>
+		/// Persistent目录
+		/// </summary>
 		[MenuItem("Icy/Path/Persistent", false, 10)]
 		static void OpenPersistentDataPath()
 		{
 			System.Diagnostics.Process.Start(Application.persistentDataPath);
 		}
 
+		/// <summary>
+		/// StreamingAssets目录
+		/// </summary>
 		[MenuItem("Icy/Path/StreamingAssets")]
 		static void OpenStreamingAssetsPath()
 		{
@@ -24,7 +32,10 @@ namespace Icy.Editor
 				Debug.LogError($"Can not find {Application.streamingAssetsPath}");
 		}
 
-		[MenuItem("Icy/Path/EditorLog")]
+		/// <summary>
+		/// Editor log 目录
+		/// </summary>
+		[MenuItem("Icy/Path/Editor Log")]
 		static void OpenEditorLogPath()
 		{
 			string editorLogPath;
@@ -36,6 +47,47 @@ namespace Icy.Editor
 #endif
 			if (!string.IsNullOrEmpty(editorLogPath))
 				System.Diagnostics.Process.Start(editorLogPath);
+		}
+
+		/// <summary>
+		/// 打包输出目录
+		/// </summary>
+		[MenuItem("Icy/Path/Build Output")]
+		static void OpenBuildOutputPath()
+		{
+			string buildSettingFileName = SettingsHelper.GetBuildSettingName();
+			BuildSetting buildSetting;
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), buildSettingFileName);
+			if (bytes == null)
+			{
+				Debug.LogError($"Can not find {buildSettingFileName}");
+				return;
+			}
+
+			buildSetting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
+			if (string.IsNullOrEmpty(buildSetting.OutputDir))
+			{
+				Debug.LogError($"BuildSetting.OutputDir is null or empty");
+				return;
+			}
+
+			if (Directory.Exists(buildSetting.OutputDir))
+				System.Diagnostics.Process.Start(buildSetting.OutputDir);
+			else
+				Debug.LogError($"Can not find {buildSetting.OutputDir}");
+		}
+
+		/// <summary>
+		/// AssetBundle输出目录
+		/// </summary>
+		[MenuItem("Icy/Path/AssetBundle Output")]
+		static void OpenAssetBundleOutputPath()
+		{
+			string dir = "Bundles";
+			if (Directory.Exists(dir))
+				System.Diagnostics.Process.Start(dir);
+			else
+				Debug.LogError($"Can not find {dir}");
 		}
 	}
 }
