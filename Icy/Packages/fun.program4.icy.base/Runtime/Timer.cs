@@ -131,8 +131,7 @@ namespace Icy.Base
 
 		private static async UniTaskVoid DoRepeatByTime(Action action, float perSeconds, int repeatCount, CancellationTokenSource cts, bool ignoreTimeScale = false)
 		{
-			if (perSeconds <= 0)
-				perSeconds = MIN_REPEAT_TIME_INTERVAL;
+			perSeconds = ValidateRepeatTimeInterval(perSeconds);
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
@@ -146,8 +145,7 @@ namespace Icy.Base
 
 		private static async UniTaskVoid DoRepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, CancellationTokenSource cts, bool ignoreTimeScale = false)
 		{
-			if (perSeconds <= 0)
-				perSeconds = MIN_REPEAT_TIME_INTERVAL;
+			perSeconds = ValidateRepeatTimeInterval(perSeconds);
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
@@ -161,8 +159,7 @@ namespace Icy.Base
 
 		private static async UniTaskVoid DoRepeatByFrame(Action action, int perFrames, int repeatCount, CancellationTokenSource cts)
 		{
-			if (perFrames <= 0)
-				perFrames = MIN_REPEAT_FRAME_INTERVAL;
+			perFrames = ValidateRepeatFrameInterval(perFrames);
 
 			int count = 0;
 			while ((repeatCount <= 0 || count < repeatCount) && !cts.IsCancellationRequested)
@@ -175,8 +172,7 @@ namespace Icy.Base
 
 		private static async UniTaskVoid DoRepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate, CancellationTokenSource cts)
 		{
-			if (perFrames <= 0)
-				perFrames = MIN_REPEAT_FRAME_INTERVAL;
+			perFrames = ValidateRepeatFrameInterval(perFrames);
 
 			int count = 0;
 			while (!predicate() && !cts.IsCancellationRequested)
@@ -185,6 +181,22 @@ namespace Icy.Base
 				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);
 				count++;
 			}
+		}
+
+		private static float ValidateRepeatTimeInterval(float interval)
+		{
+			if (interval < MIN_REPEAT_TIME_INTERVAL)
+				return MIN_REPEAT_TIME_INTERVAL;
+			else
+				return interval;
+		}
+
+		private static int ValidateRepeatFrameInterval(int interval)
+		{
+			if (interval < MIN_REPEAT_FRAME_INTERVAL)
+				return MIN_REPEAT_FRAME_INTERVAL;
+			else
+				return interval;
 		}
 		#endregion
 	}
