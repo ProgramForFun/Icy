@@ -171,7 +171,7 @@ namespace Icy.Asset.Editor
 					break;
 			}
 
-			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), IcyFrame.Instance.GetBuildSettingName());
+			byte[] bytes = IcyFrame.Instance.LoadSettingEditor(IcyFrame.Instance.GetSettingDir(), GetSettingFileName());
 			if (bytes == null)
 				_Setting = new BuildSetting();
 			else
@@ -230,7 +230,12 @@ namespace Icy.Asset.Editor
 			_Setting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
 
 			string targetDir = IcyFrame.Instance.GetSettingDir();
-			IcyFrame.Instance.SaveSetting(targetDir, IcyFrame.Instance.GetBuildSettingName(), _Setting.ToByteArray());
+			IcyFrame.Instance.SaveSetting(targetDir, GetSettingFileName(), _Setting.ToByteArray());
+		}
+
+		protected virtual string GetSettingFileName()
+		{
+			return string.Format($"BuildSetting_{_CurrBuildTarget}.json");
 		}
 
 		[Title("打包")]
