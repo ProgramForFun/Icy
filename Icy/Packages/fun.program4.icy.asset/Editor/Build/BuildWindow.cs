@@ -84,18 +84,25 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("SaveSetting")]
 		public string OutputDir;
 
-		//[InlineButton("A", "?")]
-		[Title("AssetBundle选项")]
+		[BoxGroup("AssetBundle选项")]
+		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
+		[InlineButton("SwitchAssetBundleOptionsTips", "?")]
 		[EnumToggleButtons]
 		[OnValueChanged("SaveSetting")]
 		public BuildOptionAssetBundle AssetBundleOptions;
 
-		[Title("调试选项")]
+		[BoxGroup("调试选项")]
+		[InfoBox("是否打Dev版本  ┃  是否允许调试代码  ┃  是否启动时自动连接Profiler  ┃  是否开启Deep Profiling", "_ShowDevOptionsTips")]
+		[InlineButton("SwitchDevOptionsTips", "?")]
 		[EnumToggleButtons]
 		[OnValueChanged("SaveSetting")]
 		public BuildOptionDev DevOptions;
 
-		//protected void A(){}
+		protected bool _ShowAssetBundleOptionsTips = false;
+		protected virtual void SwitchAssetBundleOptionsTips() => _ShowAssetBundleOptionsTips = !_ShowAssetBundleOptionsTips;
+
+		protected bool _ShowDevOptionsTips = false;
+		protected virtual void SwitchDevOptionsTips() => _ShowDevOptionsTips = !_ShowDevOptionsTips;
 
 
 		/// <summary>
