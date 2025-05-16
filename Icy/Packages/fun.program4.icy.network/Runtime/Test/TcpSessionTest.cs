@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using Icy.Base;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
