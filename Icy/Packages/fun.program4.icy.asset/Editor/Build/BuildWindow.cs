@@ -144,6 +144,7 @@ namespace Icy.Asset.Editor
 				AutoSigning = _Setting.AutoSigning;
 				OutputDir = _Setting.OutputDir;
 
+				DevOptions = 0;
 				if (_Setting.DevelopmentBuild)
 					DevOptions |= BuildOptionDev.DevelopmentBuild;
 				if (_Setting.ScriptDebugging)
@@ -153,6 +154,7 @@ namespace Icy.Asset.Editor
 				if (_Setting.DeepProfiling)
 					DevOptions |= BuildOptionDev.DeepProfiling;
 
+				AssetBundleOptions = 0;
 				if (_Setting.BuildAssetBundle)
 					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
 				if (_Setting.ClearAssetBundleCache)
