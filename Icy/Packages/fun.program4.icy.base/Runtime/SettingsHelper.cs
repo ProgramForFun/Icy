@@ -89,16 +89,16 @@ namespace Icy.Base
 					return "";
 			}
 #else
-			switch (Application.platform)
+			switch (UnityEngine.Application.platform)
 			{
-				case RuntimePlatform.Android:
+				case UnityEngine.RuntimePlatform.Android:
 					return "BuildSetting_Android.json";
-				case RuntimePlatform.IPhonePlayer:
+				case UnityEngine.RuntimePlatform.IPhonePlayer:
 					return "BuildSetting_iOS.json";
-				case RuntimePlatform.WindowsPlayer:
+				case UnityEngine.RuntimePlatform.WindowsPlayer:
 					return "BuildSetting_Win64";
 				default:
-					Log.Assert(false, $"Unsupported platform {Application.platform}");
+					Log.Assert(false, $"Unsupported platform {UnityEngine.Application.platform}");
 					return "";
 			}
 #endif
