@@ -1,12 +1,10 @@
 using Icy.Base;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using System;
 using System.IO;
 using SimpleJSON;
 using UnityEditor;
 using Google.Protobuf;
-using System.Linq;
 using UnityEngine;
 
 namespace Icy.Asset.Editor
@@ -14,10 +12,8 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 打包窗口
 	/// </summary>
-	public class BuildWindow : OdinEditorWindow
+	public class BuildWindow : PlatformWindowBase<BuildWindow>
 	{
-		protected static BuildWindow _BuildWindow;
-
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
 		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
@@ -104,73 +100,32 @@ namespace Icy.Asset.Editor
 		protected bool _ShowDevOptionsTips = false;
 		protected virtual void SwitchDevOptionsTips() => _ShowDevOptionsTips = !_ShowDevOptionsTips;
 
-
-		/// <summary>
-		/// 当前选中平台的BuildTarget
-		/// </summary>
-		protected BuildTarget _CurrBuildTarget;
 		/// <summary>
 		/// 当前选中平台的Setting文件
 		/// </summary>
 		protected BuildSetting _Setting;
-		/// <summary>
-		/// Odin Tab组件
-		/// </summary>
-		protected InspectorProperty _TabGroupProperty;
-		/// <summary>
-		/// 当前选中平台的名字
-		/// </summary>
-		protected string _CurrPlatformName;
 
 
 		[MenuItem("Icy/Build &B", false, 1000)]
 		public static void Open()
 		{
-			if (_BuildWindow != null)
-				_BuildWindow.Close();
-			_BuildWindow = GetWindow<BuildWindow>();
+			CreateWindow();
 		}
 
-		protected virtual void Update()
+		protected override void Update()
 		{
-#pragma warning disable CS0618
-			if (_TabGroupProperty == null)
-			{
-				if (PropertyTree != null && PropertyTree.RootProperty != null)
-					_TabGroupProperty = PropertyTree.RootProperty.Children.FirstOrDefault(p => p.Attributes.HasAttribute<TabGroupAttribute>());
-			}
-#pragma warning restore CS0618
+			base.Update();
+			if (_Setting == null)
+				LoadBuildSetting(_CurrPlatformName);
+		}
 
-			if (_TabGroupProperty != null)
-			{
-				string currTabName = _TabGroupProperty.State.Get<string>("CurrentTabName");
-				if (_CurrPlatformName != currTabName || _Setting == null)
-				{
-					_CurrPlatformName = currTabName;
-					LoadBuildSetting(currTabName);
-				}
-			}
+		protected override void OnChangePlatformTab(string tabName, BuildTarget buildTarget)
+		{
+			LoadBuildSetting(tabName);
 		}
 
 		protected virtual BuildSetting LoadBuildSetting(string tabName)
 		{
-			Log.LogInfo($"Switch to platform {tabName}", "BuildWindow");
-			switch (tabName)
-			{
-				case "Android":
-					_CurrBuildTarget = BuildTarget.Android;
-					break;
-				case "iOS":
-					_CurrBuildTarget = BuildTarget.iOS;
-					break;
-				case "Win64":
-					_CurrBuildTarget = BuildTarget.StandaloneWindows64;
-					break;
-				default:
-					Log.Assert(false, $"Unsupported platform {tabName}");
-					break;
-			}
-
 			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), GetSettingFileName());
 			if (bytes == null)
 				_Setting = new BuildSetting();
