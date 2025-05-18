@@ -2,6 +2,7 @@
 using Google.Protobuf;
 using Icy.Base;
 using System;
+using System.Buffers;
 using TestMsg;
 using UnityEngine;
 
@@ -29,12 +30,14 @@ namespace Icy.Network
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
 			//解析int类型的消息ID
-			Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
+			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
 			//解析protobuf消息本体
 			int protoStartIdx = startIdx + sizeof(int);
 			int protoLength = length - sizeof(int);
-			TestMessageResult newMessageResult = TestMessageResult.Descriptor.Parser.ParseFrom(data, protoStartIdx, protoLength) as TestMessageResult;
-			Log.LogInfo(newMessageResult.ErrorMsg);
+			//用Span降低Protobuf反序列化的GC
+			ReadOnlySequence<byte> span = new ReadOnlySequence<byte>(data, protoStartIdx, protoLength);
+			TestMessageResult newMessageResult = TestMessageResult.Descriptor.Parser.ParseFrom(span) as TestMessageResult;
+			//Log.LogInfo(newMessageResult.ErrorMsg);
 		}
 	}
 
@@ -90,6 +93,15 @@ namespace Icy.Network
 					messageResult.ErrorMsg = "Success";
 					_TcpChannel.Send(1, messageResult);
 				}
+			}
+
+			//每帧发送，模拟大量网络IO的情况
+			if (_TcpChannel != null && _TcpChannel.IsConnected)
+			{
+				TestMessageResult messageResult = new TestMessageResult();
+				messageResult.ErrorCode = 0;
+				messageResult.ErrorMsg = "Success";
+				_TcpChannel.Send(1, messageResult);
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
