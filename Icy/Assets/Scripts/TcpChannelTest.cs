@@ -18,9 +18,11 @@ namespace Icy.Network
 				//一个int类型消息ID + protobuf消息
 				byte[] buf = BitConverter.GetBytes(msgID);
 				Array.Copy(buf, 0, _Buffer, 0, buf.Length);
-				byte[] encodedData = proto.ToByteArray();
-				Array.Copy(encodedData, 0, _Buffer, buf.Length, encodedData.Length);
-				Send(_Buffer, 0, buf.Length + encodedData.Length);
+				int protoSize = proto.CalculateSize();
+				//用Span降低Protobuf序列化的GC
+				Span<byte> outputSpan = new Span<byte>(_Buffer, buf.Length, protoSize);
+				proto.WriteTo(outputSpan);
+				Send(_Buffer, 0, buf.Length + protoSize);
 			}
 		}
 	}
