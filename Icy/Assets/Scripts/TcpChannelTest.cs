@@ -16,13 +16,13 @@ namespace Icy.Network
 			if (data is int msgID && data1 is IMessage proto)
 			{
 				//一个int类型消息ID + protobuf消息
-				byte[] buf = BitConverter.GetBytes(msgID);
-				Array.Copy(buf, 0, _Buffer, 0, buf.Length);
+				int msgIDSize = sizeof(int);
+				BitConverter.TryWriteBytes(_Buffer, msgID);
 				int protoSize = proto.CalculateSize();
 				//用Span降低Protobuf序列化的GC
-				Span<byte> outputSpan = new Span<byte>(_Buffer, buf.Length, protoSize);
+				Span<byte> outputSpan = new Span<byte>(_Buffer, msgIDSize, protoSize);
 				proto.WriteTo(outputSpan);
-				Send(_Buffer, 0, buf.Length + protoSize);
+				Send(_Buffer, 0, msgIDSize + protoSize);
 			}
 		}
 	}

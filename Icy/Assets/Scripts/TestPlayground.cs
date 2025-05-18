@@ -16,7 +16,7 @@ public static class TestPlayground
 			Test();
 
 		//TcpSessionTest.Update();
-		//TcpChannelTest.Update();
+		TcpChannelTest.Update();
 	}
 
 
@@ -34,9 +34,9 @@ public static class TestPlayground
 		//PeriodicRecordTest.Test();
 		//RingBufferTest.Test();
 		//TcpSessionTest.Test();
-		//TcpChannelTest.Test();
+		TcpChannelTest.Test();
 		//ConfigTest.Test();
-		TimerTest.Test();
+		//TimerTest.Test();
 	}
 }
 

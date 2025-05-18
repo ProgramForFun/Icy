@@ -151,8 +151,7 @@ namespace Icy.Network
 
 			//1、长度 = 消息ID + 消息本体的长度
 			int len = length + MSG_LENGTH_SIZE;
-			byte[] buf = BitConverter.GetBytes(len);
-			Array.Copy(buf, 0, _SendBuffer, 0, buf.Length);
+			BitConverter.TryWriteBytes(_SendBuffer, len);
 			//2、消息本体
 			Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
 			_Stream.Write(_SendBuffer, 0, len);
