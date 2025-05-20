@@ -8,7 +8,7 @@
       "hash": "57e577126c4bac9abef927babb848a457ad5d563"
     },
     "com.coffee.ui-particle": {
-      "version": "4.10.7",
+      "version": "4.11.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {

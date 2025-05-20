@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.code-philosophy.luban": "https://github.com/focus-creative-games/luban_unity.git",
-    "com.coffee.ui-particle": "4.10.7",
+    "com.coffee.ui-particle": "4.11.2",
     "com.tuyoogame.yooasset": "2.3.9",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ide.visualstudio": "2.0.23",
