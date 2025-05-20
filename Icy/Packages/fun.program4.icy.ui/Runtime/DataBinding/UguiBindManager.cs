@@ -21,13 +21,17 @@ namespace Icy.UI
 		/// 监听数据变化的listener
 		/// </summary>
 		private List<object> _ListenerList;
+		/// <summary>
+		/// 预分配List大小
+		/// </summary>
+		private const int DEFAULT_LIST_SIZE = 32;
 
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();
-			_UguiCompList = new List<object>();
-			_BindableList = new List<object>();
-			_ListenerList = new List<object>();
+			_UguiCompList = new List<object>(DEFAULT_LIST_SIZE);
+			_BindableList = new List<object>(DEFAULT_LIST_SIZE);
+			_ListenerList = new List<object>(DEFAULT_LIST_SIZE);
 		}
 
 		/// <summary>
