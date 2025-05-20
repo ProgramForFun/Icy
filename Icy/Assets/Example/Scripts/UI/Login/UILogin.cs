@@ -49,15 +49,15 @@ public class UILogin : UIBase
 		_Bg.BindTo(BgName);
 		_Title.BindTo(BgName);
 		await UniTask.WaitForSeconds(1);
-		BgName.SetData("icon_loading");
+		BgName.Data = "icon_loading";
 
 		_Slider.BindTo(SliderValue, (BindableData<float> a) => { return a * 8; });
 		await UniTask.WaitForSeconds(1);
-		SliderValue2.SetData(0.1f);
+		SliderValue2.Data = 0.1f;
 
 		_Slider.UnbindTo(SliderValue);
 		await UniTask.WaitForSeconds(1);
-		SliderValue.SetData(0.0f);
+		SliderValue.Data = 0.0f;
 
 		_Title.UnbindTo(BgName);
 	}

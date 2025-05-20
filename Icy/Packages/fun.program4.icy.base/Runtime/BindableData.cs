@@ -33,16 +33,20 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 修改数据
+		/// 持有的数据；
 		/// </summary>
-		public void SetData(T data)
+		public T Data
 		{
-			_Data = data;
+			get => _Data;
+			set
+			{
+				_Data = value;
 
-			for (int i = 0; i < _Listeners.Count; i++)
-				_Listeners[i]?.Invoke(_Data);
-			for (int i = 0; i < _Others.Count; i++)
-				_Others[i].SetData(data);
+				for (int i = 0; i < _Listeners.Count; i++)
+					_Listeners[i]?.Invoke(_Data);
+				for (int i = 0; i < _Others.Count; i++)
+					_Others[i].Data = value;
+			}
 		}
 
 		/// <summary>
