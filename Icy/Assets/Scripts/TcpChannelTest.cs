@@ -24,7 +24,7 @@ namespace Icy.Network
 				//用Span降低Protobuf序列化的GC
 				Span<byte> outputSpan = new Span<byte>(_Buffer, msgIDSize, protoSize);
 				proto.WriteTo(outputSpan);
-				Send(_Buffer, 0, msgIDSize + protoSize);
+				Send(0, msgIDSize + protoSize);
 			}
 		}
 	}

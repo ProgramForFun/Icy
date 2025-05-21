@@ -30,9 +30,9 @@ namespace Icy.Network
 		/// <summary>
 		/// 转换成byte[]后，调用这个方法
 		/// </summary>
-		protected void Send(byte[] encodedData, int startIdx, int length)
+		protected void Send(int startIdx, int length)
 		{
-			_Channel.Send(encodedData, startIdx, length);
+			_Channel.Send(_Buffer, startIdx, length);
 		}
 	}
 }
