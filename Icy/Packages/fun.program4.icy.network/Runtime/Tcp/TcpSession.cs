@@ -121,7 +121,8 @@ namespace Icy.Network
 				int receivedSize = 0;
 				try
 				{
-					receivedSize = await _Stream.ReadAsync(_ReceiveBuffer, _BufferRemain, _BufferSize - _BufferRemain);
+					Memory<byte> memBytes = new Memory<byte>(_ReceiveBuffer, _BufferRemain, _BufferSize - _BufferRemain);
+					receivedSize = await _Stream.ReadAsync(memBytes);
 				}
 				catch (Exception ex)
 				{
