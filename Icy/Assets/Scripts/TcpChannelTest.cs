@@ -4,6 +4,7 @@ using Google.Protobuf;
 using Icy.Base;
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using TestMsg;
 using UnityEngine;
 
@@ -31,16 +32,29 @@ namespace Icy.Network
 
 	public class TcpReceiverProtobuf : TcpRecevier
 	{
+		private Dictionary<int, IMessage> _Cache = new Dictionary<int, IMessage>();
+
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
 			//解析int类型的消息ID
+			int msgID = BitConverter.ToInt32(data, startIdx);
 			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
+
 			//解析protobuf消息本体
 			int protoStartIdx = startIdx + sizeof(int);
 			int protoLength = length - sizeof(int);
 			//用Span降低Protobuf反序列化的GC
 			ReadOnlySequence<byte> span = new ReadOnlySequence<byte>(data, protoStartIdx, protoLength);
-			TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(span);
+			if (_Cache.ContainsKey(msgID))
+			{
+				TestMessageResult newMessageResult = _Cache[msgID] as TestMessageResult;
+				newMessageResult.MergeFrom(span);
+			}
+			else
+			{
+				TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(span);
+				_Cache.Add(msgID, newMessageResult);
+			}
 			//Log.LogInfo(newMessageResult.ErrorMsg);
 		}
 	}
