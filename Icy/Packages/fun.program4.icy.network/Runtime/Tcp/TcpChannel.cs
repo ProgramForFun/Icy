@@ -8,15 +8,15 @@ namespace Icy.Network
 	public class TcpChannel : TcpSession
 	{
 		public TcpSender Sender { get; protected set; }
-		public TcpRecevier Recevier { get; protected set; }
+		public TcpReceiver Receiver { get; protected set; }
 
 
-		public TcpChannel(string host, int port, TcpSender sender, TcpRecevier recevier, int bufferSize = 4096)
+		public TcpChannel(string host, int port, TcpSender sender, TcpReceiver receiver, int bufferSize = 4096)
 			: base(host, port, bufferSize)
 		{
 			Sender = sender;
 			sender.SetTcpChannel(this);
-			Recevier = recevier;
+			Receiver = receiver;
 			InitSession().Forget();
 		}
 
@@ -52,14 +52,14 @@ namespace Icy.Network
 
 		protected async UniTaskVoid InitSession()
 		{
-			OnReceive += Recevier.Decode;
+			OnReceive += Receiver.Decode;
 			await Connect();
 			await Listen();
 		}
 
 		public override void Dispose()
 		{
-			OnReceive -= Recevier.Decode;
+			OnReceive -= Receiver.Decode;
 			base.Dispose();
 		}
 	}

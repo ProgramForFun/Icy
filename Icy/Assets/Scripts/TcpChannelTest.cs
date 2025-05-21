@@ -30,7 +30,7 @@ namespace Icy.Network
 		}
 	}
 
-	public class TcpReceiverProtobuf : TcpRecevier
+	public class TcpReceiverProtobuf : TcpReceiver
 	{
 		private readonly Dictionary<int, Type> _MsgTypeMap = new Dictionary<int, Type>()
 		{
