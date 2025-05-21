@@ -52,6 +52,9 @@ namespace Icy.Network
 			if (_Cache.ContainsKey(msgID))
 			{
 				IMessage newMessageResult = _Cache[msgID];
+				//TODO：确认下面链接9.2提到的Clear的问题
+				//https://www.cnblogs.com/wsk-0000/articles/12675826.html
+				//https://zhuanlan.zhihu.com/p/588709957
 				newMessageResult.MergeFrom(span);
 			}
 			else
