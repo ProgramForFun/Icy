@@ -22,11 +22,10 @@ namespace Icy.Network
 			_Channel = tcpChannel;
 		}
 
-		public virtual void Encode<T0>(T0 data) { }
-		public virtual void Encode<T0, T1>(T0 data, T1 data1) { }
-		public virtual void Encode<T0, T1, T2>(T0 data, T1 data1, T2 data2) { }
-		public virtual void Encode<T0, T1, T2, T3>(T0 data, T1 data1, T2 data2, T3 data3) { }
-		public virtual void Encode<T0, T1, T2, T3, T4>(T0 data, T1 data1, T2 data2, T3 data3, T4 data4) { }
+		public virtual void Encode<T>(T data) { }
+		public virtual void Encode<T>(int arg1, T data) { }
+		public virtual void Encode<T>(int arg1, int arg2, T data) { }
+		public virtual void Encode<T>(int arg1, int arg2, int arg3, T data) { }
 
 		/// <summary>
 		/// 转换成byte[]后，调用这个方法

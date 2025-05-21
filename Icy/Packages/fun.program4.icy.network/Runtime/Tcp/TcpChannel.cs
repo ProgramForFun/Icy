@@ -20,29 +20,24 @@ namespace Icy.Network
 			InitSession().Forget();
 		}
 
-		public void Send<T0>(T0 data)
+		public void Send<T>(T data)
 		{
 			Sender.Encode(data);
 		}
 
-		public void Send<T0, T1>(T0 data, T1 data1)
+		public void Send<T>(int arg1, T data)
 		{
-			Sender.Encode(data, data1);
+			Sender.Encode(arg1, data);
 		}
 
-		public void Send<T0, T1, T2>(T0 data, T1 data1, T2 data2)
+		public void Send<T>(int arg1, int arg2, T data)
 		{
-			Sender.Encode(data, data1, data2);
+			Sender.Encode(arg1, arg2, data);
 		}
 
-		public void Send<T0, T1, T2, T3>(T0 data, T1 data1, T2 data2, T3 data3)
+		public void Send<T>(int arg1, int arg2, int arg3, T data)
 		{
-			Sender.Encode(data, data1, data2, data3);
-		}
-
-		public void Send<T0, T1, T2, T3, T4>(T0 data, T1 data1, T2 data2, T3 data3, T4 data4)
-		{
-			Sender.Encode(data, data1, data2, data3, data4);
+			Sender.Encode(arg1, arg2, arg3, data);
 		}
 
 		internal new void Send(byte[] encodedData, int startIdx, int length)

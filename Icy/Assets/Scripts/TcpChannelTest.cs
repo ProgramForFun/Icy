@@ -12,11 +12,10 @@ namespace Icy.Network
 {
 	public class TcpSenderProtobuf : TcpSender
 	{
-		public override void Encode<T0, T1>(T0 data, T1 data1)
+		public override void Encode<T>(int msgID, T data)
 		{
 			//通过这种方式将泛型类型转换为实际类型
-			//TODO : 这里会产生装拆箱
-			if (data is int msgID && data1 is IMessage proto)
+			if (data is IMessage proto)
 			{
 				//一个int类型消息ID + protobuf消息
 				int msgIDSize = sizeof(int);
