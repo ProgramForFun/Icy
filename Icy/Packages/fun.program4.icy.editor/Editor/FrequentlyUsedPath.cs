@@ -64,7 +64,7 @@ namespace Icy.Editor
 				return;
 			}
 
-			buildSetting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
+			buildSetting = BuildSetting.Parser.ParseFrom(bytes);
 			if (string.IsNullOrEmpty(buildSetting.OutputDir))
 			{
 				Debug.LogError($"BuildSetting.OutputDir is null or empty");

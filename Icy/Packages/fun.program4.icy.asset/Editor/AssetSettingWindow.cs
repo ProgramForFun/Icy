@@ -50,7 +50,7 @@ namespace Icy.Asset.Editor
 			if (bytes == null)
 				_Setting = new AssetSetting();
 			else
-				_Setting = AssetSetting.Descriptor.Parser.ParseFrom(bytes) as AssetSetting;
+				_Setting = AssetSetting.Parser.ParseFrom(bytes);
 			return _Setting;
 		}
 

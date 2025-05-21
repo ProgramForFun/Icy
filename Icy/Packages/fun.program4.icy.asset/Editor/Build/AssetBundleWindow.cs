@@ -62,7 +62,7 @@ namespace Icy.Asset.Editor
 			if (bytes == null)
 				_Setting = new BuildSetting();
 			else
-				_Setting = BuildSetting.Descriptor.Parser.ParseFrom(bytes) as BuildSetting;
+				_Setting = BuildSetting.Parser.ParseFrom(bytes);
 
 
 			if (_Setting != null)

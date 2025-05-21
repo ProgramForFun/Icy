@@ -60,7 +60,7 @@ public static class ProtobufTest
 		// IMessage message = new MessageResult();
 		// MessageResult newMessageResult = (MessageResult)message.Descriptor.Parser.ParseFrom(dataBytes);
 		// 第二种方式：静态直接调用
-		TestMessageResult newMessageResult = TestMessageResult.Descriptor.Parser.ParseFrom(dataBytes) as TestMessageResult;
+		TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(dataBytes);
 
 		Debug.Log(newMessageResult.ErrorCode);
 		Debug.Log(newMessageResult.ErrorMsg);

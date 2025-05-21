@@ -40,7 +40,7 @@ namespace Icy.Network
 			int protoLength = length - sizeof(int);
 			//用Span降低Protobuf反序列化的GC
 			ReadOnlySequence<byte> span = new ReadOnlySequence<byte>(data, protoStartIdx, protoLength);
-			TestMessageResult newMessageResult = TestMessageResult.Descriptor.Parser.ParseFrom(span) as TestMessageResult;
+			TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(span);
 			//Log.LogInfo(newMessageResult.ErrorMsg);
 		}
 	}

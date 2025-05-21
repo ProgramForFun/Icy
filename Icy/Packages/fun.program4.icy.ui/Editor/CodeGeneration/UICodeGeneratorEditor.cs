@@ -274,7 +274,7 @@ namespace Icy.UI.Editor
 				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
 				if (bytes != null)
 				{
-					UISetting uiSetting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+					UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);
 					return uiSetting.UIRootDir;
 				}
 				else

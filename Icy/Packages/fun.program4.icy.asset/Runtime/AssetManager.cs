@@ -65,9 +65,9 @@ namespace Icy.Asset
 			}
 
 			byte[] assetSettingBytes = await SettingsHelper.LoadSetting("AssetSetting.json");
-			_AssetSetting = AssetSetting.Descriptor.Parser.ParseFrom(assetSettingBytes) as AssetSetting;
+			_AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
 			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
-			_BuildSetting = BuildSetting.Descriptor.Parser.ParseFrom(buildSettingBytes) as BuildSetting;
+			_BuildSetting = BuildSetting.Parser.ParseFrom(buildSettingBytes);
 
 			IDecryptionServices decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
 

@@ -31,12 +31,12 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper	.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
 			if (bytes == null)
 				_Setting = new UISetting();
 			else
 			{
-				_Setting = UISetting.Descriptor.Parser.ParseFrom(bytes) as UISetting;
+				_Setting = UISetting.Parser.ParseFrom(bytes);
 				UIRootPath = _Setting.UIRootDir;
 			}
 		}
