@@ -32,6 +32,10 @@ namespace Icy.Network
 
 	public class TcpReceiverProtobuf : TcpRecevier
 	{
+		private readonly Dictionary<int, Type> _MsgTypeMap = new Dictionary<int, Type>()
+		{
+			{ 1, typeof(TestMessageResult)},
+		};
 		private Dictionary<int, IMessage> _Cache = new Dictionary<int, IMessage>();
 
 		public override void Decode(byte[] data, int startIdx, int length)
@@ -47,13 +51,15 @@ namespace Icy.Network
 			ReadOnlySequence<byte> span = new ReadOnlySequence<byte>(data, protoStartIdx, protoLength);
 			if (_Cache.ContainsKey(msgID))
 			{
-				TestMessageResult newMessageResult = _Cache[msgID] as TestMessageResult;
+				IMessage newMessageResult = _Cache[msgID];
 				newMessageResult.MergeFrom(span);
 			}
 			else
 			{
-				TestMessageResult newMessageResult = TestMessageResult.Parser.ParseFrom(span);
-				_Cache.Add(msgID, newMessageResult);
+				Type msgType = _MsgTypeMap[msgID];
+				IMessage msg = Activator.CreateInstance(msgType) as IMessage;
+				msg = msg.Descriptor.Parser.ParseFrom(span);
+				_Cache.Add(msgID, msg);
 			}
 			//Log.LogInfo(newMessageResult.ErrorMsg);
 		}
