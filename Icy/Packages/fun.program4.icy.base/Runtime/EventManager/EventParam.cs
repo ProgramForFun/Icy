@@ -1,3 +1,5 @@
+using System;
+
 namespace Icy.Base
 {
 	/// <summary>
@@ -37,6 +39,11 @@ namespace Icy.Base
 	public struct EventParam_String : IEventParam
 	{
 		public string Value;
+	}
+
+	public struct EventParam_Type : IEventParam
+	{
+		public Type Value;
 	}
 
 	public struct EventParam<T> : IEventParam
