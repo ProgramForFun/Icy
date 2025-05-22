@@ -158,6 +158,7 @@ namespace Icy.UI
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
 			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
+			EventManager.Trigger(EventDefine.UILoaded, new EventParam_Type { Value = uiType });
 			return uiBase;
 		}
 
@@ -249,19 +250,23 @@ namespace Icy.UI
 		{
 			PushStack(ui);
 
-			UIData uiState = _UIMap[ui];
-			uiState.Param = param;
+			UIData uiData = _UIMap[ui];
+			uiData.Param = param;
 
 			ui.Canvas.overrideSorting = true;
 			ui.Canvas.sortingOrder = (int)ui.UILayer + _SortingOrderOffset[ui.UILayer];
 			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 
+			EventManager.Trigger(EventDefine.UIShown, new EventParam_Type { Value = uiData.Type });
 			Log.LogInfo($"Show {ui.UIName}", "UIManager");
 		}
 
 		internal void Hide(UIBase ui)
 		{
 			DecreseSortingOrderOffeset(ui.UILayer);
+
+			UIData uiData = _UIMap[ui];
+			EventManager.Trigger(EventDefine.UIHided, new EventParam_Type { Value = uiData.Type });
 		}
 
 		internal void ShowPrev(UIBase ui)
@@ -289,6 +294,7 @@ namespace Icy.UI
 				UIData uiData = _UIMap[ui];
 				_UIMap.Remove(ui);
 				uiData.AssetRef.Release();
+				EventManager.Trigger(EventDefine.UIDestroyed, new EventParam_Type { Value = uiData.Type });
 			}
 
 			if (_SpriteTextureOfUI.ContainsKey(ui))
