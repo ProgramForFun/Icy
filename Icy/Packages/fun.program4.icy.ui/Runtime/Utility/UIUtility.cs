@@ -1,3 +1,5 @@
+using Icy.Base;
+using Icy.UI;
 using UnityEngine;
 
 public static class UIUtility
@@ -47,5 +49,24 @@ public static class UIUtility
 			parentRectTrans = UIRoot.Instance.RootCanvas.transform as RectTransform;
 		Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(UIRoot.Instance.UICamera, worldPosOfUI);
 		return ScreenPos2UGUIPos(screenPos, parentRectTrans, out uguiPos);
+	}
+
+	/// <summary>
+	/// 从一个UI的子节点开始向上找，直到找到UI脚本或层级顶
+	/// </summary>
+	public static UIBase GetUIFromParent(Transform childOfUI)
+	{
+		Transform parent = childOfUI;
+		while (parent != null)
+		{
+			UIBase ui = parent.GetComponent<UIBase>();
+			if (ui != null)
+				return ui;
+			parent = parent.parent;
+		}
+
+		string childName = childOfUI == null ? "null" : childOfUI.name;
+		Log.Assert(false, $"Can NOT find UIBase of {childName}");
+		return null;
 	}
 }
