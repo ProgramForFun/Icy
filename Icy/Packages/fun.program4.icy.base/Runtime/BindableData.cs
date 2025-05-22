@@ -106,7 +106,12 @@ namespace Icy.Base
 		/// </summary>
 		public void UnbindTo(BindableData<T> other)
 		{
-			_Others.Remove(other);
+			if (other == null)
+			{
+				Log.LogError("UnbindTo a null", "BindableData");
+				return;
+			}
+			other._Others.Remove(this);
 		}
 
 		#region Override
