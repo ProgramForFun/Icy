@@ -9,18 +9,15 @@ namespace Icy.UI
 	/// </summary>
 	internal sealed class UguiBindManager : Singleton<UguiBindManager>
 	{
-		/// <summary>
-		/// Ugui组件
-		/// </summary>
-		private List<object> _UguiCompList;
-		/// <summary>
-		/// Bind的数据
-		/// </summary>
-		private List<object> _BindableList;
-		/// <summary>
-		/// 监听数据变化的listener
-		/// </summary>
-		private List<object> _ListenerList;
+		private struct BindData
+		{
+			public object UguiComp;
+			public object BindableData;
+			public object Listener;
+		}
+
+		private List<BindData> _BindDataList;
+
 		/// <summary>
 		/// 预分配List大小
 		/// </summary>
@@ -29,18 +26,20 @@ namespace Icy.UI
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();
-			_UguiCompList = new List<object>(DEFAULT_LIST_SIZE);
-			_BindableList = new List<object>(DEFAULT_LIST_SIZE);
-			_ListenerList = new List<object>(DEFAULT_LIST_SIZE);
+			_BindDataList = new List<BindData>(DEFAULT_LIST_SIZE);
 		}
 
 		/// <summary>
-		/// 指定的Ugui组件和数据，是否已经Bind过了
+		/// 指定的Ugui组件和数据的Index
 		/// </summary>
-		internal bool AlreadyBinded(object uguiComp, object bindableData)
+		internal int GetIndex(object uguiComp, object bindableData)
 		{
-			bool contains = _UguiCompList.Contains(uguiComp) && _BindableList.Contains(bindableData);
-			return contains;
+			for (int i = 0; i < _BindDataList.Count; i++)
+			{
+				if (_BindDataList[i].UguiComp == uguiComp && _BindDataList[i].BindableData == bindableData)
+					return i;
+			}
+			return -1;
 		}
 
 		/// <summary>
@@ -48,11 +47,13 @@ namespace Icy.UI
 		/// </summary>
 		internal bool BindTo<T>(object uguiComp, BindableData<T> bindableData, Action<T> listener)
 		{
-			if (!AlreadyBinded(uguiComp, bindableData))
+			if (GetIndex(uguiComp, bindableData) < 0)
 			{
-				_UguiCompList.Add(uguiComp);
-				_BindableList.Add(bindableData);
-				_ListenerList.Add(listener);
+				BindData data = new BindData();
+				data.UguiComp = uguiComp;
+				data.BindableData = bindableData;
+				data.Listener = listener;
+				_BindDataList.Add(data);
 
 				bindableData.BindTo(listener);
 
@@ -68,13 +69,12 @@ namespace Icy.UI
 		/// </summary>
 		internal bool UnbindTo<T>(object uguiComp, BindableData<T> bindableData)
 		{
-			if (AlreadyBinded(uguiComp, bindableData))
+			int dataIdx = GetIndex(uguiComp, bindableData);
+			if (dataIdx >= 0)
 			{
-				int idx = _UguiCompList.IndexOf(uguiComp);
-				Action<T> listener = _ListenerList[idx] as Action<T>;
-				_UguiCompList.RemoveAt(idx);
-				_BindableList.RemoveAt(idx);
-				_ListenerList.RemoveAt(idx);
+				BindData data = _BindDataList[dataIdx];
+				Action<T> listener = data.Listener as Action<T>;
+				_BindDataList.RemoveAt(dataIdx);
 
 				bindableData.UnbindTo(listener);
 				return true;
