@@ -21,6 +21,10 @@ namespace Icy.UI
 			/// </summary>
 			public string Name;
 			/// <summary>
+			/// UI的Type
+			/// </summary>
+			public Type Type;
+			/// <summary>
 			/// UI的打开参数
 			/// </summary>
 			public IUIParam Param;
@@ -97,7 +101,7 @@ namespace Icy.UI
 					return item.Key as T;
 			}
 
-			return await LoadUI(typeof(T).Name) as T;
+			return await LoadUI(typeof(T)) as T;
 		}
 
 		/// <summary>
@@ -107,7 +111,7 @@ namespace Icy.UI
 		public void Get<T>(Action<UIBase> callback) where T : UIBase
 		{
 			Type uiType = typeof(T);
-			Get(uiType.Name, callback);
+			Get(uiType, callback);
 		}
 
 		/// <summary>
@@ -123,22 +127,23 @@ namespace Icy.UI
 			return ui as T;
 		}
 
-		private void Get(string uiName, Action<UIBase> callback)
+		private void Get(Type uiType, Action<UIBase> callback)
 		{
 			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
 			{
-				if (item.Value.Name == uiName)
+				if (item.Value.Type == uiType)
 				{
 					callback?.Invoke(item.Key);
 					return;
 				}
 			}
 
-			LoadUI(uiName, callback).Forget();
+			LoadUI(uiType, callback).Forget();
 		}
 
-		private async UniTask<UIBase> LoadUI(string uiName, Action<UIBase> callback = null)
+		private async UniTask<UIBase> LoadUI(Type uiType, Action<UIBase> callback = null)
 		{
+			string uiName = uiType.Name;
 			AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(uiName);
 			await assetRef.ToUniTask();
 			assetRef.Retain();
@@ -151,7 +156,7 @@ namespace Icy.UI
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
-			InitUI(uiName, uiBase, assetRef);
+			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
 			return uiBase;
 		}
@@ -215,13 +220,15 @@ namespace Icy.UI
 		/// <summary>
 		/// 初始化UI
 		/// </summary>
-		private void InitUI(string uiName, UIBase newUI, AssetRef assetRef)
+		private void InitUI(Type uiType, UIBase newUI, AssetRef assetRef)
 		{
 			if (newUI == null)
 				return;
+			string uiName = uiType.Name;
 
 			UIData newUIState = new UIData();
 			newUIState.Name = uiName;
+			newUIState.Type = uiType;
 			newUIState.Param = null;
 			newUIState.AssetRef = assetRef;
 			_UIMap[newUI] = newUIState;
@@ -267,7 +274,7 @@ namespace Icy.UI
 				UIData prev = PopStack();
 				if (prev != null)
 				{
-					Get(prev.Name, (UIBase ui) =>
+					Get(prev.Type, (UIBase ui) =>
 					{
 						ui.Show(prev.Param);
 					});
