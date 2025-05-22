@@ -4,6 +4,8 @@ using Icy.Asset;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Icy.UI
 {
@@ -230,6 +232,10 @@ namespace Icy.UI
 			newUI.UIName = uiName;
 			newUI.Init();
 			newUI.DoHide();
+
+#if UNITY_EDITOR
+			ValidateUICode(uiName, newUI);
+#endif
 		}
 
 		internal void Show(UIBase ui, IUIParam param)
@@ -376,5 +382,44 @@ namespace Icy.UI
 				return textureAsset.AssetObject as Texture;
 			}
 		}
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// 对UI代码进行一些合法性检查
+		/// </summary>
+		/// <param name="uiName"></param>
+		private void ValidateUICode(string uiName, UIBase ui)
+		{
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
+			if (bytes == null)
+				Log.LogError("Can not find UI setting");
+			else
+			{
+				UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);
+				//基于正则匹配简单检查BindableData的BindTo和UnbindTo的配对情况，避免内存泄露
+				string nameWithoutPrefixUI = uiName.Substring(2);
+				string uiScriptPath = Path.Combine(uiSetting.UIRootDir, nameWithoutPrefixUI, uiName + ".cs");
+				ValidateBindableData(uiName, uiScriptPath);
+				string uiLogicScriptPath = Path.Combine(uiSetting.UIRootDir, nameWithoutPrefixUI, uiName + "Logic.cs");
+				ValidateBindableData(uiName, uiLogicScriptPath);
+			}
+		}
+
+		private void ValidateBindableData(string scriptName, string scriptPath)
+		{
+			if (File.Exists(scriptPath))
+			{
+				string allCodes = File.ReadAllText(scriptPath);
+				string bind = Regex.Escape(".BindTo(");
+				string unbind = Regex.Escape(".UnbindTo(");
+				Regex regexBind = new Regex(bind);
+				Regex regexUnbind = new Regex(unbind);
+				int bindCount = regexBind.Matches(allCodes).Count;
+				int unbindCount = regexUnbind.Matches(allCodes).Count;
+				if (bindCount > unbindCount)
+					Log.LogError($"{scriptName} may be leaked memory, BindTo count = {bindCount}, UnbindTo count = {unbindCount}");
+			}
+		}
+#endif
 	}
 }

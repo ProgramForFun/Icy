@@ -38,7 +38,10 @@ public class UILogin : UIBase
 
 	public override void Hide()
 	{
-		
+		_Bg.UnbindTo(BgName);
+		_Title.UnbindTo(BgName);
+		SliderValue.UnbindTo(SliderValue2);
+
 		base.Hide();
 	}
 
@@ -58,8 +61,6 @@ public class UILogin : UIBase
 		_Slider.UnbindTo(SliderValue);
 		await UniTask.WaitForSeconds(1);
 		SliderValue.Data = 0.0f;
-
-		_Title.UnbindTo(BgName);
 	}
 
 	public override void Destroy()
