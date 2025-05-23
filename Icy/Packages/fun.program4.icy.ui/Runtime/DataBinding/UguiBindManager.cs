@@ -1,6 +1,8 @@
 using Icy.Base;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Icy.UI
 {
@@ -11,6 +13,7 @@ namespace Icy.UI
 	{
 		private struct BindData
 		{
+			public string UIName;
 			public object UguiComp;
 			public object BindableData;
 			public object Listener;
@@ -27,6 +30,7 @@ namespace Icy.UI
 		{
 			base.OnInitialized();
 			_BindDataList = new List<BindData>(DEFAULT_LIST_SIZE);
+			EventManager.AddListener(EventDefine.UIHided, OnUIHided);
 		}
 
 		/// <summary>
@@ -50,6 +54,21 @@ namespace Icy.UI
 			if (GetIndex(uguiComp, bindableData) < 0)
 			{
 				BindData data = new BindData();
+
+				//如果新增了可Bind的UI组件，可能需要扩展这里
+				Transform trans;
+				if (uguiComp is Selectable selectable)
+					trans = selectable.transform;
+				else if (uguiComp is Graphic graphic)
+					trans = graphic.transform;
+				else
+				{
+					Log.Assert(false, $"Not supported ugui component type {uguiComp.GetType()}");
+					return false;
+				}
+
+				UIBase ui = UIUtility.GetUIFromParent(trans);
+				data.UIName = ui.UIName;
 				data.UguiComp = uguiComp;
 				data.BindableData = bindableData;
 				data.Listener = listener;
@@ -80,6 +99,28 @@ namespace Icy.UI
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// UI隐藏时，自动Unbind该UI所属UI组件
+		/// </summary>
+		private void OnUIHided(int eventID, IEventParam param)
+		{
+			if (param is EventParam_Type paramType)
+			{
+				string uiName = paramType.Value.Name;
+				int i = _BindDataList.Count - 1;
+				for (; i >= 0; i--)
+				{
+					if (_BindDataList[i].UIName == uiName)
+					{
+						BindData bindData = _BindDataList[i];
+						dynamic bindableData = bindData.BindableData;
+						bindableData.UnbindTo((dynamic)bindData.Listener);
+						_BindDataList.RemoveAt(i);
+					}
+				}
+			}
 		}
 	}
 }
