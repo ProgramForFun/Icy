@@ -7,47 +7,90 @@ namespace Icy.Base
 	/// </summary>
 	public interface IEventParam
 	{
-
+		/// <summary>
+		/// 重置各个字段
+		/// </summary>
+		void Reset();
 	}
 
 	//以下是默认提供的事件参数
-	public struct EventParam_Int : IEventParam
+	public class EventParam_Int : IEventParam
 	{
 		public int Value;
+
+		public void Reset()
+		{
+			Value = 0;
+		}
 	}
 
-	public struct EventParam_Long : IEventParam
+	public class EventParam_Long : IEventParam
 	{
 		public long Value;
+
+		public void Reset()
+		{
+			Value = 0L;
+		}
 	}
 
-	public struct EventParam_Float : IEventParam
+	public class EventParam_Float : IEventParam
 	{
 		public float Value;
+
+		public void Reset()
+		{
+			Value = 0.0f;
+		}
 	}
 
-	public struct EventParam_Double : IEventParam
+	public class EventParam_Double : IEventParam
 	{
 		public double Value;
+
+		public void Reset()
+		{
+			Value = 0.0;
+		}
 	}
 
-	public struct EventParam_Bool : IEventParam
+	public class EventParam_Bool : IEventParam
 	{
 		public bool Value;
+
+		public void Reset()
+		{
+			Value = false;
+		}
 	}
 
-	public struct EventParam_String : IEventParam
+	public class EventParam_String : IEventParam
 	{
 		public string Value;
+
+		public void Reset()
+		{
+			Value = null;
+		}
 	}
 
-	public struct EventParam_Type : IEventParam
+	public class EventParam_Type : IEventParam
 	{
 		public Type Value;
+
+		public void Reset()
+		{
+			Value = null;
+		}
 	}
 
-	public struct EventParam<T> : IEventParam
+	public class EventParam<T> : IEventParam
 	{
 		public T Value;
+
+		public void Reset()
+		{
+			Value = default;
+		}
 	}
 }
