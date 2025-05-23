@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
 
 namespace Icy.Base
 {
@@ -112,6 +114,28 @@ namespace Icy.Base
 				return;
 			}
 			other._Others.Remove(this);
+		}
+
+		/// <summary>
+		/// 序列化输出当前所有Bind上来的监听，方便调试；
+		/// 内部实现有反射，注意在性能敏感的场景使用
+		/// </summary>
+		public string Dump()
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.AppendLine($"BindableData<{typeof(T).Name}> HashCode = {GetHashCode()}");
+			stringBuilder.AppendLine($"Listeners count = {_Listeners.Count}");
+			foreach (Action<T> l in _Listeners)
+			{
+				MethodInfo methodInfo = l.Method;
+				stringBuilder.AppendLine($"{l.Target.GetType().Name}.{l.Method.Name}");
+			}
+
+			stringBuilder.AppendLine($"Other Bindables count = {_Others.Count}");
+			foreach (BindableData<T> other in _Others)
+				stringBuilder.AppendLine($"Bindable<{typeof(T).Name}> = {other.Data}");
+
+			return stringBuilder.ToString();
 		}
 
 		#region Override

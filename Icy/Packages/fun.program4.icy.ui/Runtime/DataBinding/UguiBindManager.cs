@@ -1,6 +1,7 @@
 using Icy.Base;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -99,6 +100,25 @@ namespace Icy.UI
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// 序列化输出当前所有Bind，方便调试；
+		/// 内部实现有反射，注意谨慎在性能敏感的场景使用
+		/// </summary>
+		internal string Dump()
+		{
+			StringBuilder stringBuilder = new StringBuilder();
+			for (int i = 0; i < _BindDataList.Count; i++)
+			{
+				stringBuilder.AppendLine();
+				BindData data = _BindDataList[i];
+				dynamic uiComp = data.UguiComp;
+				dynamic bindableData = data.BindableData;
+				stringBuilder.AppendLine($"{data.UIName}.{uiComp.gameObject.name} : ");
+				stringBuilder.Append(bindableData.Dump());
+			}
+			return stringBuilder.ToString();
 		}
 
 		/// <summary>
