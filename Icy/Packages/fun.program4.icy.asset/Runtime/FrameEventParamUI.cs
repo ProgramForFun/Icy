@@ -6,7 +6,7 @@ namespace Icy.Asset
 	/// <summary>
 	/// 框架发出的即将开始下载热更资源的事件参数
 	/// </summary>
-	public struct Ready2DownloadAssetPatchParam : IEventParam
+	public class Ready2DownloadAssetPatchParam : IEventParam
 	{
 		/// <summary>
 		/// 即将要下载的资源大小
@@ -32,7 +32,7 @@ namespace Icy.Asset
 	/// <summary>
 	/// 资源下载出错的事件参数
 	/// </summary>
-	public struct AssetPatchDownloadErrorParam : IEventParam
+	public class AssetPatchDownloadErrorParam : IEventParam
 	{
 		/// <summary>
 		/// 所属包裹名称
@@ -63,7 +63,7 @@ namespace Icy.Asset
 	/// <summary>
 	/// 资源下载进度变化的事件参数
 	/// </summary>
-	public struct AssetPatchDownloadProgressParam : IEventParam
+	public class AssetPatchDownloadProgressParam : IEventParam
 	{
 		/// <summary>
 		/// 所属包裹名称
