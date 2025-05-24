@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Icy.UI;
 using Icy.Asset;
 using YooAsset;
+using System.Globalization;
 
 public class ExampleRoot : MonoBehaviour
 {
@@ -15,6 +16,14 @@ public class ExampleRoot : MonoBehaviour
 	// Start is called before the first frame update
 	async void Start()
 	{
+		//基础功能的开关
+		UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
+		Application.runInBackground = true;
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
+		//避免某些地区比如南非，1.23ToString成1,23的问题
+		CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
+
 		//框架相关初始化
 		GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
 		IcyFrame.Instance.Init();
