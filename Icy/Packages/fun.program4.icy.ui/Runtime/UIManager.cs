@@ -158,7 +158,11 @@ namespace Icy.UI
 				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
 			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
-			EventManager.Trigger(EventDefine.UILoaded, new EventParam_Type { Value = uiType });
+
+			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
+			eventParam.Value = uiType;
+			EventManager.Trigger(EventDefine.UILoaded, eventParam);
+
 			return uiBase;
 		}
 
@@ -257,7 +261,10 @@ namespace Icy.UI
 			ui.Canvas.sortingOrder = (int)ui.UILayer + _SortingOrderOffset[ui.UILayer];
 			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 
-			EventManager.Trigger(EventDefine.UIShown, new EventParam_Type { Value = uiData.Type });
+			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
+			eventParam.Value = uiData.Type;
+			EventManager.Trigger(EventDefine.UIShown, eventParam);
+
 			Log.LogInfo($"Show {ui.UIName}", "UIManager");
 		}
 
@@ -266,7 +273,10 @@ namespace Icy.UI
 			DecreseSortingOrderOffeset(ui.UILayer);
 
 			UIData uiData = _UIMap[ui];
-			EventManager.Trigger(EventDefine.UIHided, new EventParam_Type { Value = uiData.Type });
+
+			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
+			eventParam.Value = uiData.Type;
+			EventManager.Trigger(EventDefine.UIHided, eventParam);
 		}
 
 		internal void ShowPrev(UIBase ui)
@@ -294,7 +304,10 @@ namespace Icy.UI
 				UIData uiData = _UIMap[ui];
 				_UIMap.Remove(ui);
 				uiData.AssetRef.Release();
-				EventManager.Trigger(EventDefine.UIDestroyed, new EventParam_Type { Value = uiData.Type });
+
+				EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
+				eventParam.Value = uiData.Type;
+				EventManager.Trigger(EventDefine.UIDestroyed, eventParam);
 			}
 
 			if (_SpriteTextureOfUI.ContainsKey(ui))

@@ -131,7 +131,9 @@ namespace Icy.UI
 
 		private void OnNameChanged()
 		{
-			EventManager.Trigger(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = this});
+			EventParam<UICodeGeneratorItem> eventParam = EventManager.GetParam<EventParam<UICodeGeneratorItem>>();
+			eventParam.Value = this;
+			EventManager.Trigger(EventDefine.UICodeGeneratorNameChanged, eventParam);
 		}
 	}
 }

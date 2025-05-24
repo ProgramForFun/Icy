@@ -9,27 +9,27 @@ namespace Icy.Base
 		{
 			//应该输出
 			EventManager.AddListener(0, EventCallback);
-			EventParam_String param_String = new EventParam_String();
-			param_String.Value = "100";
-			EventManager.Trigger(0, param_String);
+			EventParam_String eventParam = EventManager.GetParam<EventParam_String>();
+			eventParam.Value = "100";
+			EventManager.Trigger(0, eventParam);
 			Log.LogInfo("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
 
 			//不应该输出
 			EventManager.RemoveListener(0, EventCallback);
-			EventManager.Trigger(0, param_String);
+			EventManager.Trigger(0, eventParam);
 			Log.LogInfo("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
 
 			//应该延迟1秒输出
 			EventManager.AddListener(0, EventCallback);
-			param_String.Value = "This is a delay msg";
+			eventParam.Value = "This is a delay msg";
 			float delay = 1;
 			Log.LogInfo($"FireEventDelay, delay = {delay}");
-			EventManager.TriggerDelay(0, param_String, delay);
+			EventManager.TriggerDelay(0, eventParam, delay);
 
 			//应该下一帧输出
 			EventManager.AddListener(1, FrameCountEventCallback);
 			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
-			EventManager.TriggerNextFrame(1, param_String);
+			EventManager.TriggerNextFrame(1, eventParam);
 
 			//editor下支持重复注册的检查
 			EventManager.AddListener(1, FrameCountEventCallback);

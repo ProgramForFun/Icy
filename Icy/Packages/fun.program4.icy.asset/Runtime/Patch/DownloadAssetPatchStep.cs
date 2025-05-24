@@ -40,7 +40,11 @@ namespace Icy.Asset
 			if (_Downloader.TotalDownloadCount == 0)
 			{
 				Log.LogInfo($"AssetPatchFinish, no assets needs to patch", "AssetPatcher");
-				EventManager.Trigger(EventDefine.AssetPatchFinish, new EventParam_Bool() { Value = false });
+
+				EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
+				eventParam.Value = false;
+				EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
+
 				OwnerProcedure.Abort();
 			}
 			else
@@ -49,14 +53,18 @@ namespace Icy.Asset
 				long totalDownloadBytes = _Downloader.TotalDownloadBytes;
 				if (HasEnoughDiskSpace(totalDownloadBytes))
 				{
-					Ready2DownloadAssetPatchParam param = new Ready2DownloadAssetPatchParam();
-					param.About2DownloadBytes = _Downloader.TotalDownloadBytes;
-					param.About2DownloadCount = _Downloader.TotalDownloadCount;
-					param.StartDownload = Download;
-					EventManager.Trigger(EventDefine.Ready2DownloadAssetPatch, param);
+					Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
+					eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
+					eventParam.About2DownloadCount = _Downloader.TotalDownloadCount;
+					eventParam.StartDownload = Download;
+					EventManager.Trigger(EventDefine.Ready2DownloadAssetPatch, eventParam);
 				}
 				else
-					EventManager.Trigger(EventDefine.NotEnoughDiskSpace2PatchAsset, new EventParam<Action>() { Value = PreDownload });
+				{
+					EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
+					eventParam.Value = PreDownload;
+					EventManager.Trigger(EventDefine.NotEnoughDiskSpace2PatchAsset, eventParam);
+				}
 			}
 		}
 
@@ -87,12 +95,12 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadError(DownloadErrorData data)
 		{
-			AssetPatchDownloadErrorParam param = new AssetPatchDownloadErrorParam();
-			param.PackageName = data.PackageName;
-			param.FileName = data.FileName;
-			param.ErrorInfo = data.ErrorInfo;
-			param.Retry = PreDownload;
-			EventManager.Trigger(EventDefine.AssetPatchDownloadError, param);
+			AssetPatchDownloadErrorParam eventParam = EventManager.GetParam<AssetPatchDownloadErrorParam>();
+			eventParam.PackageName = data.PackageName;
+			eventParam.FileName = data.FileName;
+			eventParam.ErrorInfo = data.ErrorInfo;
+			eventParam.Retry = PreDownload;
+			EventManager.Trigger(EventDefine.AssetPatchDownloadError, eventParam);
 		}
 
 		/// <summary>
@@ -100,14 +108,14 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadProgressUpdate(DownloadUpdateData data)
 		{
-			AssetPatchDownloadProgressParam param = new AssetPatchDownloadProgressParam();
-			param.PackageName = data.PackageName;
-			param.Progress = data.Progress;
-			param.TotalDownloadCount = data.TotalDownloadCount;
-			param.CurrentDownloadCount = data.CurrentDownloadCount;
-			param.TotalDownloadBytes = data.TotalDownloadBytes;
-			param.CurrentDownloadBytes = data.CurrentDownloadBytes;
-			EventManager.Trigger(EventDefine.AssetPatchDownloadProgress, param);
+			AssetPatchDownloadProgressParam eventParam = EventManager.GetParam<AssetPatchDownloadProgressParam>();
+			eventParam.PackageName = data.PackageName;
+			eventParam.Progress = data.Progress;
+			eventParam.TotalDownloadCount = data.TotalDownloadCount;
+			eventParam.CurrentDownloadCount = data.CurrentDownloadCount;
+			eventParam.TotalDownloadBytes = data.TotalDownloadBytes;
+			eventParam.CurrentDownloadBytes = data.CurrentDownloadBytes;
+			EventManager.Trigger(EventDefine.AssetPatchDownloadProgress, eventParam);
 		}
 
 		/// <summary>

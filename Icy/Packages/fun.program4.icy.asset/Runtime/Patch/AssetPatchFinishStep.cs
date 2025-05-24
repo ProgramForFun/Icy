@@ -26,7 +26,11 @@ public class AssetPatchFinishStep : ProcedureStep
 	{
 		ClearCacheFilesOperation operation = _Patcher.Package.ClearCacheFilesAsync(EFileClearMode.ClearUnusedBundleFiles);
 		await operation.ToUniTask();
-		EventManager.Trigger(EventDefine.AssetPatchFinish, new EventParam_Bool() { Value = true });
+
+		EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
+		eventParam.Value = true;
+		EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
+
 		Log.LogInfo($"AssetPatchFinish, patchs patched", "AssetPatcher");
 		Finish();
 	}
