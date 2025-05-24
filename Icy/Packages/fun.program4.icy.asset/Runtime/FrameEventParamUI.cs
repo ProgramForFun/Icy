@@ -20,6 +20,13 @@ namespace Icy.Asset
 		/// 开始下载的回调
 		/// </summary>
 		public Action StartDownload;
+
+		public void Reset()
+		{
+			About2DownloadBytes = 0L;
+			About2DownloadCount = 0;
+			StartDownload = null;
+		}
 	}
 
 	/// <summary>
@@ -43,6 +50,14 @@ namespace Icy.Asset
 		/// 重拾的回调
 		/// </summary>
 		public Action Retry;
+
+		public void Reset()
+		{
+			PackageName = null;
+			FileName = null;
+			ErrorInfo = null;
+			Retry = null;
+		}
 	}
 
 	/// <summary>
@@ -74,5 +89,15 @@ namespace Icy.Asset
 		/// 当前完成的下载数据大小（单位：字节）
 		/// </summary>
 		public long CurrentDownloadBytes;
+
+		public void Reset()
+		{
+			PackageName = null;
+			Progress = 0.0f;
+			TotalDownloadCount = 0;
+			CurrentDownloadBytes = 0;
+			TotalDownloadBytes = 0L;
+			CurrentDownloadBytes = 0L;
+		}
 	}
 }
