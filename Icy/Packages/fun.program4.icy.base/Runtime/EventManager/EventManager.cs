@@ -19,7 +19,32 @@ namespace Icy.Base
 		/// 所有事件的映射关系
 		/// </summary>
 		private static Dictionary<int, HashSet<EventListener>> _EventListenerMap = new Dictionary<int, HashSet<EventListener>>();
+		/// <summary>
+		/// EventParam缓存
+		/// </summary>
+		private static Dictionary<Type, IEventParam> _EventParamCache = new Dictionary<Type, IEventParam>();
 
+
+		/// <summary>
+		/// 获取缓存的Param，避免每次都new一个新的，降低GC分配；
+		/// 注意，业务逻辑只应该从Param中获取数据，不应该持有EventParam
+		/// </summary>
+		public static T GetParam<T>() where T : class, IEventParam, new()
+		{
+			IEventParam param;
+
+			Type type = typeof(T);
+			if (_EventParamCache.ContainsKey(type))
+				param = _EventParamCache[type];
+			else
+			{
+				param = new T();
+				_EventParamCache[type] = param;
+			}
+
+			param.Reset();
+			return param as T;
+		}
 
 		/// <summary>
 		/// 指定listener是否已经在监听指定event了
@@ -132,6 +157,7 @@ namespace Icy.Base
 		{
 			Log.LogInfo("Clear EventManager");
 			_EventListenerMap.Clear();
+			_EventParamCache.Clear();
 		}
 
 		/// <summary>
