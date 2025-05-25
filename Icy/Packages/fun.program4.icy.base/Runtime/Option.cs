@@ -10,11 +10,11 @@ namespace Icy.Base
 		/// <summary>
 		/// Option的附带数据，可能为null
 		/// </summary>
-		public string Payload { get; private set; }
+		public object Payload { get; private set; }
 		private Action<T> _YesCallback;
 		private Action<T> _NoCallback;
 
-		public Option(Action<T> yesCallback, Action<T> noCallback, string payload = null)
+		public Option(Action<T> yesCallback, Action<T> noCallback, object payload = null)
 		{
 			_YesCallback = yesCallback;
 			_NoCallback = noCallback;
@@ -40,11 +40,11 @@ namespace Icy.Base
 		/// <summary>
 		/// Option的附带数据，可能为null
 		/// </summary>
-		public string Payload { get; private set; }
+		public object Payload { get; private set; }
 		private Action _YesCallback;
 		private Action _NoCallback;
 
-		public Option(Action yesCallback, Action noCallback, string payload = null)
+		public Option(Action yesCallback, Action noCallback, object payload = null)
 		{
 			_YesCallback = yesCallback;
 			_NoCallback = noCallback;
