@@ -66,7 +66,7 @@ namespace Icy.Asset.Editor
 			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.None;
 			buildParameters.BuildinFileCopyParams = string.Empty;
 			buildParameters.CompressOption = ECompressOption.LZ4;
-			buildParameters.BuiltinShadersBundleName = GetBuiltinShaderBundleName();
+			buildParameters.BuiltinShadersBundleName = GetBuiltInShaderBundleName();
 			buildParameters.ClearBuildCacheFiles = clearBuildCacheFiles; //不清理构建缓存，启用增量构建，可以提高打包速度！
 			buildParameters.UseAssetDependencyDB = useAssetDependencyDB; //使用资源依赖关系数据库，可以提高打包速度！
 			if (encrypt)
@@ -94,15 +94,15 @@ namespace Icy.Asset.Editor
 
 		private static string GetDefaultPackageVersion()
 		{
-			int totalMinutes = DateTime.Now.Hour * 60 + DateTime.Now.Minute;
-			return DateTime.Now.ToString("yyyy-MM-dd") + "-" + totalMinutes;
+			TimeSpan nowSpan = DateTime.Now.TimeOfDay;
+			return DateTime.Now.ToString("yyyy-MM-dd") + "_" + Mathf.RoundToInt((float)nowSpan.TotalSeconds);
 		}
 
 		/// <summary>
 		/// 内置着色器资源包名称
 		/// 注意：和自动收集的着色器资源包名保持一致！
 		/// </summary>
-		private static string GetBuiltinShaderBundleName()
+		private static string GetBuiltInShaderBundleName()
 		{
 			bool uniqueBundleName = AssetBundleCollectorSettingData.Setting.UniqueBundleName;
 			PackRuleResult packRuleResult = DefaultPackRule.CreateShadersPackRuleResult();
