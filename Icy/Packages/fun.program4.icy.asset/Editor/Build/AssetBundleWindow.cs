@@ -146,6 +146,7 @@ namespace Icy.Asset.Editor
 			SaveSetting();
 
 			BuildAssetBundleStep.BuildAssetBundle(_CurrBuildTarget, _Setting.ClearAssetBundleCache, _Setting.EncryptAssetBundle, true);
+			UpdateBuiltAssetBundleVersion(_CurrBuildTarget);
 		}
 	}
 }
