@@ -4,6 +4,8 @@ using UnityEditor;
 using System.Linq;
 using Icy.Base;
 using Google.Protobuf;
+using System.Collections.Generic;
+using Sirenix.OdinInspector.Editor;
 
 namespace Icy.Asset.Editor
 {
@@ -17,8 +19,9 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
 		[Title("补丁包列表")]
 		[HideLabel]
-		[ListDrawerSettings(ShowFoldout = false, DraggableItems = false, HideAddButton = true, CustomRemoveElementFunction = "OnRemove")]
-		public string[] _AllBuiltAssetBundleVersion;
+		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
+		[OnCollectionChanged("OnTableListChanged")]
+		public List<AssetBundleWindowItem> _BundleVersionList;
 
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
@@ -35,6 +38,7 @@ namespace Icy.Asset.Editor
 		/// 当前选中平台的Setting文件
 		/// </summary>
 		protected BuildSetting _Setting;
+		protected List<string> _AllBuiltAssetBundleVersion;
 
 
 		[MenuItem("Icy/Asset/AssetBundle", false)]
@@ -98,17 +102,34 @@ namespace Icy.Asset.Editor
 		{
 			string dir = $"Bundles/{buildTarget}/DefaultPackage";
 			if (Directory.Exists(dir))
-				_AllBuiltAssetBundleVersion = Directory.GetDirectories(dir).Where(dir => Path.GetFileName(dir) != "OutputCache").ToArray();
+			{
+				_BundleVersionList.Clear();
+				_AllBuiltAssetBundleVersion = Directory.GetDirectories(dir).Where(dir => Path.GetFileName(dir) != "OutputCache").ToList();
+				for (int i = 0; i < _AllBuiltAssetBundleVersion.Count; i++)
+				{
+					AssetBundleWindowItem item = new AssetBundleWindowItem();
+					item.AssetBundleVersion = _AllBuiltAssetBundleVersion[i];
+					_BundleVersionList.Add(item);
+				}
+			}
 			else
-				_AllBuiltAssetBundleVersion = new string[0];
+				_BundleVersionList = new List<AssetBundleWindowItem>();
 		}
 
-		protected virtual void OnRemove(string dir)
+		protected void OnTableListChanged(CollectionChangeInfo info, object value)
 		{
-			if (EditorUtility.DisplayDialog("", $"确定要删除 {dir} 吗？", "是", "否"))
+			if (info.ChangeType == CollectionChangeType.RemoveValue || info.ChangeType == CollectionChangeType.RemoveKey || info.ChangeType == CollectionChangeType.RemoveIndex)
 			{
-				Directory.Delete(dir, true);
-				UpdateBuiltAssetBundleVersion(_CurrBuildTarget);
+				string dir = _AllBuiltAssetBundleVersion[info.Index];
+
+				if (EditorUtility.DisplayDialog("", $"确定要删除 {dir} 吗？", "是", "否"))
+				{
+					Directory.Delete(dir, true);
+					_AllBuiltAssetBundleVersion.RemoveAt(info.Index);
+					UpdateBuiltAssetBundleVersion(_CurrBuildTarget);
+				}
+				else
+					UpdateBuiltAssetBundleVersion(_CurrBuildTarget);
 			}
 		}
 
