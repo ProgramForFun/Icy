@@ -17,7 +17,7 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
 		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
-		[Title("补丁包列表")]
+		[Title("AssetBundle补丁包列表")]
 		[HideLabel]
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
 		[OnCollectionChanged("OnTableListChanged")]
@@ -38,6 +38,9 @@ namespace Icy.Asset.Editor
 		/// 当前选中平台的Setting文件
 		/// </summary>
 		protected BuildSetting _Setting;
+		/// <summary>
+		/// 所有AssetBundle补丁包路径List
+		/// </summary>
 		protected List<string> _AllBuiltAssetBundleVersion;
 
 
