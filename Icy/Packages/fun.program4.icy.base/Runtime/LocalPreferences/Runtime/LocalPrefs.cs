@@ -240,10 +240,9 @@ public sealed class LocalPrefs : ScriptableObject
     public PrefsVector3 vector3 = new PrefsVector3();
     public PrefsVector4 vector4 = new PrefsVector4();
     public PrefsString strings = new PrefsString();
-    public PrefsObject objects = new PrefsObject();
 
-	// Bool
-	public static bool GetBool(string key, bool defaultValue = default)
+    // Bool
+    public static bool GetBool(string key, bool defaultValue = default)
     {
         return Data.bools.GetPref(key, defaultValue);
     }
@@ -322,21 +321,8 @@ public sealed class LocalPrefs : ScriptableObject
         return Data.strings.SetPref(key, value);
     }
 
-	// object
-	/// <summary>
-	/// 注意，内部使用JsonUtility序列化，object应该满足JsonUtility的要求
-	/// </summary>
-	public static object GetObject(string key, object defaultValue = default)
-	{
-		return Data.objects.GetPref(key, defaultValue);
-	}
-	public static object SetObject(string key, object value = default)
-	{
-		return Data.objects.SetPref(key, value);
-	}
-
-	/// <summary>Returns true if key exist in preferences.</summary>
-	public static bool HasKey(string key)
+    /// <summary>Returns true if key exist in preferences.</summary>
+    public static bool HasKey(string key)
     {
         foreach (var pref in Data.prefs.Values)
             if (pref.ContainsKey(key))
