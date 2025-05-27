@@ -63,6 +63,7 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 |Editor-显示当前Git分支|✔️|
 |Editor-集成Odin|✔️|
 |Editor-集成ReferenceFinder|✔️|
+|Editor-资源托盘|✔️|
 |Editor-C#热重载|待开始|
 
 &nbsp;
