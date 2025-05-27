@@ -91,10 +91,18 @@ namespace Icy.Editor
 
 		private void AddAsset(Object asset, bool add2Data)
 		{
+			//判断是否重复
 			for (int i = 0; i < _Assets.Count; i++)
 			{
 				if (_Assets[i].Asset == asset)
 					return;
+			}
+
+			//判断是否是Project窗口里的独立资源
+			if (!EditorUtility.IsPersistent(asset))
+			{
+				Debug.LogError("添加失败：添加的资源并不是一个Project窗口里的独立资源");
+				return;
 			}
 
 			AssetTrayWindowItem item = new AssetTrayWindowItem();
