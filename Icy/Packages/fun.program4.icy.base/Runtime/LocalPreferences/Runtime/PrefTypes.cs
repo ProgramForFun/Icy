@@ -11,4 +11,5 @@ namespace Neonagee.LocalPreferences
     [System.Serializable] public class PrefsVector3 : Prefs<Vector3> { }
     [System.Serializable] public class PrefsVector4 : Prefs<Vector4> { }
     [System.Serializable] public class PrefsString : Prefs<string> { }
+    [System.Serializable] public class PrefsObject : Prefs<object> { }
 }
