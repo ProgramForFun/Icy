@@ -208,10 +208,10 @@ namespace Icy.Asset.Editor
 			SaveSetting();
 
 			JSONArray jsonArray;
-			if (Directory.Exists("BuildProcedure"))
-				jsonArray = JSONNode.Parse(File.ReadAllText("BuildProcedure")) as JSONArray;
+			if (Directory.Exists("BuildPlayerProcedure"))
+				jsonArray = JSONNode.Parse(File.ReadAllText("BuildPlayerProcedure.json")) as JSONArray;
 			else
-				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildProcedure.json")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure.json")) as JSONArray;
 
 
 			Procedure procedure = new Procedure("Build");
@@ -221,7 +221,7 @@ namespace Icy.Asset.Editor
 				Type type = Type.GetType(typeWithNameSpace);
 				if (type == null)
 				{
-					Log.Assert(false, $"Can not find BuildProcedure step {typeWithNameSpace}");
+					Log.Assert(false, $"Can not find BuildPlayerProcedure step {typeWithNameSpace}");
 					return;
 				}
 
@@ -232,7 +232,7 @@ namespace Icy.Asset.Editor
 			procedure.Blackboard.WriteInt("BuildTarget", (int)_CurrBuildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", _Setting);
 			procedure.OnChangeStep += OnChangeBuildStep;
-			procedure.OnFinish += OnBuildProcedureFinish;
+			procedure.OnFinish += OnBuildPlayerProcedureFinish;
 			procedure.Start();
 		}
 
@@ -242,7 +242,7 @@ namespace Icy.Asset.Editor
 			EditorUtility.DisplayProgressBar("Build Player", info, step.OwnerProcedure.Progress);
 		}
 
-		protected virtual void OnBuildProcedureFinish(bool _)
+		protected virtual void OnBuildPlayerProcedureFinish(bool _)
 		{
 			EditorUtility.ClearProgressBar();
 		}
