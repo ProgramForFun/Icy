@@ -66,8 +66,9 @@ namespace Icy.Editor
 		[Button("添加当前选中的资源进托盘", ButtonSizes.Medium)]
 		public void AddSelection()
 		{
-			Object select = Selection.activeObject;
-			AddAsset(select, true);
+			Object[] select = Selection.objects;
+			for (int i = 0; i < select.Length; i++)
+				AddAsset(select[i], true);
 		}
 
 		protected override void OnImGUI()
