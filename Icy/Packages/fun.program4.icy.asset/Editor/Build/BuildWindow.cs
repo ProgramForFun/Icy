@@ -208,13 +208,13 @@ namespace Icy.Asset.Editor
 			SaveSetting();
 
 			JSONArray jsonArray;
-			if (Directory.Exists("BuildPlayerProcedure"))
-				jsonArray = JSONNode.Parse(File.ReadAllText("BuildPlayerProcedure.json")) as JSONArray;
+			if (File.Exists("BuildPlayerProcedureCfg.json"))
+				jsonArray = JSONNode.Parse(File.ReadAllText("BuildPlayerProcedureCfg.json")) as JSONArray;
 			else
-				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure.json")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedureCfg.json")) as JSONArray;
 
 
-			Procedure procedure = new Procedure("Build");
+			Procedure procedure = new Procedure("BuildPlayer");
 			for (int i = 0; i < jsonArray.Count; i++)
 			{
 				string typeWithNameSpace = jsonArray[i];
