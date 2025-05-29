@@ -1,5 +1,5 @@
 # Icy
-Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设施
+Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具
 
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
 &nbsp;
@@ -7,7 +7,7 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 ## 安装
 
 #### 以下两种方式任选其一：
-* 方式一：直接Clone本仓库，以本仓库作为基础进行开发
+* 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
 * 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
 
 &nbsp;
