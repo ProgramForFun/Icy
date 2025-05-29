@@ -37,7 +37,7 @@ Icy Unity Framework，集成业界高质量插件/工具，提供常用基础设
 |Base-集成LocalPreferences|✔️|
 |Base-PeriodicRecord|✔️|
 |Asset-AssetManager|✔️|
-|Asset-可定制的打包流程|待开始|
+|Asset-可定制的打包流程|✔️|
 |Network-TCP|✔️|
 |Network-HTTP|✔️|
 |Network-RUDP|待开始|
