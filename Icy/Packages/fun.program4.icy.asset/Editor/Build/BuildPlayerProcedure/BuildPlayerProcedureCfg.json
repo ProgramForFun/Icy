@@ -1,6 +1,6 @@
 [
-	"Icy.Asset.Editor.CopySettingsStep",
-	"Icy.Asset.Editor.ApplyPlayerSettingsStep",
-	"Icy.Asset.Editor.BuildAssetBundleStep",
-	"Icy.Asset.Editor.BuildPlayerStep",
+  "Icy.Asset.Editor.CopySettingsStep",
+  "Icy.Asset.Editor.ApplyPlayerSettingsStep",
+  "Icy.Asset.Editor.SubProcedureBuildAssetBundleStep",
+  "Icy.Asset.Editor.BuildPlayerStep"
 ]

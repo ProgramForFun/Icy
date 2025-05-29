@@ -211,7 +211,7 @@ namespace Icy.Asset.Editor
 			if (File.Exists("BuildPlayerProcedureCfg.json"))
 				jsonArray = JSONNode.Parse(File.ReadAllText("BuildPlayerProcedureCfg.json")) as JSONArray;
 			else
-				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedureCfg.json")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure/BuildPlayerProcedureCfg.json")) as JSONArray;
 
 
 			Procedure procedure = new Procedure("BuildPlayer");

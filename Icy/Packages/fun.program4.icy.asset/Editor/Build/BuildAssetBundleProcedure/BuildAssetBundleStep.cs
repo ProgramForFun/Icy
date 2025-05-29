@@ -4,7 +4,6 @@ using UnityEditor;
 using YooAsset.Editor;
 using YooAsset;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace Icy.Asset.Editor
@@ -16,13 +15,14 @@ namespace Icy.Asset.Editor
 	{
 		private BuildTarget _BuildTarget;
 		private BuildSetting _BuildSetting;
-		private static string _BuildPackage = "DefaultPackage";
+		private static string _BuildPackage;
 		private static string _BuildOutputPath;
 
 		public override async UniTask Activate()
 		{
 			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget");
 			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
+			_BuildPackage = OwnerProcedure.Blackboard.ReadString("BuildPackage");
 
 			if (_BuildSetting.BuildAssetBundle)
 			{
@@ -30,6 +30,7 @@ namespace Icy.Asset.Editor
 				if (succeed)
 				{
 					await UniTask.Yield();
+					OwnerProcedure.Blackboard.WriteString("BuildOutputPath", _BuildOutputPath);
 					Finish();
 				}
 				else
@@ -78,10 +79,8 @@ namespace Icy.Asset.Editor
 			if (buildResult.Success)
 			{
 				Log.LogInfo($"Build asset bundle succeed : {buildResult.OutputPackageDirectory}");
-				_BuildOutputPath = buildResult.OutputPackageDirectory;
-
 				await UniTask.Yield();
-				ClearStreamingAssetsAndCopyNew();
+				_BuildOutputPath = buildResult.OutputPackageDirectory;
 				return true;
 			}
 			else
@@ -107,17 +106,6 @@ namespace Icy.Asset.Editor
 			bool uniqueBundleName = AssetBundleCollectorSettingData.Setting.UniqueBundleName;
 			PackRuleResult packRuleResult = DefaultPackRule.CreateShadersPackRuleResult();
 			return packRuleResult.GetBundleName(_BuildPackage, uniqueBundleName);
-		}
-
-		private static void ClearStreamingAssetsAndCopyNew()
-		{
-			string assetDir = Path.Combine(Application.streamingAssetsPath, "yoo", _BuildPackage);
-			if (Directory.Exists(assetDir))
-				Directory.Delete(assetDir, true);
-			CommonUtility.CopyDir(_BuildOutputPath, assetDir);
-
-			AssetDatabase.SaveAssets();
-			AssetDatabase.Refresh();
 		}
 
 		public override async UniTask Deactivate()
