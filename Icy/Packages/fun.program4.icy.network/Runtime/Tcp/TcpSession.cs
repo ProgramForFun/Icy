@@ -9,47 +9,10 @@ namespace Icy.Network
 	/// 一个简单的TCP通信类，基于System.Net.Sockets.TcpClient封装；
 	/// 处理了粘包，基于包头的一个int大小的消息长度实现
 	/// </summary>
-	public class TcpSession : IDisposable
+	public class TcpSession : NetworkSessionBase
 	{
-		/// <summary>
-		/// 服务器域名或IP地址
-		/// </summary>
-		public string Host { get; protected set; }
-		/// <summary>
-		/// 服务器端口
-		/// </summary>
-		public int Port { get; protected set; }
-		/// <summary>
-		/// 是否已和服务器建立连接
-		/// </summary>
-		public bool IsConnected { get; private set; }
-
-		/// <summary>
-		/// 和服务器建立连接、可以通信了的事件
-		/// </summary>
-		public event Action OnConnected;
-		/// <summary>
-		/// 和服务器断开连接的事件
-		/// </summary>
-		public event Action OnDisconnected;
-		/// <summary>
-		/// 接收到服务器消息的事件
-		/// </summary>
-		public event Action<byte[], int, int> OnReceive;
-		/// <summary>
-		/// 连接服务器的异常
-		/// </summary>
-		public event Action<Exception> OnConnectException;
-		/// <summary>
-		/// 接收处理服务器数据的异常
-		/// </summary>
-		public event Action<Exception> OnListenException;
-
-
 		protected TcpClient _TcpClient;
 		protected NetworkStream _Stream;
-		protected byte[] _ReceiveBuffer;
-		protected byte[] _SendBuffer;
 
 		/// <summary>
 		/// 当前正在接收的消息的长度，包括长度本身的4字节
@@ -64,28 +27,20 @@ namespace Icy.Network
 		/// </summary>
 		protected int _BufferRemain = 0;
 		/// <summary>
-		/// Buffer大小
-		/// </summary>
-		protected int _BufferSize;
-		/// <summary>
 		/// 消息长度本身，的长度
 		/// </summary>
 		protected const int MSG_LENGTH_SIZE = sizeof(int);
 
 
-		public TcpSession(string host, int port, int bufferSize = 4096)
+		public TcpSession(string host, int port, int bufferSize = 4096) : base(host, port, bufferSize)
 		{
-			Host = host;
-			Port = port;
-			_BufferSize = bufferSize;
-			_ReceiveBuffer = new byte[bufferSize];
-			_SendBuffer = new byte[bufferSize];
+
 		}
 
 		/// <summary>
 		/// 和服务器建立连接
 		/// </summary>
-		public async UniTask Connect()
+		public override async UniTask Connect()
 		{
 			if (IsConnected)
 			{
@@ -113,7 +68,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 监听消息
 		/// </summary>
-		public async UniTask Listen()
+		public override async UniTask Listen()
 		{
 			Log.LogInfo("Start Listen", "TcpSession");
 			while (IsConnected)
@@ -137,7 +92,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 发送消息
 		/// </summary>
-		public virtual void Send(byte[] msg, int startIdx, int length)
+		public override void Send(byte[] msg, int startIdx, int length)
 		{
 			if (!IsConnected)
 			{
@@ -161,7 +116,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 断开连接
 		/// </summary>
-		public void Disconnect()
+		public override void Disconnect()
 		{
 			if (!IsConnected)
 			{
@@ -178,7 +133,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 处理TCP接收到的消息
 		/// </summary>
-		private void HandleReceived(byte[] buffer, int receivedSize)
+		protected override void HandleReceived(byte[] buffer, int receivedSize)
 		{
 			_BufferRemain += receivedSize;
 			while (true)
@@ -217,7 +172,7 @@ namespace Icy.Network
 			}
 		}
 
-		public virtual void Dispose()
+		public override void Dispose()
 		{
 			if (IsConnected)
 				Disconnect();
