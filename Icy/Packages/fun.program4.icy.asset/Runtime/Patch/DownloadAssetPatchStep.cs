@@ -18,8 +18,8 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			Log.LogInfo($"Activate RequestAssetPatchInfoStep", "AssetPatcher");
-			_Patcher = OwnerProcedure.Blackboard.ReadObject("AssetPatcher") as AssetPatcher;
+			Log.LogInfo($"Activate {nameof(DownloadAssetPatchStep)}", nameof(AssetPatcher));
+			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher)) as AssetPatcher;
 			PreDownload();
 			await UniTask.CompletedTask;
 		}
@@ -39,7 +39,7 @@ namespace Icy.Asset
 
 			if (_Downloader.TotalDownloadCount == 0)
 			{
-				Log.LogInfo($"AssetPatchFinish, no assets needs to patch", "AssetPatcher");
+				Log.LogInfo($"AssetPatchFinish, no assets needs to patch", nameof(AssetPatcher));
 
 				EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
 				eventParam.Value = false;

@@ -23,17 +23,17 @@ namespace Icy.Asset
 			Package = package;
 			IsFinished = false;
 
-			Log.LogInfo($"Start patch procedure", "AssetPatcher");
+			Log.LogInfo($"Start patch procedure", nameof(AssetPatcher));
 			Start().Forget();
 		}
 
 		private async UniTaskVoid Start()
 		{
-			Procedure patchProcedure = new Procedure("AssetPatcher");
+			Procedure patchProcedure = new Procedure(nameof(AssetPatcher));
 			patchProcedure.AddStep(new RequestAssetPatchInfoStep());
 			patchProcedure.AddStep(new DownloadAssetPatchStep());
 			patchProcedure.AddStep(new AssetPatchFinishStep());
-			patchProcedure.Blackboard.WriteObject("AssetPatcher", this);
+			patchProcedure.Blackboard.WriteObject(nameof(AssetPatcher), this);
 			patchProcedure.Start();
 
 			while(!patchProcedure.IsFinished)

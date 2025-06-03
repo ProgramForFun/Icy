@@ -12,8 +12,8 @@ public class AssetPatchFinishStep : ProcedureStep
 
 	public override async UniTask Activate()
 	{
-		Log.LogInfo($"Activate AssetPatchFinishStep", "AssetPatcher");
-		_Patcher = OwnerProcedure.Blackboard.ReadObject("AssetPatcher") as AssetPatcher;
+		Log.LogInfo($"Activate {nameof(AssetPatchFinishStep)}", nameof(AssetPatcher));
+		_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher)) as AssetPatcher;
 		await Clear();
 	}
 
@@ -31,7 +31,7 @@ public class AssetPatchFinishStep : ProcedureStep
 		eventParam.Value = true;
 		EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
 
-		Log.LogInfo($"AssetPatchFinish, patchs patched", "AssetPatcher");
+		Log.LogInfo($"AssetPatchFinish, patchs patched", nameof(AssetPatcher));
 		Finish();
 	}
 }
