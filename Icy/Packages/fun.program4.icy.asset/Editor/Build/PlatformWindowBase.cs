@@ -50,7 +50,7 @@ namespace Icy.Asset.Editor
 				{
 					_CurrPlatformName = currTabName;
 
-					Log.LogInfo($"Switch to platform {_CurrPlatformName}", "BuildWindow");
+					Log.LogInfo($"Switch to platform {_CurrPlatformName}", nameof(BuildWindow));
 					switch (_CurrPlatformName)
 					{
 						case "Android":

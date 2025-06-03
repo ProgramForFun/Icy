@@ -243,11 +243,11 @@ namespace Icy.Base
 						sw.Flush();
 					}
 				}
-				Log.LogInfo("Write to file thread stopped", "Log");
+				Log.LogInfo("Write to file thread stopped", nameof(Log));
 			}
 			catch (Exception ex)
 			{
-				LogError($"Write log to file exception : {ex}", "Log");
+				LogError($"Write log to file exception : {ex}", nameof(Log));
 			}
 			finally
 			{

@@ -108,7 +108,7 @@ namespace Icy.Base
 			{
 				State = StateType.Finished;
 				OnFinish?.Invoke(true);
-				Log.LogInfo($"Procedure {_FSM.Name} finished");
+				Log.LogInfo($"Procedure {_FSM.Name} finished", nameof(Procedure));
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace Icy.Base
 
 			if (gotoIdx == -1)
 			{
-				Log.LogError($"{typeof(T).Name} is not belonged to Procedure {Name}", "Procedure");
+				Log.LogError($"{typeof(T).Name} is not belonged to Procedure {Name}", nameof(Procedure));
 				return;
 			}
 
@@ -155,7 +155,7 @@ namespace Icy.Base
 			await UniTask.WaitUntil(() => !IsChangingStep);
 			State = StateType.Finished;
 			OnFinish?.Invoke(false);
-			Log.LogInfo($"Procedure {_FSM.Name} aborted");
+			Log.LogInfo($"Procedure {_FSM.Name} aborted", nameof(Procedure));
 		}
 	}
 }

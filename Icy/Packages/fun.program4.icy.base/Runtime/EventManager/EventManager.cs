@@ -70,7 +70,7 @@ namespace Icy.Base
 			if (HasAlreadyListened(eventID, listener))
 			{
 				MethodInfo listenerMethod = listener.Method;
-				Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", "EventManager");
+				Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", nameof(EventManager));
 				return;
 			}
 

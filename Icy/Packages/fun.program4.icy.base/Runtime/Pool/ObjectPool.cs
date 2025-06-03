@@ -26,7 +26,7 @@ namespace Icy.Base
 
 #if UNITY_EDITOR
 			if (typeof(T) == typeof(GameObject) && this.GetType() != typeof(GameObjectPool))
-				Log.LogError("ObjectPool<GameObject> is unexpected, Use GameObjectPool instead");
+				Log.LogError($"ObjectPool<GameObject> is unexpected, Use {nameof(GameObjectPool)} instead");
 #endif
 		}
 
