@@ -123,7 +123,7 @@ namespace Icy.Asset
 
 			_Cached = new Dictionary<string, AssetRef>();
 
-			Log.LogInfo($"AssetManager init end, {initializationOperation.Status}", "AssetManager");
+			Log.LogInfo($"{nameof(AssetManager)} init end, {initializationOperation.Status}", nameof(AssetManager));
 			bool initSucceed = initializationOperation.Status == EOperationStatus.Succeed;
 
 			return initSucceed;
@@ -194,7 +194,7 @@ namespace Icy.Asset
 		public void SwitchPackageTo(string packageName)
 		{
 			_Package = YooAssets.GetPackage(packageName);
-			Log.Assert(_Package != null, $"AssetManager SwitchPackageTo {packageName} failed!");
+			Log.Assert(_Package != null, $"{nameof(AssetManager)} SwitchPackageTo {packageName} failed!");
 		}
 
 		/// <summary>
@@ -400,9 +400,9 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Package.ClearCacheFilesAsync(clearMode);
 			await operation.ToUniTask();
 			if (operation.Status == EOperationStatus.Succeed)
-				Log.LogInfo($"ClearCachedFiles succeed, mode = {clearMode}", "AssetManager");
+				Log.LogInfo($"ClearCachedFiles succeed, mode = {clearMode}", nameof(AssetManager));
 			else
-				Log.LogError($"ClearCachedFiles failed, mode = {clearMode}", "AssetManager");
+				Log.LogError($"ClearCachedFiles failed, mode = {clearMode}", nameof(AssetManager));
 			return operation.Status == EOperationStatus.Succeed;
 		}
 		#endregion
