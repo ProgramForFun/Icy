@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
@@ -77,7 +76,7 @@ public class HttpRequester : IDisposable
 				else if (method == SupportMethod.POST)
 					_CurRequest = UnityWebRequest.Post(url, dict);
 				else
-					Log.LogError($"HttpRequester does NOT support method {method} yet");
+					Log.LogError($"{nameof(HttpRequester)} does NOT support method {method} yet");
 				_CurRequest.timeout = _Timeout;
 				await _CurRequest.SendWebRequest();
 
@@ -85,7 +84,7 @@ public class HttpRequester : IDisposable
 				if (_CurRequest.result != UnityWebRequest.Result.Success)
 				{
 					lastError = _CurRequest.error;
-					Log.LogWarning($"HttpRequester failed, url = {url}, result = {_CurRequest.result}" +
+					Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {_CurRequest.result}" +
 									$", responseCode = {lastResponseCode}, error = {lastError}");
 				}
 				else
@@ -106,10 +105,10 @@ public class HttpRequester : IDisposable
 			}
 
 			retry++;
-			Log.LogInfo($"HttpRequester {method} retry {retry}");
+			Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}");
 		} while (retry < _RetryLimit);
 
-		Log.LogError($"HttpRequester failed, url = {url}, result = {_CurRequest.result}" +
+		Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {_CurRequest.result}" +
 						$", responseCode = {lastResponseCode}, error = {lastError}");
 
 		_CurRequest.Dispose();

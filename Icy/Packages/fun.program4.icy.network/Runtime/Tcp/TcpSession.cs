@@ -44,7 +44,7 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 			{
-				Log.LogError("Duplicate Connect", "TcpSession");
+				Log.LogError("Duplicate Connect", nameof(TcpSession));
 				return;
 			}
 
@@ -56,11 +56,11 @@ namespace Icy.Network
 				_Stream = _TcpClient.GetStream();
 				IsConnected = true;
 				OnConnected?.Invoke();
-				Log.LogInfo("Connected", "TcpSession");
+				Log.LogInfo("Connected", nameof(TcpSession));
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"Connect exception : {ex}", "TcpSession");
+				Log.LogError($"Connect exception : {ex}", nameof(TcpSession));
 				OnConnectException?.Invoke(ex);
 			}
 		}
@@ -70,7 +70,7 @@ namespace Icy.Network
 		/// </summary>
 		public override async UniTask Listen()
 		{
-			Log.LogInfo("Start Listen", "TcpSession");
+			Log.LogInfo("Start Listen", nameof(TcpSession));
 			while (IsConnected)
 			{
 				int receivedSize = 0;
@@ -81,7 +81,7 @@ namespace Icy.Network
 				}
 				catch (Exception ex)
 				{
-					Log.LogError($"Listen exception : {ex}", "TcpSession");
+					Log.LogError($"Listen exception : {ex}", nameof(TcpSession));
 					Disconnect();
 					OnListenException?.Invoke(ex);
 				}
@@ -96,7 +96,7 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Trying to send when disconnected", "TcpSession");
+				Log.LogError("Trying to send when disconnected", nameof(TcpSession));
 				return;
 			}
 
@@ -120,14 +120,14 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Disconnect when disconnected", "TcpSession");
+				Log.LogError("Disconnect when disconnected", nameof(TcpSession));
 				return;
 			}
 			IsConnected = false;
 			_TcpClient.Close();
 			_TcpClient = null;
 			OnDisconnected?.Invoke();
-			Log.LogInfo("Disconnect", "TcpSession");
+			Log.LogInfo("Disconnect", nameof(TcpSession));
 		}
 
 		/// <summary>
@@ -176,7 +176,7 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 				Disconnect();
-			Log.LogInfo("Dispose", "TcpSession");
+			Log.LogInfo("Dispose", nameof(TcpSession));
 		}
 	}
 }

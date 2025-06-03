@@ -155,7 +155,7 @@ namespace Icy.UI
 
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
-				Log.LogError($"{uiName} is Not a UI prefab", "UIManager");
+				Log.LogError($"{uiName} is Not a UI prefab", nameof(UIManager));
 			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
 
@@ -265,7 +265,7 @@ namespace Icy.UI
 			eventParam.Value = uiData.Type;
 			EventManager.Trigger(EventDefine.UIShown, eventParam);
 
-			Log.LogInfo($"Show {ui.UIName}", "UIManager");
+			Log.LogInfo($"Show {ui.UIName}", nameof(UIManager));
 		}
 
 		internal void Hide(UIBase ui)
@@ -324,7 +324,7 @@ namespace Icy.UI
 			{
 				_Stack.Push(_UIMap[ui]);
 				RemoveDuplicateInStack();
-				Log.LogInfo($"Push {ui.UIName}, stack count = {_Stack.Count}", "UIManager");
+				Log.LogInfo($"Push {ui.UIName}, stack count = {_Stack.Count}", nameof(UIManager));
 			}
 		}
 
@@ -335,7 +335,7 @@ namespace Icy.UI
 				UIData top = _Stack.Peek();
 				if (_StackBottomUI == null || top.Name != _StackBottomUI.Name)
 				{
-					Log.LogInfo($"Pop {top.Name}, stack count = {_Stack.Count - 1}", "UIManager");
+					Log.LogInfo($"Pop {top.Name}, stack count = {_Stack.Count - 1}", nameof(UIManager));
 					return _Stack.Pop();
 				}
 			}
