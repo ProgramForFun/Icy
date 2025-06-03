@@ -16,7 +16,7 @@ namespace Icy.Asset.Editor
 			bool succeed = CommonUtility.CopyDir(SettingsHelper.GetSettingDir(), dest, false);
 			if (!succeed)
 			{
-				Log.Assert(false, "Copy setting files failed", "CopySettingsStep");
+				Log.Assert(false, "Copy setting files failed", nameof(CopySettingsStep));
 				OwnerProcedure.Abort();
 				return;
 			}
