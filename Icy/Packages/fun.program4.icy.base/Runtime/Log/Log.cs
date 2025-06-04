@@ -37,7 +37,7 @@ namespace Icy.Base
 		/// <summary>
 		/// Log颜色，只在editor下生效
 		/// </summary>
-		private static string _ColorOnce;
+		private static string _ColorOnce = null;
 #endif
 		/// <summary>
 		/// 是否忽略Log等级，强制Log一条日志，单次生效；
@@ -94,9 +94,12 @@ namespace Icy.Base
 		/// <summary>
 		/// 清除所有的OverrideTagLogLevel
 		/// </summary>
-		public static void ClearOverrideTagLogLevel()
+		public static void Reset()
 		{
+			MinLogLevel = LogLevel.Info;
 			_OverrideTagLogLevel.Clear();
+			_ColorOnce = null;
+			_ForceOnce = false;
 		}
 
 		public static void LogInfo(string msg, string tag = null)

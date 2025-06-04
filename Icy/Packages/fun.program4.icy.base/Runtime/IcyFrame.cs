@@ -16,7 +16,7 @@ namespace Icy.Base
 
 		public void Init()
 		{
-			Log.ClearOverrideTagLogLevel();
+			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
 		}
