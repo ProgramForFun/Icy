@@ -39,6 +39,11 @@ namespace Icy.Base
 		/// </summary>
 		private static string _ColorOnce;
 #endif
+		/// <summary>
+		/// 是否忽略Log等级，强制Log一条日志，单次生效；
+		/// 对某些情况下要在release下log一条info日志时有用；
+		/// </summary>
+		private static bool _ForceOnce = false;
 
 		#region WriteLog2File
 		/// <summary>
@@ -141,9 +146,23 @@ namespace Icy.Base
 #endif
 		}
 
+		/// <summary>
+		/// 忽略Log等级，强制Log一条日志，单次生效；
+		/// 比如在某些情况下要在release下保留一条info日志时有用；
+		/// </summary>
+		public static void ForceLogOnce()
+		{
+			_ForceOnce = true;
+		}
+
 		private static bool IsMatchLogLevel(string tag)
 		{
-			if (tag != null && _OverrideTagLogLevel.ContainsKey(tag))
+			if (_ForceOnce)
+			{
+				_ForceOnce = false;
+				return true;
+			}
+			else if (tag != null && _OverrideTagLogLevel.ContainsKey(tag))
 			{
 				if (_OverrideTagLogLevel[tag] > LogLevel.Info)
 					return false;
