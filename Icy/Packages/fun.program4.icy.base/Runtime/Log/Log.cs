@@ -20,7 +20,7 @@ namespace Icy.Base
 
 
 	/// <summary>
-	/// 提供更精细的Log Level控制；
+	/// 提供Log到文件以及更精细的Log Level控制；
 	/// 使用本Log后，不应该再设置Unity Logger.filterLogType；
 	/// </summary>
 	public static class Log
