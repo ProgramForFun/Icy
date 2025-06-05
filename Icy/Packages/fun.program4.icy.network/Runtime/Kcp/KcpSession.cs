@@ -117,7 +117,6 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-			Log.LogInfo("Dispose", nameof(KcpSession));
 				Log.LogError(e.ToString(), nameof(KcpSession));
 			}
 		}
