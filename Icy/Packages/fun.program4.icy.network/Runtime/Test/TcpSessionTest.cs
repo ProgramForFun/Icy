@@ -12,7 +12,7 @@ namespace Icy.Network
 
 		public static void Test()
 		{
-			_TcpSession = new TcpSession("127.0.0.1", 12321);
+			_TcpSession = new TcpSession("127.0.0.1", 12321, 4096);
 			_TcpSession.OnConnected += OnConnect;
 			_TcpSession.OnDisconnected += OnDisconnect;
 			_TcpSession.OnReceive += OnReceiveData;

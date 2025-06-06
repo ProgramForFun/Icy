@@ -12,7 +12,7 @@ namespace Icy.Network
 
 		public static void Test()
 		{
-			_KcpSession = new KcpSession("127.0.0.1", 12333, 40960);
+			_KcpSession = new KcpSession("127.0.0.1", 12333, 4096);
 			_KcpSession.OnConnected += OnConnect;
 			_KcpSession.OnDisconnected += OnDisconnect;
 			_KcpSession.OnReceive += OnReceiveData;

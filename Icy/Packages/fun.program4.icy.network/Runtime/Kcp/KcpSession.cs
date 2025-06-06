@@ -74,7 +74,7 @@ namespace Icy.Network
 		protected uint _RemoteConn;
 
 
-		public KcpSession(string host, int port, int bufferSize = 4096) : base(host, port, bufferSize)
+		public KcpSession(string host, int port, int bufferSize) : base(host, port, bufferSize)
 		{
 			_StartTime = ClientNow();
 			_TimeNow = (uint)(ClientNow() - _StartTime);

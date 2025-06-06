@@ -32,7 +32,7 @@ namespace Icy.Network
 		protected const int MSG_LENGTH_SIZE = sizeof(int);
 
 
-		public TcpSession(string host, int port, int bufferSize = 4096) : base(host, port, bufferSize)
+		public TcpSession(string host, int port, int bufferSize) : base(host, port, bufferSize)
 		{
 
 		}
