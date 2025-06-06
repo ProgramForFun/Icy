@@ -44,6 +44,5 @@ public partial struct vector3
         + "}";
     }
 }
-
 }
 

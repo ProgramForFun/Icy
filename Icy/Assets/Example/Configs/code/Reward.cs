@@ -25,7 +25,7 @@ public partial class Reward
         for(int n = _buf.ReadSize() ; n > 0 ; --n)
         {
             RewardCfg _v;
-            _v = RewardCfg.DeserializeRewardCfg(_buf);
+            _v = global::cfg.RewardCfg.DeserializeRewardCfg(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Sn, _v);
         }
