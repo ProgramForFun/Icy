@@ -62,6 +62,10 @@ namespace Icy.Network
 		/// </summary>
 		protected EndPoint _IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 		/// <summary>
+		/// 是否正在断开连接
+		/// </summary>
+		protected bool _IsDisconnecting = false;
+		/// <summary>
 		/// 当前错误码
 		/// </summary>
 		protected int _Error;
@@ -83,7 +87,7 @@ namespace Icy.Network
 			IcyFrame.Instance.AddUpdate(this);
 		}
 
-		public override UniTask Connect()
+		public override UniTask Connect(byte[] syn = null)
 		{
 			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			_Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
@@ -111,15 +115,8 @@ namespace Icy.Network
 
 			try
 			{
-#if USE_KCP_SHARP
-				_SendBuffer.WriteTo(0, 4);
-				_SendBuffer.WriteTo(4, KcpProtocolType.SYN);
-				Send(_SendBuffer, 0, 6);
-#else
-				_SendBuffer.WriteTo(0, KcpProtocolType.SYN);
-				_SendBuffer.WriteTo(2, _LocalConn);
-				_Socket.SendTo(_SendBuffer, 0, 6, SocketFlags.None, _RemoteEndPoint);
-#endif
+				Buffer.BlockCopy(syn, 0, _SendBuffer, 0, syn.Length);
+				Send(_SendBuffer, 0, syn.Length);
 			}
 			catch (Exception e)
 			{
@@ -269,8 +266,13 @@ namespace Icy.Network
 
 				if (!IsConnected)
 				{
-					IsConnected = true;
-					OnConnected?.Invoke();
+					if (_IsDisconnecting)
+						_IsDisconnecting = false;
+					else
+					{
+						IsConnected = true;
+						OnConnected?.Invoke();
+					}
 				}
 				else
 					OnReceive?.Invoke(buffer, 0, n);
@@ -285,30 +287,25 @@ namespace Icy.Network
 			return (DateTime.UtcNow.Ticks - epoch) / 10000;
 		}
 
-		public override void Disconnect()
+		public override async UniTask Disconnect(byte[] fin = null)
 		{
 			if (_Socket == null)
 				return;
 
 			try
 			{
-#if USE_KCP_SHARP
-				_SendBuffer.WriteTo(0, 4);
-				_SendBuffer.WriteTo(4, KcpProtocolType.FIN);
-				Send(_SendBuffer, 0, 6);
+				_IsDisconnecting = true;
+				Buffer.BlockCopy(fin, 0, _SendBuffer, 0, fin.Length);
+				Send(_SendBuffer, 0, fin.Length);
 
+				await UniTask.NextFrame();
+#if USE_KCP_SHARP
 				if (_Kcp != null)
 				{
 					_Kcp.Release();
 					_Kcp = null;
 				}
 #else
-				_SendBuffer.WriteTo(0, KcpProtocolType.FIN);
-				_SendBuffer.WriteTo(2, _LocalConn);
-				_SendBuffer.WriteTo(6, _RemoteConn);
-				_SendBuffer.WriteTo(10, (uint)_Error);
-				_Socket.SendTo(_SendBuffer, 0, 14, SocketFlags.None, _RemoteEndPoint);
-
 				if (_Kcp != IntPtr.Zero)
 				{
 					KcpDll.KcpRelease(_Kcp);
@@ -335,7 +332,7 @@ namespace Icy.Network
 				if (IsConnected)
 				{
 					for (int i = 0; i < 4; i++)
-						Disconnect();
+						Disconnect().Forget();
 				}
 			}
 			catch (Exception)

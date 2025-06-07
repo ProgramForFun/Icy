@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
 using System.Text;
@@ -49,7 +50,10 @@ namespace Icy.Network
 		public static async void Update()
 		{
 			if (Input.GetKeyUp(KeyCode.C))
-				await _KcpSession.Connect();
+			{
+				byte[] syn = new byte[3] { 1, 2, 3 };
+				await _KcpSession.Connect(syn);
+			}
 
 			if (Input.GetKeyUp(KeyCode.L))
 				await _KcpSession.Listen();
@@ -64,7 +68,10 @@ namespace Icy.Network
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
-				_KcpSession.Disconnect();
+			{
+				byte[] fin = new byte[3] { 1, 2, 3 };
+				_KcpSession.Disconnect(fin).Forget();
+			}
 		}
 	}
 }

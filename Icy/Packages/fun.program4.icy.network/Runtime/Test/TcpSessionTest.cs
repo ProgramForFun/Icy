@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
 using System.Text;
@@ -64,7 +65,7 @@ namespace Icy.Network
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
-				_TcpSession.Disconnect();
+				_TcpSession.Disconnect().Forget();
 		}
 	}
 }

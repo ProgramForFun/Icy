@@ -40,7 +40,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 和服务器建立连接
 		/// </summary>
-		public override async UniTask Connect()
+		public override async UniTask Connect(byte[] _ = null)
 		{
 			if (IsConnected)
 			{
@@ -82,7 +82,7 @@ namespace Icy.Network
 				catch (Exception ex)
 				{
 					Log.LogError($"Listen exception : {ex}", nameof(TcpSession));
-					Disconnect();
+					await Disconnect();
 					OnListenException?.Invoke(ex);
 				}
 				HandleReceived(_ReceiveBuffer, receivedSize);
@@ -116,7 +116,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 断开连接
 		/// </summary>
-		public override void Disconnect()
+		public override async UniTask Disconnect(byte[] _ = null)
 		{
 			if (!IsConnected)
 			{
@@ -128,6 +128,7 @@ namespace Icy.Network
 			_TcpClient = null;
 			OnDisconnected?.Invoke();
 			Log.LogInfo("Disconnect", nameof(TcpSession));
+			await UniTask.CompletedTask;
 		}
 
 		/// <summary>
@@ -175,7 +176,7 @@ namespace Icy.Network
 		public override void Dispose()
 		{
 			if (IsConnected)
-				Disconnect();
+				Disconnect().Forget();
 			Log.LogInfo("Dispose", nameof(TcpSession));
 		}
 	}

@@ -65,7 +65,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 连接服务器
 		/// </summary>
-		public abstract UniTask Connect();
+		public abstract UniTask Connect(byte[] syn = null);
 		/// <summary>
 		/// 监听服务器消息
 		/// </summary>
@@ -77,7 +77,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 和服务器断开连接
 		/// </summary>
-		public abstract void Disconnect();
+		public abstract UniTask Disconnect(byte[] fin = null);
 		/// <summary>
 		/// 处理服务器的消息
 		/// </summary>
