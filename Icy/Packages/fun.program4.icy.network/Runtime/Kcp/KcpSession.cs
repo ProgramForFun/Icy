@@ -87,8 +87,11 @@ namespace Icy.Network
 			IcyFrame.Instance.AddUpdate(this);
 		}
 
-		public override UniTask Connect(byte[] syn = null)
+		public override async UniTask Connect(byte[] syn = null)
 		{
+			if (IsConnected)
+				return;
+
 			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			_Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
@@ -122,13 +125,12 @@ namespace Icy.Network
 			{
 				OnConnectException?.Invoke(e);
 			}
-
-			return UniTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 
-		public override UniTask Listen()
+		public override async UniTask Listen()
 		{
-			return UniTask.CompletedTask;
+			await UniTask.CompletedTask;
 		}
 
 #if !USE_KCP_SHARP
@@ -264,18 +266,18 @@ namespace Icy.Network
 
 				_LastRecvTime = _TimeNow;
 
-				if (!IsConnected)
+				if (_IsDisconnecting)
+					_IsDisconnecting = false;
+				else
 				{
-					if (_IsDisconnecting)
-						_IsDisconnecting = false;
-					else
+					if (!IsConnected)
 					{
 						IsConnected = true;
 						OnConnected?.Invoke();
 					}
+					else
+						OnReceive?.Invoke(buffer, 0, n);
 				}
-				else
-					OnReceive?.Invoke(buffer, 0, n);
 			}
 		}
 
@@ -298,7 +300,7 @@ namespace Icy.Network
 				Buffer.BlockCopy(fin, 0, _SendBuffer, 0, fin.Length);
 				Send(_SendBuffer, 0, fin.Length);
 
-				await UniTask.NextFrame();
+				await UniTask.WaitUntil(IsDisconnectOperationFinished);
 #if USE_KCP_SHARP
 				if (_Kcp != null)
 				{
@@ -322,6 +324,11 @@ namespace Icy.Network
 			{
 				Log.LogError(e.ToString(), nameof(KcpSession));
 			}
+		}
+
+		protected bool IsDisconnectOperationFinished()
+		{
+			return !_IsDisconnecting;
 		}
 
 		public override void Dispose()
