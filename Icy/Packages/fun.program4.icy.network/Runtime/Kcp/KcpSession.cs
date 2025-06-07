@@ -119,7 +119,8 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				OnConnectException?.Invoke(e);
+				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.ConnectFailed, e);
 			}
 			await UniTask.CompletedTask;
 		}
@@ -150,20 +151,19 @@ namespace Icy.Network
 
 		public override void Send(byte[] msg, int startIdx, int length)
 		{
-#if USE_KCP_SHARP
-			if (_Kcp == null)
-#else
-			if (_Kcp == IntPtr.Zero)
-#endif
-				OnListenException?.Invoke(new Exception($"Call {nameof(Send)} when Kcp is disconnected"));
-			else
+			if (!IsKcpValid())
 			{
-#if USE_KCP_SHARP
-				_Kcp.Send(msg, startIdx, length);
-#else
-				KcpDll.KcpSend(_Kcp, msg, length);
-#endif
+				Exception e = new Exception($"Call {nameof(Send)} when Kcp is disconnected");
+				Log.LogError(e.ToString(), nameof(KcpSession));
+				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
+				return;
 			}
+
+#if USE_KCP_SHARP
+			_Kcp.Send(msg, startIdx, length);
+#else
+			KcpDll.KcpSend(_Kcp, msg, length);
+#endif
 		}
 
 #if USE_KCP_SHARP
@@ -204,7 +204,8 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				OnListenException(e);
+				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 			return len;
 		}
@@ -220,7 +221,8 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				OnListenException?.Invoke(e);
+				Log.LogError($"Receive failed, {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.ReceiveFailed, e);
 			}
 		}
 
@@ -255,10 +257,7 @@ namespace Icy.Network
 					return;
 
 				if (n == 0)
-				{
-					OnListenException(new Exception());
 					return;
-				}
 
 #if USE_KCP_SHARP
 				int count = _Kcp.Recv(buffer, 0, ushort.MaxValue);
@@ -380,28 +379,13 @@ namespace Icy.Network
 
 			_TimeNow = (uint)(ClientNow() - _StartTime);
 
-			try
-			{
 #if USE_KCP_SHARP
-				_Kcp.Update(_TimeNow);
+			_Kcp.Update(_TimeNow);
+			uint nextUpdateTime = _Kcp.Check(_TimeNow);
 #else
-				KcpDll.KcpUpdate(_Kcp, _TimeNow);
+			KcpDll.KcpUpdate(_Kcp, _TimeNow);
+			uint nextUpdateTime = KcpDll.KcpCheck(_Kcp, _TimeNow);
 #endif
-			}
-			catch (Exception e)
-			{
-				OnListenException?.Invoke(e);
-				return;
-			}
-
-			if (_Kcp != null)
-			{
-#if USE_KCP_SHARP
-				uint nextUpdateTime = _Kcp.Check(_TimeNow);
-#else
-				uint nextUpdateTime = KcpDll.KcpCheck(_Kcp, _TimeNow);
-#endif
-			}
 		}
 	}
 }

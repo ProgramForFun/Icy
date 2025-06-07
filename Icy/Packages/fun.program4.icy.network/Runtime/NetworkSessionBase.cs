@@ -31,13 +31,9 @@ namespace Icy.Network
 		/// </summary>
 		public Action<byte[], int, int> OnReceive;
 		/// <summary>
-		/// 连接服务器的异常
+		/// 各种错误的事件
 		/// </summary>
-		public Action<Exception> OnConnectException;
-		/// <summary>
-		/// 接收处理服务器数据的异常
-		/// </summary>
-		public Action<Exception> OnListenException;
+		public Action<NetworkError, Exception> OnError;
 
 		/// <summary>
 		/// Buffer大小

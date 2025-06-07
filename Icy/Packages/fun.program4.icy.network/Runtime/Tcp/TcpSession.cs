@@ -61,7 +61,7 @@ namespace Icy.Network
 			catch (Exception ex)
 			{
 				Log.LogError($"Connect exception : {ex}", nameof(TcpSession));
-				OnConnectException?.Invoke(ex);
+				OnError?.Invoke(NetworkError.ConnectFailed, ex);
 			}
 		}
 
@@ -78,14 +78,13 @@ namespace Icy.Network
 				{
 					Memory<byte> memBytes = new Memory<byte>(_ReceiveBuffer, _BufferRemain, _BufferSize - _BufferRemain);
 					receivedSize = await _Stream.ReadAsync(memBytes);
+					HandleReceived(_ReceiveBuffer, -1, receivedSize);
 				}
 				catch (Exception ex)
 				{
-					Log.LogError($"Listen exception : {ex}", nameof(TcpSession));
-					await Disconnect();
-					OnListenException?.Invoke(ex);
+					Log.LogError($"Receive failed, {ex}", nameof(TcpSession));
+					OnError?.Invoke(NetworkError.ReceiveFailed, ex);
 				}
-				HandleReceived(_ReceiveBuffer, -1, receivedSize);
 			}
 		}
 
@@ -96,21 +95,31 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Trying to send when disconnected", nameof(TcpSession));
+				Exception e = new Exception($"Call {nameof(Send)} when Tcp is disconnected");
+				Log.LogError(e.ToString(), nameof(TcpSession));
+				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;
 			}
 
-			//消息结构前4个byte为本数据包的长度，以解决粘包问题
-			//  消息长度 消息本体
-			// |- - - -| - - -...
-			//     4      n
+			try
+			{
+				//消息结构前4个byte为本数据包的长度，以解决粘包问题
+				//  消息长度 消息本体
+				// |- - - -| - - -...
+				//     4      n
 
-			//1、长度 = 消息ID + 消息本体的长度
-			int len = length + MSG_LENGTH_SIZE;
-			BitConverter.TryWriteBytes(_SendBuffer, len);
-			//2、消息本体
-			Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
-			_Stream.Write(_SendBuffer, 0, len);
+				//1、长度 = 消息ID + 消息本体的长度
+				int len = length + MSG_LENGTH_SIZE;
+				BitConverter.TryWriteBytes(_SendBuffer, len);
+				//2、消息本体
+				Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
+				_Stream.Write(_SendBuffer, 0, len);
+			}
+			catch (Exception e)
+			{
+				Log.LogError($"Send failed, {e}", nameof(TcpSession));
+				OnError?.Invoke(NetworkError.SendFailed, e);
+			}
 		}
 
 		/// <summary>

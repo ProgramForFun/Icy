@@ -82,8 +82,7 @@ namespace Icy.Network
 			_TcpChannel.OnDisconnected += OnDisconnect;
 			//由于有TcpReceiver的存在，这里没必要监听OnReceive了
 			//_TcpChannel.OnReceive += OnReceiveData;
-			_TcpChannel.OnConnectException += OnConnectException;
-			_TcpChannel.OnListenException += OnListenException;
+			_TcpChannel.OnError += OnError;
 		}
 
 		private static void OnConnect()
@@ -96,14 +95,9 @@ namespace Icy.Network
 			Log.LogInfo("TcpChannel Disconnected");
 		}
 
-		private static void OnConnectException(Exception ex)
+		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"TcpChannel connect excetion {ex}");
-		}
-
-		private static void OnListenException(Exception ex)
-		{
-			Log.LogError($"TcpChannel handle received excetion {ex}");
+			Log.LogError($"TcpChannel error = {error}, exception = {ex}");
 		}
 
 		public static void /*async UniTaskVoid*/ Update()

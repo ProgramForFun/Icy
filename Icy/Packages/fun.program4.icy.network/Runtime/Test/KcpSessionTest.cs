@@ -17,8 +17,7 @@ namespace Icy.Network
 			_KcpSession.OnConnected += OnConnect;
 			_KcpSession.OnDisconnected += OnDisconnect;
 			_KcpSession.OnReceive += OnReceiveData;
-			_KcpSession.OnConnectException += OnConnectException;
-			_KcpSession.OnListenException += OnListenException;
+			_KcpSession.OnError += OnError;
 		}
 
 		private static void OnConnect()
@@ -37,14 +36,9 @@ namespace Icy.Network
 			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
-		private static void OnConnectException(Exception ex)
+		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"Kcp connect excetion {ex}");
-		}
-
-		private static void OnListenException(Exception ex)
-		{
-			Log.LogError($"Kcp handle received excetion {ex}");
+			Log.LogError($"Kcp error = {error}, exception = {ex}");
 		}
 
 		public static async void Update()

@@ -17,8 +17,7 @@ namespace Icy.Network
 			_TcpSession.OnConnected += OnConnect;
 			_TcpSession.OnDisconnected += OnDisconnect;
 			_TcpSession.OnReceive += OnReceiveData;
-			_TcpSession.OnConnectException += OnConnectException;
-			_TcpSession.OnListenException += OnListenException;
+			_TcpSession.OnError += OnError;
 		}
 
 		private static void OnConnect()
@@ -37,14 +36,9 @@ namespace Icy.Network
 			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
-		private static void OnConnectException(Exception ex)
+		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"Tcp connect excetion {ex}");
-		}
-
-		private static void OnListenException(Exception ex)
-		{
-			Log.LogError($"Tcp handle received excetion {ex}");
+			Log.LogError($"Tcp error = {error}, exception = {ex}");
 		}
 
 		public static async void Update()
