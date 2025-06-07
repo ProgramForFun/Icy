@@ -312,6 +312,7 @@ namespace Icy.Network
 					_Kcp = IntPtr.Zero;
 				}
 #endif
+				_Socket.Close();
 				_Socket = null;
 
 				IsConnected = false;
