@@ -8,10 +8,18 @@ namespace Icy.Network
 	/// </summary>
 	public class NetworkChannel
 	{
+		/// <summary>
+		/// 发送器，负责序列化
+		/// </summary>
 		public NetworkSenderBase Sender { get; protected set; }
+		/// <summary>
+		/// 接收器，负责反序列化
+		/// </summary>
 		public NetworkReceiverBase Receiver { get; protected set; }
 
-
+		/// <summary>
+		/// 是否已连接到服务器
+		/// </summary>
 		public bool IsConnected => _Session.IsConnected;
 		/// <summary>
 		/// 和服务器建立连接、可以通信了的事件
@@ -37,7 +45,9 @@ namespace Icy.Network
 			get => _Session.OnError;
 			set => _Session.OnError = value;
 		}
-
+		/// <summary>
+		/// 内部的网络Session
+		/// </summary>
 		protected NetworkSessionBase _Session;
 
 
@@ -84,6 +94,9 @@ namespace Icy.Network
 			_Session.Send(encodedData, startIdx, length);
 		}
 
+		/// <summary>
+		/// 断开Channel，释放资源
+		/// </summary>
 		public virtual async UniTaskVoid Dispose(byte[] fin = null)
 		{
 			await _Session.Disconnect(fin);
