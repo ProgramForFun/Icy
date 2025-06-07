@@ -84,6 +84,7 @@ namespace Icy.Network
 				{
 					Log.LogError($"Receive failed, {ex}", nameof(TcpSession));
 					OnError?.Invoke(NetworkError.ReceiveFailed, ex);
+					await Disconnect();
 				}
 			}
 		}
