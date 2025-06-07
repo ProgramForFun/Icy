@@ -62,6 +62,10 @@ namespace Icy.Network
 		/// </summary>
 		protected EndPoint _IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 		/// <summary>
+		/// 异步Receive的参数
+		/// </summary>
+		protected SocketAsyncEventArgs _AsyncReceiveArg;
+		/// <summary>
 		/// 是否正在断开连接
 		/// </summary>
 		protected bool _IsDisconnecting = false;
@@ -130,6 +134,12 @@ namespace Icy.Network
 
 		public override async UniTask Listen()
 		{
+			_AsyncReceiveArg = new SocketAsyncEventArgs();
+			_AsyncReceiveArg.SetBuffer(_ReceiveBuffer, 0, _ReceiveBuffer.Length);
+			_AsyncReceiveArg.RemoteEndPoint = _IpEndPoint;
+			_AsyncReceiveArg.Completed += OnReceived;
+			Recv();
+
 			await UniTask.CompletedTask;
 		}
 
@@ -176,7 +186,7 @@ namespace Icy.Network
 				}
 
 				Buffer.BlockCopy(bytes, 0, _SendBuffer, 0, len);
-				_Socket.SendTo(_SendBuffer, 0, len, SocketFlags.None, _RemoteEndPoint);
+				_Socket.SendToAsync(new ArraySegment<byte>(_SendBuffer, 0, len), SocketFlags.None, _RemoteEndPoint);
 			}
 			catch (Exception e)
 			{
@@ -198,7 +208,7 @@ namespace Icy.Network
 				}
 
 				Marshal.Copy(bytes, _SendBuffer, 0, len);
-				_Socket.SendTo(_SendBuffer, 0, len, SocketFlags.None, _RemoteEndPoint);
+				_Socket.SendToAsync(new ArraySegment<byte>(_SendBuffer, 0, len), SocketFlags.None, _RemoteEndPoint);
 			}
 			catch (Exception e)
 			{
@@ -210,25 +220,36 @@ namespace Icy.Network
 
 		protected virtual void Recv()
 		{
-			while (_Socket != null && _Socket.Available > 0)
+			try
 			{
-				int messageLength = 0;
-				try
-				{
-					messageLength = _Socket.ReceiveFrom(_ReceiveBuffer, ref _IpEndPoint);
-					if (messageLength < 1)
-						continue;
+				bool pending = _Socket.ReceiveFromAsync(_AsyncReceiveArg);
+				if (!pending)
+					OnReceived(_Socket, _AsyncReceiveArg);
+			}
+			catch (Exception e)
+			{
+				OnListenException?.Invoke(e);
+			}
+		}
 
-					HandleReceived(_ReceiveBuffer, messageLength);
-				}
-				catch (Exception e)
-				{
-					OnListenException?.Invoke(e);
-				}
+		protected virtual void OnReceived(object sender, SocketAsyncEventArgs e)
+		{
+			if (e.LastOperation == SocketAsyncOperation.ReceiveFrom)
+			{
+				if (!IsKcpValid())
+					return;
+
+				HandleReceived(e.Buffer, e.Offset, e.BytesTransferred);
+				Recv();
 			}
 		}
 
 		protected override void HandleReceived(byte[] buffer, int receivedSize)
+		{
+
+		}
+
+		protected /*override*/ void HandleReceived(byte[] buffer, int offset, int receivedSize)
 		{
 #if USE_KCP_SHARP
 			_Kcp.Input(buffer, 0, receivedSize);
@@ -314,6 +335,8 @@ namespace Icy.Network
 					_Kcp = IntPtr.Zero;
 				}
 #endif
+				_AsyncReceiveArg = null;
+
 				_Socket.Close();
 				_Socket = null;
 
@@ -324,11 +347,6 @@ namespace Icy.Network
 			{
 				Log.LogError(e.ToString(), nameof(KcpSession));
 			}
-		}
-
-		protected bool IsDisconnectOperationFinished()
-		{
-			return !_IsDisconnecting;
 		}
 
 		public override void Dispose()
@@ -351,19 +369,29 @@ namespace Icy.Network
 			Log.LogInfo("Dispose", nameof(KcpSession));
 		}
 
-		public void Update(float delta)
+		protected bool IsDisconnectOperationFinished()
+		{
+			return !_IsDisconnecting;
+		}
+
+		protected bool IsKcpValid()
 		{
 #if USE_KCP_SHARP
 			if (_Kcp == null)
-				return;
+				return false;
 #else
 			if (_Kcp == IntPtr.Zero)
-				return;
+				return false;
 #endif
+			return true;
+		}
+
+		public void Update(float delta)
+		{
+			if (!IsKcpValid())
+				return;
 
 			_TimeNow = (uint)(ClientNow() - _StartTime);
-
-			Recv();
 
 			try
 			{

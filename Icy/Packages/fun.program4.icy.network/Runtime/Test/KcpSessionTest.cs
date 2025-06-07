@@ -58,9 +58,9 @@ namespace Icy.Network
 			if (Input.GetKeyUp(KeyCode.L))
 				await _KcpSession.Listen();
 
-			if (Input.GetKeyUp(KeyCode.S))
+			if (Input.GetKey(KeyCode.S))
 			{
-				//for (int i = 0; i < 2; i++)
+				for (int i = 0; i < 2; i++)
 				{
 					byte[] toSend = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
 					_KcpSession.Send(toSend, 0, toSend.Length);
