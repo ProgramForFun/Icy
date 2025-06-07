@@ -18,14 +18,6 @@ namespace Icy.Network
 	{
 		private static readonly long epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
-		public static class KcpProtocolType
-		{
-			public const short SYN = 101;
-			public const short ACK = 102;
-			public const short FIN = 103;
-			public const short MSG = 104;
-		}
-
 		/// <summary>
 		/// Session创建时间，单位ms
 		/// </summary>
