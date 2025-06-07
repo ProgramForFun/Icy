@@ -3,6 +3,9 @@ using System;
 
 namespace Icy.Network
 {
+	/// <summary>
+	/// 各个网络通信协议的Session基类
+	/// </summary>
 	public abstract class NetworkSessionBase : IDisposable
 	{
 		/// <summary>

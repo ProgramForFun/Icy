@@ -2,13 +2,13 @@
 namespace Icy.Network
 {
 	/// <summary>
-	/// 和TcpChannel一起使用的，负责接收、解析数据
+	/// 和NetworkChannel一起使用的，负责接收、解析数据
 	/// </summary>
-	public abstract class TcpReceiver
+	public abstract class NetworkReceiverBase
 	{
 		protected byte[] _Buffer;
 
-		public TcpReceiver(int bufferSize = 4096)
+		public NetworkReceiverBase(int bufferSize = 4096)
 		{
 			_Buffer = new byte[bufferSize];
 		}

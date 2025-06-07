@@ -1,16 +1,14 @@
 #if UNITY_EDITOR
-using Cysharp.Threading.Tasks;
 using Google.Protobuf;
 using Icy.Base;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
 using TestMsg;
-using UnityEngine;
 
 namespace Icy.Network
 {
-	public class TcpSenderProtobuf : TcpSender
+	public class ProtoBufSender : NetworkSenderBase
 	{
 		public override void Encode<T>(int msgID, T data)
 		{
@@ -29,7 +27,7 @@ namespace Icy.Network
 		}
 	}
 
-	public class TcpReceiverProtobuf : TcpReceiver
+	public class ProtoBufReceiver : NetworkReceiverBase
 	{
 		private readonly Dictionary<int, Type> _MsgTypeMap = new Dictionary<int, Type>()
 		{
@@ -55,6 +53,8 @@ namespace Icy.Network
 				//https://www.cnblogs.com/wsk-0000/articles/12675826.html
 				//https://zhuanlan.zhihu.com/p/588709957
 				newMessageResult.MergeFrom(span);
+
+				Log.LogInfo((newMessageResult as TestMessageResult).ErrorMsg);
 			}
 			else
 			{
@@ -62,14 +62,15 @@ namespace Icy.Network
 				IMessage msg = Activator.CreateInstance(msgType) as IMessage;
 				msg = msg.Descriptor.Parser.ParseFrom(span);
 				_Cache.Add(msgID, msg);
+
+				Log.LogInfo((msg as TestMessageResult).ErrorMsg);
 			}
-			//Log.LogInfo(newMessageResult.ErrorMsg);
 		}
 	}
 
 	public static class TcpChannelTest
 	{
-		static TcpChannel _TcpChannel;
+		static NetworkChannel _TcpChannel;
 		static TestMessageResult _MessageResult;
 		
 
@@ -77,12 +78,12 @@ namespace Icy.Network
 		{
 			_MessageResult = new TestMessageResult();
 
-			_TcpChannel = new TcpChannel("127.0.0.1", 12321, new TcpSenderProtobuf(), new TcpReceiverProtobuf());
-			_TcpChannel.OnConnected += OnConnect;
+			TcpSession session = new TcpSession("127.0.0.1", 12321, 4096);
+			_TcpChannel = new NetworkChannel(session, new ProtoBufSender(), new ProtoBufReceiver());
+			_TcpChannel.OnConnected = OnConnect;
 			_TcpChannel.OnDisconnected += OnDisconnect;
-			//由于有TcpReceiver的存在，这里没必要监听OnReceive了
-			//_TcpChannel.OnReceive += OnReceiveData;
 			_TcpChannel.OnError += OnError;
+			_TcpChannel.Start().Forget();
 		}
 
 		private static void OnConnect()

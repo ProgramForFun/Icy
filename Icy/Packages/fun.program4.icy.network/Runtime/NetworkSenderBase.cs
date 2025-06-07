@@ -2,24 +2,24 @@
 namespace Icy.Network
 {
 	/// <summary>
-	/// 和TcpChannel一起使用的，负责发送前的序列化、转换成byte[]的工作
+	/// 和NetworkChannel一起使用的，负责发送前的序列化、转换成byte[]的工作
 	/// </summary>
-	public abstract class TcpSender
+	public abstract class NetworkSenderBase
 	{
-		protected TcpChannel _Channel;
+		protected NetworkChannel _Channel;
 		protected byte[] _Buffer;
 
-		public TcpSender(int bufferSize = 4096)
+		public NetworkSenderBase(int bufferSize = 4096)
 		{
 			_Buffer = new byte[bufferSize];
 		}
 
 		/// <summary>
-		/// 把TcpChannel传进来
+		/// 把NetworkChannel传进来
 		/// </summary>
-		public void SetTcpChannel(TcpChannel tcpChannel)
+		public void SetChannel(NetworkChannel channel)
 		{
-			_Channel = tcpChannel;
+			_Channel = channel;
 		}
 
 		public virtual void Encode<T>(T data) { }
