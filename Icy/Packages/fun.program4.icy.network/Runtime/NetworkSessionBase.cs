@@ -81,7 +81,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 处理服务器的消息
 		/// </summary>
-		protected abstract void HandleReceived(byte[] buffer, int receivedSize);
+		protected abstract void HandleReceived(byte[] buffer, int startIdx, int receivedSize);
 		/// <summary>
 		/// 销毁Session
 		/// </summary>

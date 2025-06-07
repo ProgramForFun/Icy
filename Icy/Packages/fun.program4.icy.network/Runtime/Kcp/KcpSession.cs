@@ -244,17 +244,12 @@ namespace Icy.Network
 			}
 		}
 
-		protected override void HandleReceived(byte[] buffer, int receivedSize)
-		{
-
-		}
-
-		protected /*override*/ void HandleReceived(byte[] buffer, int offset, int receivedSize)
+		protected override void HandleReceived(byte[] buffer, int startIdx, int receivedSize)
 		{
 #if USE_KCP_SHARP
-			_Kcp.Input(buffer, 0, receivedSize);
+			_Kcp.Input(buffer, startIdx, receivedSize);
 #else
-			KcpDll.KcpInput(_Kcp, buffer, 0, receivedSize);
+			KcpDll.KcpInput(_Kcp, buffer, startIdx, receivedSize);
 #endif
 
 			while (true)

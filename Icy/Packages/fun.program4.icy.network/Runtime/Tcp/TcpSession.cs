@@ -85,7 +85,7 @@ namespace Icy.Network
 					await Disconnect();
 					OnListenException?.Invoke(ex);
 				}
-				HandleReceived(_ReceiveBuffer, receivedSize);
+				HandleReceived(_ReceiveBuffer, -1, receivedSize);
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 处理TCP接收到的消息
 		/// </summary>
-		protected override void HandleReceived(byte[] buffer, int receivedSize)
+		protected override void HandleReceived(byte[] buffer, int _, int receivedSize)
 		{
 			_BufferRemain += receivedSize;
 			while (true)
