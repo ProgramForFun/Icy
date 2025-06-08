@@ -7,8 +7,23 @@ using UnityEngine.Networking;
 /// <summary>
 /// 带有重试的Http封装
 /// </summary>
-public class HttpRequester : IDisposable
+public sealed class HttpRequester : IDisposable
 {
+	/// <summary>
+	/// Http请求结果
+	/// </summary>
+	public struct HttpResponse
+	{
+		/// <summary>
+		/// HTTP response code
+		/// </summary>
+		public int Code;
+		/// <summary>
+		/// 成功时是返回内容，失败时是错误信息
+		/// </summary>
+		public string Content;
+	}
+
 	/// <summary>
 	/// 当前支持的Http Method
 	/// </summary>
@@ -23,13 +38,20 @@ public class HttpRequester : IDisposable
 	/// </summary>
 	private UnityWebRequest _CurRequest;
 	/// <summary>
-	/// 一个请求发送失败的重试次数上限
+	/// 一个请求发送失败的重试次数
 	/// </summary>
-	private int _RetryLimit = 3;
+	private int _RetryTimes;
 	/// <summary>
 	/// 单次请求的超时时间，单位秒；如果重试3次的话，总体超时时间就是timeout x 3
 	/// </summary>
-	private int _Timeout = 5;
+	private int _Timeout;
+
+	
+	public HttpRequester(int timeoutPerRequest = 5, int retryTimes = 3)
+	{
+		_Timeout = timeoutPerRequest;
+		_RetryTimes = retryTimes;
+	}
 
 	/// <summary>
 	/// 发送GET请求
@@ -37,7 +59,7 @@ public class HttpRequester : IDisposable
 	/// <param name="url">请求的url</param>
 	/// <param name="callback"></param>
 	/// <returns>如果当前正在发送其他请求，返回false；否则返回true</returns>
-	public bool Get(string url, Action<int, string> callback)
+	public bool Get(string url, Action<HttpResponse> callback)
 	{
 		if (_CurRequest != null)
 			return false;
@@ -53,7 +75,7 @@ public class HttpRequester : IDisposable
 	/// <param name="dict">要发送的内容</param>
 	/// <param name="callback"></param>
 	/// <returns>如果当前正在发送其他请求，返回false；否则返回true</returns>
-	public bool Post(string url, Dictionary<string, string> dict, Action<int, string> callback)
+	public bool Post(string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
 	{
 		if (_CurRequest != null)
 			return false;
@@ -62,7 +84,7 @@ public class HttpRequester : IDisposable
 		return true;
 	}
 
-	private async UniTask RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<int, string> callback)
+	private async UniTask RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
 	{
 		int retry = 0;
 		int lastResponseCode;
@@ -93,7 +115,7 @@ public class HttpRequester : IDisposable
 
 					_CurRequest.Dispose();
 					_CurRequest = null;
-					callback?.Invoke(lastResponseCode, content);
+					callback?.Invoke(new HttpResponse() { Code = lastResponseCode, Content = content });
 
 					return;
 				}
@@ -106,23 +128,23 @@ public class HttpRequester : IDisposable
 
 			retry++;
 			Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}");
-		} while (retry < _RetryLimit);
+		} while (retry < _RetryTimes);
 
 		Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {_CurRequest.result}" +
 						$", responseCode = {lastResponseCode}, error = {lastError}");
 
 		_CurRequest.Dispose();
 		_CurRequest = null;
-		callback?.Invoke(lastResponseCode, lastError);
+		callback?.Invoke(new HttpResponse() { Code = lastResponseCode, Content = lastError });
 	}
 
 	/// <summary>
 	/// 设置重试次数
 	/// </summary>
 	/// <param name="count"></param>
-	public void SetRetryCount(int count)
+	public void SetRetryTimes(int count)
 	{
-		_RetryLimit = count;
+		_RetryTimes = count;
 	}
 
 	/// <summary>

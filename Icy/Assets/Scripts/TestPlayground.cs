@@ -13,7 +13,7 @@ public static class TestPlayground
 	public static void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
-			KcpChannelTest.Test();
+			Test();
 
 		//TcpSessionTest.Update();
 		//KcpSessionTest.Update();
@@ -31,7 +31,7 @@ public static class TestPlayground
 		//EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
-		//HttpTest.Test();
+		HttpTest.Test();
 		//LocalPrefsTest.Test();
 		//PeriodicRecordTest.Test();
 		//RingBufferTest.Test();
