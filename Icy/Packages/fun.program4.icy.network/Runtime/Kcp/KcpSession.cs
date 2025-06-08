@@ -61,10 +61,6 @@ namespace Icy.Network
 		/// 是否正在断开连接
 		/// </summary>
 		protected bool _IsDisconnecting = false;
-		/// <summary>
-		/// 当前错误码
-		/// </summary>
-		protected int _Error;
 
 #if !USE_KCP_SHARP && !ENABLE_IL2CPP
 		protected KcpOutput _KcpOutput;
