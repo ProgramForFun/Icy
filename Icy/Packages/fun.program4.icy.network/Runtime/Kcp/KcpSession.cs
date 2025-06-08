@@ -46,10 +46,6 @@ namespace Icy.Network
 		/// </summary>
 		protected readonly IPEndPoint _RemoteEndPoint;
 		/// <summary>
-		/// 上次接收数据的时间，单位ms
-		/// </summary>
-		protected uint _LastRecvTime;
-		/// <summary>
 		/// 用于接收的EndPoint
 		/// </summary>
 		protected EndPoint _IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -105,8 +101,6 @@ namespace Icy.Network
 			KcpDll.KcpWndsize(_Kcp, 32, 32);
 			KcpDll.KcpSetmtu(_Kcp, 470);
 #endif
-
-			_LastRecvTime = _TimeNow;
 
 			try
 			{
@@ -266,8 +260,6 @@ namespace Icy.Network
 
 				if (count <= 0)
 					return;
-
-				_LastRecvTime = _TimeNow;
 
 				if (_IsDisconnecting)
 					_IsDisconnecting = false;
