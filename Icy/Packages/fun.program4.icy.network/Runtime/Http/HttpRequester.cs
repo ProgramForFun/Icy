@@ -54,7 +54,7 @@ public sealed class HttpRequester : IDisposable
 	}
 
 	/// <summary>
-	/// 发送GET请求
+	/// 发送GET请求；回调风格
 	/// </summary>
 	/// <param name="url">请求的url</param>
 	/// <param name="callback"></param>
@@ -66,6 +66,19 @@ public sealed class HttpRequester : IDisposable
 
 		RequestAsync(SupportMethod.GET, url, null, callback).Forget();
 		return true;
+	}
+
+	/// <summary>
+	/// 发送GET请求；async风格
+	/// </summary>
+	/// <param name="url">请求的url</param>
+	/// <returns></returns>
+	public async UniTask<HttpResponse> Get(string url)
+	{
+		if (_CurRequest != null)
+			return new HttpResponse();
+
+		return await RequestAsync(SupportMethod.GET, url, null, null);
 	}
 
 	/// <summary>
@@ -84,7 +97,20 @@ public sealed class HttpRequester : IDisposable
 		return true;
 	}
 
-	private async UniTask RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
+	/// <summary>
+	/// 发送POST请求
+	/// </summary>
+	/// <param name="url">请求的url</param>
+	/// <param name="dict">要发送的内容</param>
+	public async UniTask<HttpResponse> Post(string url, Dictionary<string, string> dict)
+	{
+		if (_CurRequest != null)
+			return new HttpResponse();
+
+		return await	RequestAsync(SupportMethod.POST, url, dict, null);
+	}
+
+	private async UniTask<HttpResponse> RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
 	{
 		int retry = 0;
 		int lastResponseCode;
@@ -115,9 +141,10 @@ public sealed class HttpRequester : IDisposable
 
 					_CurRequest.Dispose();
 					_CurRequest = null;
-					callback?.Invoke(new HttpResponse() { Code = lastResponseCode, Content = content });
+					HttpResponse rtnSucceed = new HttpResponse() { Code = lastResponseCode, Content = content };
+					callback?.Invoke(rtnSucceed);
 
-					return;
+					return rtnSucceed;
 				}
 			}
 			catch (Exception ex)
@@ -135,7 +162,9 @@ public sealed class HttpRequester : IDisposable
 
 		_CurRequest.Dispose();
 		_CurRequest = null;
-		callback?.Invoke(new HttpResponse() { Code = lastResponseCode, Content = lastError });
+		HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
+		callback?.Invoke(rtnFailed);
+		return rtnFailed;
 	}
 
 	/// <summary>

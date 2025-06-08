@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System.Collections.Generic;
 
@@ -39,6 +40,17 @@ namespace Icy.Network
 					Log.LogInfo("POST content = " + response.Content);
 				});
 			}
+
+			TestAsync().Forget();
+		}
+
+		private static async UniTask TestAsync()
+		{
+			//async风格Get
+			HttpRequester httpRequester = new HttpRequester();
+			HttpRequester.HttpResponse response = await httpRequester.Get("www.baidu.com");
+			Log.LogInfo("async GET responseCode = " + response.Code);
+			Log.LogInfo("async GET content = " + response.Content);
 		}
 	}
 }
