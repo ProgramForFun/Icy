@@ -41,7 +41,7 @@ namespace Icy.Network
 		/// 各种错误的事件
 		/// </summary>
 		public Action<NetworkError, Exception> OnError
-				{
+		{
 			get => _Session.OnError;
 			set => _Session.OnError = value;
 		}
@@ -62,6 +62,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 开始通信
 		/// </summary>
+		/// <param name="syn">Kcp必须传，其他协议不需要</param>
 		public virtual async UniTaskVoid Start(byte[] syn = null)
 		{
 			_Session.OnReceive = Receiver.Decode;
@@ -97,6 +98,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 断开Channel，释放资源
 		/// </summary>
+		/// <param name="fin">Kcp必须传，其他协议不需要</param>
 		public virtual async UniTaskVoid Dispose(byte[] fin = null)
 		{
 			await _Session.Disconnect(fin);

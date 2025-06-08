@@ -64,6 +64,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 连接服务器
 		/// </summary>
+		/// <param name="syn">Kcp必须传，其他协议不需要</param>
 		public abstract UniTask Connect(byte[] syn = null);
 		/// <summary>
 		/// 监听服务器消息
@@ -76,6 +77,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 和服务器断开连接
 		/// </summary>
+		/// <param name="fin">Kcp必须传，其他协议不需要</param>
 		public abstract UniTask Disconnect(byte[] fin = null);
 		/// <summary>
 		/// 处理服务器的消息
