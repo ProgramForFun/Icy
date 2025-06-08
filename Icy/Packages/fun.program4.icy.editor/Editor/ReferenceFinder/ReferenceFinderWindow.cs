@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -32,7 +32,7 @@ public class ReferenceFinderWindow : EditorWindow
     private TreeViewState m_TreeViewState;
     
     //查找资源引用信息
-    [MenuItem("Assets/Find References In Project %#&f", false, 25)]
+    [MenuItem("Assets/Find References By Reference Finder %#&f", false, 25)]
     static void FindRef()
     {
         InitDataIfNeeded();
