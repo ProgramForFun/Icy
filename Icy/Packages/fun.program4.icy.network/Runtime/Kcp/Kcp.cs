@@ -155,8 +155,6 @@ namespace Icy.Network
         UInt32 snd_nxt_ = 0;
         UInt32 rcv_nxt_ = 0;
 
-        UInt32 ts_recent_ = 0;
-        UInt32 ts_lastack_ = 0;
         UInt32 ssthresh_ = 0;
 
         Int32 rx_rttval_ = 0;
@@ -173,9 +171,7 @@ namespace Icy.Network
         UInt32 current_ = 0;
         UInt32 interval_ = 0;
         UInt32 ts_flush_ = 0;
-        UInt32 xmit_ = 0;
 
-        UInt32 nrcv_buf_ = 0;
         UInt32 nsnd_buf_ = 0;
         UInt32 nrcv_que_ = 0;
         UInt32 nsnd_que_ = 0;
@@ -239,7 +235,6 @@ namespace Icy.Network
             rcv_buf_.Clear();
             snd_queue_.Clear();
             rcv_queue_.Clear();
-            nrcv_buf_ = 0;
             nsnd_buf_ = 0;
             nrcv_que_ = 0;
             nsnd_que_ = 0;
@@ -316,7 +311,6 @@ namespace Icy.Network
                 if (seg.sn == rcv_nxt_ && nrcv_que_ < rcv_wnd_)
                 {
                     rcv_buf_.Remove(node);
-                    nrcv_buf_--;
                     rcv_queue_.AddLast(node);
                     nrcv_que_++;
                     rcv_nxt_++;
@@ -574,7 +568,6 @@ namespace Icy.Network
                 {
                     rcv_buf_.AddFirst(newseg);
                 }
-                nrcv_buf_++;
             }
 
             // move available data from rcv_buf -> rcv_queue
@@ -585,7 +578,6 @@ namespace Icy.Network
                 if (seg.sn == rcv_nxt_ && nrcv_que_ < rcv_wnd_)
                 {
                     rcv_buf_.Remove(node);
-                    nrcv_buf_--;
                     rcv_queue_.AddLast(node);
                     nrcv_que_++;
                     rcv_nxt_++;
@@ -883,7 +875,6 @@ namespace Icy.Network
                 {
                     needsend = 1;
                     segment.xmit++;
-                    xmit_++;
                     if (nodelay_ == 0)
                         segment.rto += (UInt32)rx_rto_;
                     else
