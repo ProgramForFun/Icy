@@ -23,9 +23,9 @@ namespace Icy.Network
 		/// </summary>
 		protected long _StartTime;
 		/// <summary>
-		/// 当前时间，单位ms
+		/// Session创建开始，已流逝的时间，单位ms
 		/// </summary>
-		protected uint _TimeNow;
+		protected uint _TimeElapsed;
 		/// <summary>
 		/// 底层UDP Socket
 		/// </summary>
@@ -73,7 +73,7 @@ namespace Icy.Network
 		public KcpSession(string host, int port, int bufferSize) : base(host, port, bufferSize)
 		{
 			_StartTime = ClientNow();
-			_TimeNow = (uint)(ClientNow() - _StartTime);
+			_TimeElapsed = 0;
 			_RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
 
 			IcyFrame.Instance.AddUpdate(this);
@@ -375,14 +375,14 @@ namespace Icy.Network
 			if (!IsKcpValid())
 				return;
 
-			_TimeNow = (uint)(ClientNow() - _StartTime);
+			_TimeElapsed = (uint)(ClientNow() - _StartTime);
 
 #if USE_KCP_SHARP
 			_Kcp.Update(_TimeNow);
 			uint nextUpdateTime = _Kcp.Check(_TimeNow);
 #else
-			KcpDll.KcpUpdate(_Kcp, _TimeNow);
-			uint nextUpdateTime = KcpDll.KcpCheck(_Kcp, _TimeNow);
+			KcpDll.KcpUpdate(_Kcp, _TimeElapsed);
+			uint nextUpdateTime = KcpDll.KcpCheck(_Kcp, _TimeElapsed);
 #endif
 		}
 	}
