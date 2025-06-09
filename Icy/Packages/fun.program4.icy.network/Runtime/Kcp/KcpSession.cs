@@ -50,6 +50,10 @@ namespace Icy.Network
 		/// </summary>
 		protected EndPoint _IpEndPoint = new IPEndPoint(IPAddress.Any, 0);
 		/// <summary>
+		/// 异步Send的参数
+		/// </summary>
+		protected SocketAsyncEventArgs _AsyncSendArg;
+		/// <summary>
 		/// 异步Receive的参数
 		/// </summary>
 		protected SocketAsyncEventArgs _AsyncReceiveArg;
@@ -117,6 +121,10 @@ namespace Icy.Network
 
 		public override async UniTask Listen()
 		{
+			_AsyncSendArg = new SocketAsyncEventArgs();
+			_AsyncSendArg.SetBuffer(_SendBuffer, 0, _ReceiveBuffer.Length);
+			_AsyncSendArg.RemoteEndPoint = _RemoteEndPoint;
+
 			_AsyncReceiveArg = new SocketAsyncEventArgs();
 			_AsyncReceiveArg.SetBuffer(_ReceiveBuffer, 0, _ReceiveBuffer.Length);
 			_AsyncReceiveArg.RemoteEndPoint = _IpEndPoint;
@@ -190,7 +198,8 @@ namespace Icy.Network
 				}
 
 				Marshal.Copy(bytes, _SendBuffer, 0, len);
-				_Socket.SendToAsync(new ArraySegment<byte>(_SendBuffer, 0, len), SocketFlags.None, _RemoteEndPoint);
+				_AsyncSendArg.SetBuffer(0, len);
+				_Socket.SendToAsync(_AsyncSendArg);
 			}
 			catch (Exception e)
 			{
