@@ -36,7 +36,7 @@ public sealed class HttpRequester : IDisposable
 	/// <summary>
 	/// 当前正在执行的请求
 	/// </summary>
-	private UnityWebRequest _CurRequest;
+	private HashSet<UnityWebRequest> _CurRequests;
 	/// <summary>
 	/// 一个请求发送失败的重试次数
 	/// </summary>
@@ -51,6 +51,7 @@ public sealed class HttpRequester : IDisposable
 	{
 		_Timeout = timeoutPerRequest;
 		_RetryTimes = retryTimes;
+		_CurRequests = new HashSet<UnityWebRequest>();
 	}
 
 	/// <summary>
@@ -58,14 +59,9 @@ public sealed class HttpRequester : IDisposable
 	/// </summary>
 	/// <param name="url">请求的url</param>
 	/// <param name="callback"></param>
-	/// <returns>如果当前正在发送其他请求，返回false；否则返回true</returns>
-	public bool Get(string url, Action<HttpResponse> callback)
+	public void Get(string url, Action<HttpResponse> callback)
 	{
-		if (_CurRequest != null)
-			return false;
-
 		RequestAsync(SupportMethod.GET, url, null, callback).Forget();
-		return true;
 	}
 
 	/// <summary>
@@ -75,9 +71,6 @@ public sealed class HttpRequester : IDisposable
 	/// <returns></returns>
 	public async UniTask<HttpResponse> Get(string url)
 	{
-		if (_CurRequest != null)
-			return new HttpResponse();
-
 		return await RequestAsync(SupportMethod.GET, url, null, null);
 	}
 
@@ -88,13 +81,9 @@ public sealed class HttpRequester : IDisposable
 	/// <param name="dict">要发送的内容</param>
 	/// <param name="callback"></param>
 	/// <returns>如果当前正在发送其他请求，返回false；否则返回true</returns>
-	public bool Post(string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
+	public void Post(string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
 	{
-		if (_CurRequest != null)
-			return false;
-
 		RequestAsync(SupportMethod.POST, url, dict, callback).Forget();
-		return true;
 	}
 
 	/// <summary>
@@ -104,14 +93,12 @@ public sealed class HttpRequester : IDisposable
 	/// <param name="dict">要发送的内容</param>
 	public async UniTask<HttpResponse> Post(string url, Dictionary<string, string> dict)
 	{
-		if (_CurRequest != null)
-			return new HttpResponse();
-
-		return await	RequestAsync(SupportMethod.POST, url, dict, null);
+		return await RequestAsync(SupportMethod.POST, url, dict, null);
 	}
 
 	private async UniTask<HttpResponse> RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
 	{
+		UnityWebRequest request = null;
 		int retry = 0;
 		int lastResponseCode;
 		string lastError;
@@ -120,27 +107,33 @@ public sealed class HttpRequester : IDisposable
 			try
 			{
 				if (method == SupportMethod.GET)
-					_CurRequest = UnityWebRequest.Get(url);
+					request = UnityWebRequest.Get(url);
 				else if (method == SupportMethod.POST)
-					_CurRequest = UnityWebRequest.Post(url, dict);
+					request = UnityWebRequest.Post(url, dict);
 				else
-					Log.LogError($"{nameof(HttpRequester)} does NOT support method {method} yet");
-				_CurRequest.timeout = _Timeout;
-				await _CurRequest.SendWebRequest();
-
-				lastResponseCode = (int)_CurRequest.responseCode;
-				if (_CurRequest.result != UnityWebRequest.Result.Success)
 				{
-					lastError = _CurRequest.error;
-					Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {_CurRequest.result}" +
-									$", responseCode = {lastResponseCode}, error = {lastError}");
+					string error = $"{nameof(HttpRequester)} does NOT support method {method} yet";
+					Log.LogError(error, nameof(HttpRequester));
+					return new HttpResponse() { Code = -1, Content = error };
+				}
+				request.timeout = _Timeout;
+				_CurRequests.Add(request);
+				await request.SendWebRequest();
+
+				lastResponseCode = (int)request.responseCode;
+				if (request.result != UnityWebRequest.Result.Success)
+				{
+					lastError = request.error;
+					Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+									$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 				}
 				else
 				{
-					string content = DownloadHandlerBuffer.GetContent(_CurRequest);
+					string content = DownloadHandlerBuffer.GetContent(request);
 
-					_CurRequest.Dispose();
-					_CurRequest = null;
+					_CurRequests.Remove(request);
+					request.Dispose();
+					request = null;
 					HttpResponse rtnSucceed = new HttpResponse() { Code = lastResponseCode, Content = content };
 					callback?.Invoke(rtnSucceed);
 
@@ -154,14 +147,15 @@ public sealed class HttpRequester : IDisposable
 			}
 
 			retry++;
-			Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}");
+			Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
 		} while (retry < _RetryTimes);
 
-		Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {_CurRequest.result}" +
-						$", responseCode = {lastResponseCode}, error = {lastError}");
+		Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+						$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 
-		_CurRequest.Dispose();
-		_CurRequest = null;
+		_CurRequests.Remove(request);
+		request.Dispose();
+		request = null;
 		HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
 		callback?.Invoke(rtnFailed);
 		return rtnFailed;
@@ -185,8 +179,17 @@ public sealed class HttpRequester : IDisposable
 		_Timeout = timeout;
 	}
 
+	/// <summary>
+	/// 获取当前有多少个请求正在执行
+	/// </summary>
+	public int GetCurrentRequestCount()
+	{
+		return _CurRequests.Count;
+	}
+
 	public void Dispose()
 	{
-		_CurRequest?.Dispose();
+		foreach (var item in _CurRequests)
+			item?.Dispose();
 	}
 }

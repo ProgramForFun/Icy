@@ -9,37 +9,30 @@ namespace Icy.Network
 	{
 		public static void Test()
 		{
+			HttpRequester httpRequester = new HttpRequester();
+			
+			//Get成功
+			httpRequester.Get("www.baidu.com", (HttpRequester.HttpResponse response) =>
 			{
-				//Get成功
-				HttpRequester httpRequester = new HttpRequester();
-				httpRequester.Get("www.baidu.com", (HttpRequester.HttpResponse response) =>
-				{
-					Log.LogInfo("GET responseCode = " + response.Code);
-					Log.LogInfo("GET content = " + response.Content);
-				});
-			}
-
+				Log.LogInfo("GET responseCode = " + response.Code);
+				Log.LogInfo("GET content = " + response.Content);
+			});
+			
+			//Get重试几次后失败
+			httpRequester.Get("program4.fun", (HttpRequester.HttpResponse response) =>
 			{
-				//Get重试几次后失败
-				HttpRequester httpRequester = new HttpRequester();
-				httpRequester.Get("program4.fun", (HttpRequester.HttpResponse response) =>
-				{
-					Log.LogInfo("GET responseCode = " + response.Code);
-					Log.LogInfo("GET content = " + response.Content);
-				});
-			}
-
+				Log.LogInfo("GET responseCode = " + response.Code);
+				Log.LogInfo("GET content = " + response.Content);
+			});
+			
+			//Post成功
+			Dictionary<string, string> args = new Dictionary<string, string>();
+			args["TestKey"] = "TestValue";
+			httpRequester.Post("jsonplaceholder.typicode.com/posts", args, (HttpRequester.HttpResponse response) =>
 			{
-				//Post成功
-				HttpRequester httpRequester = new HttpRequester();
-				Dictionary<string, string> args = new Dictionary<string, string>();
-				args["TestKey"] = "TestValue";
-				httpRequester.Post("jsonplaceholder.typicode.com/posts", args, (HttpRequester.HttpResponse response) =>
-				{
-					Log.LogInfo("POST responseCode = " + response.Code);
-					Log.LogInfo("POST content = " + response.Content);
-				});
-			}
+				Log.LogInfo("POST responseCode = " + response.Code);
+				Log.LogInfo("POST content = " + response.Content);
+			});
 
 			TestAsync().Forget();
 		}
