@@ -106,10 +106,14 @@ namespace Icy.Network
 			KcpDll.KcpSetmtu(_Kcp, 470);
 #endif
 
+			_AsyncSendArg = new SocketAsyncEventArgs();
+			_AsyncSendArg.SetBuffer(_SendBuffer, 0, _SendBuffer.Length);
+			_AsyncSendArg.RemoteEndPoint = _RemoteEndPoint;
+
 			try
 			{
-				Buffer.BlockCopy(syn, 0, _SendBuffer, 0, syn.Length);
-				Send(_SendBuffer, 0, syn.Length);
+				Buffer.BlockCopy(syn, 0, _AsyncSendArg.Buffer, 0, syn.Length);
+				Send(_AsyncSendArg.Buffer, 0, syn.Length);
 			}
 			catch (Exception e)
 			{
@@ -121,10 +125,6 @@ namespace Icy.Network
 
 		public override async UniTask Listen()
 		{
-			_AsyncSendArg = new SocketAsyncEventArgs();
-			_AsyncSendArg.SetBuffer(_SendBuffer, 0, _ReceiveBuffer.Length);
-			_AsyncSendArg.RemoteEndPoint = _RemoteEndPoint;
-
 			_AsyncReceiveArg = new SocketAsyncEventArgs();
 			_AsyncReceiveArg.SetBuffer(_ReceiveBuffer, 0, _ReceiveBuffer.Length);
 			_AsyncReceiveArg.RemoteEndPoint = _IpEndPoint;
@@ -175,8 +175,8 @@ namespace Icy.Network
 					return;
 				}
 
-				Buffer.BlockCopy(bytes, 0, _SendBuffer, 0, len);
-				_Socket.SendToAsync(new ArraySegment<byte>(_SendBuffer, 0, len), SocketFlags.None, _RemoteEndPoint);
+				Buffer.BlockCopy(bytes, 0, _AsyncSendArg.Buffer, 0, len);
+				_Socket.SendToAsync(new ArraySegment<byte>(_AsyncSendArg.Buffer, 0, len), SocketFlags.None, _RemoteEndPoint);
 			}
 			catch (Exception e)
 			{
@@ -197,7 +197,7 @@ namespace Icy.Network
 					return 0;
 				}
 
-				Marshal.Copy(bytes, _SendBuffer, 0, len);
+				Marshal.Copy(bytes, _AsyncSendArg.Buffer, 0, len);
 				_AsyncSendArg.SetBuffer(0, len);
 				_Socket.SendToAsync(_AsyncSendArg);
 			}
@@ -301,8 +301,8 @@ namespace Icy.Network
 			try
 			{
 				_IsDisconnecting = true;
-				Buffer.BlockCopy(fin, 0, _SendBuffer, 0, fin.Length);
-				Send(_SendBuffer, 0, fin.Length);
+				Buffer.BlockCopy(fin, 0, _AsyncSendArg.Buffer, 0, fin.Length);
+				Send(_AsyncSendArg.Buffer, 0, fin.Length);
 
 				await UniTask.WaitUntil(IsDisconnectOperationFinished);
 #if USE_KCP_SHARP
@@ -318,6 +318,7 @@ namespace Icy.Network
 					_Kcp = IntPtr.Zero;
 				}
 #endif
+				_AsyncSendArg = null;
 				_AsyncReceiveArg = null;
 
 				_Socket.Close();
