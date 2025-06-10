@@ -113,7 +113,7 @@ namespace Icy.Network
 				int len = length + MSG_LENGTH_SIZE;
 				BitConverter.TryWriteBytes(_SendBuffer, len);
 				//2、消息本体
-				Array.Copy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
+				Buffer.BlockCopy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
 				_Stream.Write(_SendBuffer, 0, len);
 			}
 			catch (Exception e)
@@ -173,7 +173,7 @@ namespace Icy.Network
 					if (_BufferRemain > 0 && _CurMsgStartIdx > 0)
 					{
 						//Log.LogInfo("Move " + _BufferRemain);
-						Array.Copy(_ReceiveBuffer, _CurMsgStartIdx, _ReceiveBuffer, 0, _BufferRemain);
+						Buffer.BlockCopy(_ReceiveBuffer, _CurMsgStartIdx, _ReceiveBuffer, 0, _BufferRemain);
 						_CurMsgStartIdx = 0;
 					}
 				}
