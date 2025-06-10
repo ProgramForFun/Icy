@@ -15,7 +15,7 @@ namespace Icy.Base
 		/// <summary>
 		/// Buffer的总容量
 		/// </summary>
-		public int Capacity { get { return _RingArray.Length; } }
+		public int Capacity => _RingArray.Length;
 		/// <summary>
 		/// Buffer数量满了（即Count >= Capacity）时自动扩容
 		/// </summary>
@@ -38,6 +38,17 @@ namespace Icy.Base
 		public RingBuffer(int capacity, bool autoExpansion = true)
 		{
 			_RingArray = new T[capacity];
+			Init(autoExpansion);
+		}
+
+		public RingBuffer(T[] buffer, bool autoExpansion = true)
+		{
+			_RingArray = buffer;
+			Init(autoExpansion);
+		}
+
+		private void Init(bool autoExpansion)
+		{
 			AutoExpansion = autoExpansion;
 
 			Count = 0;
