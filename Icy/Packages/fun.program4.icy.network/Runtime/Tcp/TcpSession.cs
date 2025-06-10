@@ -114,7 +114,7 @@ namespace Icy.Network
 				BitConverter.TryWriteBytes(_SendBuffer, len);
 				//2、消息本体
 				Buffer.BlockCopy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
-				_Stream.Write(_SendBuffer, 0, len);
+				_Stream.WriteAsync(_SendBuffer, 0, len);
 			}
 			catch (Exception e)
 			{
