@@ -38,9 +38,9 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 |Base-PeriodicRecord|✔️|
 |Asset-AssetManager|✔️|
 |Asset-可定制的打包流程|✔️|
-|Network-TCP|✔️|
 |Network-HTTP|✔️|
-|Network-RUDP|待开始|
+|Network-TCP|✔️|
+|Network-KCP (ReliableUDP)|✔️|
 |UI-基础结构|✔️|
 |UI-资源管理|✔️|
 |UI-数据绑定|✔️|
