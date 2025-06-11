@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 namespace Icy.UI
 {
@@ -63,6 +64,10 @@ namespace Icy.UI
 		/// 每显示一个UI，Sorting Order Offset的值
 		/// </summary>
 		private const int SORTING_ORDER_OFFSET_PER_UI = 20;
+		/// <summary>
+		/// 屏蔽UI输入的物体
+		/// </summary>
+		private GameObject _Block;
 
 		/// <summary>
 		/// 运行时为Image、RawImage加载的的Sprite和Texture和所属UI的映射关系
@@ -86,6 +91,20 @@ namespace Icy.UI
 				string layerName = Enum.GetName(UILayerType, value);
 				_SortingOrderOffset[(UILayer)value] = 0;
 			}
+
+			//创建屏蔽UI输入的block
+			GameObject topLayerGo = UIRoot.Instance.GetLayerGameObject(UILayer.Top);
+			_Block = new GameObject("Block", typeof(Empty4RaycastTarget), typeof(GraphicRaycaster));
+			CommonUtility.SetParent(topLayerGo.transform.parent, _Block.transform);
+			RectTransform blockRectTrans = _Block.GetOrAddComponent<RectTransform>();
+			blockRectTrans.anchorMin = Vector2.zero;
+			blockRectTrans.anchorMax = Vector2.one;
+			blockRectTrans.offsetMin = Vector2.zero;
+			blockRectTrans.offsetMax = Vector2.zero;
+			Canvas blockCanvas = _Block.GetOrAddComponent<Canvas>();
+			blockCanvas.overrideSorting = true;
+			blockCanvas.sortingOrder = (int)UILayer.Top + 1000;
+			BlockInteract(false);
 		}
 
 		/// <summary>
@@ -220,6 +239,14 @@ namespace Icy.UI
 				while (_StackTmp.Count > 0)
 					_Stack.Push(_StackTmp.Pop());
 			}
+		}
+
+		/// <summary>
+		/// 屏蔽所有UI交互
+		/// </summary>
+		public void BlockInteract(bool block)
+		{
+			_Block.SetActive(block);
 		}
 
 		/// <summary>
