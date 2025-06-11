@@ -69,7 +69,7 @@ public sealed class HttpRequester : IDisposable
 	/// </summary>
 	/// <param name="url">请求的url</param>
 	/// <returns></returns>
-	public async UniTask<HttpResponse> Get(string url)
+	public async UniTask<HttpResponse> GetAsync(string url)
 	{
 		return await RequestAsync(SupportMethod.GET, url, null, null);
 	}
@@ -91,7 +91,7 @@ public sealed class HttpRequester : IDisposable
 	/// </summary>
 	/// <param name="url">请求的url</param>
 	/// <param name="dict">要发送的内容</param>
-	public async UniTask<HttpResponse> Post(string url, Dictionary<string, string> dict)
+	public async UniTask<HttpResponse> PostAsync(string url, Dictionary<string, string> dict)
 	{
 		return await RequestAsync(SupportMethod.POST, url, dict, null);
 	}

@@ -41,7 +41,7 @@ namespace Icy.Network
 		{
 			//async风格Get
 			HttpRequester httpRequester = new HttpRequester();
-			HttpRequester.HttpResponse response = await httpRequester.Get("www.baidu.com");
+			HttpRequester.HttpResponse response = await httpRequester.GetAsync("www.baidu.com");
 			Log.LogInfo("async GET responseCode = " + response.Code);
 			Log.LogInfo("async GET content = " + response.Content);
 		}
