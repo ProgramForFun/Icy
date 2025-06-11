@@ -1,6 +1,7 @@
 using UnityEngine;
 using Icy.Base;
 using Sirenix.OdinInspector;
+using UnityEngine.UI;
 
 namespace Icy.UI
 {
@@ -88,6 +89,7 @@ namespace Icy.UI
 			RectTransform.offsetMax = Vector2.zero;
 
 			Canvas = gameObject.GetOrAddComponent<Canvas>();
+			gameObject.GetOrAddComponent<GraphicRaycaster>();
 			_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
 
 			HideType = UIHideType.Deactive;

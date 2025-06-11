@@ -27,7 +27,7 @@ public class UILogin : UIBase
 		base.Init();
 		_Logic = new();
 		_Logic.Init();
-
+		_Button.onClick.AddListener(OnClickBtn);
 	}
 
 	public override void Show(IUIParam param = null)
@@ -61,6 +61,11 @@ public class UILogin : UIBase
 		_Slider.UnbindTo(SliderValue);
 		await UniTask.WaitForSeconds(1);
 		SliderValue.Data = 0.0f;
+	}
+
+	private void OnClickBtn()
+	{
+		Log.LogInfo("Click Btn");
 	}
 
 	public override void Destroy()
