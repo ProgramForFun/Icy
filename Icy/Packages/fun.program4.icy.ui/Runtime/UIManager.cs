@@ -297,7 +297,7 @@ namespace Icy.UI
 
 		internal void Hide(UIBase ui)
 		{
-			DecreseSortingOrderOffeset(ui.UILayer);
+			DecreaseSortingOrderOffset(ui.UILayer);
 
 			UIData uiData = _UIMap[ui];
 
@@ -392,7 +392,7 @@ namespace Icy.UI
 			}
 		}
 
-		private void DecreseSortingOrderOffeset(UILayer layer)
+		private void DecreaseSortingOrderOffset(UILayer layer)
 		{
 			int maxSortingOrder = 0;
 			foreach (var item in _UIMap)
