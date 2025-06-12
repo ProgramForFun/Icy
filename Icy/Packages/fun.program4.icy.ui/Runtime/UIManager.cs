@@ -134,30 +134,125 @@ namespace Icy.UI
 		}
 
 		/// <summary>
+		/// 显示UI
+		/// </summary>
+		/// <param name="param">UI显示时传入的参数</param>
+		public async UniTask<T> Show<T>(IUIParam param, bool blockInteract = true) where T : UIBase
+		{
+			try
+			{
+				if (blockInteract)
+					BlockInteract(true);
+				T ui = await GetAsync<T>();
+				ui.Show();
+				return ui;
+			}
+			catch (Exception ex)
+			{
+				Log.LogError($"GetAndShow<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+			}
+			finally
+			{
+				//保证一定会解除block
+				if (blockInteract)
+					BlockInteract(false);
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// 隐藏UI
+		/// </summary>
+		public void Hide<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Value.Type == typeof(T))
+				{
+					item.Key.Hide();
+					return;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 隐藏UI并显示前一个UI
+		/// </summary>
+		public void HideToPrev<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Value.Type == typeof(T))
+				{
+					item.Key.HideToPrev();
+					return;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 销毁UI
+		/// </summary>
+		public void Destroy<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Value.Type == typeof(T))
+				{
+					item.Key.Destroy();
+					return;
+				}
+			}
+		}
+
+		/// <summary>
+		/// 销毁UI显示前一个UI
+		/// </summary>
+		public void DestroyToPrev<T>() where T : UIBase
+		{
+			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
+			{
+				if (item.Value.Type == typeof(T))
+				{
+					item.Key.DestroyToPrev();
+					return;
+				}
+			}
+		}
+
+		/// <summary>
 		/// 获取并等待predicate满足，然后显示UI
 		/// </summary>
 		/// <param name="param">UI显示时传入的参数</param>
 		/// <param name="predicate">显示的条件</param>
 		public async UniTask<T> GetAndShowUntil<T>(IUIParam param, Func<bool> predicate) where T : UIBase
 		{
-			UIBase ui = await GetAsync<T>();
+			T ui = await GetAsync<T>();
 			await UniTask.WaitUntil(predicate);
 			ui.Show(param);
-			return ui as T;
+			return ui;
 		}
 
 		private void Get(Type uiType, Action<UIBase> callback)
 		{
+			UIBase ui = GetFromUIMap(uiType);
+			if (ui == null)
+				LoadUI(uiType, callback).Forget();
+			else
+				callback?.Invoke(ui);
+		}
+
+		/// <summary>
+		/// 根据UI类型从UIMap中获取UI实例
+		/// </summary>
+		private UIBase GetFromUIMap(Type uiType)
+		{
 			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
 			{
 				if (item.Value.Type == uiType)
-				{
-					callback?.Invoke(item.Key);
-					return;
-				}
+					return item.Key;
 			}
-
-			LoadUI(uiType, callback).Forget();
+			return null;
 		}
 
 		private async UniTask<UIBase> LoadUI(Type uiType, Action<UIBase> callback = null)
