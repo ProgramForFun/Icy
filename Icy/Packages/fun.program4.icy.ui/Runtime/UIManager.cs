@@ -113,14 +113,12 @@ namespace Icy.UI
 		/// </summary>
 		public async UniTask<T> GetAsync<T>() where T : UIBase
 		{
-			string uiName = typeof(T).Name;
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Value.Name == uiName)
-					return item.Key as T;
-			}
+			Type uiType = typeof(T);
+			UIBase ui = GetFromUIMap(uiType);
+			if (ui != null)
+				return ui as T;
 
-			return await LoadUI(typeof(T)) as T;
+			return await LoadUI(uiType) as T;
 		}
 
 		/// <summary>
@@ -165,14 +163,9 @@ namespace Icy.UI
 		/// </summary>
 		public void Hide<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Value.Type == typeof(T))
-				{
-					item.Key.Hide();
-					return;
-				}
-			}
+			UIBase ui = GetFromUIMap(typeof(T));
+			if (ui != null)
+				ui.Hide();
 		}
 
 		/// <summary>
@@ -180,14 +173,9 @@ namespace Icy.UI
 		/// </summary>
 		public void HideToPrev<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Value.Type == typeof(T))
-				{
-					item.Key.HideToPrev();
-					return;
-				}
-			}
+			UIBase ui = GetFromUIMap(typeof(T));
+			if (ui != null)
+				ui.HideToPrev();
 		}
 
 		/// <summary>
@@ -195,14 +183,9 @@ namespace Icy.UI
 		/// </summary>
 		public void Destroy<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Value.Type == typeof(T))
-				{
-					item.Key.Destroy();
-					return;
-				}
-			}
+			UIBase ui = GetFromUIMap(typeof(T));
+			if (ui != null)
+				ui.Destroy();
 		}
 
 		/// <summary>
@@ -210,14 +193,9 @@ namespace Icy.UI
 		/// </summary>
 		public void DestroyToPrev<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Value.Type == typeof(T))
-				{
-					item.Key.DestroyToPrev();
-					return;
-				}
-			}
+			UIBase ui = GetFromUIMap(typeof(T));
+			if (ui != null)
+				ui.DestroyToPrev();
 		}
 
 		/// <summary>
@@ -285,12 +263,7 @@ namespace Icy.UI
 		/// </summary>
 		public bool IsCreated<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Key is T)
-					return true;
-			}
-			return false;
+			return GetFromUIMap(typeof(T)) != null;
 		}
 
 		/// <summary>
@@ -298,11 +271,10 @@ namespace Icy.UI
 		/// </summary>
 		public bool IsShowing<T>() where T : UIBase
 		{
-			foreach (KeyValuePair<UIBase, UIData> item in _UIMap)
-			{
-				if (item.Key is T)
-					return item.Key.IsShowing;
-			}
+			UIBase ui = GetFromUIMap(typeof(T));
+			if (ui != null)
+				return ui.IsShowing;
+
 			return false;
 		}
 
