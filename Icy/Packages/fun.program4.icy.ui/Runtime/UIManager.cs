@@ -135,14 +135,14 @@ namespace Icy.UI
 		/// 显示UI
 		/// </summary>
 		/// <param name="param">UI显示时传入的参数</param>
-		public async UniTask<T> Show<T>(IUIParam param, bool blockInteract = true) where T : UIBase
+		public async UniTask<T> Show<T>(IUIParam param = null, bool blockInteract = true) where T : UIBase
 		{
 			try
 			{
 				if (blockInteract)
 					BlockInteract(true);
 				T ui = await GetAsync<T>();
-				ui.Show();
+				ui.Show(param);
 				return ui;
 			}
 			catch (Exception ex)
