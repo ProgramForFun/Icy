@@ -44,7 +44,7 @@ namespace Icy.Asset.Editor
 		protected List<string> _AllBuiltAssetBundleVersion;
 
 
-		[MenuItem("Icy/Asset/AssetBundle", false)]
+		[MenuItem("Icy/Asset/Build AssetBundle", false)]
 		public static void Open()
 		{
 			CreateWindow();
