@@ -122,7 +122,10 @@ namespace Icy.UI.Editor
 						}
 
 						if (isSame)
-							EditorUtility.DisplayDialog("提示", "UI组件列表无变化，生成代码未执行", "OK");
+						{
+							//代码虽然一样，但实际引用的UI节点可能变了，所以这里要手动调一下去CopySerializeField
+							OnAllAssemblyReload();
+						}
 						else
 							File.WriteAllLines(filePath, newlines);
 					}
