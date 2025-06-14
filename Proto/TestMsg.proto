@@ -2,6 +2,10 @@ syntax = "proto3";
 
 package TestMsg;
 
+message TestNest
+{
+    int32 NestInt = 1;
+}
 
 // 测试消息
 message TestMessageResult
@@ -10,4 +14,8 @@ message TestMessageResult
     int32 errorCode = 1;
     // 消息内容。
     string errorMsg = 2;
+	// 数组
+	repeated int32 list = 3;
+	// 嵌套消息
+	TestNest obj = 4;
 }

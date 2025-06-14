@@ -50,9 +50,12 @@ namespace Icy.Network
 			if (_Cache.ContainsKey(msgID))
 			{
 				IMessage newMessageResult = _Cache[msgID];
-				//TODO：确认下面链接9.2提到的Clear的问题
+				//由于下面链接9.2提到的Clear的问题，为proto扩展了一个Reset方法，来在复用前重置状态
+				//这里的dynamic仅做示例展示，实际使用中可以延迟到知道具体类型后再调用Reset
 				//https://www.cnblogs.com/wsk-0000/articles/12675826.html
 				//https://zhuanlan.zhihu.com/p/588709957
+				((dynamic)newMessageResult).Reset();
+
 				newMessageResult.MergeFrom(span);
 
 				Log.LogInfo((newMessageResult as TestMessageResult).ErrorMsg);
