@@ -516,6 +516,11 @@ namespace Icy.UI
 			else
 			{
 				UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);
+				if (string.IsNullOrEmpty(uiSetting.UIRootDir))
+				{
+					Log.LogError($"Please set UI root path first. Go to menu Icy/UI/Setting to set it");
+					return;
+				}
 				//基于正则匹配简单检查BindableData的BindTo和UnbindTo的配对情况，避免内存泄露
 				string nameWithoutPrefixUI = uiName.Substring(2);
 				string uiScriptPath = Path.Combine(uiSetting.UIRootDir, nameWithoutPrefixUI, uiName + ".cs");
