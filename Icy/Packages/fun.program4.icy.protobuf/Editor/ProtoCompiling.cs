@@ -181,9 +181,9 @@ namespace Icy.Protobuf.Editor
 				{
 					Type fieldType = fields[f].FieldType;
 					if (iMsgType.IsAssignableFrom(fieldType))
-						stringBuilder.AppendLine(@$"			{fields[f].Name}.Reset();");
+						stringBuilder.AppendLine(@$"			{fields[f].Name}?.Reset();");
 					else if (IsSubclassOfRawGeneric(fieldType, repeatedType))
-						stringBuilder.AppendLine(@$"			{fields[f].Name}.Clear();");
+						stringBuilder.AppendLine(@$"			{fields[f].Name}?.Clear();");
 					else
 						stringBuilder.AppendLine(@$"			{fields[f].Name} = default;");
 				}
