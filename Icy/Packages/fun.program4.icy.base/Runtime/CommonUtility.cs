@@ -219,6 +219,55 @@ public static class CommonUtility
 			array[i] ^= xorWith;
 	}
 
+	/// <summary>
+	/// 检查当前类型是否派生自指定的泛型类型（忽略泛型参数）；
+	/// 需要用到元数据，谨慎在运行时使用
+	/// </summary>
+	/// <param name="typeToCheck">要检查的类型</param>
+	/// <param name="genericBaseType">泛型基类型（如 typeof(MyGenericClass<>)）</param>
+	/// <returns>如果派生自指定的泛型类型则返回 true，否则返回 false</returns>
+	public static bool IsSubclassOfRawGeneric(Type typeToCheck, Type genericBaseType)
+	{
+		if (!genericBaseType.IsGenericType || !genericBaseType.IsGenericTypeDefinition)
+		{
+			Log.LogError($"{nameof(genericBaseType)} must be a generic type without argument");
+			return false;
+		}
+
+		Type objType = typeof(object);
+		// 1. 检查当前类型及其所有基类（不包括接口）
+		while (typeToCheck != null && typeToCheck != objType)
+		{
+			// 如果是泛型类型，先获取泛型定义
+			Type current = typeToCheck.IsGenericType
+				? typeToCheck.GetGenericTypeDefinition()
+				: typeToCheck;
+
+			// 2. 直接匹配当前类型
+			if (current == genericBaseType)
+				return true;
+
+			// 3. 移动到直接基类继续检查
+			typeToCheck = typeToCheck.BaseType;
+		}
+
+		// 4. 检查所有实现的接口（如果需要包括接口）
+		if (genericBaseType.IsInterface)
+		{
+			foreach (Type interfaceType in typeToCheck.GetInterfaces())
+			{
+				Type currentInterface = interfaceType.IsGenericType
+					? interfaceType.GetGenericTypeDefinition()
+					: interfaceType;
+
+				if (currentInterface == genericBaseType)
+					return true;
+			}
+		}
+
+		return false;
+	}
+
 	#region Vector
 	/// <summary>
 	/// 在一个Rect范围内随机一个点

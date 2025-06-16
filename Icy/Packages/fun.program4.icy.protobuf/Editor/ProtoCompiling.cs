@@ -189,7 +189,7 @@ namespace Icy.Protobuf.Editor
 					Type fieldType = fields[f].FieldType;
 					if (iMsgType.IsAssignableFrom(fieldType))
 						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name}?.Reset();");
-					else if (IsSubclassOfRawGeneric(fieldType, repeatedType))
+					else if (CommonUtility.IsSubclassOfRawGeneric(fieldType, repeatedType))
 						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name}?.Clear();");
 					else
 						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name} = default;");
@@ -225,52 +225,6 @@ namespace Icy.Protobuf.Editor
 			return str.Length == 1
 				? char.ToLower(str[0]).ToString()
 				: $"{char.ToLower(str[0])}{str.Substring(1)}";
-		}
-
-		/// <summary>
-		/// 检查当前类型是否派生自指定的泛型类型（忽略泛型参数）
-		/// </summary>
-		/// <param name="typeToCheck">要检查的类型</param>
-		/// <param name="genericBaseType">泛型基类型（如 typeof(MyGenericClass<>)）</param>
-		/// <returns>如果派生自指定的泛型类型则返回 true，否则返回 false</returns>
-		private static bool IsSubclassOfRawGeneric(Type typeToCheck, Type genericBaseType)
-		{
-			if (!genericBaseType.IsGenericType)
-				throw new ArgumentException("目标类型必须是泛型类型定义", nameof(genericBaseType));
-			if (genericBaseType.IsGenericTypeDefinition == false)
-				throw new ArgumentException("必须使用未绑定的泛型类型定义（如 MyGenericClass<>）", nameof(genericBaseType));
-
-			// 1. 检查当前类型及其所有基类（不包括接口）
-			while (typeToCheck != null && typeToCheck != typeof(object))
-			{
-				// 如果是泛型类型，先获取泛型定义
-				var current = typeToCheck.IsGenericType
-					? typeToCheck.GetGenericTypeDefinition()
-					: typeToCheck;
-
-				// 2. 直接匹配当前类型
-				if (current == genericBaseType)
-					return true;
-
-				// 3. 移动到直接基类继续检查
-				typeToCheck = typeToCheck.BaseType;
-			}
-
-			// 4. 检查所有实现的接口（如果需要包括接口）
-			if (genericBaseType.IsInterface)
-			{
-				foreach (var interfaceType in typeToCheck.GetInterfaces())
-				{
-					var currentInterface = interfaceType.IsGenericType
-						? interfaceType.GetGenericTypeDefinition()
-						: interfaceType;
-
-					if (currentInterface == genericBaseType)
-						return true;
-				}
-			}
-
-			return false;
 		}
 
 		private static void OnCompileProtoLog(object sender, DataReceivedEventArgs e)
