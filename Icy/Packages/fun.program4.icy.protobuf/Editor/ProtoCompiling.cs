@@ -18,6 +18,7 @@ namespace Icy.Protobuf.Editor
 	public static class ProtoCompiling
 	{
 		private const string GENERATING_PROTO_KEY = "_Icy_GeneratingProto";
+		private const string GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES = "_Icy_GeneratingProtoAssemblyReloadTimes";
 
 		static ProtoCompiling()
 		{
@@ -31,60 +32,89 @@ namespace Icy.Protobuf.Editor
 		[MenuItem("Icy/Compile Proto", false, 900)]
 		static void CompileProto()
 		{
-			//TODO : 从设置中读取
+			EditorUtility.DisplayProgressBar("Compile Proto", "Compiling proto...", 0.5f);
+			EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, 2);
+
+			try
+			{
+				//TODO : 从设置中读取
 			string batFilePath = @"C:\Work\Z\Proto\_Compile.bat";
-			string workingDirectory = @"";
+				string workingDirectory = @"";
 
-			ProcessStartInfo processInfo = new ProcessStartInfo()
+				ProcessStartInfo processInfo = new ProcessStartInfo()
+				{
+					FileName = batFilePath,      // 批处理文件名
+					WorkingDirectory = workingDirectory,  // 工作目录
+					CreateNoWindow = true,       // 不创建新窗口（后台运行）
+					UseShellExecute = false,     // 不使用系统Shell（用于重定向输出）
+
+					// 重定向输入/输出
+					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+				};
+
+				using (Process process = new Process())
+				{
+					process.StartInfo = processInfo;
+
+					//注册输出/错误事件处理程序
+					process.OutputDataReceived += OnCompileProtoLog;
+					process.ErrorDataReceived += OnCompileProtoError;
+
+					process.Start();
+
+					// 如果重定向输出，需要开始异步读取
+					process.BeginOutputReadLine();
+					process.BeginErrorReadLine();
+
+					// 等待批处理执行完成
+					process.WaitForExit();
+
+					int exitCode = process.ExitCode;
+					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
+
+					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
+					EditorLocalPrefs.Save();
+
+					AssetDatabase.Refresh();
+				}
+			}
+			catch (Exception)
 			{
-				FileName = batFilePath,      // 批处理文件名
-				WorkingDirectory = workingDirectory,  // 工作目录
-				CreateNoWindow = true,       // 不创建新窗口（后台运行）
-				UseShellExecute = false,     // 不使用系统Shell（用于重定向输出）
-
-				// 重定向输入/输出
-				RedirectStandardOutput = true,
-				RedirectStandardError = true,
-			};
-
-			using (Process process = new Process())
-			{
-				process.StartInfo = processInfo;
-
-				//注册输出/错误事件处理程序
-				process.OutputDataReceived += OnCompileProtoLog;
-				process.ErrorDataReceived += OnCompileProtoError;
-
-				process.Start();
-
-				// 如果重定向输出，需要开始异步读取
-				process.BeginOutputReadLine();
-				process.BeginErrorReadLine();
-
-				// 等待批处理执行完成
-				process.WaitForExit();
-
-				int exitCode = process.ExitCode;
-				UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
-
-				EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
-				EditorLocalPrefs.Save();
-
-				AssetDatabase.Refresh();
+				EditorUtility.ClearProgressBar();
 			}
 		}
 
 		private static void OnAllAssemblyReload()
 		{
-			bool generatingProto = EditorLocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
-			if (generatingProto)
+			try
 			{
-				EditorLocalPrefs.RemoveKey(GENERATING_PROTO_KEY);
-				EditorLocalPrefs.Save();
+				int times = EditorLocalPrefs.GetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, int.MaxValue);
+				EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, --times);
+				if (times <= 0)
+				{
+					EditorUtility.ClearProgressBar();
+					EditorLocalPrefs.RemoveKey(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES);
+					EditorLocalPrefs.Save();
+				}
 
-				List<Type> allProtoTypes = GetAllProtoTypes();
-				Dictionary<Type, List<FieldInfo>> allProtoFields = GetAllProtoFields(allProtoTypes);
-				GenerateResetMethodExtension(allProtoFields);
+
+				bool generatingProto = EditorLocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
+				if (generatingProto)
+				{
+					EditorLocalPrefs.RemoveKey(GENERATING_PROTO_KEY);
+					EditorLocalPrefs.Save();
+
+					EditorUtility.DisplayProgressBar("Compile Proto", "Generate Reset Extension...", 0.8f);
+
+					List<Type> allProtoTypes = GetAllProtoTypes();
+					Dictionary<Type, List<FieldInfo>> allProtoFields = GetAllProtoFields(allProtoTypes);
+					GenerateResetMethodExtension(allProtoFields);
+				}
+			}
+			catch (Exception)
+			{
+				EditorUtility.ClearProgressBar();
 			}
 		}
 
@@ -209,7 +239,11 @@ namespace Icy.Protobuf.Editor
 				File.Delete(targetFile);
 			File.WriteAllText(targetFile, final);
 
-			AssetDatabase.Refresh();
+			//延迟一帧，否则无法触发代码重新编译
+			EditorApplication.delayCall += () =>
+			{
+				AssetDatabase.Refresh();
+			};
 		}
 
 		private static int SortProtoTypes(Type a, Type b)
