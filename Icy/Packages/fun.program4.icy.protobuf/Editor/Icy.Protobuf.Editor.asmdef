@@ -2,7 +2,8 @@
     "name": "Icy.Protobuf.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:126c885c2ce09634dafa2c7a73c2dc59"
+        "GUID:126c885c2ce09634dafa2c7a73c2dc59",
+        "GUID:cc67895cbebe8d447805b9b977a1d3ae"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

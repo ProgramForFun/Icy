@@ -67,8 +67,8 @@ namespace Icy.Protobuf.Editor
 				int exitCode = process.ExitCode;
 				UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
 
-				LocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
-				LocalPrefs.Save();
+				EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
+				EditorLocalPrefs.Save();
 
 				AssetDatabase.Refresh();
 			}
@@ -76,11 +76,11 @@ namespace Icy.Protobuf.Editor
 
 		private static void OnAllAssemblyReload()
 		{
-			bool generatingProto = LocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
+			bool generatingProto = EditorLocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
 			if (generatingProto)
 			{
-				LocalPrefs.RemoveKey(GENERATING_PROTO_KEY);
-				LocalPrefs.Save();
+				EditorLocalPrefs.RemoveKey(GENERATING_PROTO_KEY);
+				EditorLocalPrefs.Save();
 
 				List<Type> allProtoTypes = GetAllProtoTypes();
 				Dictionary<Type, List<FieldInfo>> allProtoFields = GetAllProtoFields(allProtoTypes);
