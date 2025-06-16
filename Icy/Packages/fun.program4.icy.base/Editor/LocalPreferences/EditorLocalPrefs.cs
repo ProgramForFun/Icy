@@ -1,4 +1,4 @@
-﻿// Made by Neonagee https://github.com/Neonagee/LocalPreferences
+// Made by Neonagee https://github.com/Neonagee/LocalPreferences
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,9 +21,12 @@ public sealed class EditorLocalPrefs : ScriptableObject
     }
     public static string currentFile;
 
-    public static void Save(string fileName)
+    public static void Save(string fileName = null)
     {
-        string filePath = Data.FilesPath + fileName + filesExtension;
+		if (string.IsNullOrEmpty(fileName))
+			fileName = defaultFileName;
+
+		string filePath = Data.FilesPath + fileName + filesExtension;
         string json = JsonUtility.ToJson(m_Data);
         File.WriteAllText(filePath, json);
     }
