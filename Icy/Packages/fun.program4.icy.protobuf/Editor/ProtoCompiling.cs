@@ -150,9 +150,8 @@ namespace Icy.Protobuf.Editor
 			//TODO : 从设置中读取
 			string targetDir = @"C:\Work\Z\Icy\Assets\Example\Protos";
 
-			StringBuilder stringBuilder = new StringBuilder(10240);
-			stringBuilder.AppendLine(@"using pb = global::Google.Protobuf;");
-
+			StringBuilder iMessageBuilder = new StringBuilder(10240);
+			StringBuilder resetPerProtoBuilder = new StringBuilder(10240);
 			string curNamespace = string.Empty;
 			Type iMsgType = typeof(pb::IMessage);
 			Type repeatedType = typeof(pb.Collections.RepeatedField<>);
@@ -160,44 +159,55 @@ namespace Icy.Protobuf.Editor
 			{
 				Type protoType = allProtoTypes[i];
 
+				//IMessage的Reset
+				string varName = protoType.Name.ToLower();
+				iMessageBuilder.AppendLine(@$"			case {protoType.FullName} {varName}:");
+				iMessageBuilder.AppendLine(@$"				{varName}.Reset();");
+				iMessageBuilder.AppendLine(@$"				break;");
+
+
+				//每个Proto msg的Reset
 				if (protoType.Namespace != curNamespace)
 				{
 					//上一个namespace的结束括号
 					if (!string.IsNullOrEmpty(curNamespace))
-						stringBuilder.AppendLine(@"}");
+						resetPerProtoBuilder.AppendLine(@"}");
 
-					stringBuilder.AppendLine(@$"namespace {protoType.Namespace}");
-					stringBuilder.AppendLine(@"{");
+					resetPerProtoBuilder.AppendLine(@$"namespace {protoType.Namespace}");
+					resetPerProtoBuilder.AppendLine(@"{");
 					curNamespace = protoType.Namespace;
 				}
 
-				stringBuilder.AppendLine(@$"	public sealed partial class {protoType.Name} : pb::IMessage<{protoType.Name}>");
-				stringBuilder.AppendLine(@"	{");
-				stringBuilder.AppendLine(@"		public void Reset()");
-				stringBuilder.AppendLine(@"		{");
+				resetPerProtoBuilder.AppendLine(@$"	public sealed partial class {protoType.Name} : pb::IMessage<{protoType.Name}>");
+				resetPerProtoBuilder.AppendLine(@"	{");
+				resetPerProtoBuilder.AppendLine(@"		public void Reset()");
+				resetPerProtoBuilder.AppendLine(@"		{");
 				List<FieldInfo> fields = protoDict[protoType];
 
 				for (int f = 0; f < fields.Count; f++)
 				{
 					Type fieldType = fields[f].FieldType;
 					if (iMsgType.IsAssignableFrom(fieldType))
-						stringBuilder.AppendLine(@$"			{fields[f].Name}?.Reset();");
+						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name}?.Reset();");
 					else if (IsSubclassOfRawGeneric(fieldType, repeatedType))
-						stringBuilder.AppendLine(@$"			{fields[f].Name}?.Clear();");
+						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name}?.Clear();");
 					else
-						stringBuilder.AppendLine(@$"			{fields[f].Name} = default;");
+						resetPerProtoBuilder.AppendLine(@$"			{fields[f].Name} = default;");
 				}
-				stringBuilder.AppendLine(@"		}");
-				stringBuilder.AppendLine(@"	}");
+				resetPerProtoBuilder.AppendLine(@"		}");
+				resetPerProtoBuilder.AppendLine(@"	}");
 			}
 
-			stringBuilder.AppendLine(@"}");
+			resetPerProtoBuilder.AppendLine(@"}");
 
+
+			string codeTemplate = ProtoResetTemplate.Code;
+			string final = string.Format(codeTemplate, iMessageBuilder.ToString(), resetPerProtoBuilder.ToString());
 
 			string targetFile = Path.Combine(targetDir, "ResetMethodExtension.cs");
 			if (File.Exists(targetFile))
 				File.Delete(targetFile);
-			File.WriteAllText(targetFile, stringBuilder.ToString());
+			File.WriteAllText(targetFile, final);
 
 			AssetDatabase.Refresh();
 		}
