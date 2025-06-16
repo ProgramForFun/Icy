@@ -7,11 +7,11 @@ public static class ProtoIMessageResetExtension
 	{
 		switch(msg)
 		{
-			case TestMsg.TestMessageResult testmessageresult:
-				testmessageresult.Reset();
+			case TestMsg.TestMessageResult testMessageResult:
+				testMessageResult.Reset();
 				break;
-			case TestMsg.TestNest testnest:
-				testnest.Reset();
+			case TestMsg.TestNest testNest:
+				testNest.Reset();
 				break;
 
 		}

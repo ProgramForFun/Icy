@@ -160,7 +160,7 @@ namespace Icy.Protobuf.Editor
 				Type protoType = allProtoTypes[i];
 
 				//IMessage的Reset
-				string varName = protoType.Name.ToLower();
+				string varName = FirstLetterToLower(protoType.Name);
 				iMessageBuilder.AppendLine(@$"			case {protoType.FullName} {varName}:");
 				iMessageBuilder.AppendLine(@$"				{varName}.Reset();");
 				iMessageBuilder.AppendLine(@$"				break;");
@@ -215,6 +215,16 @@ namespace Icy.Protobuf.Editor
 		private static int SortProtoTypes(Type a, Type b)
 		{
 			return a.FullName.CompareTo(b.FullName);
+		}
+
+		private static string FirstLetterToLower(string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return str;
+
+			return str.Length == 1
+				? char.ToLower(str[0]).ToString()
+				: $"{char.ToLower(str[0])}{str.Substring(1)}";
 		}
 
 		/// <summary>
