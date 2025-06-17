@@ -41,7 +41,7 @@ namespace Icy.Editor
 			_AssetTrayWindow._Assets = new List<AssetTrayWindowItem>();
 			_AssetTrayWindow._AssetPaths = new List<string>();
 
-			string saved = LocalPrefs.GetString(ASSET_TRAY_KEY, string.Empty);
+			string saved = EditorLocalPrefs.GetString(ASSET_TRAY_KEY, string.Empty);
 			if (!string.IsNullOrEmpty(saved))
 			{
 				string[] split = saved.Split(";");
@@ -126,8 +126,8 @@ namespace Icy.Editor
 			for (int i = 0; i < _AssetPaths.Count; i++)
 				all.Add(_AssetPaths[i]);
 
-			LocalPrefs.SetString(ASSET_TRAY_KEY, string.Join(";", all));
-			LocalPrefs.Save();
+			EditorLocalPrefs.SetString(ASSET_TRAY_KEY, string.Join(";", all));
+			EditorLocalPrefs.Save();
 		}
 	}
 }

@@ -31,13 +31,13 @@ namespace Icy.UI.Editor
 
 		private static void OnAllAssemblyReload()
 		{
-			string generatingUIName = LocalPrefs.GetString(GENERATING_UI_NAME_KEY, "");
+			string generatingUIName = EditorLocalPrefs.GetString(GENERATING_UI_NAME_KEY, "");
 			if (!string.IsNullOrEmpty(generatingUIName))
 			{
 				CopySerializeField("UI" + generatingUIName);
 
-				LocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
-				LocalPrefs.Save();
+				EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
+				EditorLocalPrefs.Save();
 			}
 		}
 
@@ -49,8 +49,8 @@ namespace Icy.UI.Editor
 				bool isLogicFileExist = IsLogicFileExist(generator.UIName);
 				DoGenerateUICode(generator, isLogicFileExist);
 				AssetDatabase.Refresh();
-				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, generator.UIName);
-				LocalPrefs.Save();
+				EditorLocalPrefs.SetString(GENERATING_UI_NAME_KEY, generator.UIName);
+				EditorLocalPrefs.Save();
 			}
 		}
 		private static void DoGenerateUICode(UICodeGenerator generator, bool withLogic)
@@ -159,8 +159,8 @@ namespace Icy.UI.Editor
 				DoGenerateUILogicCode(paramGenerator.Value.UIName);
 				DoGenerateUICode(paramGenerator.Value, true);
 				AssetDatabase.Refresh();
-				LocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
-				LocalPrefs.Save();
+				EditorLocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
+				EditorLocalPrefs.Save();
 			}
 		}
 
