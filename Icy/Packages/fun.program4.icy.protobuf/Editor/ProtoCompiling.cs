@@ -1,3 +1,4 @@
+using Icy.Base;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,21 +33,27 @@ namespace Icy.Protobuf.Editor
 		[MenuItem("Icy/Compile Proto", false, 900)]
 		static void CompileProto()
 		{
-			EditorUtility.DisplayProgressBar("Compile Proto", "Compiling proto...", 0.5f);
+			EditorUtility.DisplayCancelableProgressBar("Compile Proto", "Compiling proto...", 0.5f);
 			EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, 2);
 
 			try
 			{
-				//TODO : 从设置中读取
-			string batFilePath = @"C:\Work\Z\Proto\_Compile.bat";
-				string workingDirectory = @"";
+				string batFilePath = null;
+				ProtoSetting setting = GetSetting();
+				if (setting != null)
+					batFilePath = setting.CompileBatPath;
+				if (string.IsNullOrEmpty(batFilePath))
+				{
+					EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK");
+					return;
+				}
 
 				ProcessStartInfo processInfo = new ProcessStartInfo()
 				{
-					FileName = batFilePath,      // 批处理文件名
-					WorkingDirectory = workingDirectory,  // 工作目录
-					CreateNoWindow = true,       // 不创建新窗口（后台运行）
-					UseShellExecute = false,     // 不使用系统Shell（用于重定向输出）
+					FileName = batFilePath,		// 批处理文件名
+					WorkingDirectory = "",		// 工作目录
+					CreateNoWindow = true,		// 不创建新窗口（后台运行）
+					UseShellExecute = false,	// 不使用系统Shell（用于重定向输出）
 
 					// 重定向输入/输出
 					RedirectStandardOutput = true,
@@ -76,6 +83,11 @@ namespace Icy.Protobuf.Editor
 					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
 					EditorLocalPrefs.Save();
 
+					//先写一个空的进去，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
+					string codeTemplate = ProtoResetTemplate.Code;
+					string final = string.Format(codeTemplate, "", "");
+					WriteResetMethodExtensionFile(final);
+
 					AssetDatabase.Refresh();
 				}
 			}
@@ -97,7 +109,6 @@ namespace Icy.Protobuf.Editor
 					EditorLocalPrefs.RemoveKey(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES);
 					EditorLocalPrefs.Save();
 				}
-
 
 				bool generatingProto = EditorLocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
 				if (generatingProto)
@@ -177,9 +188,6 @@ namespace Icy.Protobuf.Editor
 			//按名字排序，同命名空间的自然挨在一起了
 			allProtoTypes.Sort(SortProtoTypes);
 
-			//TODO : 从设置中读取
-			string targetDir = @"C:\Work\Z\Icy\Assets\Example\Protos";
-
 			StringBuilder iMessageBuilder = new StringBuilder(10240);
 			StringBuilder resetPerProtoBuilder = new StringBuilder(10240);
 			string curNamespace = string.Empty;
@@ -233,17 +241,29 @@ namespace Icy.Protobuf.Editor
 
 			string codeTemplate = ProtoResetTemplate.Code;
 			string final = string.Format(codeTemplate, iMessageBuilder.ToString(), resetPerProtoBuilder.ToString());
-
-			string targetFile = Path.Combine(targetDir, "ResetMethodExtension.cs");
-			if (File.Exists(targetFile))
-				File.Delete(targetFile);
-			File.WriteAllText(targetFile, final);
+			WriteResetMethodExtensionFile(final);
 
 			//延迟一帧，否则无法触发代码重新编译
 			EditorApplication.delayCall += () =>
 			{
 				AssetDatabase.Refresh();
 			};
+		}
+
+		private static void WriteResetMethodExtensionFile(string code)
+		{
+			string targetDir = null;
+			ProtoSetting setting = GetSetting();
+			if (setting != null)
+				targetDir = setting.ProtoOutputDir;
+			if (string.IsNullOrEmpty(targetDir))
+			{
+				EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 Proto编译后的代码的输出目录", "OK");
+				return;
+			}
+
+			string targetFile = Path.Combine(targetDir, "ResetMethodExtension.cs");
+			File.WriteAllText(targetFile, code);
 		}
 
 		private static int SortProtoTypes(Type a, Type b)
@@ -259,6 +279,17 @@ namespace Icy.Protobuf.Editor
 			return str.Length == 1
 				? char.ToLower(str[0]).ToString()
 				: $"{char.ToLower(str[0])}{str.Substring(1)}";
+		}
+
+		private static ProtoSetting GetSetting()
+		{
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ProtoSetting.json");
+			if (bytes != null)
+			{
+				ProtoSetting setting = ProtoSetting.Parser.ParseFrom(bytes);
+				return setting;
+			}
+			return null;
 		}
 
 		private static void OnCompileProtoLog(object sender, DataReceivedEventArgs e)
