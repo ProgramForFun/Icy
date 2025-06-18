@@ -6,3 +6,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Icy.Network")]
 [assembly: InternalsVisibleTo("Icy.UI")]
 [assembly: InternalsVisibleTo("Icy.UI.Editor")]
+[assembly: InternalsVisibleTo("Icy.Protobuf.Editor")]
