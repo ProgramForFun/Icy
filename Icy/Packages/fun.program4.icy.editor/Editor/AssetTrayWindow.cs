@@ -2,7 +2,6 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using System.Collections.Generic;
 using Sirenix.OdinInspector.Editor;
-using Icy.Asset.Editor;
 using UnityEngine;
 
 namespace Icy.Editor

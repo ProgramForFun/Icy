@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEditor;
 
-namespace Icy.Asset.Editor
+namespace Icy.Editor
 {
 	/// <summary>
 	/// AssetTrayWindow，暂存资源列表的Item
