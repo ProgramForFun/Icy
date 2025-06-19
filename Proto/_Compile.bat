@@ -1,11 +1,14 @@
 chcp  65001
-
-
-:: 1、清除旧文件
 @echo off
 
+IF "%~1"=="" (
+	echo 不能直接调用，请通过Unity菜单Icy/Compile Proto来编译
+	pause
+	exit /b 1
+)
+
 :: 输出目录
-set "target_dir=../Icy/Assets/Example/Protos"
+set "target_dir=%~1"
 :: asmdef和Reset Extension文件要保留
 set "keep_file=Protos.asmdef"
 set "keep_file2=ResetMethodExtension.cs"
@@ -15,6 +18,7 @@ set "cur_dir=%~dp0"
 :: 切换到输出目录
 cd /d "%target_dir%"
 
+:: 1、清除旧文件
 :: 删除除指定文件外的所有文件
 for %%f in (*.*) do (
     if not "%%f"=="%keep_file%" (

@@ -31,6 +31,7 @@ namespace Icy.Protobuf.Editor
 		/// 编译Protobuf
 		/// </summary>
 		[MenuItem("Icy/Compile Proto", false, 900)]
+		[MenuItem("Icy/Proto/Compile Proto", false)]
 		static void CompileProto()
 		{
 			EditorUtility.DisplayCancelableProgressBar("Compile Proto", "Compiling proto...", 0.5f);
@@ -48,12 +49,14 @@ namespace Icy.Protobuf.Editor
 					return;
 				}
 
+				string outputDirFullPath = Path.GetFullPath(setting.ProtoOutputDir);
 				ProcessStartInfo processInfo = new ProcessStartInfo()
 				{
-					FileName = batFilePath,		// 批处理文件名
-					WorkingDirectory = "",		// 工作目录
-					CreateNoWindow = true,		// 不创建新窗口（后台运行）
-					UseShellExecute = false,	// 不使用系统Shell（用于重定向输出）
+					FileName = batFilePath,					// 批处理文件名
+					WorkingDirectory = "",					// 工作目录
+					CreateNoWindow = true,					// 不创建新窗口（后台运行）
+					UseShellExecute = false,				// 不使用系统Shell（用于重定向输出）
+					Arguments = $"\"{outputDirFullPath}\"",	//Proto编译后的代码的输出目录，传入bat
 
 					// 重定向输入/输出
 					RedirectStandardOutput = true,
@@ -78,6 +81,9 @@ namespace Icy.Protobuf.Editor
 					process.WaitForExit();
 
 					int exitCode = process.ExitCode;
+					if (exitCode != 0)
+						EditorUtility.ClearProgressBar();
+
 					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
 
 					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
