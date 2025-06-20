@@ -21,6 +21,10 @@ namespace Icy.Protobuf.Editor
 	{
 		private const string GENERATING_PROTO_KEY = "_Icy_GeneratingProto";
 		private const string GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES = "_Icy_GeneratingProtoAssemblyReloadTimes";
+
+		private const string PROTO_MSG_ID_REGISTRY_TEMPLATE_PATH = "Packages/fun.program4.icy.protobuf/Editor/ProtoMsgIDRegistryTemplate.txt";
+		private const string PROTO_RESET_TEMPLATE_PATH = "Packages/fun.program4.icy.protobuf/Editor/ProtoResetTemplate.txt";
+
 		private static bool _IsProgressBarDisplaying;
 
 		static ProtoCompiling()
@@ -102,19 +106,20 @@ namespace Icy.Protobuf.Editor
 					EditorLocalPrefs.Save();
 
 					//先写一个空的进去占位，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
-					string resetCodeTemplate = ProtoResetTemplate.Code;
+					string resetCodeTemplate = File.ReadAllText(PROTO_RESET_TEMPLATE_PATH);
 					resetCodeTemplate = string.Format(resetCodeTemplate, "", "");
 					WriteCodeFile(resetCodeTemplate, "ResetMethodExtension.cs");
 
-					string msgIDRegistryCodeTemplate = ProtoMsgIDRegistryTemplate.Code;
+					string msgIDRegistryCodeTemplate = File.ReadAllText(PROTO_MSG_ID_REGISTRY_TEMPLATE_PATH);
 					msgIDRegistryCodeTemplate = string.Format(msgIDRegistryCodeTemplate, "", "");
 					WriteCodeFile(msgIDRegistryCodeTemplate, "ProtoMsgIDRegistry.cs");
 
 					AssetDatabase.Refresh();
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Log.LogError(e.ToString());
 				Clear();
 			}
 		}
@@ -141,8 +146,9 @@ namespace Icy.Protobuf.Editor
 					GenerateCode(allProtoFields);
 				}
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Log.LogError(e.ToString());
 				Clear();
 			}
 		}
@@ -282,7 +288,7 @@ namespace Icy.Protobuf.Editor
 			resetPerProtoBuilder.AppendLine(@"}");
 
 
-			string codeTemplate = ProtoResetTemplate.Code;
+			string codeTemplate = File.ReadAllText(PROTO_RESET_TEMPLATE_PATH);
 			codeTemplate = string.Format(codeTemplate, iMessageBuilder.ToString(), resetPerProtoBuilder.ToString());
 			WriteCodeFile(codeTemplate, "ResetMethodExtension.cs");
 		}
@@ -299,7 +305,7 @@ namespace Icy.Protobuf.Editor
 				stringBuilder.AppendLine(@$"		Register<{protoType.FullName}>();");
 			}
 
-			string codeTemplate = ProtoMsgIDRegistryTemplate.Code;
+			string codeTemplate = File.ReadAllText(PROTO_MSG_ID_REGISTRY_TEMPLATE_PATH);
 			codeTemplate = string.Format(codeTemplate, stringBuilder.ToString());
 			WriteCodeFile(codeTemplate, "ProtoMsgIDRegistry.cs");
 		}
