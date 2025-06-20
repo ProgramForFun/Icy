@@ -1,4 +1,6 @@
-//Generated code, do NOT edit
+//=============================
+// Generated code, do NOT edit!
+//=============================
 using pb = global::Google.Protobuf;
 
 public static class ProtoIMessageResetExtension

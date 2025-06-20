@@ -4,7 +4,9 @@ namespace Icy.Protobuf.Editor
 	public static class ProtoMsgIDRegistryTemplate
 	{
 		public readonly static string Code =
-@"//Generated code, do NOT edit
+@"//=============================
+// Generated code, do NOT edit!
+//=============================
 using pb = global::Google.Protobuf;
 using pbr = global::Google.Protobuf.Reflection;
 using System.Collections.Generic;
