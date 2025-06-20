@@ -119,7 +119,7 @@ namespace Icy.Protobuf.Editor
 			}
 			catch (Exception e)
 			{
-				Log.LogError(e.ToString());
+				UnityEngine.Debug.LogException(e);
 				Clear();
 			}
 		}
@@ -148,7 +148,7 @@ namespace Icy.Protobuf.Editor
 			}
 			catch (Exception e)
 			{
-				Log.LogError(e.ToString());
+				UnityEngine.Debug.LogException(e);
 				Clear();
 			}
 		}
