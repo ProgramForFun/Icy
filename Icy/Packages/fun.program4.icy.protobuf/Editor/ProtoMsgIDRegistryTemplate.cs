@@ -36,9 +36,9 @@ public static class ProtoMsgIDRegistry
 		pbr.MessageDescriptor descriptor = new T().Descriptor;
 		pbr.MessageOptions options = descriptor.GetOptions();
 
-		if (options != null && options.HasExtension(IcyOptionsExtensions.MsgID))
+		if (options != null && options.HasExtension(ProtoOptionsExtensions.MsgID))
 		{{
-			int id = options.GetExtension(IcyOptionsExtensions.MsgID);
+			int id = options.GetExtension(ProtoOptionsExtensions.MsgID);
 			_MsgID2Descriptor[id] = descriptor;
 			_TypeName2MsgID[typeof(T)] = id;
 		}}

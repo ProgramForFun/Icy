@@ -1,5 +1,5 @@
 syntax = "proto3";
-import "IcyOptions.proto";
+import "ProtoOptions.proto";
 package TestMsg;
 
 
