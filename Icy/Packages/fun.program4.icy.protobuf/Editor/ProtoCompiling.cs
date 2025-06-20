@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEditor;
+using UnityEditor.Compilation;
 using pb = global::Google.Protobuf;
 
 
@@ -20,11 +21,16 @@ namespace Icy.Protobuf.Editor
 	{
 		private const string GENERATING_PROTO_KEY = "_Icy_GeneratingProto";
 		private const string GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES = "_Icy_GeneratingProtoAssemblyReloadTimes";
+		private static bool _IsProgressBarDisplaying;
 
 		static ProtoCompiling()
 		{
+			_IsProgressBarDisplaying = false;
+
 			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
 			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
+			CompilationPipeline.compilationFinished -= OnCompilationFinished;
+			CompilationPipeline.compilationFinished += OnCompilationFinished;
 		}
 
 		/// <summary>
@@ -35,6 +41,7 @@ namespace Icy.Protobuf.Editor
 		static void CompileProto()
 		{
 			EditorUtility.DisplayCancelableProgressBar("Compile Proto", "Compiling proto...", 0.5f);
+			_IsProgressBarDisplaying = true;
 			EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, 2);
 
 			try
@@ -48,6 +55,8 @@ namespace Icy.Protobuf.Editor
 					EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK");
 					return;
 				}
+
+				ClearConsole.Clear();
 
 				string outputDirFullPath = Path.GetFullPath(setting.ProtoOutputDir);
 				ProcessStartInfo processInfo = new ProcessStartInfo()
@@ -82,7 +91,10 @@ namespace Icy.Protobuf.Editor
 
 					int exitCode = process.ExitCode;
 					if (exitCode != 0)
-						EditorUtility.ClearProgressBar();
+					{
+						Clear();
+						return;
+					}
 
 					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
 
@@ -103,7 +115,7 @@ namespace Icy.Protobuf.Editor
 			}
 			catch (Exception)
 			{
-				EditorUtility.ClearProgressBar();
+				Clear();
 			}
 		}
 
@@ -114,11 +126,7 @@ namespace Icy.Protobuf.Editor
 				int times = EditorLocalPrefs.GetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, int.MaxValue);
 				EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, --times);
 				if (times <= 0)
-				{
-					EditorUtility.ClearProgressBar();
-					EditorLocalPrefs.RemoveKey(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES);
-					EditorLocalPrefs.Save();
-				}
+					Clear();
 
 				bool generatingProto = EditorLocalPrefs.GetBool(GENERATING_PROTO_KEY, false);
 				if (generatingProto)
@@ -135,8 +143,18 @@ namespace Icy.Protobuf.Editor
 			}
 			catch (Exception)
 			{
-				EditorUtility.ClearProgressBar();
+				Clear();
 			}
+		}
+
+		private static void OnCompilationFinished(object _)
+		{
+			EditorApplication.delayCall += () =>
+			{
+				//有编译错误时，关闭ProgressBar，避免卡死edtior
+				if (EditorUtility.scriptCompilationFailed && _IsProgressBarDisplaying)
+					Clear();
+			};
 		}
 
 		/// <summary>
@@ -338,6 +356,14 @@ namespace Icy.Protobuf.Editor
 		{
 			if (e != null && e.Data != null)
 				UnityEngine.Debug.LogError(e.Data);
+		}
+
+		private static void Clear()
+		{
+			EditorUtility.ClearProgressBar();
+			_IsProgressBarDisplaying = false;
+			EditorLocalPrefs.RemoveKey(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES);
+			EditorLocalPrefs.Save();
 		}
 	}
 }
