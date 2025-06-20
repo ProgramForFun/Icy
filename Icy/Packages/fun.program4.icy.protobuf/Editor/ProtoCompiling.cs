@@ -89,10 +89,14 @@ namespace Icy.Protobuf.Editor
 					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
 					EditorLocalPrefs.Save();
 
-					//先写一个空的进去，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
-					string codeTemplate = ProtoResetTemplate.Code;
-					string final = string.Format(codeTemplate, "", "");
-					WriteResetMethodExtensionFile(final);
+					//先写一个空的进去占位，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
+					string resetCodeTemplate = ProtoResetTemplate.Code;
+					resetCodeTemplate = string.Format(resetCodeTemplate, "", "");
+					WriteCodeFile(resetCodeTemplate, "ResetMethodExtension.cs");
+
+					string msgIDRegistryCodeTemplate = ProtoMsgIDRegistryTemplate.Code;
+					msgIDRegistryCodeTemplate = string.Format(msgIDRegistryCodeTemplate, "", "");
+					WriteCodeFile(msgIDRegistryCodeTemplate, "ProtoMsgIDRegistry.cs");
 
 					AssetDatabase.Refresh();
 				}
@@ -126,7 +130,7 @@ namespace Icy.Protobuf.Editor
 
 					List<Type> allProtoTypes = GetAllProtoTypes();
 					Dictionary<Type, List<FieldInfo>> allProtoFields = GetAllProtoFields(allProtoTypes);
-					GenerateResetMethodExtension(allProtoFields);
+					GenerateCode(allProtoFields);
 				}
 			}
 			catch (Exception)
@@ -186,14 +190,29 @@ namespace Icy.Protobuf.Editor
 		}
 
 		/// <summary>
-		/// 为每个Proto类，生成Reset方法
+		/// 生成具体代码
 		/// </summary>
-		private static void GenerateResetMethodExtension(Dictionary<Type, List<FieldInfo>> protoDict)
+		private static void GenerateCode(Dictionary<Type, List<FieldInfo>> protoDict)
 		{
 			List<Type> allProtoTypes = protoDict.Keys.ToList();
 			//按名字排序，同命名空间的自然挨在一起了
 			allProtoTypes.Sort(SortProtoTypes);
 
+			GenerateResetMethodExtension(protoDict, allProtoTypes);
+			GenerateMsgIDRegistry(allProtoTypes);
+
+			//延迟一帧，否则无法触发代码重新编译
+			EditorApplication.delayCall += () =>
+			{
+				AssetDatabase.Refresh();
+			};
+		}
+
+		/// <summary>
+		/// 为每个Proto类，生成Reset方法
+		/// </summary>
+		private static void GenerateResetMethodExtension(Dictionary<Type, List<FieldInfo>> protoDict, List<Type> allProtoTypes)
+		{
 			StringBuilder iMessageBuilder = new StringBuilder(10240);
 			StringBuilder resetPerProtoBuilder = new StringBuilder(10240);
 			string curNamespace = string.Empty;
@@ -246,17 +265,28 @@ namespace Icy.Protobuf.Editor
 
 
 			string codeTemplate = ProtoResetTemplate.Code;
-			string final = string.Format(codeTemplate, iMessageBuilder.ToString(), resetPerProtoBuilder.ToString());
-			WriteResetMethodExtensionFile(final);
-
-			//延迟一帧，否则无法触发代码重新编译
-			EditorApplication.delayCall += () =>
-			{
-				AssetDatabase.Refresh();
-			};
+			codeTemplate = string.Format(codeTemplate, iMessageBuilder.ToString(), resetPerProtoBuilder.ToString());
+			WriteCodeFile(codeTemplate, "ResetMethodExtension.cs");
 		}
 
-		private static void WriteResetMethodExtensionFile(string code)
+		/// <summary>
+		/// 生成MsgID的映射
+		/// </summary>
+		private static void GenerateMsgIDRegistry(List<Type> allProtoTypes)
+		{
+			StringBuilder stringBuilder = new StringBuilder(10240);
+			for (int i = 0; i < allProtoTypes.Count; i++)
+			{
+				Type protoType = allProtoTypes[i];
+				stringBuilder.AppendLine(@$"		Register<{protoType.FullName}>();");
+			}
+
+			string codeTemplate = ProtoMsgIDRegistryTemplate.Code;
+			codeTemplate = string.Format(codeTemplate, stringBuilder.ToString());
+			WriteCodeFile(codeTemplate, "ProtoMsgIDRegistry.cs");
+		}
+
+		private static void WriteCodeFile(string code, string fileName)
 		{
 			string targetDir = null;
 			ProtoSetting setting = GetSetting();
@@ -264,11 +294,11 @@ namespace Icy.Protobuf.Editor
 				targetDir = setting.ProtoOutputDir;
 			if (string.IsNullOrEmpty(targetDir))
 			{
-				EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 Proto编译后的代码的输出目录", "OK");
+				EditorUtility.DisplayDialog("", $"输出失败，请先去Icy/Proto/Setting菜单中，设置 Proto编译后的代码的输出目录", "OK");
 				return;
 			}
 
-			string targetFile = Path.Combine(targetDir, "ResetMethodExtension.cs");
+			string targetFile = Path.Combine(targetDir, fileName);
 			File.WriteAllText(targetFile, code);
 		}
 

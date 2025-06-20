@@ -1,6 +1,7 @@
 syntax = "proto3";
-
+import "IcyOptions.proto";
 package TestMsg;
+
 
 message TestNest
 {
@@ -10,6 +11,8 @@ message TestNest
 // 测试消息
 message TestMessageResult
 {
+	option (MsgID) = 1001;
+
     // 结果码。
     int32 errorCode = 1;
     // 消息内容。

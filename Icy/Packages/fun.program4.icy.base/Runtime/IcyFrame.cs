@@ -1,6 +1,6 @@
-using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace Icy.Base
@@ -19,6 +19,19 @@ namespace Icy.Base
 			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
+
+			//反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
+			//TODO：接入HybridCLR后，这里的调用时机要改
+			Assembly assembly = Assembly.Load("Protos");
+			if (assembly != null)
+			{
+				Type type = assembly.GetType("ProtoMsgIDRegistry");
+				if (type != null)
+				{
+					MethodInfo method = type.GetMethod("RegisterAll");
+					method?.Invoke(null, null);
+				}
+			}
 		}
 
 		#region Update
