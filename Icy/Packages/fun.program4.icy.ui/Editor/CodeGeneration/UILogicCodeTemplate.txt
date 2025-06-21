@@ -1,12 +1,4 @@
-namespace Icy.UI.Editor
-{
-	/// <summary>
-	/// UI逻辑代码的生成模板
-	/// </summary>
-	public static class UILogicCodeTemplate
-	{
-		public readonly static string Code =
-@"using Icy.UI;
+using Icy.UI;
 
 /// <summary>
 /// 
@@ -30,6 +22,3 @@ public class UI{0}Logic : UILogicBase
 		base.Destroy();
 	}}
 }}
-";
-	}
-}

@@ -14,7 +14,12 @@ namespace Icy.UI.Editor
 	public class UICodeGeneratorEditor
 	{
 		private const string GENERATING_UI_NAME_KEY = "_Icy_GeneratingUIName";
+
+		private const string UI_CODE_TEMPLATE_PATH = "Packages/fun.program4.icy.ui/Editor/CodeGeneration/UICodeTemplate.txt";
+		private const string UI_LOGIC_CODE_TEMPLATE_PATH = "Packages/fun.program4.icy.ui/Editor/CodeGeneration/UILogicCodeTemplate.txt";
+
 		private static string _UIRootDir;
+
 
 		static UICodeGeneratorEditor()
 		{
@@ -75,7 +80,8 @@ namespace Icy.UI.Editor
 					string logicDecl = withLogic ? string.Format("\r\n	private {0} _Logic;\r\n", logicTypeName) : "";
 					string logicAssign = withLogic ? "		_Logic = new();\r\n		_Logic.Init();\r\n" : "";
 					string componentCodeToMultiLine = string.Join("\r\n", componentCode);
-					string finalCodes = string.Format(UICodeTemplate.Code, generator.UIName, componentCodeToMultiLine, logicDecl, logicAssign);
+					string template = File.ReadAllText(UI_CODE_TEMPLATE_PATH);
+					string finalCodes = string.Format(template, generator.UIName, componentCodeToMultiLine, logicDecl, logicAssign);
 					File.WriteAllText(filePath, finalCodes);
 				}
 				else
@@ -147,7 +153,8 @@ namespace Icy.UI.Editor
 			if (filePath != null)
 			{
 				//EditorUtility.DisplayProgressBar("UI", "Generating UI Logic code...", 0.5f);
-				string code = string.Format(UILogicCodeTemplate.Code, uiName);
+				string template = File.ReadAllText(UI_LOGIC_CODE_TEMPLATE_PATH);
+				string code = string.Format(template, uiName);
 				File.WriteAllText(filePath, code);
 			}
 		}

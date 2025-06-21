@@ -1,12 +1,4 @@
-namespace Icy.UI.Editor
-{
-	/// <summary>
-	/// UI代码的生成模板
-	/// </summary>
-	public static class UICodeTemplate
-	{
-		public readonly static string Code =
-@"using UnityEngine;
+using UnityEngine;
 using Icy.UI;
 using Sirenix.OdinInspector;
 
@@ -47,6 +39,3 @@ public class UI{0} : UIBase
 		base.Destroy();
 	}}
 }}
-";
-	}
-}
