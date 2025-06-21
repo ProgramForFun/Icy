@@ -1,5 +1,6 @@
 using UnityEngine;
 using YooAsset;
+using Icy.Base;
 
 namespace Icy.Asset
 {
@@ -55,6 +56,12 @@ namespace Icy.Asset
 		public static ulong GetFileOffset()
 		{
 			return _OffsetA + _OffsetB;
+		}
+
+		public DecryptResult LoadAssetBundleFallback(DecryptFileInfo fileInfo)
+		{
+			Log.LogError("Decrypt failed, fallback");
+			return default;
 		}
 	}
 }
