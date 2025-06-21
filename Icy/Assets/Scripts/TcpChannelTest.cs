@@ -30,10 +30,6 @@ namespace Icy.Network
 
 	public class ProtoBufReceiver : NetworkReceiverBase
 	{
-		private readonly Dictionary<int, Type> _MsgTypeMap = new Dictionary<int, Type>()
-		{
-			{ 1, typeof(TestMessageResult)},
-		};
 		private Dictionary<int, IMessage> _Cache = new Dictionary<int, IMessage>();
 
 		public override void Decode(byte[] data, int startIdx, int length)
@@ -61,9 +57,8 @@ namespace Icy.Network
 			}
 			else
 			{
-				Type msgType = _MsgTypeMap[msgID];
-				IMessage msg = Activator.CreateInstance(msgType) as IMessage;
-				msg = msg.Descriptor.Parser.ParseFrom(span);
+				Google.Protobuf.Reflection.MessageDescriptor descriptor = ProtoMsgIDRegistry.GetDescriptor(msgID);
+				IMessage msg = descriptor.Parser.ParseFrom(span);
 				_Cache.Add(msgID, msg);
 
 				Log.LogInfo((msg as TestMessageResult).ErrorMsg);
@@ -128,7 +123,7 @@ namespace Icy.Network
 			{
 				_MessageResult.ErrorCode = 0;
 				_MessageResult.ErrorMsg = "Success";
-				_TcpChannel.Send(1, _MessageResult);
+				_TcpChannel.Send(1001, _MessageResult);
 			}
 
 			//if (Input.GetKeyUp(KeyCode.D))
