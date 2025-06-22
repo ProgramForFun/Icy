@@ -7,6 +7,7 @@ using UnityEngine;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
+using System.Threading;
 
 namespace Icy.UI
 {
@@ -68,6 +69,10 @@ namespace Icy.UI
 		/// 屏蔽UI输入的物体
 		/// </summary>
 		private GameObject _Block;
+		/// <summary>
+		/// 屏蔽超时关闭的CancelToken
+		/// </summary>
+		private CancellationTokenSource _BlockTimeoutCancelToken;
 
 		/// <summary>
 		/// 运行时为Image、RawImage加载的的Sprite和Texture和所属UI的映射关系
@@ -104,7 +109,7 @@ namespace Icy.UI
 			Canvas blockCanvas = _Block.GetOrAddComponent<Canvas>();
 			blockCanvas.overrideSorting = true;
 			blockCanvas.sortingOrder = (int)UILayer.Top + 1000;
-			BlockInteract(false);
+			CancelBlockInteract();
 		}
 
 		/// <summary>
@@ -140,7 +145,7 @@ namespace Icy.UI
 			try
 			{
 				if (blockInteract)
-					BlockInteract(true);
+					BlockInteract();
 				T ui = await GetAsync<T>();
 				ui.Show(param);
 				return ui;
@@ -153,7 +158,7 @@ namespace Icy.UI
 			{
 				//保证一定会解除block
 				if (blockInteract)
-					BlockInteract(false);
+					CancelBlockInteract();
 			}
 			return null;
 		}
@@ -311,9 +316,22 @@ namespace Icy.UI
 		/// <summary>
 		/// 屏蔽所有UI交互
 		/// </summary>
-		public void BlockInteract(bool block)
+		/// <param name="timeout">超时时间，单位秒，默认-1为无超时时间</param>
+		public void BlockInteract(int timeout = -1)
 		{
-			_Block.SetActive(block);
+			_Block.SetActive(true);
+
+			_BlockTimeoutCancelToken?.Cancel();
+			if (timeout != -1)
+				_BlockTimeoutCancelToken = Base.Timer.DelayByTime(CancelBlockInteract, timeout);
+		}
+
+		/// <summary>
+		/// 关闭屏蔽
+		/// </summary>
+		public void CancelBlockInteract()
+		{
+			_Block.SetActive(false);
 		}
 
 		/// <summary>
