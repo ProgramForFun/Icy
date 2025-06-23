@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Icy.Protobuf.Editor {
+namespace Icy.Editor {
 
   /// <summary>Holder for reflection information generated from ConfigSetting.proto</summary>
   public static partial class ConfigSettingReflection {
@@ -24,13 +24,13 @@ namespace Icy.Protobuf.Editor {
     static ConfigSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNDb25maWdTZXR0aW5nLnByb3RvEhNJY3kuUHJvdG9idWYuRWRpdG9yIkEK",
-            "DUNvbmZpZ1NldHRpbmcSFwoPR2VuZXJhdGVCYXRQYXRoGAEgASgJEhcKD0Nv",
-            "bmZpZ091dHB1dERpchgCIAEoCWIGcHJvdG8z"));
+            "ChNDb25maWdTZXR0aW5nLnByb3RvEgpJY3kuRWRpdG9yIkEKDUNvbmZpZ1Nl",
+            "dHRpbmcSFwoPR2VuZXJhdGVCYXRQYXRoGAEgASgJEhcKD0NvbmZpZ091dHB1",
+            "dERpchgCIAEoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Protobuf.Editor.ConfigSetting), global::Icy.Protobuf.Editor.ConfigSetting.Parser, new[]{ "GenerateBatPath", "ConfigOutputDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Editor.ConfigSetting), global::Icy.Editor.ConfigSetting.Parser, new[]{ "GenerateBatPath", "ConfigOutputDir" }, null, null, null, null)
           }));
     }
     #endregion
@@ -52,7 +52,7 @@ namespace Icy.Protobuf.Editor {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Icy.Protobuf.Editor.ConfigSettingReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Icy.Editor.ConfigSettingReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
