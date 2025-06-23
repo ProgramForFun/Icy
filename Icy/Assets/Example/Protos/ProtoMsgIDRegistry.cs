@@ -20,6 +20,10 @@ public static class ProtoMsgIDRegistry
 	/// </summary>
 	private static Dictionary<Type, int> _TypeName2MsgID;
 
+
+	/// <summary>
+	/// 注册所有Proto Msg
+	/// </summary>
 	public static void RegisterAll()
 	{
 		_MsgID2Descriptor = new Dictionary<int, pbr.MessageDescriptor>();
@@ -45,7 +49,7 @@ public static class ProtoMsgIDRegistry
 	/// <summary>
 	/// 根据MsgID获取 MessageDescriptor
 	/// </summary>
-	public static pbr.MessageDescriptor GetDescriptor(int msgID)
+	public static pbr.MessageDescriptor GetMsgDescriptor(int msgID)
 	{
 		return _MsgID2Descriptor.TryGetValue(msgID, out pbr.MessageDescriptor descriptor) ? descriptor : null;
 	}
@@ -54,7 +58,7 @@ public static class ProtoMsgIDRegistry
 	/// 根据Proto类型，获取MsgID
 	/// </summary>
 	/// <returns>如果没有找到，返回-1</returns>
-	public static int GetId<T>() where T : pb.IMessage, new()
+	public static int GetMsgID<T>() where T : pb.IMessage, new()
 	{
 		Type type = typeof(T);
 		if (_TypeName2MsgID.ContainsKey(type))

@@ -57,7 +57,7 @@ namespace Icy.Network
 			}
 			else
 			{
-				Google.Protobuf.Reflection.MessageDescriptor descriptor = ProtoMsgIDRegistry.GetDescriptor(msgID);
+				Google.Protobuf.Reflection.MessageDescriptor descriptor = ProtoMsgIDRegistry.GetMsgDescriptor(msgID);
 				IMessage msg = descriptor.Parser.ParseFrom(span);
 				_Cache.Add(msgID, msg);
 
