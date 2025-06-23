@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package Icy.Protobuf.Editor;
+
+
+message ConfigSetting
+{
+    //生成Config的Bat脚本路径
+    string GenerateBatPath = 1;
+	//Config的导出输出目录
+	string ConfigOutputDir = 2;
+}
