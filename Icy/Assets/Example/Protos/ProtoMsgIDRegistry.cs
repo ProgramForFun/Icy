@@ -53,8 +53,13 @@ public static class ProtoMsgIDRegistry
 	/// <summary>
 	/// 根据Proto类型，获取MsgID
 	/// </summary>
+	/// <returns>如果没有找到，返回-1</returns>
 	public static int GetId<T>() where T : pb.IMessage, new()
 	{
-		return _TypeName2MsgID[typeof(T)];
+		Type type = typeof(T);
+		if (_TypeName2MsgID.ContainsKey(type))
+			return _TypeName2MsgID[type];
+		else
+			return -1;
 	}
 }
