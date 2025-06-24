@@ -60,7 +60,7 @@ namespace Icy.Protobuf.Editor
 
 			if (!Directory.Exists(Path.Combine(curDir, ProtoOutputDir)))
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {CompileBatPath} 目录，请检查路径", "OK");
+				EditorUtility.DisplayDialog("", $"找不到 {ProtoOutputDir} 目录，请检查路径", "OK");
 				return;
 			}
 
