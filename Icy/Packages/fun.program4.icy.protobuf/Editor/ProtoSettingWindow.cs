@@ -52,13 +52,13 @@ namespace Icy.Protobuf.Editor
 		private void OnDataChanged()
 		{
 			string curDir = Directory.GetCurrentDirectory();
-			if (!File.Exists(Path.Combine(curDir, CompileBatPath)))
+			if (!string.IsNullOrEmpty(CompileBatPath) && !File.Exists(Path.Combine(curDir, CompileBatPath)))
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {CompileBatPath} 文件，请检查路径", "OK");
 				return;
 			}
 
-			if (!Directory.Exists(Path.Combine(curDir, ProtoOutputDir)))
+			if (!string.IsNullOrEmpty(ProtoOutputDir) && !Directory.Exists(Path.Combine(curDir, ProtoOutputDir)))
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {ProtoOutputDir} 目录，请检查路径", "OK");
 				return;
