@@ -24,13 +24,14 @@ namespace Icy.Editor {
     static ConfigSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNDb25maWdTZXR0aW5nLnByb3RvEgpJY3kuRWRpdG9yIkEKDUNvbmZpZ1Nl",
-            "dHRpbmcSFwoPR2VuZXJhdGVCYXRQYXRoGAEgASgJEhcKD0NvbmZpZ091dHB1",
-            "dERpchgCIAEoCWIGcHJvdG8z"));
+            "ChNDb25maWdTZXR0aW5nLnByb3RvEgpJY3kuRWRpdG9yImwKDUNvbmZpZ1Nl",
+            "dHRpbmcSFwoPR2VuZXJhdGVCYXRQYXRoGAEgASgJEhUKDUNvZGVPdXRwdXRE",
+            "aXIYAiABKAkSFAoMQmluT3V0cHV0RGlyGAMgASgJEhUKDUpzb25PdXRwdXRE",
+            "aXIYBCABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Editor.ConfigSetting), global::Icy.Editor.ConfigSetting.Parser, new[]{ "GenerateBatPath", "ConfigOutputDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Editor.ConfigSetting), global::Icy.Editor.ConfigSetting.Parser, new[]{ "GenerateBatPath", "CodeOutputDir", "BinOutputDir", "JsonOutputDir" }, null, null, null, null)
           }));
     }
     #endregion
@@ -73,7 +74,9 @@ namespace Icy.Editor {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ConfigSetting(ConfigSetting other) : this() {
       generateBatPath_ = other.generateBatPath_;
-      configOutputDir_ = other.configOutputDir_;
+      codeOutputDir_ = other.codeOutputDir_;
+      binOutputDir_ = other.binOutputDir_;
+      jsonOutputDir_ = other.jsonOutputDir_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -98,18 +101,48 @@ namespace Icy.Editor {
       }
     }
 
-    /// <summary>Field number for the "ConfigOutputDir" field.</summary>
-    public const int ConfigOutputDirFieldNumber = 2;
-    private string configOutputDir_ = "";
+    /// <summary>Field number for the "CodeOutputDir" field.</summary>
+    public const int CodeOutputDirFieldNumber = 2;
+    private string codeOutputDir_ = "";
     /// <summary>
-    ///Config的导出输出目录
+    ///Config代码的导出输出目录
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string ConfigOutputDir {
-      get { return configOutputDir_; }
+    public string CodeOutputDir {
+      get { return codeOutputDir_; }
       set {
-        configOutputDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        codeOutputDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "BinOutputDir" field.</summary>
+    public const int BinOutputDirFieldNumber = 3;
+    private string binOutputDir_ = "";
+    /// <summary>
+    ///Bin格式的Config的导出输出目录
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string BinOutputDir {
+      get { return binOutputDir_; }
+      set {
+        binOutputDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "JsonOutputDir" field.</summary>
+    public const int JsonOutputDirFieldNumber = 4;
+    private string jsonOutputDir_ = "";
+    /// <summary>
+    ///Json格式的Config的导出输出目录
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string JsonOutputDir {
+      get { return jsonOutputDir_; }
+      set {
+        jsonOutputDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -129,7 +162,9 @@ namespace Icy.Editor {
         return true;
       }
       if (GenerateBatPath != other.GenerateBatPath) return false;
-      if (ConfigOutputDir != other.ConfigOutputDir) return false;
+      if (CodeOutputDir != other.CodeOutputDir) return false;
+      if (BinOutputDir != other.BinOutputDir) return false;
+      if (JsonOutputDir != other.JsonOutputDir) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -138,7 +173,9 @@ namespace Icy.Editor {
     public override int GetHashCode() {
       int hash = 1;
       if (GenerateBatPath.Length != 0) hash ^= GenerateBatPath.GetHashCode();
-      if (ConfigOutputDir.Length != 0) hash ^= ConfigOutputDir.GetHashCode();
+      if (CodeOutputDir.Length != 0) hash ^= CodeOutputDir.GetHashCode();
+      if (BinOutputDir.Length != 0) hash ^= BinOutputDir.GetHashCode();
+      if (JsonOutputDir.Length != 0) hash ^= JsonOutputDir.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -161,9 +198,17 @@ namespace Icy.Editor {
         output.WriteRawTag(10);
         output.WriteString(GenerateBatPath);
       }
-      if (ConfigOutputDir.Length != 0) {
+      if (CodeOutputDir.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(ConfigOutputDir);
+        output.WriteString(CodeOutputDir);
+      }
+      if (BinOutputDir.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(BinOutputDir);
+      }
+      if (JsonOutputDir.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(JsonOutputDir);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -179,9 +224,17 @@ namespace Icy.Editor {
         output.WriteRawTag(10);
         output.WriteString(GenerateBatPath);
       }
-      if (ConfigOutputDir.Length != 0) {
+      if (CodeOutputDir.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(ConfigOutputDir);
+        output.WriteString(CodeOutputDir);
+      }
+      if (BinOutputDir.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(BinOutputDir);
+      }
+      if (JsonOutputDir.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(JsonOutputDir);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -196,8 +249,14 @@ namespace Icy.Editor {
       if (GenerateBatPath.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(GenerateBatPath);
       }
-      if (ConfigOutputDir.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ConfigOutputDir);
+      if (CodeOutputDir.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CodeOutputDir);
+      }
+      if (BinOutputDir.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BinOutputDir);
+      }
+      if (JsonOutputDir.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(JsonOutputDir);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -214,8 +273,14 @@ namespace Icy.Editor {
       if (other.GenerateBatPath.Length != 0) {
         GenerateBatPath = other.GenerateBatPath;
       }
-      if (other.ConfigOutputDir.Length != 0) {
-        ConfigOutputDir = other.ConfigOutputDir;
+      if (other.CodeOutputDir.Length != 0) {
+        CodeOutputDir = other.CodeOutputDir;
+      }
+      if (other.BinOutputDir.Length != 0) {
+        BinOutputDir = other.BinOutputDir;
+      }
+      if (other.JsonOutputDir.Length != 0) {
+        JsonOutputDir = other.JsonOutputDir;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -241,7 +306,15 @@ namespace Icy.Editor {
             break;
           }
           case 18: {
-            ConfigOutputDir = input.ReadString();
+            CodeOutputDir = input.ReadString();
+            break;
+          }
+          case 26: {
+            BinOutputDir = input.ReadString();
+            break;
+          }
+          case 34: {
+            JsonOutputDir = input.ReadString();
             break;
           }
         }
@@ -268,7 +341,15 @@ namespace Icy.Editor {
             break;
           }
           case 18: {
-            ConfigOutputDir = input.ReadString();
+            CodeOutputDir = input.ReadString();
+            break;
+          }
+          case 26: {
+            BinOutputDir = input.ReadString();
+            break;
+          }
+          case 34: {
+            JsonOutputDir = input.ReadString();
             break;
           }
         }

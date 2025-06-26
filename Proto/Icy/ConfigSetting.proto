@@ -7,6 +7,10 @@ message ConfigSetting
 {
     //生成Config的Bat脚本路径
     string GenerateBatPath = 1;
-	//Config的导出输出目录
-	string ConfigOutputDir = 2;
+	//Config代码的导出输出目录
+	string CodeOutputDir = 2;
+	//Bin格式的Config的导出输出目录
+	string BinOutputDir = 3;
+	//Json格式的Config的导出输出目录
+	string JsonOutputDir = 4;
 }
