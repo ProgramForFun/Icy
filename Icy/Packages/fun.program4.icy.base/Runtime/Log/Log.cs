@@ -132,7 +132,8 @@ namespace Icy.Base
 #if UNITY_EDITOR
 				if (!Application.isBatchMode)
 				{
-					Debug.Break();
+					if (UnityEditor.EditorApplication.isPlaying)
+						Debug.Break();
 					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
 				}
 #endif
