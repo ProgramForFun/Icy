@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace Icy.UI.Editor
@@ -39,7 +40,10 @@ namespace Icy.UI.Editor
 			string generatingUIName = EditorLocalPrefs.GetString(GENERATING_UI_NAME_KEY, "");
 			if (!string.IsNullOrEmpty(generatingUIName))
 			{
-				CopySerializeField("UI" + generatingUIName);
+				//只有非play、编辑Prefab状态下，才执行生成代码
+				PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
+				if (!EditorApplication.isPlaying && stage != null)
+					CopySerializeField("UI" + generatingUIName);
 
 				EditorApplication.delayCall += () =>
 				{
