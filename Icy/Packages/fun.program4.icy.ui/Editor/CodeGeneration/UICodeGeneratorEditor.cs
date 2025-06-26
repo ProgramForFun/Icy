@@ -41,8 +41,11 @@ namespace Icy.UI.Editor
 			{
 				CopySerializeField("UI" + generatingUIName);
 
-				EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
-				EditorLocalPrefs.Save();
+				EditorApplication.delayCall += () =>
+				{
+					EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
+					EditorLocalPrefs.Save();
+				};
 			}
 		}
 
