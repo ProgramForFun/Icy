@@ -94,13 +94,12 @@ namespace Icy.Protobuf.Editor
 					process.WaitForExit();
 
 					int exitCode = process.ExitCode;
+					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
 					if (exitCode != 0)
 					{
 						Clear();
 						return;
 					}
-
-					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
 
 					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
 					EditorLocalPrefs.Save();
