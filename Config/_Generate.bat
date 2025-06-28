@@ -1,3 +1,5 @@
+chcp  65001
+
 set WORKSPACE=.
 set LUBAN_DLL=%WORKSPACE%\Luban\Luban.dll
 set CONF_ROOT=.
