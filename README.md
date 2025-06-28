@@ -3,6 +3,7 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 
 ![](https://img.shields.io/badge/Unity%20Ver-2022.3.60-blue.svg?style=flat-square)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
+![](https://img.shields.io/github/last-commit/ProgramForFun/Icy)
 &nbsp;
 
 ## 安装
