@@ -13,8 +13,6 @@ namespace Icy.Base
 		public const long MinuteSeconds = 60;
 		public const long HourSeconds = MinuteSeconds * 60;
 		public const long DaySeconds = HourSeconds * 24;
-		public const long MonthSeconds = DaySeconds * 30;
-		public const long YearSeconds = MonthSeconds * 12;
 
 
 		/// <summary>
