@@ -8,7 +8,7 @@ using UnityEditor;
 /// <summary>
 /// 打表
 /// </summary>
-public static class ConfigGenerator
+public static class ConfigGenerating
 {
 	/// <summary>
 	/// 打表
