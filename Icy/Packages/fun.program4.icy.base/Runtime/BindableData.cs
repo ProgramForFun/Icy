@@ -85,14 +85,14 @@ namespace Icy.Base
 				return false;
 			}
 
-			if (!other._Others.Contains(this))
+			if (other._Others.Contains(this))
 			{
-				other._Others.Add(this);
-				return true;
+				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}", "BindableData");
+				return false;
 			}
 
-			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}", "BindableData");
-			return false;
+			other._Others.Add(this);
+			return true;
 		}
 
 		/// <summary>
