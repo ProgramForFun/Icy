@@ -136,7 +136,7 @@ namespace Icy.UI
 					{
 						BindData bindData = _BindDataList[i];
 						dynamic bindableData = bindData.BindableData;
-						bindableData.UnbindTo((dynamic)bindData.Listener);
+						bindableData.Unbind((dynamic)bindData.Listener);
 						_BindDataList.RemoveAt(i);
 					}
 				}
