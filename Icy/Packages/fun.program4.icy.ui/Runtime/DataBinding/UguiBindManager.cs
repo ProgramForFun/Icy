@@ -75,7 +75,7 @@ namespace Icy.UI
 				data.Listener = listener;
 				_BindDataList.Add(data);
 
-				bindableData.BindTo(listener);
+				bindableData.Bind(listener);
 
 				return true;
 			}
@@ -96,7 +96,7 @@ namespace Icy.UI
 				Action<T> listener = data.Listener as Action<T>;
 				_BindDataList.RemoveAt(dataIdx);
 
-				bindableData.UnbindTo(listener);
+				bindableData.Unbind(listener);
 				return true;
 			}
 			return false;

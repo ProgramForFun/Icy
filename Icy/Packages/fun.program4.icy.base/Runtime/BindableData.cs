@@ -54,7 +54,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 把一个事件绑定到BindableData，BindableData修改时调用这个事件
 		/// </summary>
-		public bool BindTo(Action<T> listener)
+		public bool Bind(Action<T> listener)
 		{
 			if (!_Listeners.Contains(listener))
 			{
@@ -98,7 +98,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 解除Bind一个Listener
 		/// </summary>
-		public void UnbindTo(Action<T> listener)
+		public void Unbind(Action<T> listener)
 		{
 			_Listeners.Remove(listener);
 		}
