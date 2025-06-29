@@ -14,7 +14,7 @@ namespace Icy.GM
 		/// </summary>
 		public static void Init(IGMOptions gmOptions)
 		{
-			if (SRServiceManager.HasService<IConsoleService>())
+			if (IsInited())
 			{
 				Log.LogError("Duplicate Init to GM is invalid", nameof(GM));
 				return;
@@ -24,6 +24,14 @@ namespace Icy.GM
 			//注册SRDebugger的Options
 			IOptionsService srService = SRServiceManager.GetService<IOptionsService>();
 			srService.AddContainer(gmOptions);
+		}
+
+		/// <summary>
+		/// 是否已经初始化了
+		/// </summary>
+		public static bool IsInited()
+		{
+			return SRServiceManager.HasService<IConsoleService>();
 		}
 	}
 }
