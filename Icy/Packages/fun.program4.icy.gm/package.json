@@ -1,0 +1,13 @@
+{
+  "name": "fun.program4.icy.gm",
+  "version": "1.0.0",
+  "displayName": "Icy GM",
+  "description": "Icy GM",
+  "author": {
+    "name": "Icy",
+    "email": "chengshengtzss@163.com",
+    "url": "https://program4.fun"
+  },
+  "dependencies": {
+  }
+}

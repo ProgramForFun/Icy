@@ -7,6 +7,10 @@ using Icy.UI;
 using Icy.Asset;
 using YooAsset;
 using System.Globalization;
+using Icy.GM;
+using System.ComponentModel;
+using SRDebugger;
+
 
 public class ExampleRoot : MonoBehaviour
 {
@@ -29,6 +33,8 @@ public class ExampleRoot : MonoBehaviour
 		IcyFrame.Instance.Init();
 		Log.Init(true);
 		UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
+		GM.Init(new TestGM());//可以根据服务器，决定是否要开启GM
+
 
 		//资源热更
 		bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage", 30);
@@ -72,5 +78,20 @@ public class ExampleRoot : MonoBehaviour
 #if UNITY_EDITOR
 		TestPlayground.Update();
 #endif
+	}
+}
+
+public class TestGM : IGMOptions
+{
+	event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+	{
+		add { }
+		remove { }
+	}
+
+	[Category("AAA"), DisplayName("Clear LocalPrefs"), Sort(1)]
+	public void DeleteSave()
+	{
+
 	}
 }
