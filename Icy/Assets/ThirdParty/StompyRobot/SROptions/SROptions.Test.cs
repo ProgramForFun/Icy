@@ -1,4 +1,4 @@
-﻿#define ENABLE_TEST_SROPTIONS
+﻿//#define ENABLE_TEST_SROPTIONS
 
 using System;
 using System.ComponentModel;
