@@ -34,19 +34,25 @@ public static class ConfigGenerating
 
 				ClearConsole.Clear();
 
-				//string outputDirFullPath = Path.GetFullPath(setting.ProtoOutputDir);
+				string batDir = Path.GetDirectoryName(batFilePath);
 				ProcessStartInfo processInfo = new ProcessStartInfo()
 				{
-					FileName = batFilePath,									// 批处理文件名
-					WorkingDirectory = Path.GetDirectoryName(batFilePath),	// 工作目录
-					CreateNoWindow = true,									// 不创建新窗口（后台运行）
-					UseShellExecute = false,								// 不使用系统Shell（用于重定向输出）
-					//Arguments = $"\"{outputDirFullPath}\"",				//Config编译后的代码的输出目录，传入bat
+					FileName = batFilePath,			// 批处理文件名
+					WorkingDirectory = batDir,		//工作目录
+					CreateNoWindow = true,			// 不创建新窗口（后台运行）
+					UseShellExecute = false,		// 不使用系统Shell（用于重定向输出）
 
 					// 重定向输入/输出
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
 				};
+
+				string relativeCodeOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.CodeOutputDir));
+				string relativeBinOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.BinOutputDir));
+				string relativeJsonOutputDir = Path.GetRelativePath(Path.GetFullPath(batDir), Path.GetFullPath(setting.JsonOutputDir));
+				processInfo.ArgumentList.Add(relativeCodeOutputDir);
+				processInfo.ArgumentList.Add(relativeBinOutputDir);
+				processInfo.ArgumentList.Add(relativeJsonOutputDir);
 
 				using (Process process = new Process())
 				{
