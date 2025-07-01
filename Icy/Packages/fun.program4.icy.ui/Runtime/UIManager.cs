@@ -388,7 +388,7 @@ namespace Icy.UI
 
 			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
 			eventParam.Value = uiData.Type;
-			EventManager.Trigger(EventDefine.UIHided, eventParam);
+			EventManager.Trigger(EventDefine.UIHid, eventParam);
 		}
 
 		internal void ShowPrev(UIBase ui)

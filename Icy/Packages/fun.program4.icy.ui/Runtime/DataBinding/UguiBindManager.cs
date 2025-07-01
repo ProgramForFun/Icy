@@ -31,7 +31,7 @@ namespace Icy.UI
 		{
 			base.OnInitialized();
 			_BindDataList = new List<BindData>(DEFAULT_LIST_SIZE);
-			EventManager.AddListener(EventDefine.UIHided, OnUIHided);
+			EventManager.AddListener(EventDefine.UIHid, OnUIHid);
 		}
 
 		/// <summary>
@@ -124,7 +124,7 @@ namespace Icy.UI
 		/// <summary>
 		/// UI隐藏时，自动Unbind该UI所属UI组件
 		/// </summary>
-		private void OnUIHided(int eventID, IEventParam param)
+		private void OnUIHid(int eventID, IEventParam param)
 		{
 			if (param is EventParam_Type paramType)
 			{

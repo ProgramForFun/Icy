@@ -64,7 +64,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 一个UI调用Hide隐藏
 		/// </summary>
-		public static readonly int UIHided = -1202;
+		public static readonly int UIHid = -1202;
 		/// <summary>
 		/// 一个UI调用Destroy销毁
 		/// </summary>
