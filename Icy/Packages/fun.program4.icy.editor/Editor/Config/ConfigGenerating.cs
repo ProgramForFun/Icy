@@ -10,6 +10,8 @@ using UnityEditor;
 /// </summary>
 public static class ConfigGenerating
 {
+	private static Process _Process;
+
 	/// <summary>
 	/// 打表
 	/// </summary>
@@ -38,7 +40,7 @@ public static class ConfigGenerating
 				ProcessStartInfo processInfo = new ProcessStartInfo()
 				{
 					FileName = batFilePath,			// 批处理文件名
-					WorkingDirectory = batDir,		//工作目录
+					WorkingDirectory = batDir,		// 工作目录
 					CreateNoWindow = true,			// 不创建新窗口（后台运行）
 					UseShellExecute = false,		// 不使用系统Shell（用于重定向输出）
 
@@ -54,38 +56,26 @@ public static class ConfigGenerating
 				processInfo.ArgumentList.Add(relativeBinOutputDir);
 				processInfo.ArgumentList.Add(relativeJsonOutputDir);
 
-				using (Process process = new Process())
-				{
-					process.StartInfo = processInfo;
+				_Process = new Process();
+				_Process.StartInfo = processInfo;
+				_Process.EnableRaisingEvents = true;
+				_Process.Exited += OnGenerateEnd;
 
-					//注册输出/错误事件处理程序
-					process.OutputDataReceived += OnGenerateConfigLog;
-					process.ErrorDataReceived += OnGenerateConfigError;
+				//注册输出/错误事件处理程序
+				_Process.OutputDataReceived += OnGenerateConfigLog;
+				_Process.ErrorDataReceived += OnGenerateConfigError;
 
-					process.Start();
+				_Process.Start();
 
-					// 如果重定向输出，需要开始异步读取
-					process.BeginOutputReadLine();
-					process.BeginErrorReadLine();
-
-					// 等待批处理执行完成
-					process.WaitForExit();
-
-					int exitCode = process.ExitCode;
-					UnityEngine.Debug.Log("Generate config exit code = " + exitCode);
-					if (exitCode != 0)
-						return;
-
-
-
-
-					AssetDatabase.Refresh();
-				}
+				// 如果重定向输出，需要开始异步读取
+				_Process.BeginOutputReadLine();
+				_Process.BeginErrorReadLine();
 			}
 		}
 		catch(Exception e)
 		{
 			UnityEngine.Debug.LogException(e);
+			_Process.Dispose();
 		}
 	}
 
@@ -99,5 +89,19 @@ public static class ConfigGenerating
 	{
 		if (e != null && e.Data != null)
 			UnityEngine.Debug.LogError(e.Data);
+	}
+
+	private static void OnGenerateEnd(object sender, EventArgs e)
+	{
+		int exitCode = _Process.ExitCode;
+		UnityEngine.Debug.Log("Generate config exit code = " + exitCode);
+
+		EditorApplication.delayCall += () =>
+		{
+			_Process.Dispose();
+		};
+
+		if (exitCode == 0)
+			AssetDatabase.Refresh();
 	}
 }
