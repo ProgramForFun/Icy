@@ -26,6 +26,7 @@ namespace Icy.Protobuf.Editor
 		private const string PROTO_RESET_TEMPLATE_PATH = "Packages/fun.program4.icy.protobuf/Editor/ProtoResetTemplate.txt";
 
 		private static bool _IsProgressBarDisplaying;
+		private static Process _Process;
 
 		static ProtoCompiling()
 		{
@@ -76,51 +77,60 @@ namespace Icy.Protobuf.Editor
 					RedirectStandardError = true,
 				};
 
-				using (Process process = new Process())
-				{
-					process.StartInfo = processInfo;
+				_Process = new Process();
+				_Process.StartInfo = processInfo;
+				_Process.EnableRaisingEvents = true;
+				_Process.Exited += OnProcessExited;
 
-					//注册输出/错误事件处理程序
-					process.OutputDataReceived += OnCompileProtoLog;
-					process.ErrorDataReceived += OnCompileProtoError;
+				//注册输出/错误事件处理程序
+				_Process.OutputDataReceived += OnCompileProtoLog;
+				_Process.ErrorDataReceived += OnCompileProtoError;
 
-					process.Start();
+				_Process.Start();
 
-					// 如果重定向输出，需要开始异步读取
-					process.BeginOutputReadLine();
-					process.BeginErrorReadLine();
-
-					// 等待批处理执行完成
-					process.WaitForExit();
-
-					int exitCode = process.ExitCode;
-					UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
-					if (exitCode != 0)
-					{
-						Clear();
-						return;
-					}
-
-					EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
-					EditorLocalPrefs.Save();
-
-					//先写一个空的进去占位，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
-					string resetCodeTemplate = File.ReadAllText(PROTO_RESET_TEMPLATE_PATH);
-					resetCodeTemplate = string.Format(resetCodeTemplate, "", "");
-					WriteCodeFile(resetCodeTemplate, "ResetMethodExtension.cs");
-
-					string msgIDRegistryCodeTemplate = File.ReadAllText(PROTO_MSG_ID_REGISTRY_TEMPLATE_PATH);
-					msgIDRegistryCodeTemplate = string.Format(msgIDRegistryCodeTemplate, "", "");
-					WriteCodeFile(msgIDRegistryCodeTemplate, "ProtoMsgIDRegistry.cs");
-
-					AssetDatabase.Refresh();
-				}
+				// 如果重定向输出，需要开始异步读取
+				_Process.BeginOutputReadLine();
+				_Process.BeginErrorReadLine();
 			}
 			catch (Exception e)
 			{
 				UnityEngine.Debug.LogException(e);
 				Clear();
+				_Process.Dispose();
 			}
+		}
+
+		private static void OnProcessExited(object sender, EventArgs e)
+		{
+			int exitCode = _Process.ExitCode;
+			UnityEngine.Debug.Log("Compile proto exit code = " + exitCode);
+
+			EditorApplication.delayCall += () =>
+			{
+				_Process.Dispose();
+			};
+
+			if (exitCode == 0)
+			{
+				EditorLocalPrefs.SetBool(GENERATING_PROTO_KEY, true);
+				EditorLocalPrefs.Save();
+
+				//先写一个空的进去占位，避免proto中有删除操作时，旧的Reset扩展代码里还没删掉的对应字段导致报错
+				string resetCodeTemplate = File.ReadAllText(PROTO_RESET_TEMPLATE_PATH);
+				resetCodeTemplate = string.Format(resetCodeTemplate, "", "");
+				WriteCodeFile(resetCodeTemplate, "ResetMethodExtension.cs");
+
+				string msgIDRegistryCodeTemplate = File.ReadAllText(PROTO_MSG_ID_REGISTRY_TEMPLATE_PATH);
+				msgIDRegistryCodeTemplate = string.Format(msgIDRegistryCodeTemplate, "", "");
+				WriteCodeFile(msgIDRegistryCodeTemplate, "ProtoMsgIDRegistry.cs");
+
+				EditorApplication.delayCall += () =>
+				{
+					AssetDatabase.Refresh();
+				};
+			}
+			else
+				Clear();
 		}
 
 		private static void OnAllAssemblyReload()
