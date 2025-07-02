@@ -54,6 +54,7 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 |UI-模糊|待开始|
 |UI-UI状态记录组件|待开始|
 |UI-集成Super ScrollView|✔️|
+|UI-集成UIEffect|✔️|
 |UI-集成UIParticle|✔️|
 |UI-集成3DObjectImageForUGUI|✔️|
 |UI-易于UI/UX/策划使用的缓动动画系统|待开始|
