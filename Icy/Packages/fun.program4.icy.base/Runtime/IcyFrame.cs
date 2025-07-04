@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 
 namespace Icy.Base
@@ -10,12 +11,20 @@ namespace Icy.Base
 	/// </summary>
 	public sealed class IcyFrame : PersistentMonoSingleton<IcyFrame>
 	{
+		/// <summary>
+		/// 主线程ID
+		/// </summary>
+		public int MainThreadID { get; private set; }
+
 		private List<IUpdateable> _Updateables = new List<IUpdateable>();
 		private List<IFixedUpdateable> _FixedUpdateables = new List<IFixedUpdateable>();
 		private List<ILateUpdateable> _LateUpdateables = new List<ILateUpdateable>();
 
+
 		public void Init()
 		{
+			MainThreadID = Thread.CurrentThread.ManagedThreadId;
+
 			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
@@ -32,6 +41,14 @@ namespace Icy.Base
 					method?.Invoke(null, null);
 				}
 			}
+		}
+
+		/// <summary>
+		/// 当前是否是主线程？
+		/// </summary>
+		public bool IsMainThread()
+		{
+			return Thread.CurrentThread.ManagedThreadId == MainThreadID;
 		}
 
 		#region Update
