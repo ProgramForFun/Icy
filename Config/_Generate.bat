@@ -1,4 +1,11 @@
 chcp  65001
+@echo off
+
+IF "%~1"=="" (
+	echo 不能直接调用，请通过Unity菜单Icy/Generate Config来生成
+	pause
+	exit /b 1
+)
 
 set WORKSPACE=.
 set LUBAN_DLL=%WORKSPACE%\Luban\Luban.dll
