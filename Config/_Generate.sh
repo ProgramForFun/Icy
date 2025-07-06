@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]; then
+  echo "不能直接调用，请通过Unity菜单Icy/Generate Config来生成"
+  exit 1
+fi
+
 WORKSPACE=.
 LUBAN_DLL=$WORKSPACE/Luban/Luban.dll
 CONF_ROOT=.
