@@ -20,7 +20,7 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 &nbsp;
 
 ## Roadmap
-|目标|描述|状态|
+|目标|描述|完成状态|
 |---|---|:---:|
 |集成[YooAsset](https://github.com/tuyoogame/YooAsset)|AssetBundle资源管理|✔️|
 |集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
