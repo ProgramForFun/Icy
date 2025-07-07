@@ -22,13 +22,13 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 ## Roadmap
 |目标|描述|状态|
 |---|---|:---:|
-|集成[YooAsset🔗](https://github.com/tuyoogame/YooAsset)|AssetBundle资源管理|✔️|
-|集成[Luban🔗](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
+|集成[YooAsset](https://github.com/tuyoogame/YooAsset)|AssetBundle资源管理|✔️|
+|集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
 |集成SRDebugger||✔️|
-|集成[Protobuf🔗](https://github.com/protocolbuffers/protobuf)|高效二进制序列化|✔️|
-|集成[UniTask🔗](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
-|集成[Obfuz🔗](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
-|集成[HybridCLR🔗](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
+|集成[Protobuf](https://github.com/protocolbuffers/protobuf)|高效二进制序列化|✔️|
+|集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
+|集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
+|集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
 |Base-事件系统||✔️|
 |Base-FSM||✔️|
 |Base-基于FSM的Procedure||✔️|
@@ -64,7 +64,7 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 |Editor-显示当前Git分支|在Editor左上角显示当前Git分支，<br>便于多工程管理|✔️|
 |Editor-Quick Play|不重新Reload Domain，快速进入Play|✔️|
 |Editor-集成Odin||✔️|
-|Editor-集成[ReferenceFinder🔗](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
+|Editor-集成[ReferenceFinder](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
 |Editor-资源托盘|暂存任意工程内文件，便于快速定位|✔️|
 |Editor-C#热重载||待开始|
 
