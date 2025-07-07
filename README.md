@@ -35,7 +35,7 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 |Base-Log||✔️|
 |Base-Timer||✔️|
 |Base-Pool||✔️|
-|Base-集成[LocalPreferences🔗](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
+|Base-集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
 |Asset-AssetManager|基于YooAsset的运行时资源管理器|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
