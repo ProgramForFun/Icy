@@ -98,8 +98,11 @@ namespace Icy.Base
 		{
 			MinLogLevel = LogLevel.Info;
 			_OverrideTagLogLevel.Clear();
-			_ColorOnce = null;
 			_ForceOnce = false;
+
+#if UNITY_EDITOR
+			_ColorOnce = null;
+#endif
 		}
 
 		public static void LogInfo(string msg, string tag = null)
