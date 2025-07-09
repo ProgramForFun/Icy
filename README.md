@@ -6,11 +6,19 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 ![](https://img.shields.io/github/last-commit/ProgramForFun/Icy)
 &nbsp;
 
-## 安装
+## 快速开始
 
-#### 以下两种方式任选其一：
-* 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
-* 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
+1. 安装Framework：
+   * 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
+   * 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
+2. 安装以下付费插件：
+
+|插件名称|版本号需求|插件安装后移动到此目录|
+|---|---|---|
+|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
+
+Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许可协议不能直接提供，  
+所以请您按照上面的表格自行购买并安装
 
 &nbsp;
 
