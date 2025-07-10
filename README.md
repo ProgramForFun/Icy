@@ -1,5 +1,5 @@
 # Icy
-Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具；
+Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
 HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + Super ScrollView + UIParticle + UIEffect + 3D Object Image for UGUI
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
