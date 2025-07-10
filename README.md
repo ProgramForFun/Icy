@@ -1,5 +1,6 @@
 # Icy
-Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具
+Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具；
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + Super ScrollView + UIParticle + UIEffect + 3D Object Image for UGUI
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
@@ -50,7 +51,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许�
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
 |Network-HTTP||✔️|
 |Network-TCP||✔️|
-|Network-KCP (ReliableUDP)||✔️|
+|Network-KCP (Reliable UDP)||✔️|
 |UI-基础结构||✔️|
 |UI-资源管理|基于YooAsset的UI Prefab、图集、Sprite管理|✔️|
 |UI-数据绑定||✔️|
@@ -64,7 +65,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许�
 |UI-集成Super ScrollView||✔️|
 |UI-集成[UIEffect](https://github.com/mob-sakai/UIEffect)|各种常用UI效果合集|✔️|
 |UI-集成[UIParticle](https://github.com/mob-sakai/ParticleEffectForUGUI)|在UGUI上渲染粒子的工具|✔️|
-|UI-集成3DObjectImageForUGUI||✔️|
+|UI-集成3D Object Image For UGUI||✔️|
 |UI-易于使用的缓动动画系统|便于UI/UX/直接使用缓动动画制作效果、<br>并序列化进Prefab，以避免使用<br>Animation/Animator、解放程序员|待开始|
 |UI-新手引导||待开始|
 |Gameplay-基础数值系统||待开始|
