@@ -195,10 +195,7 @@ namespace Icy.UI
 #else
 	public sealed class UICodeGenerator : MonoBehaviour
 	{
-		private void Awake()
-		{
-			Destroy(this);
-		}
+
 	}
 #endif
 }
