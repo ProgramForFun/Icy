@@ -8,17 +8,18 @@ Icy Unity Framework，提供商业项目必备的各种基础设施，集成业�
 
 ## 快速开始
 
-1. 安装Framework：
+1. **安装Framework**：
    * 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
    * 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
-2. 安装以下付费插件：
+2. **安装以下付费插件**：
 
-|插件名称|版本号需求|插件安装后移动到此目录|
-|---|---|---|
-|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
+|插件名称|描述|版本号需求|插件安装后移动到此目录|
+|---|---|---|---|
+|[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|3.3.1.11+|Icy/Assets/Plugins/Sirenix|
+|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
 
 Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许可协议不能直接提供，  
-所以请您按照上面的表格自行购买并安装
+请您按照上面提供的官方链接和版本号自行购买并导入
 
 &nbsp;
 
@@ -32,7 +33,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许�
 |---|---|:---:|
 |集成[YooAsset](https://github.com/tuyoogame/YooAsset)|AssetBundle资源管理|✔️|
 |集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
-|集成SRDebugger||✔️|
+|集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
 |集成[Protobuf](https://github.com/protocolbuffers/protobuf)|高效二进制序列化|✔️|
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
@@ -71,7 +72,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许�
 |Gameplay-换装系统||待开始|
 |Editor-显示当前Git分支|在Editor左上角显示当前Git分支，<br>便于多工程管理|✔️|
 |Editor-Quick Play|不重新Reload Domain，快速进入Play|✔️|
-|Editor-集成Odin||✔️|
+|Editor-集成[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|✔️|
 |Editor-集成[ReferenceFinder](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
 |Editor-资源托盘|暂存任意工程内文件，便于快速定位|✔️|
 |Editor-C#热重载||待开始|
