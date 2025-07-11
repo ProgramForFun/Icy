@@ -47,24 +47,24 @@ public class ExampleRoot : MonoBehaviour
 
 		//=================开始业务逻辑=================
 
-		//显示UI
-		UILogin uiLogin = null;
-		//回调风格加载
-		UIManager.Instance.Get<UILogin>((UIBase ui) =>
-		{
-			uiLogin = ui as UILogin;
-			uiLogin.Show();
-			Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
-		});
+		////显示UI
+		//UILogin uiLogin = null;
+		////回调风格加载
+		//UIManager.Instance.Get<UILogin>((UIBase ui) =>
+		//{
+		//	uiLogin = ui as UILogin;
+		//	uiLogin.Show();
+		//	Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
+		//});
 
 
-		await UniTask.WaitForSeconds(1);
+		//await UniTask.WaitForSeconds(1);
 		//uiLogin.Hide();
 		//uiLogin.Destroy();
 
 		//UniTask风格加载
-		//UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
-		//uiExample.Show();
+		UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
+		uiExample.Show();
 
 		//await UniTask.WaitForSeconds(1);
 
