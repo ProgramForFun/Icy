@@ -74,6 +74,9 @@ namespace Icy.Asset.Editor
 
 			if (_Setting != null)
 			{
+				//Asset Bundle的打包窗口里，BuildAssetBundle选项不能被取消才合理
+				_Setting.BuildAssetBundle = true;
+
 				AssetBundleOptions = 0;
 				if (_Setting.BuildAssetBundle)
 					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
@@ -88,7 +91,10 @@ namespace Icy.Asset.Editor
 
 		protected virtual void SaveSetting()
 		{
-			_Setting.BuildAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.BuildAssetBundle) == BuildOptionAssetBundle.BuildAssetBundle;
+			//Asset Bundle的打包窗口里，BuildAssetBundle选项不能被取消才合理
+			AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
+
+			_Setting.BuildAssetBundle = true;
 			_Setting.ClearAssetBundleCache = (AssetBundleOptions & BuildOptionAssetBundle.ClearAssetBundleCache) == BuildOptionAssetBundle.ClearAssetBundleCache;
 			_Setting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
 
