@@ -269,6 +269,16 @@ namespace Icy.Base
 			return false;
 		}
 
+#if UNITY_EDITOR
+		/// <summary>
+		/// Unity Editor是否有编译错误
+		/// </summary>
+		public static bool HasCompileErrors()
+		{
+			return UnityEditor.EditorUtility.scriptCompilationFailed;
+		}
+#endif
+
 		#region Vector
 		/// <summary>
 		/// 在一个Rect范围内随机一个点
