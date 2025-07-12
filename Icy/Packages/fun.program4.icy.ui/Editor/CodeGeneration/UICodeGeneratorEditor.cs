@@ -11,7 +11,6 @@ namespace Icy.UI.Editor
 	/// <summary>
 	/// UI代码生成器的逻辑部分，Editor UI部分见UICodeGenerator类
 	/// </summary>
-	[InitializeOnLoad]
 	public class UICodeGeneratorEditor
 	{
 		private const string GENERATING_UI_NAME_KEY = "_Icy_GeneratingUIName";
@@ -22,7 +21,8 @@ namespace Icy.UI.Editor
 		private static string _UIRootDir;
 
 
-		static UICodeGeneratorEditor()
+		[InitializeOnLoadMethod]
+		static void Init()
 		{
 			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
 			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
