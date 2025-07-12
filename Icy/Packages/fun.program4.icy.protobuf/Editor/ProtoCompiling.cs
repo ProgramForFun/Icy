@@ -17,7 +17,6 @@ namespace Icy.Protobuf.Editor
 	/// <summary>
 	/// 编译Protobuf
 	/// </summary>
-	[InitializeOnLoad]
 	public static class ProtoCompiling
 	{
 		private const string GENERATING_PROTO_KEY = "_Icy_GeneratingProto";
@@ -29,7 +28,8 @@ namespace Icy.Protobuf.Editor
 		private static bool _IsProgressBarDisplaying;
 		private static Process _Process;
 
-		static ProtoCompiling()
+		[InitializeOnLoadMethod]
+		static void Init()
 		{
 			_IsProgressBarDisplaying = false;
 

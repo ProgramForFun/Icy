@@ -7,10 +7,10 @@ namespace Icy.Editor
 	/// <summary>
 	/// 在Play按钮那一行的最左侧，显示Git分支名，方便区分分支
 	/// </summary>
-	[InitializeOnLoad]
 	public class ProjectPathViewer
 	{
-		static ProjectPathViewer()
+		[InitializeOnLoadMethod]
+		static void Init()
 		{
 			ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
 		}

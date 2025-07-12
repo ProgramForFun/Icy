@@ -7,14 +7,14 @@ namespace Icy.Editor
 	/// <summary>
 	/// 在原生Play按钮右侧，添加快速Play、RePlay按钮，加快迭代速度
 	/// </summary>
-	[InitializeOnLoad]
 	public class QuickPlayViewer
 	{
 		private static Texture _QuickPlayIcon;
 		private static Texture _RePlayIcon;
 		private static bool _IsRequestingRePlay;
 
-		static QuickPlayViewer()
+		[InitializeOnLoadMethod]
+		static void Init()
 		{
 			ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
 			EditorApplication.playModeStateChanged += ClearPlayMode;
