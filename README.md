@@ -1,10 +1,14 @@
 # Icy
-Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
+Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
 HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + UIParticle + UIEffect + ZString
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
 ![](https://img.shields.io/github/last-commit/ProgramForFun/Icy)
+&nbsp;
+
+[![](https://github-readme-activity-graph.vercel.app/graph?username=ProgramForFun&repo=Icy&theme=github-light&area=true)](https://github.com/ProgramForFun/Icy)
+
 &nbsp;
 
 ## 快速开始
@@ -19,7 +23,7 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebug
 |[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|3.3.1.11+|Icy/Assets/Plugins/Sirenix|
 |[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
 
-Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许可协议不能直接提供，  
+Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许可协议不能直接提供，  
 请您按照上面提供的官方链接和版本号自行购买并导入
 
 &nbsp;
