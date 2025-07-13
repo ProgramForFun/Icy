@@ -21,6 +21,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using Cysharp.Text;
 
 namespace Icy.Base
 {
@@ -202,9 +203,9 @@ namespace Icy.Base
 			string now = DateTime.Now.ToString("HH:mm:ss.fff");
 			string logFormatted;
 			if (tag != null)
-				logFormatted = string.Format("{0} : [{1}] {2}", now, tag, msg);
+				logFormatted = ZString.Format("{0} : [{1}] {2}", now, tag, msg);
 			else
-				logFormatted = string.Format("{0} : {1}", now, msg);
+				logFormatted = ZString.Format("{0} : {1}", now, msg);
 
 #if UNITY_EDITOR
 			//颜色
@@ -214,7 +215,7 @@ namespace Icy.Base
 			{
 				string color = _ColorOnce;
 				_ColorOnce = null;
-				return string.Format("<color=#{0}>{1}</color>", color, logFormatted);
+				return ZString.Format("<color=#{0}>{1}</color>", color, logFormatted);
 			}
 #else
 			return logFormatted;
@@ -241,7 +242,7 @@ namespace Icy.Base
 					File.Delete(allFiles[i]);
 			}
 
-			string newFilePath = string.Format("{0}{1}.txt", LOG_ROOT_DIR, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+			string newFilePath = ZString.Format("{0}{1}.txt", LOG_ROOT_DIR, DateTime.Now.ToString("yyyyMMdd_HHmmss"));
 			File.Create(newFilePath).Dispose();
 			return newFilePath;
 		}
