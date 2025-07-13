@@ -17,6 +17,7 @@ namespace Icy.Asset.Editor
 		private BuildSetting _BuildSetting;
 		private static string _BuildPackage;
 		private static string _BuildOutputPath;
+		private static ScriptableBuildParameters _BuildParam;
 
 		public override async UniTask Activate()
 		{
@@ -31,6 +32,7 @@ namespace Icy.Asset.Editor
 				{
 					await UniTask.Yield();
 					OwnerProcedure.Blackboard.WriteString("BuildOutputPath", _BuildOutputPath);
+					OwnerProcedure.Blackboard.WriteObject("BuildParam", _BuildParam);
 					Finish();
 				}
 				else
@@ -64,7 +66,7 @@ namespace Icy.Asset.Editor
 			buildParameters.VerifyBuildingResult = true;
 			buildParameters.EnableSharePackRule = true; //启用共享资源构建模式，兼容1.5x版本
 			buildParameters.FileNameStyle = EFileNameStyle.HashName;
-			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.None;
+			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.ClearAndCopyAll;
 			buildParameters.BuildinFileCopyParams = string.Empty;
 			buildParameters.CompressOption = ECompressOption.LZ4;
 			buildParameters.BuiltinShadersBundleName = GetBuiltInShaderBundleName();
@@ -72,6 +74,8 @@ namespace Icy.Asset.Editor
 			buildParameters.UseAssetDependencyDB = useAssetDependencyDB; //使用资源依赖关系数据库，可以提高打包速度！
 			if (encrypt)
 				buildParameters.EncryptionServices = new EncryptionOffset();//如果要加密，开启这里，需要提供一个加密的Service
+
+			_BuildParam = buildParameters;
 
 			// 执行构建
 			ScriptableBuildPipeline pipeline = new ScriptableBuildPipeline();
