@@ -240,6 +240,36 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// Copy指定扩展名的文件，到指定目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="targetDir">复制到的目标目录</param>
+		/// <param name="extensionWithDotPrefix">带“点”的扩展名，比如".txt"</param>
+		/// <param name="overwrite">是否允许覆盖同名文件</param>
+		public static void CopyFilesByExtension(string sourceDir, string targetDir, string extensionWithDotPrefix, bool overwrite = true)
+		{
+			if (!Directory.Exists(sourceDir))
+			{
+				Log.LogError(sourceDir + " does not exist", "CopyFilesByNameList");
+				return;
+			}
+
+			Directory.CreateDirectory(targetDir);
+
+			string[] allFiles = Directory.GetFiles(sourceDir);
+			for (int i = 0; i < allFiles.Length; i++)
+			{
+				string filePath = allFiles[i];
+				string fileExtension = Path.GetExtension(filePath);
+				if (fileExtension == extensionWithDotPrefix)
+				{
+					string destPath = Path.Combine(targetDir, Path.GetFileName(filePath));
+					File.Copy(filePath, destPath, overwrite);
+				}
+			}
+		}
+
+		/// <summary>
 		/// 逐byte异或一个byte数组
 		/// </summary>
 		/// <param name="array">要异或的byte数组</param>
