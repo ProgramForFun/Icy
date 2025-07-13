@@ -26,6 +26,13 @@
       },
       "url": "https://package.openupm.com"
     },
+    "com.cysharp.zstring": {
+      "version": "https://github.com/Cysharp/ZString.git?path=src/ZString.Unity/Assets/Scripts/ZString",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "5fefbaa7df300643e53954cf07a73b3299665883"
+    },
     "com.marijnzwemmer.unity-toolbar-extender": {
       "version": "file:unity-toolbar-extender-1.4.3",
       "depth": 0,
