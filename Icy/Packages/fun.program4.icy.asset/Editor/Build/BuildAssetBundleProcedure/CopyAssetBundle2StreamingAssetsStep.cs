@@ -23,7 +23,7 @@ namespace Icy.Asset.Editor
 			await UniTask.CompletedTask;
 		}
 
-		private static void ClearStreamingAssetsAndCopyNew(string buildPackage, string outputPath, ScriptableBuildParameters buildParam)
+		private void ClearStreamingAssetsAndCopyNew(string buildPackage, string outputPath, ScriptableBuildParameters buildParam)
 		{
 			string assetDir = Path.Combine(Application.streamingAssetsPath, "yoo", buildPackage);
 			if (Directory.Exists(assetDir))
@@ -31,6 +31,7 @@ namespace Icy.Asset.Editor
 			CommonUtility.CopyDir(outputPath, assetDir);
 
 			//Copy BuildInCatalog
+			buildParam.BuildinFileCopyOption = EBuildinFileCopyOption.ClearAndCopyAll; //改为非None，才能Copy
 			BuildContext buildContext = new BuildContext();
 			BuildParametersContext buildParametersContext = new BuildParametersContext(buildParam);
 			buildContext.SetContextObject(buildParametersContext);

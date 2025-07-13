@@ -66,7 +66,7 @@ namespace Icy.Asset.Editor
 			buildParameters.VerifyBuildingResult = true;
 			buildParameters.EnableSharePackRule = true; //启用共享资源构建模式，兼容1.5x版本
 			buildParameters.FileNameStyle = EFileNameStyle.HashName;
-			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.ClearAndCopyAll;
+			buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.None;
 			buildParameters.BuildinFileCopyParams = string.Empty;
 			buildParameters.CompressOption = ECompressOption.LZ4;
 			buildParameters.BuiltinShadersBundleName = GetBuiltInShaderBundleName();
