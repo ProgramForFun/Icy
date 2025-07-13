@@ -1,6 +1,6 @@
 # Icy
 Icy Unity Framework，提供商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
-HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + UIParticle + UIEffect
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + UIParticle + UIEffect + ZString
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
@@ -39,13 +39,14 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违法许�
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
+|集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder|✔️|
+|集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
 |Base-FSM|有限状态机|✔️|
 |Base-基于FSM的Procedure|基于FSM的顺序执行的流程|✔️|
 |Base-Log||✔️|
 |Base-Timer||✔️|
 |Base-Pool||✔️|
-|Base-集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
 |Asset-AssetManager|基于YooAsset的运行时资源管理器|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
