@@ -31,6 +31,7 @@ namespace Icy.UI.Editor
 	public class UICodeGeneratorEditor
 	{
 		private const string GENERATING_UI_NAME_KEY = "_Icy_GeneratingUIName";
+		private const string GENERATING_UI_LOGIC_NAME_KEY = "_Icy_GeneratingUILogicName";
 
 		private const string UI_CODE_TEMPLATE_PATH = "Packages/fun.program4.icy.ui/Editor/CodeGeneration/UICodeTemplate.txt";
 		private const string UI_LOGIC_CODE_TEMPLATE_PATH = "Packages/fun.program4.icy.ui/Editor/CodeGeneration/UILogicCodeTemplate.txt";
@@ -60,11 +61,26 @@ namespace Icy.UI.Editor
 				//只有非play、编辑Prefab状态下，才执行生成代码
 				PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
 				if (!EditorApplication.isPlaying && stage != null)
+				{
 					CopySerializeField("UI" + generatingUIName);
+					EditorUtility.DisplayDialog("Generate UI Code", "生成UI代码完成", "OK");
+				}
 
 				EditorApplication.delayCall += () =>
 				{
 					EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
+					EditorLocalPrefs.Save();
+				};
+			}
+
+			string generatingLogicUIName = EditorLocalPrefs.GetString(GENERATING_UI_LOGIC_NAME_KEY, "");
+			if (!string.IsNullOrEmpty(generatingLogicUIName))
+			{
+				EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码完成", "OK");
+
+				EditorApplication.delayCall += () =>
+				{
+					EditorLocalPrefs.RemoveKey(GENERATING_UI_LOGIC_NAME_KEY);
 					EditorLocalPrefs.Save();
 				};
 			}
@@ -76,12 +92,12 @@ namespace Icy.UI.Editor
 			{
 				UICodeGenerator generator = paramGenerator.Value;
 				bool isLogicFileExist = IsLogicFileExist(generator.UIName);
-				bool generated = DoGenerateUICode(generator, isLogicFileExist);
-				AssetDatabase.Refresh();
+
 				EditorLocalPrefs.SetString(GENERATING_UI_NAME_KEY, generator.UIName);
 				EditorLocalPrefs.Save();
-				if (generated)
-					EditorUtility.DisplayDialog("Generate UI Code", "生成UI代码完成", "OK");
+
+				DoGenerateUICode(generator, isLogicFileExist);
+				AssetDatabase.Refresh();
 			}
 		}
 		private static bool DoGenerateUICode(UICodeGenerator generator, bool withLogic)
@@ -172,9 +188,15 @@ namespace Icy.UI.Editor
 			if (param is EventParam_String paramString)
 			{
 				bool generated = DoGenerateUILogicCode(paramString.Value);
-				AssetDatabase.Refresh();
 				if (generated)
-					EditorUtility.DisplayDialog("Generate Logic Code", "生成UI Logic代码完成", "OK");
+				{
+					EditorLocalPrefs.SetString(GENERATING_UI_LOGIC_NAME_KEY, paramString.Value);
+					EditorLocalPrefs.Save();
+				}
+				else
+					EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK");
+
+				AssetDatabase.Refresh();
 			}
 		}
 		private static bool DoGenerateUILogicCode(string uiName)
@@ -182,7 +204,6 @@ namespace Icy.UI.Editor
 			string filePath = CheckGenerateCondition(uiName, "Logic");
 			if (filePath != null)
 			{
-				//EditorUtility.DisplayProgressBar("UI", "Generating UI Logic code...", 0.5f);
 				string template = File.ReadAllText(UI_LOGIC_CODE_TEMPLATE_PATH);
 				string code = string.Format(template, uiName);
 				File.WriteAllText(filePath, code);
@@ -195,18 +216,21 @@ namespace Icy.UI.Editor
 		{
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
-				bool generatedLogic = DoGenerateUILogicCode(paramGenerator.Value.UIName);
-				bool generatedUI = DoGenerateUICode(paramGenerator.Value, true);
-				AssetDatabase.Refresh();
 				EditorLocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
 				EditorLocalPrefs.Save();
 
-				if (generatedLogic && generatedUI)
-					EditorUtility.DisplayDialog("Generate Both", "生成UI 和 UI Logic代码完成", "OK");
-				else if (generatedUI && !generatedLogic)
-					EditorUtility.DisplayDialog("Generate Both", "生成UI代码完成，Logic代码未生成", "OK");
-				else if (generatedLogic && !generatedUI)
-					EditorUtility.DisplayDialog("Generate Both", "生成UI Logic代码完成，UI代码未生成", "OK");
+				bool generatedLogic = DoGenerateUILogicCode(paramGenerator.Value.UIName);
+				DoGenerateUICode(paramGenerator.Value, true);
+
+				if (generatedLogic)
+				{
+					EditorLocalPrefs.SetString(GENERATING_UI_LOGIC_NAME_KEY, paramGenerator.Value.UIName);
+					EditorLocalPrefs.Save();
+				}
+				else
+					EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK");
+
+				AssetDatabase.Refresh();
 			}
 		}
 
