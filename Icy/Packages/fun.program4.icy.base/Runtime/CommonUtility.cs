@@ -1,3 +1,20 @@
+/*
+ * Copyright 2025 @ProgramForFun. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
@@ -177,36 +194,96 @@ namespace Icy.Base
 		/// <summary>
 		/// 复制目录
 		/// </summary>
-		/// <param name="sourceDirPath">要复制的目录</param>
-		/// <param name="destDirPath">复制到的目标目录</param>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="destDir">复制到的目标目录</param>
 		/// <param name="copySubDirs">是否复制子文件夹</param>
-		public static bool CopyDir(string sourceDirPath, string destDirPath, bool copySubDirs = true)
+		public static bool CopyDir(string sourceDir, string destDir, bool copySubDirs = true)
 		{
-			DirectoryInfo sourceDir = new DirectoryInfo(sourceDirPath);
+			DirectoryInfo source = new DirectoryInfo(sourceDir);
 
-			if (!sourceDir.Exists)
+			if (!source.Exists)
 			{
-				Log.LogError(sourceDirPath + " does not exist", "CopyDir");
+				Log.LogError(sourceDir + " does not exist", "CopyDir");
 				return false;
 			}
 
-			Directory.CreateDirectory(destDirPath);
+			Directory.CreateDirectory(destDir);
 
-			foreach (FileInfo file in sourceDir.GetFiles())
+			foreach (FileInfo file in source.GetFiles())
 			{
-				string destFilePath = Path.Combine(destDirPath, file.Name);
+				string destFilePath = Path.Combine(destDir, file.Name);
 				file.CopyTo(destFilePath, true); // 覆盖已存在文件
 			}
 
 			if (copySubDirs)
 			{
-				foreach (DirectoryInfo subDir in sourceDir.GetDirectories())
+				foreach (DirectoryInfo subDir in source.GetDirectories())
 				{
-					string destSubDirPath = Path.Combine(destDirPath, subDir.Name);
+					string destSubDirPath = Path.Combine(destDir, subDir.Name);
 					CopyDir(subDir.FullName, destSubDirPath, copySubDirs);
 				}
 			}
 			return true;
+		}
+
+		/// <summary>
+		/// Copy指定文件名的文件，到指定目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="targetDir">复制到的目标目录</param>
+		/// <param name="nameSet">指定的文件名</param>
+		/// <param name="overwrite">是否允许覆盖同名文件</param>
+		public static void CopyFilesByNames(string sourceDir, string targetDir, HashSet<string> nameSet, bool overwrite = true)
+		{
+			if (!Directory.Exists(sourceDir))
+			{
+				Log.LogError(sourceDir + " does not exist", "CopyFilesByNameList");
+				return;
+			}
+
+			Directory.CreateDirectory(targetDir);
+
+			string[] allFiles = Directory.GetFiles(sourceDir);
+			for (int i = 0; i < allFiles.Length; i++)
+			{
+				string filePath = allFiles[i];
+				string fileName = Path.GetFileName(filePath);
+				if (nameSet.Contains(fileName))
+				{
+					string destPath = Path.Combine(targetDir, fileName);
+					File.Copy(filePath, destPath, overwrite);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Copy指定扩展名的文件，到指定目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="targetDir">复制到的目标目录</param>
+		/// <param name="extensionWithDotPrefix">带“点”的扩展名，比如".txt"</param>
+		/// <param name="overwrite">是否允许覆盖同名文件</param>
+		public static void CopyFilesByExtension(string sourceDir, string targetDir, string extensionWithDotPrefix, bool overwrite = true)
+		{
+			if (!Directory.Exists(sourceDir))
+			{
+				Log.LogError(sourceDir + " does not exist", "CopyFilesByNameList");
+				return;
+			}
+
+			Directory.CreateDirectory(targetDir);
+
+			string[] allFiles = Directory.GetFiles(sourceDir);
+			for (int i = 0; i < allFiles.Length; i++)
+			{
+				string filePath = allFiles[i];
+				string fileExtension = Path.GetExtension(filePath);
+				if (fileExtension == extensionWithDotPrefix)
+				{
+					string destPath = Path.Combine(targetDir, Path.GetFileName(filePath));
+					File.Copy(filePath, destPath, overwrite);
+				}
+			}
 		}
 
 		/// <summary>
