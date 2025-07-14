@@ -1,6 +1,6 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
-HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + SRDebugger + UIParticle + UIEffect + ZString
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
@@ -29,7 +29,8 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 &nbsp;
 
 ## 文档
-[How-Tos](https://github.com/ProgramForFun/Icy/wiki/How%E2%80%90tos)
+[How-Tos](https://github.com/ProgramForFun/Icy/wiki/How%E2%80%90tos)  
+（目前在集中推进Roadmap的实现，文档的完善会晚一些）
 
 &nbsp;
 
@@ -41,8 +42,9 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
 |集成[Protobuf](https://github.com/protocolbuffers/protobuf)|高效二进制序列化|✔️|
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
-|集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
+|集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
+|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|待开始|
 |集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder|✔️|
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
