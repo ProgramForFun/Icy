@@ -22,7 +22,7 @@ namespace Icy.Editor
 		{
 			try
 			{
-				EditorUtility.DisplayCancelableProgressBar("Generate Config", "Generating config...", 0.5f);
+				BiProgress.Show("Generate Config", "Generating config...", 0.5f);
 
 				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ConfigSetting.json");
 				if (bytes != null)
@@ -79,7 +79,7 @@ namespace Icy.Editor
 			{
 				UnityEngine.Debug.LogException(e);
 				_Process.Dispose();
-				EditorUtility.ClearProgressBar();
+				BiProgress.Hide();
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace Icy.Editor
 
 			EditorApplication.delayCall += () =>
 			{
-				EditorUtility.ClearProgressBar();
+				BiProgress.Hide();
 				_Process.Dispose();
 			};
 

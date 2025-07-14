@@ -6,6 +6,7 @@ using SimpleJSON;
 using UnityEditor;
 using Google.Protobuf;
 using UnityEngine;
+using Icy.Editor;
 
 namespace Icy.Asset.Editor
 {
@@ -239,12 +240,12 @@ namespace Icy.Asset.Editor
 		protected virtual void OnChangeBuildStep(ProcedureStep step)
 		{
 			string info = $"Current build step : {step.GetType().Name}";
-			EditorUtility.DisplayProgressBar("Build Player", info, step.OwnerProcedure.Progress);
+			BiProgress.Show("Build Player", info, step.OwnerProcedure.Progress);
 		}
 
 		protected virtual void OnBuildPlayerProcedureFinish(bool _)
 		{
-			EditorUtility.ClearProgressBar();
+			BiProgress.Hide();
 		}
 	}
 }

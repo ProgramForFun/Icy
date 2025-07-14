@@ -4,6 +4,7 @@ using UnityEditor;
 using System;
 using System.IO;
 using SimpleJSON;
+using Icy.Editor;
 
 namespace Icy.Asset.Editor
 {
@@ -62,12 +63,12 @@ namespace Icy.Asset.Editor
 		protected static void OnChangeBuildStep(ProcedureStep step)
 		{
 			string info = $"Current build asset bundle step : {step.GetType().Name}";
-			EditorUtility.DisplayProgressBar("Build AssetBundle", info, step.OwnerProcedure.Progress);
+			BiProgress.Show("Build AssetBundle", info, step.OwnerProcedure.Progress);
 		}
 
 		protected static void OnBuildAssetBundleProcedureFinish(bool succeed)
 		{
-			EditorUtility.ClearProgressBar();
+			BiProgress.Hide();
 			_BuildCallback?.Invoke(succeed);
 		}
 

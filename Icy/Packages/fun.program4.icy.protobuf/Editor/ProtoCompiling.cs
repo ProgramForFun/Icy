@@ -46,7 +46,7 @@ namespace Icy.Protobuf.Editor
 		[MenuItem("Icy/Proto/Compile Proto", false)]
 		static void CompileProto()
 		{
-			EditorUtility.DisplayCancelableProgressBar("Compile Proto", "Compiling proto...", 0.5f);
+			BiProgress.Show("Compile Proto", "Compiling proto...", 0.5f);
 			_IsProgressBarDisplaying = true;
 			EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, 2);
 
@@ -149,7 +149,7 @@ namespace Icy.Protobuf.Editor
 					EditorLocalPrefs.RemoveKey(GENERATING_PROTO_KEY);
 					EditorLocalPrefs.Save();
 
-					EditorUtility.DisplayProgressBar("Compile Proto", "Generate Reset Extension...", 0.8f);
+					BiProgress.Show("Compile Proto", "Generate Reset Extension...", 0.8f);
 
 					List<Type> allProtoTypes = GetAllProtoTypes();
 					Dictionary<Type, List<FieldInfo>> allProtoFields = GetAllProtoFields(allProtoTypes);
@@ -376,7 +376,7 @@ namespace Icy.Protobuf.Editor
 
 		private static void Clear()
 		{
-			EditorUtility.ClearProgressBar();
+			BiProgress.Hide();
 			_IsProgressBarDisplaying = false;
 			EditorLocalPrefs.RemoveKey(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES);
 			EditorLocalPrefs.Save();
