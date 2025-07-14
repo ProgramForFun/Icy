@@ -1,6 +1,6 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
-HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocket + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
@@ -56,9 +56,10 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
 |Asset-AssetManager|基于YooAsset的运行时资源管理器|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
-|Network-HTTP||✔️|
-|Network-TCP||✔️|
+|Network-HTTP|基于BestHTTP实现，支持WebGL平台|待开始|
+|Network-TCP|基于.Net TCP实现|✔️|
 |Network-KCP|以速度著称的Reliable UDP|✔️|
+|Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|待开始|
 |UI-基础结构||✔️|
 |UI-资源管理|基于YooAsset的UI Prefab、图集、Sprite管理|✔️|
 |UI-数据绑定||✔️|
