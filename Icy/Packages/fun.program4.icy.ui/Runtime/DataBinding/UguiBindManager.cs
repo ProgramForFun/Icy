@@ -15,10 +15,10 @@
  */
 
 
+using Cysharp.Text;
 using Icy.Base;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -125,7 +125,7 @@ namespace Icy.UI
 		/// </summary>
 		internal string Dump()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			for (int i = 0; i < _BindDataList.Count; i++)
 			{
 				stringBuilder.AppendLine();

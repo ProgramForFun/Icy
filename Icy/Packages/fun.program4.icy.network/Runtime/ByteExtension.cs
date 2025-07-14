@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Text;
 using System.Text;
 
 namespace Icy.Network
@@ -37,7 +38,7 @@ namespace Icy.Network
 		/// </summary>
 		public static string ToHex(this byte[] bytes)
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			for (int i = 0; i < bytes.Length; i++)
 				stringBuilder.Append(bytes[i].ToString("X2"));
 			return stringBuilder.ToString();
@@ -48,7 +49,7 @@ namespace Icy.Network
 		/// </summary>
 		public static string ToHex(this byte[] bytes, string format)
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			for (int i = 0; i < bytes.Length; i++)
 				stringBuilder.Append(bytes[i].ToString(format));
 			return stringBuilder.ToString();
@@ -59,7 +60,7 @@ namespace Icy.Network
 		/// </summary>
 		public static string ToHex(this byte[] bytes, int offset, int count)
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			for (int i = offset; i < offset + count; i++)
 				stringBuilder.Append(bytes[i].ToString("X2"));
 			return stringBuilder.ToString();

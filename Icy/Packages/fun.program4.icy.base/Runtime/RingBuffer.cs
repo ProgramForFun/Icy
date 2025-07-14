@@ -15,8 +15,8 @@
  */
 
 
+using Cysharp.Text;
 using System;
-using System.Text;
 
 namespace Icy.Base
 {
@@ -141,7 +141,7 @@ namespace Icy.Base
 
 		public override string ToString()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			for (int i = 0; i < _RingArray.Length; ++i)
 			{
 				if (i == _HeadIdx)

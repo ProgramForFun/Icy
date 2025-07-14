@@ -15,11 +15,11 @@
  */
 
 
+using Cysharp.Text;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 
 namespace Icy.Base
@@ -183,7 +183,7 @@ namespace Icy.Base
 		/// </summary>
 		public static string Dump()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			foreach (var kvp in _EventListenerMap)
 			{
 				stringBuilder.AppendLine($"EventKey : {kvp.Key} ");

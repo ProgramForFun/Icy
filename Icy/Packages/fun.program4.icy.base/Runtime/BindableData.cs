@@ -15,10 +15,10 @@
  */
 
 
+using Cysharp.Text;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace Icy.Base
 {
@@ -139,7 +139,7 @@ namespace Icy.Base
 		/// </summary>
 		public string Dump()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
 			stringBuilder.AppendLine($"BindableData<{typeof(T).Name}> HashCode = {GetHashCode()}");
 			stringBuilder.AppendLine($"Listeners count = {_Listeners.Count}");
 			foreach (Action<T> l in _Listeners)

@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Text;
 using Icy.Base;
 using Icy.Editor;
 using System;
@@ -264,8 +265,8 @@ namespace Icy.Protobuf.Editor
 		/// </summary>
 		private static void GenerateResetMethodExtension(Dictionary<Type, List<FieldInfo>> protoDict, List<Type> allProtoTypes)
 		{
-			StringBuilder iMessageBuilder = new StringBuilder(10240);
-			StringBuilder resetPerProtoBuilder = new StringBuilder(10240);
+			Utf16ValueStringBuilder iMessageBuilder = ZString.CreateStringBuilder();
+			Utf16ValueStringBuilder resetPerProtoBuilder = ZString.CreateStringBuilder();
 			string curNamespace = string.Empty;
 			Type iMsgType = typeof(pb::IMessage);
 			Type repeatedType = typeof(pb.Collections.RepeatedField<>);
