@@ -18,10 +18,10 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
    * 方式二：拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
 2. **安装以下付费插件**：
 
-|插件名称|描述|版本号需求|插件安装后移动到此目录|
-|---|---|---|---|
-|[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|3.3.1.11+|Icy/Assets/Plugins/Sirenix|
-|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
+|插件名称|描述|Optionality|版本号需求|插件安装后移动到此目录|
+|---|---|---|---|---|
+|[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|必选|3.3.1.11+|Icy/Assets/Plugins/Sirenix|
+|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|可选，如不需要可移除fun.program4.icy.gm目录|1.11.0+|Icy/Packages/fun.program4.icy.gm/StompyRobot|
 
 Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许可协议不能直接提供，  
 请您按照上面提供的官方链接和版本号自行购买并导入
