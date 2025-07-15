@@ -16,6 +16,7 @@
 
 
 using Icy.Base;
+using Icy.Editor;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,6 +65,7 @@ namespace Icy.UI.Editor
 				{
 					CopySerializeField("UI" + generatingUIName);
 					EditorUtility.DisplayDialog("Generate UI Code", "生成UI代码完成", "OK");
+					BiProgress.Hide();
 				}
 
 				EditorApplication.delayCall += () =>
@@ -77,6 +79,7 @@ namespace Icy.UI.Editor
 			if (!string.IsNullOrEmpty(generatingLogicUIName))
 			{
 				EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码完成", "OK");
+				BiProgress.Hide();
 
 				EditorApplication.delayCall += () =>
 				{
@@ -90,6 +93,8 @@ namespace Icy.UI.Editor
 		{
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
+				BiProgress.Show("Generate UI Code", "Generating UI Code", 0.5f);
+
 				UICodeGenerator generator = paramGenerator.Value;
 				bool isLogicFileExist = IsLogicFileExist(generator.UIName);
 
@@ -187,6 +192,8 @@ namespace Icy.UI.Editor
 		{
 			if (param is EventParam_String paramString)
 			{
+				BiProgress.Show("Generate UI Code", "Generating UI Logic Code", 0.5f);
+
 				bool generated = DoGenerateUILogicCode(paramString.Value);
 				if (generated)
 				{
@@ -194,7 +201,10 @@ namespace Icy.UI.Editor
 					EditorLocalPrefs.Save();
 				}
 				else
+				{
 					EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK");
+					BiProgress.Hide();
+				}
 
 				AssetDatabase.Refresh();
 			}
@@ -216,6 +226,8 @@ namespace Icy.UI.Editor
 		{
 			if (param is EventParam<UICodeGenerator> paramGenerator)
 			{
+				BiProgress.Show("Generate UI Code", "Generating UI and UI Logic Code", 0.5f);
+
 				EditorLocalPrefs.SetString(GENERATING_UI_NAME_KEY, paramGenerator.Value.UIName);
 				EditorLocalPrefs.Save();
 
