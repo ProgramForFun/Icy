@@ -24,7 +24,8 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
 |[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|可选，如不需要可移除fun.program4.icy.gm目录|1.11.0+|Icy/Packages<br>/fun.program4.icy.gm<br>/StompyRobot|
 
 Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许可协议不能直接提供，  
-请您按照上面提供的官方链接和版本号自行购买并导入
+请您按照上面提供的官方链接和版本号自行购买并导入；  
+标为可选的付费插件，如确定不需要，可以按提示移除；
 
 &nbsp;
 
