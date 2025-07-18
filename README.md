@@ -1,7 +1,7 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
 HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocket + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString  
-更具体的见[Features & Roadmap](#features-&amp;-roadmap)
+更具体的见[Features & Roadmap](#features--roadmap)
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
 ![](https://img.shields.io/github/license/ProgramForFun/Icy.svg)
