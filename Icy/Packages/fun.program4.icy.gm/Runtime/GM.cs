@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if ICY_USE_SRDEBUGGER
 
 using Icy.Base;
 using SRDebugger.Services;
@@ -52,3 +53,5 @@ namespace Icy.GM
 		}
 	}
 }
+
+#endif

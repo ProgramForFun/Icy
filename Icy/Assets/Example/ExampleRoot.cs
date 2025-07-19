@@ -8,8 +8,10 @@ using Icy.Asset;
 using YooAsset;
 using System.Globalization;
 using System.ComponentModel;
-//using Icy.GM;
-//using SRDebugger;
+#if ICY_USE_SRDEBUGGER
+using Icy.GM;
+using SRDebugger;
+#endif
 
 
 public class ExampleRoot : MonoBehaviour
@@ -33,7 +35,9 @@ public class ExampleRoot : MonoBehaviour
 		IcyFrame.Instance.Init();
 		Log.Init(true);
 		UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
-		//GM.Init(new TestGM());//可以根据服务器，决定是否要开启GM
+#if ICY_USE_SRDEBUGGER
+		GM.Init(new TestGM());//可以根据服务器，决定是否要开启GM
+#endif
 
 
 		//资源热更
@@ -81,17 +85,19 @@ public class ExampleRoot : MonoBehaviour
 	}
 }
 
-//public class TestGM : IGMOptions
-//{
-//	event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
-//	{
-//		add { }
-//		remove { }
-//	}
+#if ICY_USE_SRDEBUGGER
+public class TestGM : IGMOptions
+{
+	event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+	{
+		add { }
+		remove { }
+	}
 
-//	[Category("AAA"), DisplayName("Clear LocalPrefs"), Sort(1)]
-//	public void DeleteSave()
-//	{
+	[Category("AAA"), DisplayName("Clear LocalPrefs"), Sort(1)]
+	public void DeleteSave()
+	{
 
-//	}
-//}
+	}
+}
+#endif

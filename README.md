@@ -1,6 +1,6 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
-HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocket + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString  
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocket + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString；  
 更具体的见[Features & Roadmap](#features--roadmap)
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
@@ -24,7 +24,7 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
 |插件名称|描述|Optionality|版本号需求|插件安装后移动到此目录|
 |---|---|---|---|---|
 |[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|必选|3.3.1.11+|Icy/Assets<br>/Plugins/Sirenix|
-|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|可选，如不需要可移除fun.program4.icy.gm目录|1.11.0+|Icy/Packages<br>/fun.program4.icy.gm<br>/StompyRobot|
+|[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|可选，如不需要可移除PlayerSetting中的`ICY_USE_SRDEBUGGER`宏|1.11.0+|Icy/Packages<br>/fun.program4.icy.gm<br>/StompyRobot|
 
 Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许可协议不能直接提供，  
 请您按照上面提供的官方链接和版本号自行购买并导入；  
@@ -49,7 +49,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
 |集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|待开始|
-|集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder|✔️|
+|集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder/Formatter|✔️|
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
 |Base-FSM|有限状态机|✔️|
