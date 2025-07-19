@@ -58,6 +58,11 @@ namespace Icy.UI
 		/// </summary>
 		public Camera UICamera => UIRoot.Instance.UICamera;
 		/// <summary>
+		/// 在UI初始化和打开的过程中，如果有报错，会触发这个事件；
+		/// 方便业务侧决定后续处理，比如说直接销毁这个UI，避免卡住整个流程；
+		/// </summary>
+		public event Action<UIBase, Exception> OnUIOpenException;
+		/// <summary>
 		/// 当前未销毁的所有UI
 		/// </summary>
 		private Dictionary<UIBase, UIData> _UIMap;
@@ -371,8 +376,16 @@ namespace Icy.UI
 			CommonUtility.SetParent(layerGo, newUI.gameObject);
 
 			newUI.UIName = uiName;
-			newUI.Init();
-			newUI.DoHide();
+			try
+			{
+				newUI.Init();
+				newUI.DoHide();
+			}
+			catch (Exception ex)
+			{
+				Log.LogError($"Init {uiName} failed, Exception = {ex}", nameof(UIManager));
+				OnUIOpenException?.Invoke(newUI, ex);
+			}
 
 #if UNITY_EDITOR
 			ValidateUICode(uiName, newUI);
