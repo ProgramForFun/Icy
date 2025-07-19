@@ -122,11 +122,7 @@ namespace Icy.Base
 				_FSM.ChangeState(_Steps[_CurrStepIdx]);
 			}
 			else
-			{
-				State = StateType.Finished;
-				OnFinish?.Invoke(true);
-				Log.LogInfo($"Procedure {_FSM.Name} finished", nameof(Procedure));
-			}
+				End(false);
 		}
 
 		/// <summary>
@@ -163,16 +159,30 @@ namespace Icy.Base
 		/// </summary>
 		public void Abort()
 		{
-			State = StateType.Finishing;
 			DoAbort().Forget();
 		}
 
 		private async UniTaskVoid DoAbort()
 		{
-			await UniTask.WaitUntil(() => !IsChangingStep);
+			await UniTask.WaitUntil(IsNotChangingStep);
+			End(true);
+		}
+
+		private bool IsNotChangingStep()
+		{
+			return !IsChangingStep;
+		}
+
+		private void End(bool isAbort)
+		{
 			State = StateType.Finished;
-			OnFinish?.Invoke(false);
-			Log.LogInfo($"Procedure {_FSM.Name} aborted", nameof(Procedure));
+			OnFinish?.Invoke(!isAbort);
+			_FSM.Dispose();
+
+			if (isAbort)
+				Log.LogInfo($"Procedure {_FSM.Name} aborted", nameof(Procedure));
+			else
+				Log.LogInfo($"Procedure {_FSM.Name} finished", nameof(Procedure));
 		}
 	}
 }
