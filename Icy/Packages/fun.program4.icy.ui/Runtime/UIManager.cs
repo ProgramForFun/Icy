@@ -202,7 +202,11 @@ namespace Icy.UI
 		{
 			UIBase ui = GetFromUIMap(typeof(T));
 			if (ui != null)
-				ui.HideToPrev();
+			{
+				ui.Hide();
+				if (ui.UIType == UIType.Dialog)
+					ShowPrev();
+			}
 		}
 
 		/// <summary>
@@ -222,7 +226,11 @@ namespace Icy.UI
 		{
 			UIBase ui = GetFromUIMap(typeof(T));
 			if (ui != null)
-				ui.DestroyToPrev();
+			{
+				ui.Destroy();
+				if (ui.UIType == UIType.Dialog)
+					ShowPrev();
+			}
 		}
 
 		/// <summary>
@@ -421,21 +429,18 @@ namespace Icy.UI
 			EventManager.Trigger(EventDefine.UIHid, eventParam);
 		}
 
-		internal void ShowPrev(UIBase ui)
+		internal void ShowPrev()
 		{
-			if (ui.UIType == UIType.Dialog)
-			{
-				//先弹出栈顶，这个是刚刚Hide或者Destroy的，下一个才是前一个UI
-				PopStack();
+			//先弹出栈顶，这个是刚刚Hide或者Destroy的，下一个才是前一个UI
+			PopStack();
 
-				UIData prev = PopStack();
-				if (prev != null)
+			UIData prev = PopStack();
+			if (prev != null)
+			{
+				Get(prev.Type, (UIBase ui) =>
 				{
-					Get(prev.Type, (UIBase ui) =>
-					{
-						ui.Show(prev.Param);
-					});
-				}
+					ui.Show(prev.Param);
+				});
 			}
 		}
 

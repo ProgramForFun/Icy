@@ -175,12 +175,6 @@ namespace Icy.UI
 			}
 		}
 
-		public void HideToPrev()
-		{
-			Hide();
-			UIManager.Instance.ShowPrev(this);
-		}
-
 		public virtual void Destroy()
 		{
 			if (IsDestroyed)
@@ -196,12 +190,6 @@ namespace Icy.UI
 			UIManager.Instance.Destroy(this);
 
 			UnityEngine.Object.Destroy(this.gameObject);
-		}
-
-		public void DestroyToPrev()
-		{
-			Destroy();
-			UIManager.Instance.ShowPrev(this);
 		}
 
 		protected void OnDestroy()
