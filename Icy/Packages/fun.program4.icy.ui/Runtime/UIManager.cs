@@ -362,6 +362,8 @@ namespace Icy.UI
 		public void CancelBlockInteract()
 		{
 			_Block.SetActive(false);
+			_BlockTimeoutCancelToken?.Cancel();
+			_BlockTimeoutCancelToken = null;
 		}
 
 		/// <summary>
