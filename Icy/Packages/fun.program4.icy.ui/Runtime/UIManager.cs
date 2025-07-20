@@ -234,9 +234,9 @@ namespace Icy.UI
 		/// <summary>
 		/// 隐藏UI并显示前一个UI
 		/// </summary>
-		public void HideToPrev<T>() where T : UIBase
+		public void HideToPrev()
 		{
-			UIBase ui = GetFromUIMap(typeof(T));
+			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
 				ui.Hide();
@@ -258,9 +258,9 @@ namespace Icy.UI
 		/// <summary>
 		/// 销毁UI显示前一个UI
 		/// </summary>
-		public void DestroyToPrev<T>() where T : UIBase
+		public void DestroyToPrev()
 		{
-			UIBase ui = GetFromUIMap(typeof(T));
+			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
 				ui.Destroy();
@@ -519,6 +519,15 @@ namespace Icy.UI
 					return _Stack.Pop();
 				}
 			}
+			return null;
+		}
+
+		private UIBase GetHidableOrDestroyableUIFromStackTop()
+		{
+			UIData top = _Stack.Peek();
+			UIBase ui = GetFromUIMap(top.Type);
+			if (ui != null && (_StackBottomUI == null || top.Name != _StackBottomUI.Name))
+				return ui;
 			return null;
 		}
 

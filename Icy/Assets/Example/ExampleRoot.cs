@@ -61,7 +61,7 @@ public class ExampleRoot : MonoBehaviour
 		UIExample uiExample = await UIManager.Instance.Show<UIExample>();
 
 		await UniTask.WaitForSeconds(1);
-		UIManager.Instance.HideToPrev<UIExample>();
+		UIManager.Instance.DestroyToPrev();
 	}
 
 	// Update is called once per frame
