@@ -162,19 +162,55 @@ namespace Icy.UI
 		/// 显示UI
 		/// </summary>
 		/// <param name="param">UI显示时传入的参数</param>
+		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
 		public async UniTask<T> Show<T>(IUIParam param = null, bool blockInteract = true) where T : UIBase
 		{
+			if (blockInteract)
+				BlockInteract();
+			T ui = await GetAsync<T>();
+
 			try
 			{
-				if (blockInteract)
-					BlockInteract();
-				T ui = await GetAsync<T>();
 				ui.Show(param);
 				return ui;
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"GetAndShow<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+				Log.LogError($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+				OnUIOpenException?.Invoke(ui, ex);
+			}
+			finally
+			{
+				//保证一定会解除block
+				if (blockInteract)
+					CancelBlockInteract();
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// 获取并等待predicate满足，然后显示UI
+		/// </summary>
+		/// <param name="param">UI显示时传入的参数</param>
+		/// <param name="predicate">显示的条件</param>
+		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
+		public async UniTask<T> ShowUntil<T>(IUIParam param, Func<bool> predicate, bool blockInteract = false) where T : UIBase
+		{
+			if (blockInteract)
+				BlockInteract();
+
+			T ui = await GetAsync<T>();
+			await UniTask.WaitUntil(predicate);
+
+			try
+			{
+				ui.Show(param);
+				return ui;
+			}
+			catch (Exception ex)
+			{
+				Log.LogError($"ShowUntil<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+				OnUIOpenException?.Invoke(ui, ex);
 			}
 			finally
 			{
@@ -231,19 +267,6 @@ namespace Icy.UI
 				if (ui.UIType == UIType.Dialog)
 					ShowPrev();
 			}
-		}
-
-		/// <summary>
-		/// 获取并等待predicate满足，然后显示UI
-		/// </summary>
-		/// <param name="param">UI显示时传入的参数</param>
-		/// <param name="predicate">显示的条件</param>
-		public async UniTask<T> GetAndShowUntil<T>(IUIParam param, Func<bool> predicate) where T : UIBase
-		{
-			T ui = await GetAsync<T>();
-			await UniTask.WaitUntil(predicate);
-			ui.Show(param);
-			return ui;
 		}
 
 		private void Get(Type uiType, Action<UIBase> callback)
@@ -441,7 +464,15 @@ namespace Icy.UI
 			{
 				Get(prev.Type, (UIBase ui) =>
 				{
-					ui.Show(prev.Param);
+					try
+					{
+						ui.Show(prev.Param);
+					}
+					catch (Exception ex)
+					{
+						Log.LogError($"ShowPrev {prev.Name} failed, exception = {ex}", nameof(UIManager));
+						OnUIOpenException?.Invoke(ui, ex);
+					}
 				});
 			}
 		}

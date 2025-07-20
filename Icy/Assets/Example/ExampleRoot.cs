@@ -51,29 +51,17 @@ public class ExampleRoot : MonoBehaviour
 
 		//=================开始业务逻辑=================
 
-		////显示UI
-		//UILogin uiLogin = null;
-		////回调风格加载
-		//UIManager.Instance.Get<UILogin>((UIBase ui) =>
-		//{
-		//	uiLogin = ui as UILogin;
-		//	uiLogin.Show();
-		//	Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
-		//});
+		//显示UI
+		UILogin uiLogin = await UIManager.Instance.Show<UILogin>();
+		Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
 
+		await UniTask.WaitForSeconds(1);
+		UIManager.Instance.Hide<UILogin>();
 
-		//await UniTask.WaitForSeconds(1);
-		//uiLogin.Hide();
-		//uiLogin.Destroy();
+		UIExample uiExample = await UIManager.Instance.Show<UIExample>();
 
-		//UniTask风格加载
-		UIExample uiExample = await UIManager.Instance.GetAsync<UIExample>();
-		uiExample.Show();
-
-		//await UniTask.WaitForSeconds(1);
-
-		////uiExample.HideToPrev();
-		//uiExample.DestroyToPrev();
+		await UniTask.WaitForSeconds(1);
+		UIManager.Instance.HideToPrev<UIExample>();
 	}
 
 	// Update is called once per frame
