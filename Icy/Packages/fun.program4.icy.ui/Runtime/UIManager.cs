@@ -159,11 +159,11 @@ namespace Icy.UI
 		}
 
 		/// <summary>
-		/// 显示UI
+		/// 显示UI（async await风格）；
 		/// </summary>
 		/// <param name="param">UI显示时传入的参数</param>
 		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
-		public async UniTask<T> Show<T>(IUIParam param = null, bool blockInteract = true) where T : UIBase
+		public async UniTask<T> ShowAsync<T>(IUIParam param = null, bool blockInteract = true) where T : UIBase
 		{
 			if (blockInteract)
 				BlockInteract();
@@ -186,6 +186,39 @@ namespace Icy.UI
 					CancelBlockInteract();
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// 显示UI（回调函数风格）；
+		/// </summary>
+		/// <param name="param">UI显示时传入的参数</param>
+		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
+		/// <param name="callback">UI打开后的回调函数，如果Show UI出现异常，会返回null</param>
+		public void Show<T>(IUIParam param = null, bool blockInteract = true, Action<UIBase> callback = null) where T : UIBase
+		{
+			if (blockInteract)
+				BlockInteract();
+
+			Get(typeof(T), (UIBase ui) => 
+			{
+				try
+				{
+					ui.Show(param);
+					callback?.Invoke(ui);
+				}
+				catch (Exception ex)
+				{
+					Log.LogError($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+					OnUIOpenException?.Invoke(ui, ex);
+					callback?.Invoke(null);
+				}
+				finally
+				{
+					//保证一定会解除block
+					if (blockInteract)
+						CancelBlockInteract();
+				}
+			});
 		}
 
 		/// <summary>
@@ -232,7 +265,7 @@ namespace Icy.UI
 		}
 
 		/// <summary>
-		/// 隐藏UI并显示前一个UI
+		/// 隐藏当前UI并显示前一个UI
 		/// </summary>
 		public void HideToPrev()
 		{
@@ -256,7 +289,7 @@ namespace Icy.UI
 		}
 
 		/// <summary>
-		/// 销毁UI显示前一个UI
+		/// 销毁当前UI并显示前一个UI
 		/// </summary>
 		public void DestroyToPrev()
 		{
