@@ -45,10 +45,6 @@ namespace Icy.UI
 		/// 移动到屏幕外面
 		/// </summary>
 		MoveOutScreen,
-		/// <summary>
-		/// 变透明
-		/// </summary>
-		Transparent,
 	}
 
 	/// <summary>

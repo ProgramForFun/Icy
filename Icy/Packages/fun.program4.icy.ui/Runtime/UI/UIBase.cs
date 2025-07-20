@@ -134,10 +134,6 @@ namespace Icy.UI
 				case UIHideType.MoveOutScreen:
 					gameObject.transform.localPosition = Vector3.zero;
 					break;
-				case UIHideType.Transparent:
-					_CanvasGroup.alpha = _OriginalAlpha;
-					_CanvasGroup.interactable = true;
-					break;
 				default:
 					//do nothing
 					break;
@@ -164,10 +160,6 @@ namespace Icy.UI
 					break;
 				case UIHideType.MoveOutScreen:
 					gameObject.transform.localPosition = MOVE_OUT_POS;
-					break;
-				case UIHideType.Transparent:
-					_CanvasGroup.alpha = 0.0f;
-					_CanvasGroup.interactable = false;
 					break;
 				default:
 					Log.LogError($"Invalid HideType {HideType}", nameof(UIBase));
