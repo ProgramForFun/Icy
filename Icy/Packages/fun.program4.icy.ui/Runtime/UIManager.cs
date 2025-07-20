@@ -239,9 +239,9 @@ namespace Icy.UI
 			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
-				ui.Hide();
+				//Dialog才需要开前一个界面，Popup的前一个Dialog不会关闭，不需要打开前一个
 				if (ui.UIType == UIType.Dialog)
-					ShowPrev();
+					ShowPrev((UIBase prevUI) => { ui.Hide(); });
 			}
 		}
 
@@ -263,9 +263,9 @@ namespace Icy.UI
 			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
-				ui.Destroy();
+				//Dialog才需要开前一个界面，Popup的前一个Dialog不会关闭，不需要打开前一个
 				if (ui.UIType == UIType.Dialog)
-					ShowPrev();
+					ShowPrev((UIBase prevUI) => { ui.Destroy(); });
 			}
 		}
 
@@ -454,7 +454,7 @@ namespace Icy.UI
 			EventManager.Trigger(EventDefine.UIHid, eventParam);
 		}
 
-		internal void ShowPrev()
+		internal void ShowPrev(Action<UIBase> callbackBeforePrevUIShow)
 		{
 			//先弹出栈顶，这个是刚刚Hide或者Destroy的，下一个才是前一个UI
 			PopStack();
@@ -466,6 +466,7 @@ namespace Icy.UI
 				{
 					try
 					{
+						callbackBeforePrevUIShow?.Invoke(ui);
 						ui.Show(prev.Param);
 					}
 					catch (Exception ex)
