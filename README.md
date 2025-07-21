@@ -17,8 +17,8 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
 1. **安装Framework**：
 	* 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
 	* 方式二：
-		1. 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个路径下的内容到你的项目目录的同名文件夹
-		2. 拷贝/Config、/Proto到你的项目的Assets目录的**上一级**目录
+		1. 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个目录下的内容到你的项目目录的同名文件夹
+		2. 拷贝/Config、/Proto两个目录到你的项目的Assets目录的**上一级**目录
 2. **安装以下付费插件**：
 
 |插件名称|描述|Optionality|版本号需求|插件安装后移动到此目录|
@@ -41,7 +41,6 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 ## Features & Roadmap
 |目标|描述|完成状态|
 |---|---|:---:|
-|集成[YooAsset](https://github.com/tuyoogame/YooAsset)|资源管理系统|✔️|
 |集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
 |集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
 |集成[Protobuf](https://github.com/ProgramForFun/protobuf_unity)|高效二进制序列化|✔️|
@@ -58,8 +57,9 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Base-Timer||✔️|
 |Base-Pool||✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
-|Asset-AssetManager|基于YooAsset的运行时资源管理器|✔️|
+|Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|很好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
+|Network-[NativeWebSocket](https://github.com/endel/NativeWebSocket)|支持WebGL平台的开源WebSocket库|✔️|
 |Network-HTTP|基于BestHTTP实现，支持WebGL平台|待开始|
 |Network-TCP|基于.Net TCP实现|✔️|
 |Network-[KCP](https://github.com/passiony/kcp-unity)|以速度著称的Reliable UDP|✔️|
