@@ -42,7 +42,12 @@ namespace Icy.Editor
 				BiProgress.Show("Generate Config", "Generating config...", 0.5f);
 
 				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ConfigSetting.json");
-				if (bytes != null)
+				if (bytes == null)
+				{
+					EditorUtility.DisplayDialog("", $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/ConfigSetting.json", "OK");
+					Clear();
+				}
+				else
 				{
 					string batFilePath = null;
 					ConfigSetting setting = ConfigSetting.Parser.ParseFrom(bytes);
@@ -51,6 +56,7 @@ namespace Icy.Editor
 					if (string.IsNullOrEmpty(batFilePath))
 					{
 						EditorUtility.DisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，设置 生成Config的Bat脚本路径", "OK");
+						Clear();
 						return;
 					}
 
@@ -59,10 +65,10 @@ namespace Icy.Editor
 					string batDir = Path.GetDirectoryName(batFilePath);
 					ProcessStartInfo processInfo = new ProcessStartInfo()
 					{
-						FileName = batFilePath,			// 批处理文件名
-						WorkingDirectory = batDir,		// 工作目录
-						CreateNoWindow = true,			// 不创建新窗口（后台运行）
-						UseShellExecute = false,		// 不使用系统Shell（用于重定向输出）
+						FileName = batFilePath,         // 批处理文件名
+						WorkingDirectory = batDir,      // 工作目录
+						CreateNoWindow = true,          // 不创建新窗口（后台运行）
+						UseShellExecute = false,        // 不使用系统Shell（用于重定向输出）
 
 						// 重定向输入/输出
 						RedirectStandardOutput = true,
@@ -95,8 +101,7 @@ namespace Icy.Editor
 			catch (Exception e)
 			{
 				UnityEngine.Debug.LogException(e);
-				_Process.Dispose();
-				BiProgress.Hide();
+				Clear();
 			}
 		}
 
@@ -119,12 +124,17 @@ namespace Icy.Editor
 
 			EditorApplication.delayCall += () =>
 			{
-				BiProgress.Hide();
-				_Process.Dispose();
+				Clear();
 			};
 
 			if (exitCode == 0)
 				AssetDatabase.Refresh();
+		}
+
+		private static void Clear()
+		{
+			BiProgress.Hide();
+			_Process?.Dispose();
 		}
 	}
 }
