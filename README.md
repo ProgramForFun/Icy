@@ -19,6 +19,7 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
 	* 方式二：
 		1. 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个目录下的内容到你的项目目录的同名文件夹
 		2. 拷贝/Config、/Proto两个目录到你的项目的Assets目录的**上一级**目录
+		3. 把PlayerSetting中的Api Compatibility Level设置为`.Net Framework`
 2. **安装以下付费插件**：
 
 |插件名称|描述|Optionality|版本号需求|插件安装后移动到此目录|
