@@ -77,6 +77,7 @@ namespace Icy.Protobuf.Editor
 				if (string.IsNullOrEmpty(batFilePath))
 				{
 					EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK");
+					Clear();
 					return;
 				}
 
