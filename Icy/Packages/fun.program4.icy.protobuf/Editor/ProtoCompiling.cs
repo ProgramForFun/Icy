@@ -71,10 +71,14 @@ namespace Icy.Protobuf.Editor
 			try
 			{
 				string batFilePath = null;
+				string outputDirFullPath = null;
 				ProtoSetting setting = GetSetting();
 				if (setting != null)
+				{
 					batFilePath = setting.CompileBatPath;
-				if (string.IsNullOrEmpty(batFilePath))
+					outputDirFullPath = Path.GetFullPath(setting.ProtoOutputDir);
+				}
+				if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(outputDirFullPath))
 				{
 					EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK");
 					Clear();
@@ -83,7 +87,6 @@ namespace Icy.Protobuf.Editor
 
 				ClearConsole.Clear();
 
-				string outputDirFullPath = Path.GetFullPath(setting.ProtoOutputDir);
 				ProcessStartInfo processInfo = new ProcessStartInfo()
 				{
 					FileName = batFilePath,					// 批处理文件名
