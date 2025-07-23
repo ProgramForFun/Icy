@@ -15,11 +15,12 @@ HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + BestHTTP + NativeWebSocke
 ## Installation
 
 1. **安装Framework**：
-	* 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行开发
+	* 方式一(推荐)：直接Clone本仓库，以本仓库作为基础进行项目开发
 	* 方式二：
 		1. 拷贝Icy/Packages、Icy/Assets/ThirdParty、Icy/Assets/Plugins 这三个目录下的内容到你的项目目录的同名文件夹
 		2. 拷贝/Config、/Proto两个目录到你的项目的Assets目录的**上一级**目录
-		3. 把PlayerSetting中的Api Compatibility Level设置为`.Net Framework`
+		3. 拷贝Icy/IcySettings到你的项目的Assets目录的**同级**目录，并从Unity菜单栏的Icy分别打开Asset、UI、Proto、Config的Setting窗口，根据你项目的情况填入对应的设置
+		4. 把PlayerSetting中的Api Compatibility Level设置为`.Net Framework`
 2. **安装以下付费插件**：
 
 |插件名称|描述|Optionality|版本号需求|插件安装后移动到此目录|
