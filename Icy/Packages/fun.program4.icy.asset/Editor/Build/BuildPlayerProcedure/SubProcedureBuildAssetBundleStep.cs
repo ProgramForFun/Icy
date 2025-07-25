@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using SimpleJSON;
 using Icy.Editor;
+using System.Collections.Generic;
 
 namespace Icy.Asset.Editor
 {
@@ -46,21 +47,21 @@ namespace Icy.Asset.Editor
 			await UniTask.CompletedTask;
 		}
 
+		/// <summary>
+		/// 打包AssetBundle
+		/// </summary>
+		/// <param name="buildTarget">打包的平台</param>
+		/// <param name="buildSetting">打包的设置</param>
+		/// <param name="callback">回调</param>
 		public static void Build(BuildTarget buildTarget, BuildSetting buildSetting, Action<bool> callback)
 		{
 			_BuildCallback = callback;
 
-			JSONArray jsonArray;
-			if (File.Exists(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME))
-				jsonArray = JSONNode.Parse(File.ReadAllText(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME)) as JSONArray;
-			else
-				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_BUILD_ASSET_BUNDLE_PROCEDURE_CFG_PATH)) as JSONArray;
-
-
+			List<string> allSteps = GetAllStepNames();
 			Procedure procedure = new Procedure("BuildAssetBundle");
-			for (int i = 0; i < jsonArray.Count; i++)
+			for (int i = 0; i < allSteps.Count; i++)
 			{
-				string typeWithNameSpace = jsonArray[i];
+				string typeWithNameSpace = allSteps[i];
 				Type type = Type.GetType(typeWithNameSpace);
 				if (type == null)
 				{
@@ -78,6 +79,27 @@ namespace Icy.Asset.Editor
 			procedure.OnChangeStep += OnChangeBuildStep;
 			procedure.OnFinish += OnBuildAssetBundleProcedureFinish;
 			procedure.Start();
+		}
+
+		/// <summary>
+		/// 获取所有的打包Bundle的步骤类名
+		/// </summary>
+		public static List<string> GetAllStepNames()
+		{
+			JSONArray jsonArray;
+			if (File.Exists(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME))
+				jsonArray = JSONNode.Parse(File.ReadAllText(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME)) as JSONArray;
+			else
+				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_BUILD_ASSET_BUNDLE_PROCEDURE_CFG_PATH)) as JSONArray;
+
+			List<string> rtn = new List<string>(8);
+			for (int i = 0; i < jsonArray.Count; i++)
+			{
+				string typeWithNameSpace = jsonArray[i];
+				rtn.Add(typeWithNameSpace);
+			}
+
+			return rtn;
 		}
 
 		protected static void OnChangeBuildStep(ProcedureStep step)

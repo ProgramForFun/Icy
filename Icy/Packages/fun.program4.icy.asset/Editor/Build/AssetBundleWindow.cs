@@ -40,6 +40,14 @@ namespace Icy.Asset.Editor
 		[OnCollectionChanged("OnTableListChanged")]
 		public List<AssetBundleWindowItem> _BundleVersionList;
 
+		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
+		[TabGroup("", "iOS", SdfIconType.Apple)]
+		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
+		[Title("打包步骤")]
+		[HideLabel]
+		[ReadOnly]
+		public List<string> Steps;
+
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
 		[InlineButton("SwitchAssetBundleOptionsTips", "?")]
@@ -102,6 +110,11 @@ namespace Icy.Asset.Editor
 				if (_Setting.EncryptAssetBundle)
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
+
+			Steps.Clear();
+			List<string> allSteps = SubProcedureBuildAssetBundleStep.GetAllStepNames();
+			for (int i = 0; i < allSteps.Count; i++)
+				Steps.Add(allSteps[i]);
 
 			return _Setting;
 		}
