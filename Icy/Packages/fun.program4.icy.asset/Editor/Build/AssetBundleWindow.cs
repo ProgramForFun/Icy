@@ -44,9 +44,8 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "iOS", SdfIconType.Apple)]
 		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
 		[Title("打包步骤")]
-		[HideLabel]
 		[ReadOnly]
-		public List<string> Steps;
+		public List<string> BuildBundleSteps;
 
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
@@ -111,10 +110,10 @@ namespace Icy.Asset.Editor
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 
-			Steps.Clear();
+			BuildBundleSteps.Clear();
 			List<string> allSteps = SubProcedureBuildAssetBundleStep.GetAllStepNames();
 			for (int i = 0; i < allSteps.Count; i++)
-				Steps.Add(allSteps[i]);
+				BuildBundleSteps.Add(allSteps[i]);
 
 			return _Setting;
 		}
