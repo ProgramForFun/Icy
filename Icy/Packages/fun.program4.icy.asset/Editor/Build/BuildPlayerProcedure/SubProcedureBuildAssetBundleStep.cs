@@ -55,6 +55,12 @@ namespace Icy.Asset.Editor
 		/// <param name="callback">回调</param>
 		public static void Build(BuildTarget buildTarget, BuildSetting buildSetting, Action<bool> callback)
 		{
+			if (buildTarget != EditorUserBuildSettings.activeBuildTarget)
+			{
+				Log.Assert(false, $"AssetBunle打包未执行；BuildTarget平台不一致，请先切换完毕再打包；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 选择的打包平台 = {buildTarget}");
+				return;
+			}
+
 			_BuildCallback = callback;
 
 			List<string> allSteps = GetAllStepNames();
