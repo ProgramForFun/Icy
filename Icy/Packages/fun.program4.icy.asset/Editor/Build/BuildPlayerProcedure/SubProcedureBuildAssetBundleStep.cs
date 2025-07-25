@@ -34,6 +34,9 @@ namespace Icy.Asset.Editor
 		protected static BuildSetting _BuildSetting;
 		protected static Action<bool> _BuildCallback;
 
+		protected static string BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME = "BuildAssetBundleProcedureCfg.json";
+		protected static string ICY_BUILD_ASSET_BUNDLE_PROCEDURE_CFG_PATH = "Packages/fun.program4.icy.asset/Editor/Build/BuildAssetBundleProcedure/" + BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME;
+
 		public override async UniTask Activate()
 		{
 			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget");
@@ -48,10 +51,10 @@ namespace Icy.Asset.Editor
 			_BuildCallback = callback;
 
 			JSONArray jsonArray;
-			if (File.Exists("BuildAssetBundleProcedureCfg.json"))
-				jsonArray = JSONNode.Parse(File.ReadAllText("BuildAssetBundleProcedureCfg.json")) as JSONArray;
+			if (File.Exists(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME))
+				jsonArray = JSONNode.Parse(File.ReadAllText(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME)) as JSONArray;
 			else
-				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildAssetBundleProcedure/BuildAssetBundleProcedureCfg.json")) as JSONArray;
+				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_BUILD_ASSET_BUNDLE_PROCEDURE_CFG_PATH)) as JSONArray;
 
 
 			Procedure procedure = new Procedure("BuildAssetBundle");
