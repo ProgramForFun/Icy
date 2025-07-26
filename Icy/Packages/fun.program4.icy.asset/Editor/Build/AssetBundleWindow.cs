@@ -40,9 +40,6 @@ namespace Icy.Asset.Editor
 		[OnCollectionChanged("OnTableListChanged")]
 		public List<AssetBundleWindowItem> _BundleVersionList;
 
-		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
-		[TabGroup("", "iOS", SdfIconType.Apple)]
-		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
 		[Title("打包步骤")]
 		[ReadOnly]
 		public List<string> BuildBundleSteps;
