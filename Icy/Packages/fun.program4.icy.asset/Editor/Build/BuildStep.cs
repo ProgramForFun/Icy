@@ -15,36 +15,30 @@
  */
 
 
-using UnityEngine;
 using Icy.Base;
-using Cysharp.Threading.Tasks;
-using System.IO;
+using System.Collections.Generic;
 
 namespace Icy.Asset.Editor
 {
 	/// <summary>
-	/// 把框架Setting文件copy到streamingAssetsPath
+	/// 打包Step的基类
 	/// </summary>
-	public class CopySettingsStep : BuildStep
+	public abstract class BuildStep : ProcedureStep
 	{
-		public override async UniTask Activate()
+		/// <summary>
+		/// 是否是子Procedure
+		/// </summary>
+		public virtual bool IsSubProcedure()
 		{
-			string dest = Path.Combine(Application.streamingAssetsPath, SettingsHelper.GetSettingDir());
-			bool succeed = CommonUtility.CopyDir(SettingsHelper.GetSettingDir(), dest, false);
-			if (!succeed)
-			{
-				Log.Assert(false, "Copy setting files failed", nameof(CopySettingsStep));
-				OwnerProcedure.Abort();
-				return;
-			}
-
-			await UniTask.CompletedTask;
-			Finish();
+			return false;
 		}
 
-		public override async UniTask Deactivate()
+		/// <summary>
+		/// 获取子Procedure所有的Step名字，也是类的名字
+		/// </summary>
+		public virtual List<string> GetAllStepNames()
 		{
-			await UniTask.CompletedTask;
+			return null;
 		}
 	}
 }

@@ -108,7 +108,7 @@ namespace Icy.Asset.Editor
 			}
 
 			BuildBundleSteps.Clear();
-			List<string> allSteps = SubProcedureBuildAssetBundleStep.GetAllStepNames();
+			List<string> allSteps = SubProcedureBuildAssetBundleStep.GetAllStepNamesImpl();
 			for (int i = 0; i < allSteps.Count; i++)
 				BuildBundleSteps.Add(allSteps[i]);
 

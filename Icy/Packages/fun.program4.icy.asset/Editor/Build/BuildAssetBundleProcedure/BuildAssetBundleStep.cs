@@ -28,7 +28,7 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 打包AssetBundle，并Copy到StreamingAssets目录下
 	/// </summary>
-	public class BuildAssetBundleStep : ProcedureStep
+	public class BuildAssetBundleStep : BuildStep
 	{
 		private BuildTarget _BuildTarget;
 		private BuildSetting _BuildSetting;

@@ -27,7 +27,7 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 执行Unity的打包
 	/// </summary>
-	public class BuildPlayerStep : ProcedureStep
+	public class BuildPlayerStep : BuildStep
 	{
 		public override async UniTask Activate()
 		{

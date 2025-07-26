@@ -28,7 +28,7 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 打包AssetBundle，并Copy到StreamingAssets目录下
 	/// </summary>
-	public class CopyAssetBundle2StreamingAssetsStep : ProcedureStep
+	public class CopyAssetBundle2StreamingAssetsStep : BuildStep
 	{
 		public override async UniTask Activate()
 		{

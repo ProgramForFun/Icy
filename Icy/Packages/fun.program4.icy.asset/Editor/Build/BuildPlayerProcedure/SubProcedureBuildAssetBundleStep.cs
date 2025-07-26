@@ -29,7 +29,7 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 打包AssetBundle的子Procedure
 	/// </summary>
-	public class SubProcedureBuildAssetBundleStep : ProcedureStep
+	public class SubProcedureBuildAssetBundleStep : BuildStep
 	{
 		protected static BuildTarget _BuildTarget;
 		protected static BuildSetting _BuildSetting;
@@ -45,6 +45,16 @@ namespace Icy.Asset.Editor
 
 			Build(_BuildTarget, _BuildSetting, DoOnBuildAssetBundleProcedureFinish);
 			await UniTask.CompletedTask;
+		}
+
+		public override bool IsSubProcedure()
+		{
+			return true;
+		}
+
+		public override List<string> GetAllStepNames()
+		{
+			return GetAllStepNamesImpl();
 		}
 
 		/// <summary>
@@ -63,7 +73,7 @@ namespace Icy.Asset.Editor
 
 			_BuildCallback = callback;
 
-			List<string> allSteps = GetAllStepNames();
+			List<string> allSteps = GetAllStepNamesImpl();
 			Procedure procedure = new Procedure("BuildAssetBundle");
 			for (int i = 0; i < allSteps.Count; i++)
 			{
@@ -90,7 +100,7 @@ namespace Icy.Asset.Editor
 		/// <summary>
 		/// 获取所有的打包Bundle的步骤类名
 		/// </summary>
-		public static List<string> GetAllStepNames()
+		public static List<string> GetAllStepNamesImpl()
 		{
 			JSONArray jsonArray;
 			if (File.Exists(BUILD_ASSET_BUNDLE_PROCEDURE_CFG_NAME))

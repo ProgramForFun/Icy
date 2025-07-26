@@ -24,7 +24,7 @@ namespace Icy.Asset.Editor
 	/// <summary>
 	/// 把框架Setting文件PlayerSetting部分，应用到PlayerSetting
 	/// </summary>
-	public class ApplyPlayerSettingsStep : ProcedureStep
+	public class ApplyPlayerSettingsStep : BuildStep
 	{
 		private BuildTarget _BuildTarget;
 		private BuildSetting _BuildSetting;
