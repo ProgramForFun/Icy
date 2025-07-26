@@ -192,7 +192,7 @@ namespace Icy.Asset.Editor
 
 			BuildSteps.Clear();
 			List<string> allSteps = GetAllStepNames();
-			SetBuildSteps(allSteps, 0);
+			SetBuildSteps(BuildSteps, allSteps, 0);
 
 			return _Setting;
 		}
@@ -200,7 +200,7 @@ namespace Icy.Asset.Editor
 		/// <summary>
 		/// 递归显示所有steps以及sub steps
 		/// </summary>
-		protected virtual void SetBuildSteps(List<string> steps, int indent)
+		public static void SetBuildSteps(List<string> dest, List<string> steps2Add, int indent)
 		{
 			//计算缩进
 			string indentStr = string.Empty;
@@ -210,10 +210,10 @@ namespace Icy.Asset.Editor
 				indentStr += "└-";
 
 			//递归添加steps
-			for (int i = 0; i < steps.Count; i++)
+			for (int i = 0; i < steps2Add.Count; i++)
 			{
-				string typeWithNameSpace = steps[i];
-				BuildSteps.Add(indentStr + steps[i]);
+				string typeWithNameSpace = steps2Add[i];
+				dest.Add(indentStr + steps2Add[i]);
 
 				Type type = Type.GetType(typeWithNameSpace);
 				BuildStep step = Activator.CreateInstance(type) as BuildStep;
@@ -222,7 +222,7 @@ namespace Icy.Asset.Editor
 					indent++;
 
 					List<string> subSteps = step.GetAllStepNames();
-					SetBuildSteps(subSteps, indent);
+					SetBuildSteps(dest, subSteps, indent);
 				}
 			}
 		}
