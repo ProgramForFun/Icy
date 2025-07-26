@@ -24,6 +24,7 @@ using UnityEditor;
 using Google.Protobuf;
 using UnityEngine;
 using Icy.Editor;
+using System.Collections.Generic;
 
 namespace Icy.Asset.Editor
 {
@@ -98,6 +99,10 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("SaveSetting")]
 		public string OutputDir;
 
+		[Title("打包步骤")]
+		[ReadOnly]
+		public List<string> BuildSteps;
+
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
 		[InlineButton("SwitchAssetBundleOptionsTips", "?")]
@@ -117,6 +122,10 @@ namespace Icy.Asset.Editor
 
 		protected bool _ShowDevOptionsTips = false;
 		protected virtual void SwitchDevOptionsTips() => _ShowDevOptionsTips = !_ShowDevOptionsTips;
+
+		protected static string BUILD_PLAYER_PROCEDURE_CFG_NAME = "BuildPlayerProcedureCfg.json";
+		protected static string ICY_BUILD_PLAYER_PROCEDURE_CFG_PATH = "Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure/" + BUILD_PLAYER_PROCEDURE_CFG_NAME;
+
 
 		/// <summary>
 		/// 当前选中平台的Setting文件
@@ -181,6 +190,11 @@ namespace Icy.Asset.Editor
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 
+			BuildSteps.Clear();
+			List<string> allSteps = GetAllStepNames();
+			for (int i = 0; i < allSteps.Count; i++)
+				BuildSteps.Add(allSteps[i]);
+
 			return _Setting;
 		}
 
@@ -225,17 +239,12 @@ namespace Icy.Asset.Editor
 
 			SaveSetting();
 
-			JSONArray jsonArray;
-			if (File.Exists("BuildPlayerProcedureCfg.json"))
-				jsonArray = JSONNode.Parse(File.ReadAllText("BuildPlayerProcedureCfg.json")) as JSONArray;
-			else
-				jsonArray = JSONNode.Parse(File.ReadAllText("Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure/BuildPlayerProcedureCfg.json")) as JSONArray;
-
 
 			Procedure procedure = new Procedure("BuildPlayer");
-			for (int i = 0; i < jsonArray.Count; i++)
+			List<string> allSteps = GetAllStepNames();
+			for (int i = 0; i < allSteps.Count; i++)
 			{
-				string typeWithNameSpace = jsonArray[i];
+				string typeWithNameSpace = allSteps[i];
 				Type type = Type.GetType(typeWithNameSpace);
 				if (type == null)
 				{
@@ -252,6 +261,27 @@ namespace Icy.Asset.Editor
 			procedure.OnChangeStep += OnChangeBuildStep;
 			procedure.OnFinish += OnBuildPlayerProcedureFinish;
 			procedure.Start();
+		}
+
+		/// <summary>
+		/// 获取所有的打包Player的步骤类名
+		/// </summary>
+		protected virtual List<string> GetAllStepNames()
+		{
+			JSONArray jsonArray;
+			if (File.Exists(BUILD_PLAYER_PROCEDURE_CFG_NAME))
+				jsonArray = JSONNode.Parse(File.ReadAllText(BUILD_PLAYER_PROCEDURE_CFG_NAME)) as JSONArray;
+			else
+				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_BUILD_PLAYER_PROCEDURE_CFG_PATH)) as JSONArray;
+
+			List<string> rtn = new List<string>(8);
+			for (int i = 0; i < jsonArray.Count; i++)
+			{
+				string typeWithNameSpace = jsonArray[i];
+				rtn.Add(typeWithNameSpace);
+			}
+
+			return rtn;
 		}
 
 		protected virtual void OnChangeBuildStep(ProcedureStep step)
