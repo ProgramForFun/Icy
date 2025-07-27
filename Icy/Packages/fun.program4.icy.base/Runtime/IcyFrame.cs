@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -46,6 +47,9 @@ namespace Icy.Base
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
 
+			//监听UniTask中未处理的异常
+			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
+
 			//反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
 			//TODO：接入HybridCLR后，这里的调用时机要改
 			Assembly assembly = Assembly.Load("Protos");
@@ -66,6 +70,11 @@ namespace Icy.Base
 		public bool IsMainThread()
 		{
 			return Thread.CurrentThread.ManagedThreadId == MainThreadID;
+		}
+
+		private void OnUniTaskUnobservedTaskException(Exception ex)
+		{
+			Log.LogError(ex.ToString(), "UniTask Unobserved Exception");
 		}
 
 		#region Update
@@ -123,6 +132,7 @@ namespace Icy.Base
 
 		private void OnApplicationQuit()
 		{
+			UniTaskScheduler.UnobservedTaskException -= OnUniTaskUnobservedTaskException;
 			Log.StopLog2FileThread();
 		}
 	}
