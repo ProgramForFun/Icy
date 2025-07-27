@@ -64,7 +64,7 @@ namespace Icy.Network
 			{
 				_MessageResult.ErrorCode = 0;
 				_MessageResult.ErrorMsg = "Success";
-				_KcpChannel.Send(1, _MessageResult);
+				_KcpChannel.Send(1001, _MessageResult);
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))

@@ -237,19 +237,27 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Receive failed, {e}", nameof(KcpSession));
+				Log.LogError($"Recv failed, {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ReceiveFailed, e);
 			}
 		}
 
-		protected virtual void OnReceived(object sender, SocketAsyncEventArgs e)
+		protected virtual void OnReceived(object sender, SocketAsyncEventArgs asyncEventArgs)
 		{
-			if (e.LastOperation == SocketAsyncOperation.ReceiveFrom)
+			if (asyncEventArgs.LastOperation == SocketAsyncOperation.ReceiveFrom)
 			{
 				if (!IsKcpValid())
 					return;
 
-				HandleReceived(e.Buffer, e.Offset, e.BytesTransferred);
+				try
+				{
+					HandleReceived(asyncEventArgs.Buffer, asyncEventArgs.Offset, asyncEventArgs.BytesTransferred);
+				}
+				catch (Exception e)
+				{
+					Log.LogError($"Receive failed, {e}", nameof(KcpSession));
+					OnError?.Invoke(NetworkError.ReceiveFailed, e);
+				}
 				Recv();
 			}
 		}
