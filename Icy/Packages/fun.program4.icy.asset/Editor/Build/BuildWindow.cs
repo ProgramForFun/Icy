@@ -99,7 +99,7 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("SaveSetting")]
 		public string OutputDir;
 
-		[Title("打包步骤")]
+		[FoldoutGroup("打包步骤", Expanded = false)]
 		[ReadOnly]
 		public List<string> BuildSteps;
 
@@ -190,7 +190,7 @@ namespace Icy.Asset.Editor
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 
-			BuildSteps.Clear();
+			BuildSteps = new List<string>();
 			List<string> allSteps = GetAllStepNames();
 			SetBuildSteps(BuildSteps, allSteps, 0);
 

@@ -40,7 +40,7 @@ namespace Icy.Asset.Editor
 		[OnCollectionChanged("OnTableListChanged")]
 		public List<AssetBundleWindowItem> _BundleVersionList;
 
-		[Title("打包步骤")]
+		[FoldoutGroup("打包步骤", Expanded = false)]
 		[ReadOnly]
 		public List<string> BuildBundleSteps;
 
@@ -107,7 +107,7 @@ namespace Icy.Asset.Editor
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 
-			BuildBundleSteps.Clear();
+			BuildBundleSteps = new List<string>();
 			List<string> allSteps = SubProcedureBuildAssetBundleStep.GetAllStepNamesImpl();
 			BuildWindow.SetBuildSteps(BuildBundleSteps, allSteps, 0);
 
