@@ -76,6 +76,7 @@ namespace Icy.Network
 			_BufferSize = bufferSize;
 			_ReceiveBuffer = new byte[bufferSize];
 			_SendBuffer = new byte[bufferSize];
+			IsConnected = false;
 		}
 
 		/// <summary>
