@@ -26,9 +26,8 @@ async def on_start() -> None:
 # Ran when a connection is made.
 @server.on_data
 async def on_data(connection: Connection, data: bytes) -> None:
-    print(type(data))
-    print(f"Received data from {connection.address}: {data}")
     connection.enqueue(bytes(data))
+    print(f"Echo back to {connection.address}: {data}")
 
 
 server.start()

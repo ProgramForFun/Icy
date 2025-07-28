@@ -13,5 +13,5 @@ print("Listening on " + server_address + ":" + str(server_port))
 
 while True:
 	payload, client_address = sock.recvfrom(4096)
-	print("Echoing " + str(payload) + " back to " + str(client_address))
+	print("Echo back to " + str(client_address) + " : " + str(payload))
 	sent = sock.sendto(payload, client_address)

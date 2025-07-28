@@ -23,7 +23,7 @@ class EchoRequestHandler(socketserver.StreamRequestHandler):
             line = self.request.recv(BUFFER_SIZE)
             if not line:
                 break
-            print ("%s send back: %s" % (self.client_address[0], line))
+            print ("Echo back to %s : %s" % (self.client_address[0], line))
             time.sleep(0.01)
             self.wfile.write(line)
         print ("%s disconnected" % self.client_address[0])

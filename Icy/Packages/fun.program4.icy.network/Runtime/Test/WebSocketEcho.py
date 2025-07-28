@@ -9,9 +9,8 @@ async def echo_handler(websocket):
     """
     try:
         async for message in websocket:
-            print(f"Received: {message}")
-            await websocket.send(f"Echo: {message}")
-            print(f"Sent: Echo: {message}")
+            await websocket.send(f"{message}")
+            print(f"Echo back to: {message}")
     except websockets.exceptions.ConnectionClosedOK:
         print("客户端正常断开连接")
     except websockets.exceptions.ConnectionClosedError as e:
