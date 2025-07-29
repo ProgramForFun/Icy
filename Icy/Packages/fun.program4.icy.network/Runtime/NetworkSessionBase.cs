@@ -85,10 +85,6 @@ namespace Icy.Network
 		/// <param name="syn">Kcp必须传，其他协议不需要</param>
 		public abstract UniTask Connect(byte[] syn = null);
 		/// <summary>
-		/// 监听服务器消息
-		/// </summary>
-		public abstract UniTask Listen();
-		/// <summary>
 		/// 发送消息
 		/// </summary>
 		public abstract void Send(byte[] msg, int startIdx, int length);

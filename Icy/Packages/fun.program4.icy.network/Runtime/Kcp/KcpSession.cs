@@ -137,11 +137,7 @@ namespace Icy.Network
 				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, e);
 			}
-			await UniTask.CompletedTask;
-		}
 
-		public override async UniTask Listen()
-		{
 			_AsyncReceiveArg = new SocketAsyncEventArgs();
 			_AsyncReceiveArg.SetBuffer(_ReceiveBuffer, 0, _ReceiveBuffer.Length);
 			_AsyncReceiveArg.RemoteEndPoint = _IpEndPoint;

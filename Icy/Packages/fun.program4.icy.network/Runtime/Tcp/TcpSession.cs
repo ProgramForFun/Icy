@@ -80,14 +80,7 @@ namespace Icy.Network
 				Log.LogError($"Connect exception : {ex}", nameof(TcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, ex);
 			}
-		}
 
-		/// <summary>
-		/// 监听消息
-		/// </summary>
-		public override async UniTask Listen()
-		{
-			Log.LogInfo("Start Listen", nameof(TcpSession));
 			while (IsConnected)
 			{
 				int receivedSize = 0;

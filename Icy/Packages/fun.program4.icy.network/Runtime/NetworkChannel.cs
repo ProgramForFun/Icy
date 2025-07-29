@@ -105,7 +105,6 @@ namespace Icy.Network
 		{
 			_Session.OnReceive = _Receiver.Decode;
 			await _Session.Connect(syn);
-			await _Session.Listen();
 		}
 
 		public virtual void Send<T>(T data)
