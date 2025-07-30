@@ -32,9 +32,9 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			string buildPackage = OwnerProcedure.Blackboard.ReadString("BuildPackage");
-			string buildOutputPath = OwnerProcedure.Blackboard.ReadString("BuildOutputPath");
-			ScriptableBuildParameters buildParam = OwnerProcedure.Blackboard.ReadObject("BuildParam") as ScriptableBuildParameters;
+			string buildPackage = OwnerProcedure.Blackboard.ReadString("BuildPackage", true);
+			string buildOutputPath = OwnerProcedure.Blackboard.ReadString("BuildOutputPath", true);
+			ScriptableBuildParameters buildParam = OwnerProcedure.Blackboard.ReadObject("BuildParam", true) as ScriptableBuildParameters;
 			ClearStreamingAssetsAndCopyNew(buildPackage, buildOutputPath, buildParam);
 
 			Finish();

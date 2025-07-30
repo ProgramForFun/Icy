@@ -31,7 +31,7 @@ namespace Icy.Base
 		public override void Init(FSM owner)
 		{
 			base.Init(owner);
-			OwnerProcedure = OwnerFSM.Blackboard.ReadObject("Procedure") as Procedure;
+			OwnerProcedure = OwnerFSM.Blackboard.ReadObject("Procedure", true) as Procedure;
 		}
 
 		/// <summary>

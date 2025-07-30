@@ -40,8 +40,8 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Activate()
 		{
-			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget");
-			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting") as BuildSetting;
+			_BuildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget", true);
+			_BuildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting", true) as BuildSetting;
 
 			Build(_BuildTarget, _BuildSetting, DoOnBuildAssetBundleProcedureFinish);
 			await UniTask.CompletedTask;

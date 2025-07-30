@@ -40,9 +40,12 @@ namespace Icy.Base
 			return _Int != null && _Int.ContainsKey(key);
 		}
 
-		public int ReadInt(string key)
+		public int ReadInt(string key, bool keep = false)
 		{
-			return _Int[key];
+			int rtn = _Int[key];
+			if (!keep)
+				_Int.Remove(key);
+			return rtn;
 		}
 
 		public void WriteFloat(string key, float value)
@@ -56,9 +59,12 @@ namespace Icy.Base
 			return _Float != null && _Float.ContainsKey(key);
 		}
 
-		public float ReadFloat(string key)
+		public float ReadFloat(string key, bool keep = false)
 		{
-			return _Float[key];
+			float rtn = _Float[key];
+			if (!keep)
+				_Float.Remove(key);
+			return rtn;
 		}
 
 		public void WriteString(string key, string value)
@@ -72,9 +78,12 @@ namespace Icy.Base
 			return _String != null && _String.ContainsKey(key);
 		}
 
-		public string ReadString(string key)
+		public string ReadString(string key, bool keep = false)
 		{
-			return _String[key];
+			string rtn = _String[key];
+			if (!keep)
+				_String.Remove(key);
+			return rtn;
 		}
 
 		public void WriteObject(string key, object value)
@@ -88,9 +97,12 @@ namespace Icy.Base
 			return _Object != null && _Object.ContainsKey(key);
 		}
 
-		public object ReadObject(string key)
+		public object ReadObject(string key, bool keep = false)
 		{
-			return _Object[key];
+			object rtn = _Object[key];
+			if (!keep)
+				_Object.Remove(key);
+			return rtn;
 		}
 
 		private void TryToLazyAllocate<T>()
