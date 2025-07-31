@@ -22,7 +22,10 @@ namespace Icy.Network
 			_KcpChannel.OnConnected = OnConnect;
 			_KcpChannel.OnDisconnected += OnDisconnect;
 			_KcpChannel.OnError += OnError;
-			_KcpChannel.Start(new byte[3] { 1, 2, 3}).Forget();
+
+			byte[] syn = new byte[4];
+			syn.WriteTo(0, 1u);
+			_KcpChannel.Start(syn).Forget();
 		}
 
 		private static void OnConnect()

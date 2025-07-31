@@ -96,15 +96,27 @@ namespace Icy.Network
 			IcyFrame.Instance.AddUpdate(this);
 		}
 
+		/// <summary>
+		/// 前4个byte会被解析为uint，作为conv发送给服务器；
+		/// conv是kcp的概念，客户端和服务器要保持一致；
+		/// </summary>
 		public override async UniTask Connect(byte[] syn = null)
 		{
 			if (IsConnected)
 				return;
 
+			if (syn == null || syn.Length < 4)
+			{
+				Exception e = new Exception($"Invalide syn argument");
+				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.ConnectFailed, e);
+				return;
+			}
+
 			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			_Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
-			_LocalConn = (uint)UnityEngine.Random.Range(1000, int.MaxValue);
+			_LocalConn = BitConverter.ToUInt32(syn, 0);
 			_RemoteConn = _LocalConn;
 
 #if USE_KCP_SHARP

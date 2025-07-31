@@ -100,7 +100,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 开始通信
 		/// </summary>
-		/// <param name="syn">Kcp必须传，其他协议不需要</param>
+		/// <param name="syn">Kcp必须传，具体见KcpSession；其他协议不需要</param>
 		public virtual async UniTask Start(byte[] syn = null)
 		{
 			_Session.OnReceive = _Receiver.Decode;
