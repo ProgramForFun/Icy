@@ -205,7 +205,8 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				OnListenException(e);
+				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 		}
 #else
@@ -411,8 +412,8 @@ namespace Icy.Network
 			_TimeElapsed = (uint)(ClientNow() - _StartTime);
 
 #if USE_KCP_SHARP
-			_Kcp.Update(_TimeNow);
-			uint nextUpdateTime = _Kcp.Check(_TimeNow);
+			_Kcp.Update(_TimeElapsed);
+			uint nextUpdateTime = _Kcp.Check(_TimeElapsed);
 #else
 			KcpDll.KcpUpdate(_Kcp, _TimeElapsed);
 			uint nextUpdateTime = KcpDll.KcpCheck(_Kcp, _TimeElapsed);
