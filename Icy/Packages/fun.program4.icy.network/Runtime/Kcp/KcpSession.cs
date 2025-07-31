@@ -82,9 +82,10 @@ namespace Icy.Network
 #if !USE_KCP_SHARP && !ENABLE_IL2CPP
 		protected KcpOutput _KcpOutput;
 #endif
-
-		protected uint _LocalConn;
-		protected uint _RemoteConn;
+		/// <summary>
+		/// Kcp的conv，客户端和服务器要保持一致
+		/// </summary>
+		protected uint _Conv;
 
 
 		public KcpSession(string host, int port, int bufferSize) : base(host, port, bufferSize)
@@ -116,18 +117,17 @@ namespace Icy.Network
 			_Socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			_Socket.Bind(new IPEndPoint(IPAddress.Any, 0));
 
-			_LocalConn = BitConverter.ToUInt32(syn, 0);
-			_RemoteConn = _LocalConn;
+			_Conv = BitConverter.ToUInt32(syn, 0);
 
 #if USE_KCP_SHARP
-			_Kcp = new Kcp(_RemoteConn, new IntPtr(_LocalConn));
+			_Kcp = new Kcp(_Conv, new IntPtr(_Conv));
 			_Kcp.SetOutput(KcpOutput);
 
 			_Kcp.NoDelay(1, 10, 1, 1);
 			_Kcp.WndSize(32, 32);
 			_Kcp.SetMTU(470);
 #else
-			_Kcp = KcpDll.KcpCreate(_RemoteConn, new IntPtr(_LocalConn));
+			_Kcp = KcpDll.KcpCreate(_Conv, new IntPtr(_Conv));
 			SetOutput();
 
 			KcpDll.KcpNodelay(_Kcp, 1, 10, 1, 1);
