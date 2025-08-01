@@ -104,7 +104,10 @@ namespace Icy.Network
 		public override async UniTask Connect(byte[] syn = null)
 		{
 			if (IsConnected)
+			{
+				Log.LogError("Duplicate Connect", nameof(KcpSession));
 				return;
+			}
 
 			if (syn == null || syn.Length < 4)
 			{
@@ -329,6 +332,12 @@ namespace Icy.Network
 
 		public override async UniTask Disconnect(byte[] fin = null)
 		{
+			if (!IsConnected)
+			{
+				Log.LogError("Disconnect when disconnected", nameof(KcpSession));
+				return;
+			}
+
 			if (_Socket == null)
 				return;
 
