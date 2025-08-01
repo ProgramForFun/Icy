@@ -38,5 +38,9 @@ namespace Icy.Network
 		/// 接收失败
 		/// </summary>
 		ReceiveFailed,
+		/// <summary>
+		/// WebSocket协议特有的错误
+		/// </summary>
+		WebSocketError,
 	}
 }
