@@ -65,7 +65,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Network-HTTP|基于BestHTTP实现，支持WebGL平台|待开始|
 |Network-TCP|基于.Net TCP实现|✔️|
 |Network-[KCP](https://github.com/passiony/kcp-unity)|以速度著称的Reliable UDP|✔️|
-|Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|待开始|
+|Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|✔️|
 |UI-基础结构||✔️|
 |UI-资源管理|基于YooAsset的UI Prefab、图集、Sprite管理|✔️|
 |UI-数据绑定||✔️|
