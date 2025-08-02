@@ -31,7 +31,9 @@ namespace Icy.Network
 
 		public WebSocketSession(string host, int port, int _) : base(host, port, 0) //0：WebSocket高度封装过了，不需要再提供Buffer
 		{
+#if !UNITY_WEBGL || UNITY_EDITOR
 			IcyFrame.Instance.AddUpdate(this);
+#endif
 		}
 
 		public override async UniTask Connect(byte[] syn = null)
@@ -143,7 +145,9 @@ namespace Icy.Network
 
 		public override void Dispose()
 		{
+#if !UNITY_WEBGL || UNITY_EDITOR
 			IcyFrame.Instance.RemoveUpdate(this);
+#endif
 			if (IsConnected)
 				Disconnect().Forget();
 			Log.LogInfo("Dispose", nameof(WebSocketSession));
@@ -151,7 +155,9 @@ namespace Icy.Network
 
 		public void Update(float delta)
 		{
+#if !UNITY_WEBGL || UNITY_EDITOR
 			_WebSocket?.DispatchMessageQueue();
+#endif
 		}
 	}
 }
