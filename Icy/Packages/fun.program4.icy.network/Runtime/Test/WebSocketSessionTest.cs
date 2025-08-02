@@ -30,7 +30,7 @@ namespace Icy.Network
 
 		public static void Test()
 		{
-			_WebSocketSession = new WebSocketSession("ws://localhost", 12888, 0);
+			_WebSocketSession = new WebSocketSession("ws://localhost", 12888);
 			_WebSocketSession.OnConnected += OnConnect;
 			_WebSocketSession.OnDisconnected += OnDisconnect;
 			_WebSocketSession.OnReceive += OnReceiveData;

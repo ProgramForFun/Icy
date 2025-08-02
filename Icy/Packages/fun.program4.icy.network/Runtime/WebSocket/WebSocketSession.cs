@@ -29,7 +29,12 @@ namespace Icy.Network
 	{
 		protected WebSocket _WebSocket;
 
-		public WebSocketSession(string host, int port, int _) : base(host, port, 0) //0：WebSocket高度封装过了，不需要再提供Buffer
+		/// <summary>
+		/// 构造WebSocketSession
+		/// </summary>
+		/// <param name="host">ws://或wss://开头的地址</param>
+		/// <param name="port">端口，如果不需指定填0</param>
+		public WebSocketSession(string host, int port = 0) : base(host, port, 0) //0：WebSocket高度封装过了，不需要再提供Buffer
 		{
 #if !UNITY_WEBGL || UNITY_EDITOR
 			IcyFrame.Instance.AddUpdate(this);
