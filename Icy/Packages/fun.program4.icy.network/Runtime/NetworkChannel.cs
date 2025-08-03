@@ -29,36 +29,36 @@ namespace Icy.Network
 		/// <summary>
 		/// 是否已连接到服务器
 		/// </summary>
-		public bool IsConnected => _Session.IsConnected;
+		public bool IsConnected => Session.IsConnected;
 		/// <summary>
 		/// 和服务器建立连接、可以通信了的事件
 		/// </summary>
 		public Action OnConnected
 		{
-			get => _Session.OnConnected;
-			set => _Session.OnConnected = value;
+			get => Session.OnConnected;
+			set => Session.OnConnected = value;
 		}
 		/// <summary>
 		/// 和服务器断开连接的事件
 		/// </summary>
 		public Action OnDisconnected
 		{
-			get => _Session.OnDisconnected;
-			set => _Session.OnDisconnected = value;
+			get => Session.OnDisconnected;
+			set => Session.OnDisconnected = value;
 		}
 		/// <summary>
 		/// 各种错误的事件
 		/// </summary>
 		public Action<NetworkError, Exception> OnError
 		{
-			get => _Session.OnError;
-			set => _Session.OnError = value;
+			get => Session.OnError;
+			set => Session.OnError = value;
 		}
 
 		/// <summary>
 		/// 内部的网络Session
 		/// </summary>
-		protected NetworkSessionBase _Session;
+		public NetworkSessionBase Session { get; protected set; }
 		/// <summary>
 		/// 负责序列化
 		/// </summary>
@@ -74,10 +74,10 @@ namespace Icy.Network
 			switch (args.SessionType)
 			{
 				case NetworkSessionType.Tcp:
-					_Session = new TcpSession(args.Host, args.Port, args.BufferSize);
+					Session = new TcpSession(args.Host, args.Port, args.BufferSize);
 					break;
 				case NetworkSessionType.Kcp:
-					_Session = new KcpSession(args.Host, args.Port, args.BufferSize);
+					Session = new KcpSession(args.Host, args.Port, args.BufferSize);
 					break;
 				default:
 					Log.Assert(false, $"Invalid NetworkSessionType = {args.SessionType}");
@@ -91,7 +91,7 @@ namespace Icy.Network
 
 		public NetworkChannel(NetworkSessionBase session, NetworkSenderBase sender, NetworkReceiverBase receiver)
 		{
-			_Session = session;
+			Session = session;
 			_Sender = sender;
 			sender.SetChannel(this);
 			_Receiver = receiver;
@@ -103,8 +103,8 @@ namespace Icy.Network
 		/// <param name="syn">Kcp必须传，具体见KcpSession；其他协议不需要</param>
 		public virtual async UniTask Start(byte[] syn = null)
 		{
-			_Session.OnReceive = _Receiver.Decode;
-			await _Session.Connect(syn);
+			Session.OnReceive = _Receiver.Decode;
+			await Session.Connect(syn);
 		}
 
 		public virtual void Send<T>(T data)
@@ -129,7 +129,7 @@ namespace Icy.Network
 
 		internal virtual void Send(byte[] encodedData, int startIdx, int length)
 		{
-			_Session.Send(encodedData, startIdx, length);
+			Session.Send(encodedData, startIdx, length);
 		}
 
 		/// <summary>
@@ -138,9 +138,9 @@ namespace Icy.Network
 		/// <param name="fin">Kcp必须传，其他协议不需要</param>
 		public virtual async UniTask Dispose(byte[] fin = null)
 		{
-			await _Session.Disconnect(fin);
-			_Session.OnReceive = null;
-			_Session.Dispose();
+			await Session.Disconnect(fin);
+			Session.OnReceive = null;
+			Session.Dispose();
 		}
 	}
 }
