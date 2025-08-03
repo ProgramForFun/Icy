@@ -34,7 +34,7 @@
       "hash": "5fefbaa7df300643e53954cf07a73b3299665883"
     },
     "com.endel.nativewebsocket": {
-      "version": "https://github.com/endel/NativeWebSocket.git#upm",
+      "version": "https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC.git#upm",
       "depth": 0,
       "source": "git",
       "dependencies": {},
