@@ -125,10 +125,15 @@ namespace Icy.Network
 				return;
 			}
 
+#if UNITY_WEBGL && !UNITY_EDITOR
 			//TODO：GC优化
 			byte[] data2Send = new byte[length];
 			Buffer.BlockCopy(msg, startIdx, data2Send, 0, length);
 			await _WebSocket.Send(data2Send);
+#else
+			ArraySegment<byte> data2Send = new ArraySegment<byte>(msg, startIdx, length);
+			await _WebSocket.Send(data2Send);
+#endif
 		}
 
 		protected override void HandleReceived(byte[] buffer, int startIdx, int receivedSize)
