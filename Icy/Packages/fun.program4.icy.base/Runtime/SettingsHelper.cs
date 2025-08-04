@@ -47,6 +47,8 @@ namespace Icy.Base
 		{
 			string path = Path.Combine(GetSettingDir(), fileNameWithExtension);
 #if UNITY_EDITOR
+			if (!File.Exists(path))
+				return null;
 			byte[] bytes = File.ReadAllBytes(path);
 			await UniTask.CompletedTask;
 #else
@@ -100,7 +102,7 @@ namespace Icy.Base
 				case UnityEditor.BuildTarget.iOS:
 					return "BuildSetting_iOS.json";
 				case UnityEditor.BuildTarget.StandaloneWindows64:
-					return "BuildSetting_Win64";
+					return "BuildSetting_Win64.json";
 				default:
 					Log.Assert(false, $"Unsupported platform {UnityEditor.EditorUserBuildSettings.activeBuildTarget}");
 					return "";
@@ -113,7 +115,7 @@ namespace Icy.Base
 				case UnityEngine.RuntimePlatform.IPhonePlayer:
 					return "BuildSetting_iOS.json";
 				case UnityEngine.RuntimePlatform.WindowsPlayer:
-					return "BuildSetting_Win64";
+					return "BuildSetting_Win64.json";
 				default:
 					Log.Assert(false, $"Unsupported platform {UnityEngine.Application.platform}");
 					return "";

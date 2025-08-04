@@ -83,10 +83,16 @@ namespace Icy.Asset
 
 			byte[] assetSettingBytes = await SettingsHelper.LoadSetting("AssetSetting.json");
 			_AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
-			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
-			_BuildSetting = BuildSetting.Parser.ParseFrom(buildSettingBytes);
 
-			IDecryptionServices decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
+			IDecryptionServices decryptionServices = null;
+			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
+			if (buildSettingBytes != null)
+			{
+				_BuildSetting = BuildSetting.Parser.ParseFrom(buildSettingBytes);
+				decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
+			}
+			else
+				Log.LogError("Can not find " + Path.Combine(SettingsHelper.GetSettingDir(), SettingsHelper.GetBuildSettingName()));
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
