@@ -49,7 +49,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
-|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|待开始|
+|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|✔️|
 |集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder/Formatter|✔️|
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
