@@ -68,7 +68,7 @@ namespace Icy.Network
 			try
 			{
 				_TcpClient = new TcpClient();
-				await _TcpClient.ConnectAsync(Host, Port);
+				await _TcpClient.ConnectAsync(Host, Port).AsUniTask();
 				_TcpClient.NoDelay = true;  //关闭Nagle算法
 				_Stream = _TcpClient.GetStream();
 				IsConnected = true;
@@ -87,7 +87,7 @@ namespace Icy.Network
 				try
 				{
 					Memory<byte> memBytes = new Memory<byte>(_ReceiveBuffer, _BufferRemain, _BufferSize - _BufferRemain);
-					receivedSize = await _Stream.ReadAsync(memBytes);
+					receivedSize = await _Stream.ReadAsync(memBytes).AsUniTask();
 					HandleReceived(_ReceiveBuffer, -1, receivedSize);
 				}
 				catch (Exception ex)

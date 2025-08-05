@@ -129,10 +129,10 @@ namespace Icy.Network
 			//TODO：GC优化
 			byte[] data2Send = new byte[length];
 			Buffer.BlockCopy(msg, startIdx, data2Send, 0, length);
-			await _WebSocket.Send(data2Send);
+			await _WebSocket.Send(data2Send).AsUniTask();
 #else
 			ArraySegment<byte> data2Send = new ArraySegment<byte>(msg, startIdx, length);
-			await _WebSocket.Send(data2Send);
+			await _WebSocket.Send(data2Send).AsUniTask();
 #endif
 		}
 
