@@ -21,6 +21,7 @@ using Icy.Base;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 #endif
@@ -172,6 +173,11 @@ namespace Icy.UI
 		[MenuItem("GameObject/Add To UI Code Generator _SPACE", false, -100)]
 		private static void AddComponentByEditorSelection()
 		{
+			//只有非play、编辑Prefab状态下，才执行快捷添加逻辑
+			PrefabStage stage = PrefabStageUtility.GetCurrentPrefabStage();
+			if (EditorApplication.isPlaying || stage == null)
+				return;
+
 			UICodeGenerator generator = null;
 			GameObject[] allSelect = Selection.gameObjects;
 			if (allSelect.Length == 0)
