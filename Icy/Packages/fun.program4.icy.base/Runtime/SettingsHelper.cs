@@ -95,18 +95,7 @@ namespace Icy.Base
 		internal static string GetBuildSettingName()
 		{
 #if UNITY_EDITOR
-			switch (UnityEditor.EditorUserBuildSettings.activeBuildTarget)
-			{
-				case UnityEditor.BuildTarget.Android:
-					return "BuildSetting_Android.json";
-				case UnityEditor.BuildTarget.iOS:
-					return "BuildSetting_iOS.json";
-				case UnityEditor.BuildTarget.StandaloneWindows64:
-					return "BuildSetting_Win64.json";
-				default:
-					Log.Assert(false, $"Unsupported platform {UnityEditor.EditorUserBuildSettings.activeBuildTarget}");
-					return "";
-			}
+			return GetBuildSettingNameEditor(UnityEditor.EditorUserBuildSettings.activeBuildTarget);
 #else
 			switch (UnityEngine.Application.platform)
 			{
@@ -122,5 +111,23 @@ namespace Icy.Base
 			}
 #endif
 		}
+
+#if UNITY_EDITOR
+		internal static string GetBuildSettingNameEditor(UnityEditor.BuildTarget buildTarget)
+		{
+			switch (buildTarget)
+			{
+				case UnityEditor.BuildTarget.Android:
+					return "BuildSetting_Android.json";
+				case UnityEditor.BuildTarget.iOS:
+					return "BuildSetting_iOS.json";
+				case UnityEditor.BuildTarget.StandaloneWindows64:
+					return "BuildSetting_Win64.json";
+				default:
+					Log.Assert(false, $"Unsupported platform {UnityEditor.EditorUserBuildSettings.activeBuildTarget}");
+					return "";
+			}
+		}
+#endif
 	}
 }

@@ -253,7 +253,7 @@ namespace Icy.Asset.Editor
 
 		protected virtual string GetSettingFileName()
 		{
-			return string.Format($"BuildSetting_{_CurrBuildTarget}.json");
+			return SettingsHelper.GetBuildSettingNameEditor(_CurrBuildTarget);
 		}
 
 		[Title("打包")]
