@@ -54,7 +54,7 @@ namespace Icy.Network
 				_WebSocket.OnMessage += OnWebSocketMessage;
 				_WebSocket.OnError += OnWebSocketError;
 				_WebSocket.OnClose += OnWebSocketClose;
-				await _WebSocket.Connect().AsUniTask();
+				await _WebSocket.Connect();
 			}
 			catch (Exception ex)
 			{
@@ -129,10 +129,10 @@ namespace Icy.Network
 			//TODO：GC优化
 			byte[] data2Send = new byte[length];
 			Buffer.BlockCopy(msg, startIdx, data2Send, 0, length);
-			await _WebSocket.Send(data2Send).AsUniTask();
+			await _WebSocket.Send(data2Send);
 #else
 			ArraySegment<byte> data2Send = new ArraySegment<byte>(msg, startIdx, length);
-			await _WebSocket.Send(data2Send).AsUniTask();
+			await _WebSocket.Send(data2Send);
 #endif
 		}
 
@@ -149,7 +149,7 @@ namespace Icy.Network
 				return;
 			}
 
-			await _WebSocket.Close().AsUniTask();
+			await _WebSocket.Close();
 			_WebSocket = null;
 		}
 
