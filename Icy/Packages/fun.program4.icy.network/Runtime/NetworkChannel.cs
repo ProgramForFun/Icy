@@ -79,6 +79,9 @@ namespace Icy.Network
 				case NetworkSessionType.Kcp:
 					Session = new KcpSession(args.Host, args.Port, args.BufferSize);
 					break;
+				case NetworkSessionType.WebSocket:
+					Session = new WebSocketSession(args.Host, args.Port);
+					break;
 				default:
 					Log.Assert(false, $"Invalid NetworkSessionType = {args.SessionType}");
 					break;

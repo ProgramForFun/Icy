@@ -23,7 +23,8 @@ namespace Icy.Network
 	public enum NetworkSessionType
 	{
 		Tcp,
-		Kcp
+		Kcp,
+		WebSocket,
 	}
 
 	/// <summary>
