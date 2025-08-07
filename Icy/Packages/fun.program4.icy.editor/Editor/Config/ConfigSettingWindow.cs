@@ -35,21 +35,25 @@ namespace Icy.Editor
 
 		[Title("生成Config的Bat脚本路径")]
 		[Delayed]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string GenerateBatPath;
 
 		[Title("Config代码的导出输出目录")]
 		[FolderPath]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string CodeOutputDir;
 
 		[Title("Bin格式的Config的导出输出目录")]
 		[FolderPath]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string BinOutputDir;
 
 		[Title("Json格式的Config的导出输出目录")]
 		[FolderPath]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string JsonOutputDir;
 

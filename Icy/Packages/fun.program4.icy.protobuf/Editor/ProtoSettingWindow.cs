@@ -35,11 +35,13 @@ namespace Icy.Protobuf.Editor
 
 		[Title("编译Proto的Bat脚本路径")]
 		[Delayed]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string CompileBatPath;
 
 		[Title("Proto编译后的代码的输出目录")]
 		[FolderPath]
+		[Required]
 		[OnValueChanged("OnDataChanged")]
 		public string ProtoOutputDir;
 
