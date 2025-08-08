@@ -27,6 +27,7 @@ namespace Icy.Network
 	public static class WebSocketSessionTest
 	{
 		static WebSocketSession _WebSocketSession;
+		static byte[] _Data2Send;
 
 		public static void Test()
 		{
@@ -35,6 +36,8 @@ namespace Icy.Network
 			_WebSocketSession.OnDisconnected += OnDisconnect;
 			_WebSocketSession.OnReceive += OnReceiveData;
 			_WebSocketSession.OnError += OnError;
+
+			_Data2Send = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
 		}
 
 		private static void OnConnect()
@@ -49,8 +52,8 @@ namespace Icy.Network
 
 		private static void OnReceiveData(byte[] buffer, int start, int length)
 		{
-			string msg = Encoding.UTF8.GetString(buffer, start, length);
-			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
+			//string msg = Encoding.UTF8.GetString(buffer, start, length);
+			//Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
@@ -63,14 +66,17 @@ namespace Icy.Network
 			if (Input.GetKeyUp(KeyCode.C))
 				await _WebSocketSession.Connect();
 
-			if (Input.GetKey(KeyCode.S))
-			{
-				for (int i = 0; i < 2; i++)
-				{
-					byte[] toSend = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
-					_WebSocketSession.Send(toSend, 0, toSend.Length);
-				}
-			}
+			//if (Input.GetKey(KeyCode.S))
+			//{
+			//	for (int i = 0; i < 2; i++)
+			//	{
+			//		byte[] toSend = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
+			//		_WebSocketSession.Send(toSend, 0, toSend.Length);
+			//	}
+			//}
+
+			if (_WebSocketSession != null && _WebSocketSession.IsConnected)
+				_WebSocketSession.Send(_Data2Send, 0, _Data2Send.Length);
 
 			if (Input.GetKeyUp(KeyCode.D))
 				_WebSocketSession.Disconnect().Forget();
