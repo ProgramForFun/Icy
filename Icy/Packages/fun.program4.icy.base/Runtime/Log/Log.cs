@@ -38,7 +38,7 @@ namespace Icy.Base
 
 
 	/// <summary>
-	/// 提供Log到文件以及更精细的Log Level控制；
+	/// 提供Log到文件、多线程Log、以及更精细的Log Level控制；
 	/// 使用本Log后，不应该再设置Unity Logger.filterLogType；
 	/// </summary>
 	public static class Log
@@ -48,9 +48,13 @@ namespace Icy.Base
 		/// </summary>
 		public static LogLevel MinLogLevel { get; set; } = LogLevel.Info;
 		/// <summary>
-		/// 指定Tag独立的LogLevel，优先级高于MinLogLevel
+		/// 指定Tag独立的最小LogLevel，优先级高于MinLogLevel
 		/// </summary>
-		private static Dictionary<string, LogLevel> _OverrideTagLogLevel = new Dictionary<string, LogLevel>();
+		private static Dictionary<string, LogLevel> _OverrideMinLogLevelForTag = new Dictionary<string, LogLevel>();
+		/// <summary>
+		/// Log Level相关数据的锁
+		/// </summary>
+		private static object _LevelLock = new object();
 #if UNITY_EDITOR
 		/// <summary>
 		/// Log颜色，只在editor下生效
@@ -75,7 +79,7 @@ namespace Icy.Base
 		/// <summary>
 		/// Log队列的锁
 		/// </summary>
-		private static object _Lock;
+		private static object _QueueLock;
 		/// <summary>
 		/// 停止线程令牌
 		/// </summary>
@@ -91,7 +95,7 @@ namespace Icy.Base
 			#region WriteLog2File
 			if (write2File)
 			{
-				_Lock = new object();
+				_QueueLock = new object();
 				_LogQueue = new Queue<string>();
 				_CancellationTokenSource = new CancellationTokenSource();
 				_Write2FileThread = new Thread(ConsumeLog);
@@ -102,11 +106,12 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 给指定Tag独立的LogLevel
+		/// 给指定Tag独立的最小LogLevel
 		/// </summary>
-		public static void OverrideTagLogLevel(string tag, LogLevel logLevel)
+		public static void OverrideMinLogLevelForTag(string tag, LogLevel logLevel)
 		{
-			_OverrideTagLogLevel[tag] = logLevel;
+			lock (_LevelLock)
+				_OverrideMinLogLevelForTag[tag] = logLevel;
 		}
 
 		/// <summary>
@@ -115,8 +120,11 @@ namespace Icy.Base
 		public static void Reset()
 		{
 			MinLogLevel = LogLevel.Info;
-			_OverrideTagLogLevel.Clear();
-			_ForceOnce = false;
+			lock (_LevelLock)
+			{
+				_OverrideMinLogLevelForTag.Clear();
+				_ForceOnce = false;
+			}
 
 #if UNITY_EDITOR
 			_ColorOnce = null;
@@ -125,7 +133,7 @@ namespace Icy.Base
 
 		public static void LogInfo(string msg, string tag = null)
 		{
-			if (!IsMatchLogLevel(tag))
+			if (!IsMatchLogLevel(tag, LogLevel.Info))
 				return;
 
 			Debug.Log(FormatByTag(tag,msg));
@@ -133,20 +141,23 @@ namespace Icy.Base
 
 		public static void LogWarning(string msg, string tag = null)
 		{
-			if (!IsMatchLogLevel(tag))
+			if (!IsMatchLogLevel(tag, LogLevel.Warning))
 				return;
 			Debug.LogWarning(FormatByTag(tag, msg));
 		}
 
 		public static void LogError(string msg, string tag = null)
 		{
-			if (!IsMatchLogLevel(tag))
+			if (!IsMatchLogLevel(tag, LogLevel.Error))
 				return;
 			Debug.LogError(FormatByTag(tag, msg));
 		}
 
 		public static void Assert(bool condition, string msg, string tag = null)
 		{
+			if (!IsMatchLogLevel(tag, LogLevel.Assert))
+				return;
+
 			if (!condition)
 			{
 				LogError("[ASSERT] " + msg, tag);
@@ -177,25 +188,29 @@ namespace Icy.Base
 		/// </summary>
 		public static void ForceLogOnce()
 		{
-			_ForceOnce = true;
+			lock (_LevelLock)
+				_ForceOnce = true;
 		}
 
-		private static bool IsMatchLogLevel(string tag)
+		private static bool IsMatchLogLevel(string tag, LogLevel logLevel)
 		{
-			if (_ForceOnce)
+			lock (_LevelLock)
 			{
-				_ForceOnce = false;
+				if (_ForceOnce)
+				{
+					_ForceOnce = false;
+					return true;
+				}
+				else if (tag != null && _OverrideMinLogLevelForTag.ContainsKey(tag))
+				{
+					if (logLevel < _OverrideMinLogLevelForTag[tag])
+						return false;
+				}
+				else if (logLevel < MinLogLevel)
+					return false;
+
 				return true;
 			}
-			else if (tag != null && _OverrideTagLogLevel.ContainsKey(tag))
-			{
-				if (_OverrideTagLogLevel[tag] > LogLevel.Info)
-					return false;
-			}
-			else if (MinLogLevel > LogLevel.Info)
-				return false;
-
-			return true;
 		}
 
 		private static string FormatByTag(string tag, string msg)
@@ -252,12 +267,12 @@ namespace Icy.Base
 		/// </summary>
 		private static void OnLog(string condition, string stackTrace, LogType type)
 		{
-			lock (_Lock)
+			lock (_QueueLock)
 			{
 				_LogQueue.Enqueue(condition);
 				if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert)
 					_LogQueue.Enqueue(stackTrace);
-				Monitor.Pulse(_Lock);
+				Monitor.Pulse(_QueueLock);
 			}
 
 		}
@@ -274,10 +289,10 @@ namespace Icy.Base
 				while (!_CancellationTokenSource.Token.IsCancellationRequested)
 				{
 					string log = null;
-					lock (_Lock)
+					lock (_QueueLock)
 					{
 						while (_LogQueue.Count == 0)
-							Monitor.Wait(_Lock);
+							Monitor.Wait(_QueueLock);
 						log = _LogQueue.Dequeue();
 					}
 
@@ -307,11 +322,11 @@ namespace Icy.Base
 			if (_Write2FileThread != null && _CancellationTokenSource != null)
 			{
 				_CancellationTokenSource.Cancel();
-				lock (_Lock)
+				lock (_QueueLock)
 				{
 					//令牌取消后，线程函数实际还Wait在锁上，这里要写入一行log、调用Pulse，以唤起线程函数来继续向下执行，才能停止
 					_LogQueue.Enqueue("EOF");
-					Monitor.Pulse(_Lock);
+					Monitor.Pulse(_QueueLock);
 				}
 				_Write2FileThread.Join(1000);
 			}

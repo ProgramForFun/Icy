@@ -17,6 +17,9 @@
 
 #if UNITY_EDITOR
 
+using Cysharp.Threading.Tasks;
+using System.Threading;
+
 namespace Icy.Base
 {
 	public static class LogTest
@@ -25,8 +28,24 @@ namespace Icy.Base
 		{
 			Log.MinLogLevel = LogLevel.Warning;
 			Log.LogInfo("Test Msg", "game");
-			Log.OverrideTagLogLevel("game", LogLevel.Info);
+			Log.OverrideMinLogLevelForTag("game", LogLevel.Info);
 			Log.LogInfo("Test Msg", "game");
+
+			UniTask.RunOnThreadPool(() => 
+			{
+				Log.OverrideMinLogLevelForTag("worker", LogLevel.Info);
+				Log.LogError($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker");
+				Log.LogError($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker");
+				Log.LogError($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker");
+			}).Forget();
+
+			UniTask.RunOnThreadPool(() =>
+			{
+				Log.OverrideMinLogLevelForTag("worker 2", LogLevel.Info);
+				Log.LogWarning($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker 2");
+				Log.LogWarning($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker 2");
+				Log.LogWarning($"Log from worker thread {Thread.CurrentThread.ManagedThreadId}", "worker 2");
+			}).Forget();
 		}
 	}
 }
