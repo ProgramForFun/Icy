@@ -20,6 +20,8 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using UnityEngine;
 
 
 namespace Icy.Base
@@ -27,8 +29,8 @@ namespace Icy.Base
 	using EventListener = Action<int, IEventParam>;
 
 	/// <summary>
-	/// 事件管理器
-	/// TODO：支持多线程
+	/// 事件管理器；
+	/// 支持Worker线程触发事件，主线程执行
 	/// </summary>
 	public static class EventManager
 	{
@@ -39,24 +41,39 @@ namespace Icy.Base
 		/// <summary>
 		/// EventParam缓存
 		/// </summary>
-		private static Dictionary<Type, IEventParam> _EventParamCache = new Dictionary<Type, IEventParam>();
+		private static ThreadLocal<Dictionary<Type, IEventParam>> _EventParamCache = new ThreadLocal<Dictionary<Type, IEventParam>>();
+		/// 事件的锁
+		/// </summary>
+		private static object _EventLock = new object();
+		/// <summary>
+		/// EventParam缓存的锁
+		/// </summary>
+		private static object _ParamLock = new object();
+		/// <summary>
+		/// 事件队列
+		/// </summary>
+		private static Queue<KeyValuePair<int, IEventParam>> _EventQueue = new Queue<KeyValuePair<int, IEventParam>>();
 
 
 		/// <summary>
 		/// 获取缓存的Param，避免每次都new一个新的，降低GC分配；
-		/// 注意，业务逻辑只应该从Param中获取数据，不应该持有EventParam
+		/// 注意，业务逻辑只应该从Param中获取数据，不应该持有EventParam；
 		/// </summary>
 		public static T GetParam<T>() where T : class, IEventParam, new()
 		{
 			IEventParam param;
-
 			Type type = typeof(T);
-			if (_EventParamCache.ContainsKey(type))
-				param = _EventParamCache[type];
-			else
+
+			lock (_ParamLock)
 			{
-				param = new T();
-				_EventParamCache[type] = param;
+				if (_EventParamCache.Value == null)
+					_EventParamCache.Value = new Dictionary<Type, IEventParam>();
+
+				if (!_EventParamCache.Value.TryGetValue(type, out param))
+				{
+					param = new T();
+					_EventParamCache.Value[type] = param;
+				}
 			}
 
 			param.Reset();
@@ -68,15 +85,18 @@ namespace Icy.Base
 		/// </summary>
 		public static bool HasAlreadyListened(int eventID, EventListener listener)
 		{
-			if (!_EventListenerMap.ContainsKey(eventID))
-				return false;
-
-			foreach (var item in _EventListenerMap[eventID])
+			lock (_EventLock)
 			{
-				if (item == listener)
-					return true;
+				if (!_EventListenerMap.ContainsKey(eventID))
+					return false;
+
+				foreach (var item in _EventListenerMap[eventID])
+				{
+					if (item == listener)
+						return true;
+				}
+				return false;
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -84,16 +104,19 @@ namespace Icy.Base
 		/// </summary>
 		public static void AddListener(int eventID, EventListener listener)
 		{
-			if (HasAlreadyListened(eventID, listener))
+			lock (_EventLock)
 			{
-				MethodInfo listenerMethod = listener.Method;
-				Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", nameof(EventManager));
-				return;
-			}
+				if (HasAlreadyListened(eventID, listener))
+				{
+					MethodInfo listenerMethod = listener.Method;
+					Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", nameof(EventManager));
+					return;
+				}
 
-			if (!_EventListenerMap.ContainsKey(eventID))
-				_EventListenerMap[eventID] = new HashSet<EventListener>();
-			_EventListenerMap[eventID].Add(listener);
+				if (!_EventListenerMap.ContainsKey(eventID))
+					_EventListenerMap[eventID] = new HashSet<EventListener>();
+				_EventListenerMap[eventID].Add(listener);
+			}
 		}
 
 		/// <summary>
@@ -101,8 +124,11 @@ namespace Icy.Base
 		/// </summary>
 		public static void RemoveListener(int eventID, EventListener listener)
 		{
-			if (_EventListenerMap.ContainsKey(eventID))
-				_EventListenerMap[eventID].Remove(listener);
+			lock (_EventLock)
+			{
+				if (_EventListenerMap.ContainsKey(eventID))
+					_EventListenerMap[eventID].Remove(listener);
+			}
 		}
 
 		/// <summary>
@@ -118,11 +144,13 @@ namespace Icy.Base
 		/// </summary>
 		public static void Trigger(int eventID, IEventParam param)
 		{
-			if (_EventListenerMap.ContainsKey(eventID))
+			if (IsWorkerThread())
 			{
-				foreach (EventListener listener in _EventListenerMap[eventID])
-					listener(eventID, param);
+				lock (_EventLock)
+					_EventQueue.Enqueue(new KeyValuePair<int, IEventParam>(eventID, param));
 			}
+			else
+				DoTrigger(eventID, param);
 		}
 
 		/// <summary>
@@ -167,14 +195,29 @@ namespace Icy.Base
 			Trigger(eventID, param);
 		}
 
+		private static void DoTrigger(int eventID, IEventParam param)
+		{
+			lock (_EventLock)
+			{
+				if (_EventListenerMap.ContainsKey(eventID))
+				{
+					foreach (EventListener listener in _EventListenerMap[eventID])
+						listener(eventID, param);
+				}
+			}
+		}
+
 		/// <summary>
 		/// 清除所有的事件注册，谨慎调用！
 		/// </summary>
 		public static void ClearAll()
 		{
+			Log.ForceLogOnce();
 			Log.LogInfo("Clear EventManager");
-			_EventListenerMap.Clear();
-			_EventParamCache.Clear();
+			lock (_EventLock)
+				_EventListenerMap.Clear();
+			lock (_ParamLock)
+				_EventParamCache.Value = new Dictionary<Type, IEventParam>();
 		}
 
 		/// <summary>
@@ -184,17 +227,51 @@ namespace Icy.Base
 		public static string Dump()
 		{
 			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
-			foreach (var kvp in _EventListenerMap)
+			lock (_EventLock)
 			{
-				stringBuilder.AppendLine($"EventKey : {kvp.Key} ");
-				foreach (var callback in kvp.Value)
+				foreach (var kvp in _EventListenerMap)
 				{
-					MethodInfo methodInfo = callback.Method;
-					stringBuilder.AppendLine($"{methodInfo.DeclaringType?.FullName}.{methodInfo.Name}");
+					stringBuilder.AppendLine($"EventKey : {kvp.Key} ");
+					foreach (var callback in kvp.Value)
+					{
+						MethodInfo methodInfo = callback.Method;
+						stringBuilder.AppendLine($"{methodInfo.DeclaringType?.FullName}.{methodInfo.Name}");
+					}
+					stringBuilder.AppendLine();
 				}
-				stringBuilder.AppendLine();
+				return stringBuilder.ToString();
 			}
-			return stringBuilder.ToString();
+		}
+
+		private static bool IsWorkerThread()
+		{
+#if UNITY_EDITOR
+			try
+			{
+				//编辑器非Play时，当做主线程
+				if (!Application.isPlaying)
+					return false;
+			}
+			catch (Exception)
+			{
+				//报错的话，说明是从Worker线程调用Unity API了，此时肯定是Worker线程，返回true
+				return true;
+			}
+#endif
+			return IcyFrame.Instance != null && !IcyFrame.Instance.IsMainThread();
+		}
+
+		internal static void Update()
+		{
+			lock (_EventLock)
+			{
+				while (_EventQueue.Count > 0)
+				{
+					KeyValuePair<int, IEventParam> e = _EventQueue.Dequeue();
+					//Log.LogInfo($"Trigger from queue, event id = {e.Key}");
+					DoTrigger(e.Key, e.Value);
+				}
+			}
 		}
 	}
 }

@@ -16,6 +16,8 @@
 
 
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Icy.Base
@@ -51,19 +53,53 @@ namespace Icy.Base
 			//editor下支持重复注册的检查
 			EventManager.AddListener(1, FrameCountEventCallback);
 
+			//Worker线程触发事件，主线程执行
+			UniTask.RunOnThreadPool(async () =>
+			{
+				EventManager.AddListener(2, WorkerThreadEventCallback);
+				for (int i = 0; i < 10; i++)
+				{
+					//Log.LogInfo("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
+					Log.LogInfo("Trigger event = " + i);
+					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
+					eventParam.Value = i;
+					EventManager.Trigger(2, eventParam);
+					await Task.Delay(500);
+				}
+			}).Forget();
+
+			UniTask.RunOnThreadPool(async () =>
+			{
+				for (int i = 100; i < 110; i++)
+				{
+					//Log.LogWarning("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
+					Log.LogWarning("Trigger event = " + i);
+					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
+					eventParam.Value = i;
+					EventManager.Trigger(2, eventParam);
+					await Task.Delay(500);
+				}
+			}).Forget();
+
 			//输出当前EventManager里所有注册的监听，方便调试
 			Log.LogInfo(EventManager.Dump());
 		}
 
 		static void EventCallback(int eventID, IEventParam param)
 		{
-			if (param is EventParam_String param_Int)
-				Log.LogInfo(param_Int.Value.ToString(), "game");
+			if (param is EventParam_String param_String)
+				Log.LogInfo(param_String.Value, "game");
 		}
 
 		static void FrameCountEventCallback(int eventID, IEventParam param)
 		{
 			Log.LogInfo($"This is a NextFrame msg, frameCount = {Time.frameCount}", "game");
+		}
+
+		static void WorkerThreadEventCallback(int eventID, IEventParam param)
+		{
+			if (param is EventParam_Int param_Int)
+				Log.LogInfo($"This is a msg from worker thread, value = {param_Int.Value}", "game");
 		}
 	}
 }

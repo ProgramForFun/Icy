@@ -27,9 +27,9 @@ public static class TestPlayground
 	//[Shortcut("TestPlayground", KeyCode.Space)]
 	public static void Test()
 	{
-		LogTest.Test();
+		//LogTest.Test();
 		//ProcedureTest.Test();
-		//EventTest.Test();
+		EventTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();

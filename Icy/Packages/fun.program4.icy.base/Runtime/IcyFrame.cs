@@ -113,6 +113,8 @@ namespace Icy.Base
 			float delta = Time.deltaTime;
 			for (int i = 0; i < _Updateables.Count; i++)
 				_Updateables[i]?.Update(delta);
+
+			EventManager.Update();
 		}
 
 		private void FixedUpdate()
