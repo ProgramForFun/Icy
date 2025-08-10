@@ -15,6 +15,8 @@
  */
 
 
+using Icy.Base;
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityToolbarExtender;
@@ -26,9 +28,13 @@ namespace Icy.Editor
 	/// </summary>
 	public class BranchDisplaying
 	{
+		private static string _BranchName;
+		private static long _PrevUpdateBranchNameTimestamp;
+
 		[InitializeOnLoadMethod]
 		static void Init()
 		{
+			_PrevUpdateBranchNameTimestamp = 0;
 			ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
 		}
 
@@ -38,12 +44,16 @@ namespace Icy.Editor
 			style.normal.textColor = Color.white;
 			style.fontStyle = FontStyle.Bold;
 
-			string branch = GetGitBranch();
-			GUILayout.Label($"Git Branch  :  {branch}", style);
-			Debug.Log(branch);
+			long totalSeconds = DateTime.Now.TotalSeconds();
+			if (totalSeconds - _PrevUpdateBranchNameTimestamp > 10)
+			{
+				_PrevUpdateBranchNameTimestamp = totalSeconds;
+				_BranchName = GetGitBranch();
+			}
+			GUILayout.Label($"Git Branch  :  {_BranchName}", style);
 		}
 
-		static string GetGitBranch()
+			static string GetGitBranch()
 		{
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
 			{
