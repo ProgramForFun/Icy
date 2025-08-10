@@ -109,31 +109,29 @@ namespace Icy.Editor
 		/// </summary>
 		static string GetSvnBranch()
 		{
-			var process = new Process
+			ProcessStartInfo startInfo = new ProcessStartInfo
 			{
-				StartInfo = new ProcessStartInfo
-				{
-					FileName = "svn",
-					Arguments = "info --show-item relative-url",
-					RedirectStandardOutput = true,
-					UseShellExecute = false,
-					CreateNoWindow = true
-				}
+				FileName = "svn",
+				Arguments = "info --show-item relative-url",
+				RedirectStandardOutput = true,
+				UseShellExecute = false,
+				CreateNoWindow = true
 			};
 
-			process.Start();
-			string output = process.StandardOutput.ReadToEnd();
-			process.WaitForExit();
-
-			if (process.ExitCode == 0)
+			using (Process process = Process.Start(startInfo))
 			{
-				string relativeUrl = output.Trim().ToLower();
-				// 示例格式： ^/branches/your-branch-name
-				if (relativeUrl.Contains("/branches/"))
-					return relativeUrl.Split(new[] { "/branches/" }, System.StringSplitOptions.None)[1].Split('/')[0];
-				return relativeUrl.Contains("/trunk") ? "trunk" : string.Empty;
+				using (StreamReader reader = process.StandardOutput)
+				{
+					string result = reader.ReadToEnd().Trim();
+					// 示例格式： ^/branches/your-branch-name
+					if (result.Contains("/branches/") || result.Contains("/Branches/"))
+					{
+						string[] splitArray = result.Split('/');
+						return splitArray[^1];
+					}
+					return result.Contains("/trunk") ? "trunk" : string.Empty;
+				}
 			}
-			return string.Empty;
 		}
 
 		/// <summary>
@@ -142,7 +140,7 @@ namespace Icy.Editor
 		static RepositoryType DetectRepository(string path = null)
 		{
 			path ??= Directory.GetCurrentDirectory();
-			var current = new DirectoryInfo(path);
+			DirectoryInfo current = new DirectoryInfo(path);
 
 			while (current != null)
 			{
@@ -152,7 +150,7 @@ namespace Icy.Editor
 				if (Directory.Exists(Path.Combine(current.FullName, ".svn")))
 					return RepositoryType.SVN;
 
-				current = current.Parent; // 向上一级目录查找
+				current = current.Parent;
 			}
 
 			return RepositoryType.None;
