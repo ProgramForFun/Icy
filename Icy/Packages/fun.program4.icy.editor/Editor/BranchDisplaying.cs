@@ -24,7 +24,7 @@ namespace Icy.Editor
 	/// <summary>
 	/// 在Play按钮那一行的最左侧，显示Git分支名，方便区分分支
 	/// </summary>
-	public class ProjectPathViewer
+	public class BranchDisplaying
 	{
 		[InitializeOnLoadMethod]
 		static void Init()
@@ -40,6 +40,7 @@ namespace Icy.Editor
 
 			string branch = GetGitBranch();
 			GUILayout.Label($"Git Branch  :  {branch}", style);
+			Debug.Log(branch);
 		}
 
 		static string GetGitBranch()
