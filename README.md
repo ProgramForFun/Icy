@@ -83,7 +83,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Gameplay-基础数值系统||待开始|
 |Gameplay-技能系统||待开始|
 |Gameplay-换装系统||待开始|
-|Editor-显示当前Git分支|在Editor左上角显示当前Git分支，<br>便于多工程管理|✔️|
+|Editor-显示当前分支|在Editor左上角显示当前Git / SVN分支，<br>便于多工程管理|✔️|
 |Editor-Quick Play|不重新Reload Domain，快速进入Play|✔️|
 |Editor-集成[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|✔️|
 |Editor-集成[ReferenceFinder](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
