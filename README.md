@@ -43,13 +43,13 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 ## Features & Roadmap
 |目标|描述|完成状态|
 |---|---|:---:|
-|集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
-|集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
-|集成[Protobuf](https://github.com/ProgramForFun/protobuf_unity)|高效二进制序列化|✔️|
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
+|集成[Protobuf](https://github.com/ProgramForFun/protobuf_unity)|高效二进制序列化|✔️|
+|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|✔️|
+|集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
-|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|✔️|
+|集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
 |集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder/Formatter|✔️|
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
@@ -59,7 +59,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Base-Timer||✔️|
 |Base-Pool||✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
-|Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|很好用的资源管理系统|✔️|
+|Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|非常好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
 |Network-[NativeWebSocket](https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC)|支持WebGL平台的开源WebSocket库|✔️|
 |Network-HTTP|基于BestHTTP实现，支持WebGL平台|待开始|
@@ -68,14 +68,14 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|✔️|
 |UI-基础结构||✔️|
 |UI-资源管理|基于YooAsset的UI Prefab、图集、Sprite管理|✔️|
-|UI-数据绑定||✔️|
+|UI-数据绑定|一个简单的数据绑定数据结构|✔️|
 |UI-UIText||待开始|
 |UI-UIButton||待开始|
 |UI-本地化||待开始|
 |UI-后退栈||✔️|
 |UI-红点||待开始|
-|UI-模糊||待开始|
-|UI-状态记录组件||待开始|
+|UI-背景模糊||待开始|
+|UI-状态记录组件|序列化进Prefab的UI状态记录，<br>支持一键切换多个UI节点的状态|待开始|
 |UI-集成[UIEffect](https://github.com/mob-sakai/UIEffect)|各种常用UI效果合集|✔️|
 |UI-集成[UIParticle](https://github.com/mob-sakai/ParticleEffectForUGUI)|在UGUI上渲染粒子的工具|✔️|
 |UI-易于使用的缓动动画系统|便于UI/UX直接使用缓动动画制作效果、<br>并序列化进Prefab，以避免使用<br>Animation/Animator、解放程序员|待开始|
