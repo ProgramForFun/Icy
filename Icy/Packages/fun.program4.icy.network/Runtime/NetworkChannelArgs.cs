@@ -30,7 +30,7 @@ namespace Icy.Network
 	/// <summary>
 	/// 构造NetworkChannel的参数
 	/// </summary>
-	public class NetworkChannelArgs
+	public class NetworkChannelArgs<T>
 	{
 		/// <summary>
 		/// Session类型
@@ -51,7 +51,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 负责序列化的Sender
 		/// </summary>
-		public NetworkSenderBase Sender;
+		public NetworkSenderBase<T> Sender;
 		/// <summary>
 		/// 负责反序列化的Receiver
 		/// </summary>

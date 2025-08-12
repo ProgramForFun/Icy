@@ -13,13 +13,13 @@ public static class TestPlayground
 	public static void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
-			Test();
+			WebSocketSessionTest.Test();
 
 		//TcpSessionTest.Update();
 		//KcpSessionTest.Update();
 		//TcpChannelTest.Update();
 		//KcpChannelTest.Update();
-		//WebSocketSessionTest.Update();
+		WebSocketSessionTest.Update();
 	}
 
 

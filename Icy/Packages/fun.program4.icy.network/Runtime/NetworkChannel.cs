@@ -18,13 +18,14 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
+using System.Collections.Concurrent;
 
 namespace Icy.Network
 {
 	/// <summary>
 	/// 封装起来的网络通信Channel，支持多种协议
 	/// </summary>
-	public class NetworkChannel
+	public class NetworkChannel<T>
 	{
 		/// <summary>
 		/// 是否已连接到服务器
@@ -62,42 +63,60 @@ namespace Icy.Network
 		/// <summary>
 		/// 负责序列化
 		/// </summary>
-		protected NetworkSenderBase _Sender;
+		protected NetworkSenderBase<T> _Sender;
 		/// <summary>
 		/// 负责反序列化
 		/// </summary>
 		protected NetworkReceiverBase _Receiver;
 
+		/// <summary>
+		/// 发送队列
+		/// </summary>
+		protected ConcurrentQueue<T> _SendQueue1;
+		protected ConcurrentQueue<ValueTuple<int, T>> _SendQueue2;
+		protected ConcurrentQueue<ValueTuple<int, int, T>> _SendQueue3;
+		protected ConcurrentQueue<ValueTuple<int, int, int, T>> _SendQueue4;
 
-		public NetworkChannel(NetworkChannelArgs args)
+
+		public NetworkChannel(NetworkChannelArgs<T> args)
 		{
+			NetworkSessionBase session = null;
 			switch (args.SessionType)
 			{
 				case NetworkSessionType.Tcp:
-					Session = new TcpSession(args.Host, args.Port, args.BufferSize);
+					session = new TcpSession(args.Host, args.Port, args.BufferSize);
 					break;
 				case NetworkSessionType.Kcp:
-					Session = new KcpSession(args.Host, args.Port, args.BufferSize);
+					session = new KcpSession(args.Host, args.Port, args.BufferSize);
 					break;
 				case NetworkSessionType.WebSocket:
-					Session = new WebSocketSession(args.Host, args.Port);
+					session = new WebSocketSession(args.Host, args.Port);
 					break;
 				default:
 					Log.Assert(false, $"Invalid NetworkSessionType = {args.SessionType}");
 					break;
 			}
 
-			_Sender = args.Sender;
-			_Sender.SetChannel(this);
-			_Receiver = args.Receiver;
+			if (session != null)
+				Init(session, args.Sender, args.Receiver);
 		}
 
-		public NetworkChannel(NetworkSessionBase session, NetworkSenderBase sender, NetworkReceiverBase receiver)
+		public NetworkChannel(NetworkSessionBase session, NetworkSenderBase<T> sender, NetworkReceiverBase receiver)
+		{
+			Init(session, sender, receiver);
+		}
+
+		protected void Init(NetworkSessionBase session, NetworkSenderBase<T> sender, NetworkReceiverBase receiver)
 		{
 			Session = session;
 			_Sender = sender;
 			sender.SetChannel(this);
 			_Receiver = receiver;
+
+			_SendQueue1 = new ConcurrentQueue<T>();
+			_SendQueue2 = new ConcurrentQueue<ValueTuple<int, T>>();
+			_SendQueue3 = new ConcurrentQueue<ValueTuple<int, int, T>>();
+			_SendQueue4 = new ConcurrentQueue<ValueTuple<int, int, int, T>>();
 		}
 
 		/// <summary>
@@ -110,24 +129,28 @@ namespace Icy.Network
 			await Session.Connect(syn);
 		}
 
-		public virtual void Send<T>(T data)
+		public virtual void Send(T data)
 		{
 			_Sender.Encode(data);
+			//_SendQueue1.Enqueue(data);
 		}
 
-		public virtual void Send<T>(int arg1, T data)
+		public virtual void Send(int arg1, T data)
 		{
 			_Sender.Encode(arg1, data);
+			//_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
 		}
 
-		public virtual void Send<T>(int arg1, int arg2, T data)
+		public virtual void Send(int arg1, int arg2, T data)
 		{
 			_Sender.Encode(arg1, arg2, data);
+			//_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
 		}
 
-		public virtual void Send<T>(int arg1, int arg2, int arg3, T data)
+		public virtual void Send(int arg1, int arg2, int arg3, T data)
 		{
 			_Sender.Encode(arg1, arg2, arg3, data);
+			//_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
 		}
 
 		internal virtual void Send(byte[] encodedData, int startIdx, int length)

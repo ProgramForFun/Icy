@@ -9,22 +9,18 @@ using TestMsg;
 
 namespace Icy.Network
 {
-	public class ProtoBufSender : NetworkSenderBase
+	public class ProtoBufSender : NetworkSenderBase<IMessage>
 	{
-		public override void Encode<T>(int msgID, T data)
+		public override void Encode(int msgID, IMessage proto)
 		{
-			//通过这种方式将泛型类型转换为实际类型
-			if (data is IMessage proto)
-			{
-				//一个int类型消息ID + protobuf消息
-				int msgIDSize = sizeof(int);
-				BitConverter.TryWriteBytes(_Buffer, msgID);
-				int protoSize = proto.CalculateSize();
-				//用Span降低Protobuf序列化的GC
-				Span<byte> outputSpan = new Span<byte>(_Buffer, msgIDSize, protoSize);
-				proto.WriteTo(outputSpan);
-				Send(0, msgIDSize + protoSize);
-			}
+			//一个int类型消息ID + protobuf消息
+			int msgIDSize = sizeof(int);
+			BitConverter.TryWriteBytes(_Buffer, msgID);
+			int protoSize = proto.CalculateSize();
+			//用Span降低Protobuf序列化的GC
+			Span<byte> outputSpan = new Span<byte>(_Buffer, msgIDSize, protoSize);
+			proto.WriteTo(outputSpan);
+			Send(0, msgIDSize + protoSize);
 		}
 	}
 
@@ -68,7 +64,7 @@ namespace Icy.Network
 
 	public static class TcpChannelTest
 	{
-		static NetworkChannel _TcpChannel;
+		static NetworkChannel<IMessage> _TcpChannel;
 		static TestMessageResult _MessageResult;
 		
 
@@ -77,7 +73,7 @@ namespace Icy.Network
 			_MessageResult = new TestMessageResult();
 
 			TcpSession session = new TcpSession("127.0.0.1", 12321, 4096);
-			_TcpChannel = new NetworkChannel(session, new ProtoBufSender(), new ProtoBufReceiver());
+			_TcpChannel = new NetworkChannel<IMessage>(session, new ProtoBufSender(), new ProtoBufReceiver());
 			_TcpChannel.OnConnected = OnConnect;
 			_TcpChannel.OnDisconnected += OnDisconnect;
 			_TcpChannel.OnError += OnError;
