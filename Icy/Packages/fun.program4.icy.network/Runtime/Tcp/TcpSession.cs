@@ -19,6 +19,7 @@ using System.Net.Sockets;
 using System;
 using Icy.Base;
 using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 namespace Icy.Network
 {
@@ -57,7 +58,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 和服务器建立连接
 		/// </summary>
-		public override async UniTask Connect(byte[] _ = null)
+		public override async Task Connect(byte[] _ = null)
 		{
 			if (IsConnected)
 			{
@@ -136,7 +137,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 断开连接
 		/// </summary>
-		public override async UniTask Disconnect(byte[] _ = null)
+		public override async Task Disconnect(byte[] _ = null)
 		{
 			if (!IsConnected)
 			{
@@ -196,7 +197,7 @@ namespace Icy.Network
 		public override void Dispose()
 		{
 			if (IsConnected)
-				Disconnect().Forget();
+				Disconnect().AsUniTask().Forget();
 			Log.LogInfo("Dispose", nameof(TcpSession));
 		}
 	}

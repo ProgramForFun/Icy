@@ -24,6 +24,7 @@ using System.Net;
 using System.Net.Sockets;
 #if !USE_KCP_SHARP
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 #endif
 
 namespace Icy.Network
@@ -101,7 +102,7 @@ namespace Icy.Network
 		/// 前4个byte会被解析为uint，作为conv发送给服务器；
 		/// conv是kcp的概念，客户端和服务器要保持一致；
 		/// </summary>
-		public override async UniTask Connect(byte[] syn = null)
+		public override async Task Connect(byte[] syn = null)
 		{
 			if (IsConnected)
 			{
@@ -330,7 +331,7 @@ namespace Icy.Network
 			return (DateTime.UtcNow.Ticks - epoch) / 10000;
 		}
 
-		public override async UniTask Disconnect(byte[] fin = null)
+		public override async Task Disconnect(byte[] fin = null)
 		{
 			if (!IsConnected)
 			{
@@ -385,7 +386,7 @@ namespace Icy.Network
 				if (IsConnected)
 				{
 					for (int i = 0; i < 4; i++)
-						Disconnect().Forget();
+						Disconnect().AsUniTask().Forget();
 				}
 			}
 			catch (Exception)

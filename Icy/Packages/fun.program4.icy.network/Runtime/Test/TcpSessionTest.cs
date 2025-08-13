@@ -73,7 +73,7 @@ namespace Icy.Network
 			}
 
 			if (Input.GetKeyUp(KeyCode.D))
-				_TcpSession.Disconnect().Forget();
+				_TcpSession.Disconnect().AsUniTask().Forget();
 		}
 	}
 }

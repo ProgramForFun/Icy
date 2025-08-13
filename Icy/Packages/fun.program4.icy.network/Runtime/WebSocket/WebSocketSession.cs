@@ -16,6 +16,7 @@
 
 
 using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using NativeWebSocket;
@@ -41,7 +42,7 @@ namespace Icy.Network
 #endif
 		}
 
-		public override async UniTask Connect(byte[] syn = null)
+		public override async Task Connect(byte[] syn = null)
 		{
 			try
 			{
@@ -141,7 +142,7 @@ namespace Icy.Network
 			OnReceive?.Invoke(buffer, startIdx, receivedSize);
 		}
 
-		public override async UniTask Disconnect(byte[] fin = null)
+		public override async Task Disconnect(byte[] fin = null)
 		{
 			if (!IsConnected)
 			{
@@ -159,7 +160,7 @@ namespace Icy.Network
 			IcyFrame.Instance.RemoveUpdate(this);
 #endif
 			if (IsConnected)
-				Disconnect().Forget();
+				Disconnect().AsUniTask().Forget();
 			Log.LogInfo("Dispose", nameof(WebSocketSession));
 		}
 
