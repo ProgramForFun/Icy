@@ -78,7 +78,7 @@ namespace Icy.Network
 			if (Input.GetKeyUp(KeyCode.D))
 			{
 				byte[] fin = new byte[3] { 1, 2, 3 };
-				_KcpSession.Disconnect(fin).AsUniTask().Forget();
+				_KcpSession.Disconnect(fin).Forget();
 			}
 		}
 	}

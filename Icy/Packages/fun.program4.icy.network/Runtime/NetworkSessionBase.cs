@@ -15,8 +15,8 @@
  */
 
 
+using Cysharp.Threading.Tasks;
 using System;
-using System.Threading.Tasks;
 
 namespace Icy.Network
 {
@@ -83,7 +83,7 @@ namespace Icy.Network
 		/// 连接服务器
 		/// </summary>
 		/// <param name="syn">Kcp必须传，其他协议不需要</param>
-		public abstract Task Connect(byte[] syn = null);
+		public abstract UniTask Connect(byte[] syn = null);
 		/// <summary>
 		/// 发送消息
 		/// </summary>
@@ -92,7 +92,7 @@ namespace Icy.Network
 		/// 和服务器断开连接
 		/// </summary>
 		/// <param name="fin">Kcp必须传，其他协议不需要</param>
-		public abstract Task Disconnect(byte[] fin = null);
+		public abstract UniTask Disconnect(byte[] fin = null);
 		/// <summary>
 		/// 处理服务器的消息
 		/// </summary>
