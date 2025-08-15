@@ -8,6 +8,8 @@ BUFFER_SIZE = 1024
 # this server uses ThreadingMixIn - one thread per connection
 # replace with ForkMixIn to spawn a new process per connection
 
+count = 0
+
 class EchoServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     # no need to override anything - default behavior is just fine
     pass
@@ -18,12 +20,14 @@ class EchoRequestHandler(socketserver.StreamRequestHandler):
     """
     def handle(self):
         print ("connection from %s" % self.client_address[0])
+        count = 0
         while True:
             # line = self.rfile.readline()
             line = self.request.recv(BUFFER_SIZE)
             if not line:
                 break
-            print ("Echo back to %s : %s" % (self.client_address[0], line))
+            count = count + 1
+            print ("Echo back to %s : [%d] %s" % (self.client_address[0], count, line))
             time.sleep(0.01)
             self.wfile.write(line)
         print ("%s disconnected" % self.client_address[0])

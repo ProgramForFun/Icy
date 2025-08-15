@@ -10,8 +10,10 @@ server_port = 12333
 server = (server_address, server_port)
 sock.bind(server)
 print("Listening on " + server_address + ":" + str(server_port))
+count = 0
 
 while True:
-	payload, client_address = sock.recvfrom(4096)
-	print("Echo back to " + str(client_address) + " : " + str(payload))
-	sent = sock.sendto(payload, client_address)
+    payload, client_address = sock.recvfrom(4096)
+    count = count + 1
+    print ("Echo back to %s : [%d] %s" % (str(client_address), count, str(payload)))
+    sent = sock.sendto(payload, client_address)

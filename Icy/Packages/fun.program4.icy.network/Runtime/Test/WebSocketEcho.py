@@ -3,14 +3,18 @@
 import asyncio
 import websockets
 
+count = 0
+
 async def echo_handler(websocket):
     """
     处理 WebSocket 连接，将接收到的所有消息原样返回
     """
     try:
         async for message in websocket:
+            global count
             await websocket.send(message)
-            print(f"Echo back to: {message}")
+            count = count +1
+            print(f"Echo back to: [{count}] {message}")
     except websockets.exceptions.ConnectionClosedOK:
         print("客户端正常断开连接")
     except websockets.exceptions.ConnectionClosedError as e:
