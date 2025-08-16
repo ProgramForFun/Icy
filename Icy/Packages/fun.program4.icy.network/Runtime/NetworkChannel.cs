@@ -18,7 +18,8 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Icy.Network
 {
@@ -70,12 +71,32 @@ namespace Icy.Network
 		protected NetworkReceiverBase _Receiver;
 
 		/// <summary>
+		/// Syn参数
+		/// </summary>
+		protected byte[] _Syn;
+		/// <summary>
 		/// 发送队列
 		/// </summary>
-		protected ConcurrentQueue<T> _SendQueue1;
-		protected ConcurrentQueue<ValueTuple<int, T>> _SendQueue2;
-		protected ConcurrentQueue<ValueTuple<int, int, T>> _SendQueue3;
-		protected ConcurrentQueue<ValueTuple<int, int, int, T>> _SendQueue4;
+		protected Queue<T> _SendQueue1;
+		protected Queue<ValueTuple<int, T>> _SendQueue2;
+		protected Queue<ValueTuple<int, int, T>> _SendQueue3;
+		protected Queue<ValueTuple<int, int, int, T>> _SendQueue4;
+		/// <summary>
+		/// 待发送消息数量
+		/// </summary>
+		protected int _ToSendCount;
+		/// <summary>
+		/// 发送线程
+		/// </summary>
+		protected Thread _SendThread;
+		/// <summary>
+		/// 发送线程锁
+		/// </summary>
+		protected object _SendLock;
+		/// <summary>
+		/// 发送线程取消令牌
+		/// </summary>
+		protected CancellationTokenSource _SendCancellationTokenSource;
 
 
 		public NetworkChannel(NetworkChannelArgs<T> args)
@@ -112,11 +133,6 @@ namespace Icy.Network
 			_Sender = sender;
 			sender.SetChannel(this);
 			_Receiver = receiver;
-
-			_SendQueue1 = new ConcurrentQueue<T>();
-			_SendQueue2 = new ConcurrentQueue<ValueTuple<int, T>>();
-			_SendQueue3 = new ConcurrentQueue<ValueTuple<int, int, T>>();
-			_SendQueue4 = new ConcurrentQueue<ValueTuple<int, int, int, T>>();
 		}
 
 		/// <summary>
@@ -125,37 +141,112 @@ namespace Icy.Network
 		/// <param name="syn">Kcp必须传，具体见KcpSession；其他协议不需要</param>
 		public virtual async UniTask Start(byte[] syn = null)
 		{
+			_Syn = syn;
+
 			Session.OnReceive = _Receiver.Decode;
-			await Session.Connect(syn);
+			//await Session.Connect(syn);
+
+			_SendQueue1 = new Queue<T>();
+			_SendQueue2 = new Queue<ValueTuple<int, T>>();
+			_SendQueue3 = new Queue<ValueTuple<int, int, T>>();
+			_SendQueue4 = new Queue<ValueTuple<int, int, int, T>>();
+
+			_ToSendCount = 0;
+			_SendLock = new object();
+			_SendCancellationTokenSource = new CancellationTokenSource();
+			_SendThread = new Thread(SendLoop);
+			_SendThread.Start();
+
+			await UniTask.CompletedTask;
 		}
 
 		public virtual void Send(T data)
 		{
 			_Sender.Encode(data);
-			//_SendQueue1.Enqueue(data);
+			//lock (_SendLock)
+			//{
+			//	_SendQueue1.Enqueue(data);
+			//	Monitor.Pulse(_SendLock);
+			//}
 		}
 
 		public virtual void Send(int arg1, T data)
 		{
 			_Sender.Encode(arg1, data);
-			//_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
+			//lock (_SendLock)
+			//{
+			//	_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
+			//	Monitor.Pulse(_SendLock);
+			//}
 		}
 
 		public virtual void Send(int arg1, int arg2, T data)
 		{
 			_Sender.Encode(arg1, arg2, data);
-			//_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
+			//lock (_SendLock)
+			//{
+			//	_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
+			//	Monitor.Pulse(_SendLock);
+			//}
 		}
 
 		public virtual void Send(int arg1, int arg2, int arg3, T data)
 		{
 			_Sender.Encode(arg1, arg2, arg3, data);
-			//_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
+			//lock (_SendLock)
+			//{
+			//	_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
+			//	Monitor.Pulse(_SendLock);
+			//}
 		}
 
 		internal virtual void Send(byte[] encodedData, int startIdx, int length)
 		{
 			Session.Send(encodedData, startIdx, length);
+		}
+
+		/// <summary>
+		/// 发送循环
+		/// </summary>
+		protected async void SendLoop()
+		{
+			await Session.Connect(_Syn);
+
+			while (!_SendCancellationTokenSource.Token.IsCancellationRequested)
+			{
+				lock (_SendLock)
+				{
+					while (_ToSendCount == 0)
+						Monitor.Wait(_SendLock);
+
+					if (_SendQueue1.Count > 0)
+					{
+						_Sender.Encode(_SendQueue1.Dequeue());
+						continue;
+					}
+
+					if (_SendQueue2.Count > 0)
+					{
+						(int, T) toSend = _SendQueue2.Dequeue();
+						_Sender.Encode(toSend.Item1, toSend.Item2);
+						continue;
+					}
+
+					if (_SendQueue3.Count > 0)
+					{
+						(int, int, T) toSend = _SendQueue3.Dequeue();
+						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
+						continue;
+					}
+
+					if (_SendQueue4.Count > 0)
+					{
+						(int, int, int, T) toSend = _SendQueue4.Dequeue();
+						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
+						continue;
+					}
+				}
+			}
 		}
 
 		/// <summary>
