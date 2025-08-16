@@ -50,6 +50,3 @@ if [ $? -eq 0 ]; then
     echo "===== 编译完成 ====="
     echo "===================="
 fi
-
-# 暂停
-read -p "Press [Enter] to continue..."
