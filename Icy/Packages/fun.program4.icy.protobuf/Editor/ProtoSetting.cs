@@ -24,13 +24,14 @@ namespace Icy.Protobuf.Editor {
     static ProtoSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJQcm90b1NldHRpbmcucHJvdG8SE0ljeS5Qcm90b2J1Zi5FZGl0b3IiPgoM",
+            "ChJQcm90b1NldHRpbmcucHJvdG8SE0ljeS5Qcm90b2J1Zi5FZGl0b3IiWQoM",
             "UHJvdG9TZXR0aW5nEhYKDkNvbXBpbGVCYXRQYXRoGAEgASgJEhYKDlByb3Rv",
-            "T3V0cHV0RGlyGAIgASgJYgZwcm90bzM="));
+            "T3V0cHV0RGlyGAIgASgJEhkKEVByb3RvQXNzZW1ibHlOYW1lGAMgASgJYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Protobuf.Editor.ProtoSetting), global::Icy.Protobuf.Editor.ProtoSetting.Parser, new[]{ "CompileBatPath", "ProtoOutputDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Protobuf.Editor.ProtoSetting), global::Icy.Protobuf.Editor.ProtoSetting.Parser, new[]{ "CompileBatPath", "ProtoOutputDir", "ProtoAssemblyName" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,6 +75,7 @@ namespace Icy.Protobuf.Editor {
     public ProtoSetting(ProtoSetting other) : this() {
       compileBatPath_ = other.compileBatPath_;
       protoOutputDir_ = other.protoOutputDir_;
+      protoAssemblyName_ = other.protoAssemblyName_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -113,6 +115,21 @@ namespace Icy.Protobuf.Editor {
       }
     }
 
+    /// <summary>Field number for the "ProtoAssemblyName" field.</summary>
+    public const int ProtoAssemblyNameFieldNumber = 3;
+    private string protoAssemblyName_ = "";
+    /// <summary>
+    ///Proto的程序集名称
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ProtoAssemblyName {
+      get { return protoAssemblyName_; }
+      set {
+        protoAssemblyName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -130,6 +147,7 @@ namespace Icy.Protobuf.Editor {
       }
       if (CompileBatPath != other.CompileBatPath) return false;
       if (ProtoOutputDir != other.ProtoOutputDir) return false;
+      if (ProtoAssemblyName != other.ProtoAssemblyName) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -139,6 +157,7 @@ namespace Icy.Protobuf.Editor {
       int hash = 1;
       if (CompileBatPath.Length != 0) hash ^= CompileBatPath.GetHashCode();
       if (ProtoOutputDir.Length != 0) hash ^= ProtoOutputDir.GetHashCode();
+      if (ProtoAssemblyName.Length != 0) hash ^= ProtoAssemblyName.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -165,6 +184,10 @@ namespace Icy.Protobuf.Editor {
         output.WriteRawTag(18);
         output.WriteString(ProtoOutputDir);
       }
+      if (ProtoAssemblyName.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ProtoAssemblyName);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -183,6 +206,10 @@ namespace Icy.Protobuf.Editor {
         output.WriteRawTag(18);
         output.WriteString(ProtoOutputDir);
       }
+      if (ProtoAssemblyName.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(ProtoAssemblyName);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -198,6 +225,9 @@ namespace Icy.Protobuf.Editor {
       }
       if (ProtoOutputDir.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ProtoOutputDir);
+      }
+      if (ProtoAssemblyName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ProtoAssemblyName);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -216,6 +246,9 @@ namespace Icy.Protobuf.Editor {
       }
       if (other.ProtoOutputDir.Length != 0) {
         ProtoOutputDir = other.ProtoOutputDir;
+      }
+      if (other.ProtoAssemblyName.Length != 0) {
+        ProtoAssemblyName = other.ProtoAssemblyName;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -244,6 +277,10 @@ namespace Icy.Protobuf.Editor {
             ProtoOutputDir = input.ReadString();
             break;
           }
+          case 26: {
+            ProtoAssemblyName = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -269,6 +306,10 @@ namespace Icy.Protobuf.Editor {
           }
           case 18: {
             ProtoOutputDir = input.ReadString();
+            break;
+          }
+          case 26: {
+            ProtoAssemblyName = input.ReadString();
             break;
           }
         }

@@ -9,4 +9,6 @@ message ProtoSetting
     string CompileBatPath = 1;
 	//Proto编译后的代码的输出目录
 	string ProtoOutputDir = 2;
+	//Proto的程序集名称
+	string ProtoAssemblyName = 3;
 }

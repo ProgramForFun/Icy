@@ -45,6 +45,12 @@ namespace Icy.Protobuf.Editor
 		[OnValueChanged("OnDataChanged")]
 		public string ProtoOutputDir;
 
+		[Title("Proto的程序集名称")]
+		[Delayed]
+		[Required]
+		[OnValueChanged("OnDataChanged")]
+		public string ProtoAssemblyName;
+
 
 		[MenuItem("Icy/Proto/Setting", false, 50)]
 		public static void Open()
@@ -65,6 +71,7 @@ namespace Icy.Protobuf.Editor
 				_Setting = ProtoSetting.Parser.ParseFrom(bytes);
 				CompileBatPath = _Setting.CompileBatPath;
 				ProtoOutputDir = _Setting.ProtoOutputDir;
+				ProtoAssemblyName = _Setting.ProtoAssemblyName;
 			}
 		}
 
@@ -85,6 +92,7 @@ namespace Icy.Protobuf.Editor
 
 			_Setting.CompileBatPath = CompileBatPath;
 			_Setting.ProtoOutputDir = ProtoOutputDir;
+			_Setting.ProtoAssemblyName = ProtoAssemblyName;
 
 			string targetDir = SettingsHelper.GetEditorOnlySettingDir();
 			SettingsHelper.SaveSetting(targetDir, "ProtoSetting.json", _Setting.ToByteArray());
