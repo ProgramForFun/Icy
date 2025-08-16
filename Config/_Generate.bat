@@ -25,5 +25,3 @@ dotnet %LUBAN_DLL% ^
     -x outputCodeDir=%CODE_DIR% ^
     -x json.outputDataDir=%JSON_DIR% ^
     -x bin.outputDataDir=%BIN_DIR%
-
-pause
