@@ -375,7 +375,7 @@ namespace Icy.Protobuf.Editor
 
 		private static ProtoSetting GetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ProtoSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "ProtoSetting.json");
 			if (bytes != null)
 			{
 				ProtoSetting setting = ProtoSetting.Parser.ParseFrom(bytes);
