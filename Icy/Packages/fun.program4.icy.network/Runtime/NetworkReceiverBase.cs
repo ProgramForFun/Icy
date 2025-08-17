@@ -19,6 +19,7 @@ namespace Icy.Network
 {
 	/// <summary>
 	/// 和NetworkChannel一起使用的，负责接收、解析数据
+	/// 注意，这个类跑在Worker线程里；
 	/// </summary>
 	public abstract class NetworkReceiverBase
 	{
