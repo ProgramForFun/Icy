@@ -63,6 +63,11 @@ namespace Icy.Network
 			}
 		}
 
+		public override async UniTask Listen()
+		{
+			await UniTask.CompletedTask;
+		}
+
 		private void OnWebSocketMessage(byte[] data)
 		{
 			HandleReceived(data, 0, data.Length);

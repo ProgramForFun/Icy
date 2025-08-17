@@ -20,6 +20,7 @@ using Icy.Base;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Icy.Network
 {
@@ -90,13 +91,17 @@ namespace Icy.Network
 		/// </summary>
 		protected Thread _SendThread;
 		/// <summary>
+		/// 接收线程
+		/// </summary>
+		protected Thread _ReceiveThread;
+		/// <summary>
 		/// 发送线程锁
 		/// </summary>
 		protected object _SendLock;
 		/// <summary>
 		/// 发送线程取消令牌
 		/// </summary>
-		protected CancellationTokenSource _SendCancellationTokenSource;
+		protected CancellationTokenSource _CancellationTokenSource;
 
 
 		public NetworkChannel(NetworkChannelArgs<T> args)
@@ -153,7 +158,9 @@ namespace Icy.Network
 
 			_ToSendCount = 0;
 			_SendLock = new object();
-			_SendCancellationTokenSource = new CancellationTokenSource();
+			_CancellationTokenSource = new CancellationTokenSource();
+			_ReceiveThread = new Thread(ReceiveLoop);
+			_ReceiveThread.Start();
 			_SendThread = new Thread(SendLoop);
 			_SendThread.Start();
 
@@ -162,42 +169,46 @@ namespace Icy.Network
 
 		public virtual void Send(T data)
 		{
-			_Sender.Encode(data);
-			//lock (_SendLock)
-			//{
-			//	_SendQueue1.Enqueue(data);
-			//	Monitor.Pulse(_SendLock);
-			//}
+			//_Sender.Encode(data);
+			lock (_SendLock)
+			{
+				_SendQueue1.Enqueue(data);
+				_ToSendCount++;
+				Monitor.Pulse(_SendLock);
+			}
 		}
 
 		public virtual void Send(int arg1, T data)
 		{
-			_Sender.Encode(arg1, data);
-			//lock (_SendLock)
-			//{
-			//	_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
-			//	Monitor.Pulse(_SendLock);
-			//}
+			//_Sender.Encode(arg1, data);
+			lock (_SendLock)
+			{
+				_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
+				_ToSendCount++;
+				Monitor.Pulse(_SendLock);
+			}
 		}
 
 		public virtual void Send(int arg1, int arg2, T data)
 		{
-			_Sender.Encode(arg1, arg2, data);
-			//lock (_SendLock)
-			//{
-			//	_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
-			//	Monitor.Pulse(_SendLock);
-			//}
+			//_Sender.Encode(arg1, arg2, data);
+			lock (_SendLock)
+			{
+				_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
+				_ToSendCount++;
+				Monitor.Pulse(_SendLock);
+			}
 		}
 
 		public virtual void Send(int arg1, int arg2, int arg3, T data)
 		{
-			_Sender.Encode(arg1, arg2, arg3, data);
-			//lock (_SendLock)
-			//{
-			//	_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
-			//	Monitor.Pulse(_SendLock);
-			//}
+			//_Sender.Encode(arg1, arg2, arg3, data);
+			lock (_SendLock)
+			{
+				_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
+				_ToSendCount++;
+				Monitor.Pulse(_SendLock);
+			}
 		}
 
 		internal virtual void Send(byte[] encodedData, int startIdx, int length)
@@ -210,18 +221,20 @@ namespace Icy.Network
 		/// </summary>
 		protected async void SendLoop()
 		{
-			await Session.Connect(_Syn);
+			while (!IsConnected && !_CancellationTokenSource.Token.IsCancellationRequested)
+				await Task.Delay(16);	//帧率60的每帧时间，这个等待总体不会太长
 
-			while (!_SendCancellationTokenSource.Token.IsCancellationRequested)
+			while (!_CancellationTokenSource.Token.IsCancellationRequested)
 			{
 				lock (_SendLock)
 				{
-					while (_ToSendCount == 0)
+					while (_ToSendCount == 0 && !_CancellationTokenSource.Token.IsCancellationRequested)
 						Monitor.Wait(_SendLock);
 
 					if (_SendQueue1.Count > 0)
 					{
 						_Sender.Encode(_SendQueue1.Dequeue());
+						_ToSendCount--;
 						continue;
 					}
 
@@ -229,6 +242,7 @@ namespace Icy.Network
 					{
 						(int, T) toSend = _SendQueue2.Dequeue();
 						_Sender.Encode(toSend.Item1, toSend.Item2);
+						_ToSendCount--;
 						continue;
 					}
 
@@ -236,6 +250,7 @@ namespace Icy.Network
 					{
 						(int, int, T) toSend = _SendQueue3.Dequeue();
 						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
+						_ToSendCount--;
 						continue;
 					}
 
@@ -243,10 +258,22 @@ namespace Icy.Network
 					{
 						(int, int, int, T) toSend = _SendQueue4.Dequeue();
 						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
+						_ToSendCount--;
 						continue;
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// 接收循环
+		/// </summary>
+		protected async void ReceiveLoop()
+		{
+			await Session.Connect(_Syn);
+
+			if (!_CancellationTokenSource.Token.IsCancellationRequested)
+				await Session.Listen();
 		}
 
 		/// <summary>
@@ -255,6 +282,8 @@ namespace Icy.Network
 		/// <param name="fin">Kcp必须传，其他协议不需要</param>
 		public virtual async UniTask Dispose(byte[] fin = null)
 		{
+			_CancellationTokenSource.Cancel();
+			await UniTask.Delay(1000);
 			await Session.Disconnect(fin);
 			Session.OnReceive = null;
 			Session.Dispose();

@@ -6,6 +6,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using TestMsg;
+using UnityEngine;
 
 namespace Icy.Network
 {
@@ -13,6 +14,7 @@ namespace Icy.Network
 	{
 		public override void Encode(int msgID, IMessage proto)
 		{
+			Log.LogInfo("[ProtoBufSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//一个int类型消息ID + protobuf消息
 			int msgIDSize = sizeof(int);
 			BitConverter.TryWriteBytes(_Buffer, msgID);
@@ -30,6 +32,7 @@ namespace Icy.Network
 
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
+			Log.LogInfo("[ProtoBufReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//解析int类型的消息ID
 			int msgID = BitConverter.ToInt32(data, startIdx);
 			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
@@ -122,8 +125,8 @@ namespace Icy.Network
 				_TcpChannel.Send(1001, _MessageResult);
 			}
 
-			//if (Input.GetKeyUp(KeyCode.D))
-			//	_TcpChannel.Disconnect();
+			if (Input.GetKeyUp(KeyCode.D))
+				_TcpChannel.Dispose().Forget();
 		}
 	}
 }

@@ -80,7 +80,10 @@ namespace Icy.Network
 				Log.LogError($"Connect exception : {ex}", nameof(TcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, ex);
 			}
+		}
 
+		public override async UniTask Listen()
+		{
 			while (IsConnected)
 			{
 				int receivedSize = 0;
@@ -92,6 +95,10 @@ namespace Icy.Network
 				}
 				catch (Exception ex)
 				{
+					//如果不是连接状态，忽略异常
+					if (!IsConnected)
+						return;
+
 					Log.LogError($"Receive failed, {ex}", nameof(TcpSession));
 					OnError?.Invoke(NetworkError.ReceiveFailed, ex);
 					await Disconnect();
