@@ -66,6 +66,9 @@ namespace Icy.Network
 				await _KcpSession.Connect(syn);
 			}
 
+			if (Input.GetKeyUp(KeyCode.L))
+				await _KcpSession.Listen();
+
 			if (Input.GetKey(KeyCode.S))
 			{
 				for (int i = 0; i < 2; i++)

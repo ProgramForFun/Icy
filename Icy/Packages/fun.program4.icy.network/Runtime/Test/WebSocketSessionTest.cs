@@ -66,6 +66,9 @@ namespace Icy.Network
 			if (Input.GetKeyUp(KeyCode.C))
 				await _WebSocketSession.Connect();
 
+			if (Input.GetKeyUp(KeyCode.L))
+				await _WebSocketSession.Listen();
+
 			//if (Input.GetKey(KeyCode.S))
 			//{
 			//	for (int i = 0; i < 2; i++)

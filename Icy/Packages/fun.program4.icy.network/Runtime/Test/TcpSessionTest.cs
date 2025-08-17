@@ -63,6 +63,9 @@ namespace Icy.Network
 			if (Input.GetKeyUp(KeyCode.C))
 				await _TcpSession.Connect();
 
+			if (Input.GetKeyUp(KeyCode.L))
+				await _TcpSession.Listen();
+
 			if (Input.GetKey(KeyCode.S))
 			{
 				for (int i = 0; i < 2; i++)
