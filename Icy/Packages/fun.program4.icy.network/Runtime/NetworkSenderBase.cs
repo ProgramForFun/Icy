@@ -15,6 +15,8 @@
  */
 
 
+using Cysharp.Threading.Tasks;
+
 namespace Icy.Network
 {
 	/// <summary>
@@ -39,17 +41,17 @@ namespace Icy.Network
 			_Channel = channel;
 		}
 
-		public virtual void Encode(T data) { }
-		public virtual void Encode(int arg1, T data) { }
-		public virtual void Encode(int arg1, int arg2, T data) { }
-		public virtual void Encode(int arg1, int arg2, int arg3, T data) { }
+		public virtual async UniTask Encode(T data) { await UniTask.CompletedTask; }
+		public virtual async UniTask Encode(int arg1, T data) { await UniTask.CompletedTask; }
+		public virtual async UniTask Encode(int arg1, int arg2, T data) { await UniTask.CompletedTask; }
+		public virtual async UniTask Encode(int arg1, int arg2, int arg3, T data) { await UniTask.CompletedTask; }
 
 		/// <summary>
 		/// 转换成byte[]后，调用这个方法
 		/// </summary>
-		protected void Send(int startIdx, int length)
+		protected async UniTask Send(int startIdx, int length)
 		{
-			_Channel.Send(_Buffer, startIdx, length);
+			await _Channel.Send(_Buffer, startIdx, length);
 		}
 	}
 }

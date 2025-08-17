@@ -87,7 +87,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 发送消息
 		/// </summary>
-		public abstract void Send(byte[] msg, int startIdx, int length);
+		public abstract UniTask Send(byte[] msg, int startIdx, int length);
 		/// <summary>
 		/// 监听服务器消息
 		/// </summary>

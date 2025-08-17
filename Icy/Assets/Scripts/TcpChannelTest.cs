@@ -12,17 +12,25 @@ namespace Icy.Network
 {
 	public class ProtoBufSender : NetworkSenderBase<IMessage>
 	{
-		public override void Encode(int msgID, IMessage proto)
+		public override async UniTask Encode(int msgID, IMessage proto)
 		{
 			Log.LogInfo("[ProtoBufSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//一个int类型消息ID + protobuf消息
 			int msgIDSize = sizeof(int);
 			BitConverter.TryWriteBytes(_Buffer, msgID);
 			int protoSize = proto.CalculateSize();
+			DoEncode(msgIDSize, protoSize, proto);
+			await Send(0, msgIDSize + protoSize);
+		}
+
+		/// <summary>
+		/// Span不能用在async函数里，这里拿出来放在普通函数里
+		/// </summary>
+		private void DoEncode(int msgIDSize, int protoSize, IMessage proto)
+		{
 			//用Span降低Protobuf序列化的GC
 			Span<byte> outputSpan = new Span<byte>(_Buffer, msgIDSize, protoSize);
 			proto.WriteTo(outputSpan);
-			Send(0, msgIDSize + protoSize);
 		}
 	}
 

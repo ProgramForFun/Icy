@@ -211,9 +211,9 @@ namespace Icy.Network
 			}
 		}
 
-		internal virtual void Send(byte[] encodedData, int startIdx, int length)
+		internal virtual async UniTask Send(byte[] encodedData, int startIdx, int length)
 		{
-			Session.Send(encodedData, startIdx, length);
+			await Session.Send(encodedData, startIdx, length);
 		}
 
 		/// <summary>
@@ -226,41 +226,57 @@ namespace Icy.Network
 
 			while (!_CancellationTokenSource.Token.IsCancellationRequested)
 			{
-				lock (_SendLock)
+				//TODO：用UniTask避免GC Alloc
+				while (_ToSendCount == 0 && !_CancellationTokenSource.Token.IsCancellationRequested)
+					await Task.Delay(16);
+
+				if (_SendQueue1.Count > 0)
 				{
-					while (_ToSendCount == 0 && !_CancellationTokenSource.Token.IsCancellationRequested)
-						Monitor.Wait(_SendLock);
-
-					if (_SendQueue1.Count > 0)
+					T toSend;
+					lock(_SendLock)
 					{
-						_Sender.Encode(_SendQueue1.Dequeue());
+						toSend = _SendQueue1.Dequeue();
 						_ToSendCount--;
-						continue;
 					}
+					await _Sender.Encode(toSend);
+					continue;
+				}
 
-					if (_SendQueue2.Count > 0)
+				if (_SendQueue2.Count > 0)
+				{
+					ValueTuple<int, T> toSend;
+					lock (_SendLock)
 					{
-						(int, T) toSend = _SendQueue2.Dequeue();
-						_Sender.Encode(toSend.Item1, toSend.Item2);
+						toSend = _SendQueue2.Dequeue();
 						_ToSendCount--;
-						continue;
 					}
+					await _Sender.Encode(toSend.Item1, toSend.Item2);
+					continue;
+				}
 
-					if (_SendQueue3.Count > 0)
+				if (_SendQueue3.Count > 0)
+				{
+					ValueTuple<int, int, T> toSend;
+					lock (_SendLock)
 					{
-						(int, int, T) toSend = _SendQueue3.Dequeue();
-						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
+						toSend = _SendQueue3.Dequeue();
 						_ToSendCount--;
-						continue;
 					}
+					await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
+					_ToSendCount--;
+					continue;
+				}
 
-					if (_SendQueue4.Count > 0)
+				if (_SendQueue4.Count > 0)
+				{
+					ValueTuple<int, int, int, T> toSend;
+					lock (_SendLock)
 					{
-						(int, int, int, T) toSend = _SendQueue4.Dequeue();
-						_Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
+						toSend = _SendQueue4.Dequeue();
 						_ToSendCount--;
-						continue;
 					}
+					await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
+					continue;
 				}
 			}
 		}

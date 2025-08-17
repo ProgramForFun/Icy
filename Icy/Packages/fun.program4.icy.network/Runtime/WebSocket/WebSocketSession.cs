@@ -120,7 +120,7 @@ namespace Icy.Network
 			OnConnected?.Invoke();
 		}
 
-		public override async void Send(byte[] msg, int startIdx, int length)
+		public override async UniTask Send(byte[] msg, int startIdx, int length)
 		{
 			if (!IsConnected)
 			{

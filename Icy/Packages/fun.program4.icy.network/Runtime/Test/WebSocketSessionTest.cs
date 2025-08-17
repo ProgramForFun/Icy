@@ -76,7 +76,7 @@ namespace Icy.Network
 			//}
 
 			if (_WebSocketSession != null && _WebSocketSession.IsConnected)
-				_WebSocketSession.Send(_Data2Send, 0, _Data2Send.Length);
+				await _WebSocketSession.Send(_Data2Send, 0, _Data2Send.Length);
 
 			if (Input.GetKeyUp(KeyCode.D))
 				_WebSocketSession.Disconnect().Forget();

@@ -145,14 +145,13 @@ namespace Icy.Network
 			try
 			{
 				Buffer.BlockCopy(syn, 0, _AsyncSendArg.Buffer, 0, syn.Length);
-				Send(_AsyncSendArg.Buffer, 0, syn.Length);
+				await Send(_AsyncSendArg.Buffer, 0, syn.Length);
 			}
 			catch (Exception e)
 			{
 				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, e);
 			}
-			await UniTask.CompletedTask;
 		}
 
 		public override async UniTask Listen()
@@ -179,7 +178,7 @@ namespace Icy.Network
 		}
 #endif
 
-		public override void Send(byte[] msg, int startIdx, int length)
+		public override async UniTask Send(byte[] msg, int startIdx, int length)
 		{
 			if (!IsKcpValid())
 			{
@@ -189,11 +188,13 @@ namespace Icy.Network
 				return;
 			}
 
+			//TODO：处理Send的返回值
 #if USE_KCP_SHARP
 			_Kcp.Send(msg, startIdx, length);
 #else
 			KcpDll.KcpSend(_Kcp, msg, length);
 #endif
+			await UniTask.CompletedTask;
 		}
 
 #if USE_KCP_SHARP
@@ -349,7 +350,7 @@ namespace Icy.Network
 			{
 				_IsDisconnecting = true;
 				Buffer.BlockCopy(fin, 0, _AsyncSendArg.Buffer, 0, fin.Length);
-				Send(_AsyncSendArg.Buffer, 0, fin.Length);
+				await Send(_AsyncSendArg.Buffer, 0, fin.Length);
 
 				await UniTask.WaitUntil(IsDisconnectOperationFinished);
 #if USE_KCP_SHARP

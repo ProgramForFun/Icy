@@ -71,7 +71,7 @@ namespace Icy.Network
 				for (int i = 0; i < 2; i++)
 				{
 					byte[] toSend = Encoding.UTF8.GetBytes("abcdefghijklmnopqrstuvwxyz");
-					_KcpSession.Send(toSend, 0, toSend.Length);
+					await _KcpSession.Send(toSend, 0, toSend.Length);
 				}
 			}
 

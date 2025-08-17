@@ -109,7 +109,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 发送消息
 		/// </summary>
-		public override void Send(byte[] msg, int startIdx, int length)
+		public override async UniTask Send(byte[] msg, int startIdx, int length)
 		{
 			if (!IsConnected)
 			{
@@ -131,7 +131,7 @@ namespace Icy.Network
 				BitConverter.TryWriteBytes(_SendBuffer, len);
 				//2、消息本体
 				Buffer.BlockCopy(msg, 0, _SendBuffer, MSG_LENGTH_SIZE, length);
-				_Stream.WriteAsync(_SendBuffer, 0, len);
+				await _Stream.WriteAsync(_SendBuffer, 0, len);
 			}
 			catch (Exception e)
 			{
