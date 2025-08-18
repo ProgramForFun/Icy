@@ -174,7 +174,6 @@ namespace Icy.Network
 			{
 				_SendQueue1.Enqueue(data);
 				_ToSendCount++;
-				Monitor.Pulse(_SendLock);
 			}
 		}
 
@@ -185,7 +184,6 @@ namespace Icy.Network
 			{
 				_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
 				_ToSendCount++;
-				Monitor.Pulse(_SendLock);
 			}
 		}
 
@@ -196,7 +194,6 @@ namespace Icy.Network
 			{
 				_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
 				_ToSendCount++;
-				Monitor.Pulse(_SendLock);
 			}
 		}
 
@@ -207,7 +204,6 @@ namespace Icy.Network
 			{
 				_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
 				_ToSendCount++;
-				Monitor.Pulse(_SendLock);
 			}
 		}
 
