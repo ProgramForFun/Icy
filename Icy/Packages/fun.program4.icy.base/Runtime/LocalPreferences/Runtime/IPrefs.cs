@@ -200,8 +200,6 @@ namespace Neonagee.LocalPreferences
         // Unload from dictionary to array
         public void OnBeforeSerialize()
         {
-            if (dictionary.Count == 0)
-                return;
             keys = new string[dictionary.Count];
             values = new T[dictionary.Count];
             int i = 0;
