@@ -21,16 +21,17 @@ namespace Icy.Network
 {
 	/// <summary>
 	/// 和NetworkChannel一起使用的，负责发送前的序列化、转换成byte[]的工作；
-	/// 注意，这个类跑在Worker线程里；
+	/// 注意，这个类的派生类跑在Worker线程里；
 	/// </summary>
 	public abstract class NetworkSenderBase<T>
 	{
 		protected NetworkChannel<T> _Channel;
 		protected byte[] _Buffer;
 
-		public NetworkSenderBase(int bufferSize = 4096)
+		public NetworkSenderBase(int bufferSize = 0)
 		{
-			_Buffer = new byte[bufferSize];
+			if (bufferSize > 0)
+				_Buffer = new byte[bufferSize];
 		}
 
 		/// <summary>
@@ -49,7 +50,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 转换成byte[]后，调用这个方法
 		/// </summary>
-		protected async UniTask Send(int startIdx, int length)
+		protected virtual async UniTask Send(int startIdx, int length)
 		{
 			await _Channel.Send(_Buffer, startIdx, length);
 		}

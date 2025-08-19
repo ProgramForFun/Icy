@@ -12,6 +12,11 @@ namespace Icy.Network
 {
 	public class ProtoBufSender : NetworkSenderBase<IMessage>
 	{
+		public ProtoBufSender() : base(4096)
+		{
+
+		}
+
 		public override async UniTask Encode(int msgID, IMessage proto)
 		{
 			Log.LogInfo("[ProtoBufSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
