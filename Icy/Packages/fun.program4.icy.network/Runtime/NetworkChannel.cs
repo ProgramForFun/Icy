@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Text;
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
@@ -102,6 +103,10 @@ namespace Icy.Network
 		/// 发送线程取消令牌
 		/// </summary>
 		protected CancellationTokenSource _CancellationTokenSource;
+		/// <summary>
+		/// 待发送的消息超过这个数量，会报错预警
+		/// </summary>
+		protected const int SEND_QUEUE_COUNT_ALERT = 32;
 
 
 		public NetworkChannel(NetworkChannelArgs<T> args)
@@ -174,6 +179,7 @@ namespace Icy.Network
 			{
 				_SendQueue1.Enqueue(data);
 				_ToSendCount++;
+				MonitorSendQueueBacklog();
 			}
 		}
 
@@ -184,6 +190,7 @@ namespace Icy.Network
 			{
 				_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
 				_ToSendCount++;
+				MonitorSendQueueBacklog();
 			}
 		}
 
@@ -194,6 +201,7 @@ namespace Icy.Network
 			{
 				_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
 				_ToSendCount++;
+				MonitorSendQueueBacklog();
 			}
 		}
 
@@ -204,6 +212,7 @@ namespace Icy.Network
 			{
 				_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
 				_ToSendCount++;
+				MonitorSendQueueBacklog();
 			}
 		}
 
@@ -286,6 +295,21 @@ namespace Icy.Network
 
 			if (!_CancellationTokenSource.Token.IsCancellationRequested)
 				await Session.Listen();
+		}
+
+		/// <summary>
+		/// 监视发送队列是否有积压
+		/// </summary>
+		protected bool MonitorSendQueueBacklog()
+		{
+			int totalCount = _SendQueue1.Count + _SendQueue2.Count + _SendQueue3.Count + _SendQueue4.Count;
+			if (totalCount >= SEND_QUEUE_COUNT_ALERT)
+			{
+				string content = ZString.Format("To send msg is backlogging, {0} - {1} - {2} - {3}", _SendQueue1.Count, _SendQueue2.Count, _SendQueue3.Count, _SendQueue4.Count);
+				Log.LogError(content, nameof(NetworkChannel<T>));
+				return false;
+			}
+			return true;
 		}
 
 		/// <summary>
