@@ -160,7 +160,7 @@ namespace Icy.Protobuf.Editor
 		{
 			try
 			{
-				int times = EditorLocalPrefs.GetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, int.MaxValue);
+				int times = EditorLocalPrefs.GetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, 0);
 				EditorLocalPrefs.SetInt(GENERATING_PROTO_ASSEMBLY_RELOAD_TIMES, --times);
 				if (times <= 0)
 					Clear();
