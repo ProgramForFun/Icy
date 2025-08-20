@@ -35,7 +35,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 是否已连接到服务器
 		/// </summary>
-		public bool IsConnected => Session.IsConnected;
+		public bool IsConnected => Session.IsConnected && _CancellationTokenSource != null && !_CancellationTokenSource.IsCancellationRequested;
 		/// <summary>
 		/// 和服务器建立连接、可以通信了的事件
 		/// </summary>
@@ -176,45 +176,53 @@ namespace Icy.Network
 
 		public virtual void Send(T data)
 		{
-			//_Sender.Encode(data);
-			lock (_SendLock)
+			if (CheckSendable())
 			{
-				_SendQueue1.Enqueue(data);
-				_ToSendCount++;
-				MonitorSendQueueBacklog();
+				lock (_SendLock)
+				{
+					_SendQueue1.Enqueue(data);
+					_ToSendCount++;
+					MonitorSendQueueBacklog();
+				}
 			}
 		}
 
 		public virtual void Send(int arg1, T data)
 		{
-			//_Sender.Encode(arg1, data);
-			lock (_SendLock)
+			if (CheckSendable())
 			{
-				_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
-				_ToSendCount++;
-				MonitorSendQueueBacklog();
+				lock (_SendLock)
+				{
+					_SendQueue2.Enqueue(new ValueTuple<int, T>(arg1, data));
+					_ToSendCount++;
+					MonitorSendQueueBacklog();
+				}
 			}
 		}
 
 		public virtual void Send(int arg1, int arg2, T data)
 		{
-			//_Sender.Encode(arg1, arg2, data);
-			lock (_SendLock)
+			if (CheckSendable())
 			{
-				_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
-				_ToSendCount++;
-				MonitorSendQueueBacklog();
+				lock (_SendLock)
+				{
+					_SendQueue3.Enqueue(new ValueTuple<int, int, T>(arg1, arg2, data));
+					_ToSendCount++;
+					MonitorSendQueueBacklog();
+				}
 			}
 		}
 
 		public virtual void Send(int arg1, int arg2, int arg3, T data)
 		{
-			//_Sender.Encode(arg1, arg2, arg3, data);
-			lock (_SendLock)
+			if (CheckSendable())
 			{
-				_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
-				_ToSendCount++;
-				MonitorSendQueueBacklog();
+				lock (_SendLock)
+				{
+					_SendQueue4.Enqueue(new ValueTuple<int, int, int, T>(arg1, arg2, arg3, data));
+					_ToSendCount++;
+					MonitorSendQueueBacklog();
+				}
 			}
 		}
 
@@ -297,6 +305,19 @@ namespace Icy.Network
 
 			if (!_CancellationTokenSource.Token.IsCancellationRequested)
 				await Session.Listen();
+		}
+
+		protected bool CheckSendable()
+		{
+			if (!IsConnected || _CancellationTokenSource == null || _CancellationTokenSource.Token.IsCancellationRequested)
+			{
+				Exception e = new Exception($"Call {nameof(Send)} when {nameof(NetworkChannel<T>)} is disconnected");
+				Log.LogError(e.ToString(), nameof(NetworkChannel<T>));
+				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>
