@@ -26,7 +26,9 @@ using System.Threading.Tasks;
 namespace Icy.Network
 {
 	/// <summary>
-	/// 封装起来的网络通信Channel，支持多种协议
+	/// 封装的网络通信Channel，支持多种协议；
+	/// 业务侧通过几个Send方法发送消息，
+	/// 接收消息、在NetworkReceiver中解析后，可以通过EventManager发送到主线程的业务侧；
 	/// </summary>
 	public class NetworkChannel<T>
 	{
