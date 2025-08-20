@@ -124,7 +124,7 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Exception e = new Exception($"Call {nameof(Send)} when WebSocket is disconnected");
+				Exception e = new Exception($"Call {nameof(Send)} when {nameof(WebSocketSession)} is disconnected");
 				Log.LogError(e.ToString(), nameof(WebSocketSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;

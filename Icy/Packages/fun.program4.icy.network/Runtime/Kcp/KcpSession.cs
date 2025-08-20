@@ -182,7 +182,7 @@ namespace Icy.Network
 		{
 			if (!IsKcpValid())
 			{
-				Exception e = new Exception($"Call {nameof(Send)} when Kcp is disconnected");
+				Exception e = new Exception($"Call {nameof(Send)} when {nameof(KcpSession)} is disconnected");
 				Log.LogError(e.ToString(), nameof(KcpSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;

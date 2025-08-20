@@ -113,7 +113,7 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Exception e = new Exception($"Call {nameof(Send)} when Tcp is disconnected");
+				Exception e = new Exception($"Call {nameof(Send)} when {nameof(TcpSession)} is disconnected");
 				Log.LogError(e.ToString(), nameof(TcpSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;
