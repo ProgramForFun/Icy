@@ -286,7 +286,7 @@ namespace Icy.Base
 			StreamWriter sw = new StreamWriter(newLogFilePath, true, Encoding.UTF8);
 			try
 			{
-				while (!_CancellationTokenSource.Token.IsCancellationRequested)
+				while (!_CancellationTokenSource.IsCancellationRequested)
 				{
 					string log = null;
 					lock (_QueueLock)

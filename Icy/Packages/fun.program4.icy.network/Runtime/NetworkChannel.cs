@@ -236,13 +236,13 @@ namespace Icy.Network
 		/// </summary>
 		protected async void SendLoop()
 		{
-			while (!IsConnected && !_CancellationTokenSource.Token.IsCancellationRequested)
+			while (!IsConnected && !_CancellationTokenSource.IsCancellationRequested)
 				await Task.Delay(16);	//帧率60的每帧时间，这个等待总体不会太长
 
-			while (!_CancellationTokenSource.Token.IsCancellationRequested)
+			while (!_CancellationTokenSource.IsCancellationRequested)
 			{
 				//TODO：用UniTask避免GC Alloc
-				while (_ToSendCount == 0 && !_CancellationTokenSource.Token.IsCancellationRequested)
+				while (_ToSendCount == 0 && !_CancellationTokenSource.IsCancellationRequested)
 					await Task.Delay(16);
 
 				if (_SendQueue1.Count > 0)
@@ -303,13 +303,13 @@ namespace Icy.Network
 		{
 			await Session.Connect(_Syn);
 
-			if (!_CancellationTokenSource.Token.IsCancellationRequested)
+			if (!_CancellationTokenSource.IsCancellationRequested)
 				await Session.Listen();
 		}
 
 		protected bool CheckSendable()
 		{
-			if (!IsConnected || _CancellationTokenSource == null || _CancellationTokenSource.Token.IsCancellationRequested)
+			if (!IsConnected || _CancellationTokenSource == null || _CancellationTokenSource.IsCancellationRequested)
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(NetworkChannel<T>)} is disconnected");
 				Log.LogError(e.ToString(), nameof(NetworkChannel<T>));
