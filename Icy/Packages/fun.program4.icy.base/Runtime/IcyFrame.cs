@@ -50,18 +50,7 @@ namespace Icy.Base
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
 
-			//反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
-			//TODO：接入HybridCLR后，这里的调用时机要改
-			Assembly assembly = Assembly.Load("Protos");
-			if (assembly != null)
-			{
-				Type type = assembly.GetType("ProtoMsgIDRegistry");
-				if (type != null)
-				{
-					MethodInfo method = type.GetMethod("RegisterAll");
-					method?.Invoke(null, null);
-				}
-			}
+			InitProto();
 		}
 
 		/// <summary>
@@ -70,6 +59,19 @@ namespace Icy.Base
 		public bool IsMainThread()
 		{
 			return Thread.CurrentThread.ManagedThreadId == MainThreadID;
+		}
+
+		/// <summary>
+		/// 反射调用初始化Proto，牺牲一点点性能，换取用户不需要关心这个调用了
+		/// TODO：接入HybridCLR后，这里的调用时机要改
+		/// </summary>
+		private void InitProto()
+		{
+			Assembly assembly = Assembly.Load("Icy.Protobuf");
+			Type type = assembly.GetType("Icy.Protobuf.InitProto");
+			MethodInfo method = type.GetMethod("InitProtoMsgIDRegistry", BindingFlags.Public | BindingFlags.Instance);
+			object instance = Activator.CreateInstance(type);
+			method.Invoke(instance, null);
 		}
 
 		private void OnUniTaskUnobservedTaskException(Exception ex)
