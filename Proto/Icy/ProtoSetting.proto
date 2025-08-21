@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package Icy.Protobuf.Editor;
+package Icy.Protobuf;
 
 
 message ProtoSetting

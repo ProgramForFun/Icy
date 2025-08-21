@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Icy.Protobuf.Editor {
+namespace Icy.Protobuf {
 
   /// <summary>Holder for reflection information generated from ProtoSetting.proto</summary>
   public static partial class ProtoSettingReflection {
@@ -24,14 +24,13 @@ namespace Icy.Protobuf.Editor {
     static ProtoSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJQcm90b1NldHRpbmcucHJvdG8SE0ljeS5Qcm90b2J1Zi5FZGl0b3IiWQoM",
-            "UHJvdG9TZXR0aW5nEhYKDkNvbXBpbGVCYXRQYXRoGAEgASgJEhYKDlByb3Rv",
-            "T3V0cHV0RGlyGAIgASgJEhkKEVByb3RvQXNzZW1ibHlOYW1lGAMgASgJYgZw",
-            "cm90bzM="));
+            "ChJQcm90b1NldHRpbmcucHJvdG8SDEljeS5Qcm90b2J1ZiJZCgxQcm90b1Nl",
+            "dHRpbmcSFgoOQ29tcGlsZUJhdFBhdGgYASABKAkSFgoOUHJvdG9PdXRwdXRE",
+            "aXIYAiABKAkSGQoRUHJvdG9Bc3NlbWJseU5hbWUYAyABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Protobuf.Editor.ProtoSetting), global::Icy.Protobuf.Editor.ProtoSetting.Parser, new[]{ "CompileBatPath", "ProtoOutputDir", "ProtoAssemblyName" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Protobuf.ProtoSetting), global::Icy.Protobuf.ProtoSetting.Parser, new[]{ "CompileBatPath", "ProtoOutputDir", "ProtoAssemblyName" }, null, null, null, null)
           }));
     }
     #endregion
@@ -53,7 +52,7 @@ namespace Icy.Protobuf.Editor {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Icy.Protobuf.Editor.ProtoSettingReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Icy.Protobuf.ProtoSettingReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
