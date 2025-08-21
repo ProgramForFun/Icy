@@ -155,6 +155,7 @@ namespace Icy.Network
 			}
 
 			await _WebSocket.Close();
+			IsConnected = false;
 			_WebSocket = null;
 		}
 
