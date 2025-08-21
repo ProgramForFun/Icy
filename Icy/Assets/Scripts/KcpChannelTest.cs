@@ -32,16 +32,27 @@ namespace Icy.Network
 		private static void OnConnect()
 		{
 			Log.LogInfo("KcpChannel Connected");
+			EventManager.AddListener(123, Handle);
 		}
 
 		private static void OnDisconnect()
 		{
 			Log.LogInfo("KcpChannel Disconnected");
+			EventManager.RemoveListener(123, Handle);
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
 			Log.LogError($"KcpChannel error = {error}, exception = {ex}");
+		}
+
+		private static void Handle(int eventID, IEventParam param)
+		{
+			if (param is EventParam<IMessage> msg)
+			{
+				Log.LogInfo("[KcpChannelTest.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.LogInfo((msg.Value as TestMessageResult).ErrorMsg);
+			}
 		}
 
 		public static void /*async UniTaskVoid*/ Update()

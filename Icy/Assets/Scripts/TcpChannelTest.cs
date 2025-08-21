@@ -55,25 +55,29 @@ namespace Icy.Network
 			int protoLength = length - sizeof(int);
 			//用Span降低Protobuf反序列化的GC
 			ReadOnlySequence<byte> span = new ReadOnlySequence<byte>(data, protoStartIdx, protoLength);
+
+			IMessage msg = null;
 			if (_Cache.ContainsKey(msgID))
 			{
-				IMessage newMessageResult = _Cache[msgID];
+				msg = _Cache[msgID];
 				//由于下面链接9.2提到的Clear的问题，为proto扩展了一个Reset方法，来在复用前重置状态
 				//https://www.cnblogs.com/wsk-0000/articles/12675826.html
 				//https://zhuanlan.zhihu.com/p/588709957
-				newMessageResult.Reset();
-
-				newMessageResult.MergeFrom(span);
-
-				Log.LogInfo((newMessageResult as TestMessageResult).ErrorMsg);
+				msg.Reset();
+				msg.MergeFrom(span);
 			}
 			else
 			{
 				Google.Protobuf.Reflection.MessageDescriptor descriptor = ProtoMsgIDRegistry.GetMsgDescriptor(msgID);
-				IMessage msg = descriptor.Parser.ParseFrom(span);
+				msg = descriptor.Parser.ParseFrom(span);
 				_Cache.Add(msgID, msg);
+			}
 
-				Log.LogInfo((msg as TestMessageResult).ErrorMsg);
+			if (msg != null)
+			{
+				EventParam<IMessage> evtParam = EventManager.GetParam<EventParam<IMessage>>();
+				evtParam.Value = msg;
+				EventManager.Trigger(123, evtParam);
 			}
 		}
 	}
@@ -99,16 +103,27 @@ namespace Icy.Network
 		private static void OnConnect()
 		{
 			Log.LogInfo("TcpChannel Connected");
+			EventManager.AddListener(123, Handle);
 		}
 
 		private static void OnDisconnect()
 		{
 			Log.LogInfo("TcpChannel Disconnected");
+			EventManager.RemoveListener(123, Handle);
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
 			Log.LogError($"TcpChannel error = {error}, exception = {ex}");
+		}
+
+		private static void Handle(int eventID, IEventParam param)
+		{
+			if (param is EventParam<IMessage> msg)
+			{
+				Log.LogInfo("[TcpChannelTest.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.LogInfo((msg.Value as TestMessageResult).ErrorMsg);
+			}
 		}
 
 		public static void /*async UniTaskVoid*/ Update()
