@@ -38,7 +38,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "38c001e2093b345ef35c6f31a4222694c0885a5e"
+      "hash": "019a75b2fd4fd0f072621c4229e08d4ac9215a20"
     },
     "com.marijnzwemmer.unity-toolbar-extender": {
       "version": "file:unity-toolbar-extender-1.4.3",

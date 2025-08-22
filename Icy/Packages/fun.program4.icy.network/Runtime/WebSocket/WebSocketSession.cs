@@ -30,6 +30,13 @@ namespace Icy.Network
 		protected WebSocket _WebSocket;
 
 		/// <summary>
+		/// 是否使用NativeWebSocket的接收DispatchQueue；
+		/// 是：NativeWebSocket.OnMessage保证在Unity主线程执行
+		/// 否：NativeWebSocket.OnMessageDirectly在当前线程执行，当前线程是主线程还是Worker线程取决于Connect在哪调用
+		/// </summary>
+		protected bool _UseDispatchQueue = false;
+
+		/// <summary>
 		/// 构造WebSocketSession
 		/// </summary>
 		/// <param name="host">ws://或wss://开头的地址</param>
@@ -51,9 +58,13 @@ namespace Icy.Network
 
 				_WebSocket = new WebSocket(url);
 				_WebSocket.OnOpen += OnWebSocketConnected;
-				_WebSocket.OnMessage += OnWebSocketMessage;
+				if (_UseDispatchQueue)
+					_WebSocket.OnMessage += OnWebSocketMessage;
+				else
+					_WebSocket.OnMessageDirectly += HandleReceived;
 				_WebSocket.OnError += OnWebSocketError;
 				_WebSocket.OnClose += OnWebSocketClose;
+				_WebSocket.EnableDispatchQueue(_UseDispatchQueue);
 				await _WebSocket.Connect();
 			}
 			catch (Exception ex)
@@ -172,7 +183,8 @@ namespace Icy.Network
 		public void Update(float delta)
 		{
 #if !UNITY_WEBGL || UNITY_EDITOR
-			_WebSocket?.DispatchMessageQueue();
+			if (_UseDispatchQueue)
+				_WebSocket?.DispatchMessageQueue();
 #endif
 		}
 	}
