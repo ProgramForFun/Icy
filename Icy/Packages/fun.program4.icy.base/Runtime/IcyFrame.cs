@@ -74,6 +74,14 @@ namespace Icy.Base
 			method.Invoke(instance, null);
 		}
 
+		/// <summary>
+		/// 所有不等待的UniTask方法，都应该把这个方法传入Forget函数中，或者业务侧自己定义一个类似方法也可以
+		/// </summary>
+		public static void OnUniTaskForgetException(Exception ex)
+		{
+			Log.LogError(ex.ToString(), "UniTask Forget Exception");
+		}
+
 		private void OnUniTaskUnobservedTaskException(Exception ex)
 		{
 			Log.LogError(ex.ToString(), "UniTask Unobserved Exception");
