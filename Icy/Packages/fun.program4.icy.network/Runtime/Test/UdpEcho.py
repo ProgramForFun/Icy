@@ -15,5 +15,5 @@ count = 0
 while True:
     payload, client_address = sock.recvfrom(4096)
     count = count + 1
-    print ("Echo back to %s : [%d] %s" % (str(client_address), count, str(payload)))
+    print ("[UDP] Echo back to %s : [%d] %s" % (str(client_address), count, str(payload)))
     sent = sock.sendto(payload, client_address)

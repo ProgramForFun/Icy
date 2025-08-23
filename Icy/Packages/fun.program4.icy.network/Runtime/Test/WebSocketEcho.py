@@ -14,7 +14,7 @@ async def echo_handler(websocket):
             global count
             await websocket.send(message)
             count = count +1
-            print(f"Echo back to: [{count}] {message}")
+            print(f"[WebSocket] Echo back to: [{count}] {message}")
     except websockets.exceptions.ConnectionClosedOK:
         print("客户端正常断开连接")
     except websockets.exceptions.ConnectionClosedError as e:

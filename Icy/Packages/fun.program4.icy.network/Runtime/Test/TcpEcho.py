@@ -27,7 +27,7 @@ class EchoRequestHandler(socketserver.StreamRequestHandler):
             if not line:
                 break
             count = count + 1
-            print ("Echo back to %s : [%d] %s" % (self.client_address[0], count, line))
+            print ("[TCP] Echo back to %s : [%d] %s" % (self.client_address[0], count, line))
             time.sleep(0.01)
             self.wfile.write(line)
         print ("%s disconnected" % self.client_address[0])

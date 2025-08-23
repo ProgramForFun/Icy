@@ -31,7 +31,7 @@ async def on_data(connection: Connection, data: bytes) -> None:
     global count
     connection.enqueue(bytes(data))
     count = count + 1
-    print(f"Echo back to {connection.address}: [{count}]{data}")
+    print(f"[Kcp] Echo back to {connection.address}: [{count}]{data}")
 
 
 server.start()
