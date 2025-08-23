@@ -90,14 +90,6 @@ namespace Icy.Network
 		/// </summary>
 		protected int _ToSendCount;
 		/// <summary>
-		/// 发送线程
-		/// </summary>
-		protected Thread _SendThread;
-		/// <summary>
-		/// 接收线程
-		/// </summary>
-		protected Thread _ReceiveThread;
-		/// <summary>
 		/// 发送线程锁
 		/// </summary>
 		protected object _SendLock;
@@ -166,10 +158,8 @@ namespace Icy.Network
 			_ToSendCount = 0;
 			_SendLock = new object();
 			_CancellationTokenSource = new CancellationTokenSource();
-			_ReceiveThread = new Thread(ReceiveLoop);
-			_ReceiveThread.Start();
-			_SendThread = new Thread(SendLoop);
-			_SendThread.Start();
+			UniTask.RunOnThreadPool(ReceiveLoop).Forget(IcyFrame.OnUniTaskForgetException);
+			UniTask.RunOnThreadPool(SendLoop).Forget(IcyFrame.OnUniTaskForgetException);
 
 			await UniTask.CompletedTask;
 		}
@@ -234,16 +224,16 @@ namespace Icy.Network
 		/// <summary>
 		/// 发送循环
 		/// </summary>
-		protected async void SendLoop()
+		protected async UniTaskVoid SendLoop()
 		{
 			while (!IsConnected && !_CancellationTokenSource.IsCancellationRequested)
-				await Task.Delay(16);	//帧率60的每帧时间，这个等待总体不会太长
+				await Task.Delay(16).ConfigureAwait(false);	//帧率60的每帧时间，这个等待总体不会太长
 
 			while (!_CancellationTokenSource.IsCancellationRequested)
 			{
-				//TODO：用UniTask避免GC Alloc
+				//TODO：想办法避免Task.Delay的GC Alloc
 				while (_ToSendCount == 0 && !_CancellationTokenSource.IsCancellationRequested)
-					await Task.Delay(16);
+					await Task.Delay(16).ConfigureAwait(false);
 
 				if (_SendQueue1.Count > 0)
 				{
@@ -299,7 +289,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 接收循环
 		/// </summary>
-		protected async void ReceiveLoop()
+		protected async UniTaskVoid ReceiveLoop()
 		{
 			await Session.Connect(_Syn);
 
