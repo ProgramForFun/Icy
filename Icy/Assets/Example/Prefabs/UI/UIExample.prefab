@@ -477,7 +477,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Components:
-  - Object: {fileID: 1544333541371959942}
+  - Generator: {fileID: 3985246323809618410}
+    Object: {fileID: 1544333541371959942}
     Name: ScrollView
     Component: {fileID: 5240978122594216020}
   UIName: Example

@@ -381,16 +381,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Components:
-  - Object: {fileID: 7875446801187775820}
+  - Generator: {fileID: 7144021193448441104}
+    Object: {fileID: 7875446801187775820}
     Name: Bg
     Component: {fileID: 3098078886348500455}
-  - Object: {fileID: 5043637691542804104}
+  - Generator: {fileID: 7144021193448441104}
+    Object: {fileID: 5043637691542804104}
     Name: Title
     Component: {fileID: 1392750261224780599}
-  - Object: {fileID: 3391058008370667811}
+  - Generator: {fileID: 7144021193448441104}
+    Object: {fileID: 3391058008370667811}
     Name: Button
     Component: {fileID: 5566719931547290517}
-  - Object: {fileID: 8746155678142144844}
+  - Generator: {fileID: 7144021193448441104}
+    Object: {fileID: 8746155678142144844}
     Name: Slider
     Component: {fileID: 3966701445877579166}
   UIName: Login
