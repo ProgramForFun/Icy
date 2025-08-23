@@ -54,13 +54,12 @@ namespace Icy.UI
 		{
 			if (!_Inited)
 			{
-				EventManager.AddListener(EventDefine.UICodeGeneratorNameChanged, ValidateName);
 				_Inited = true;
 				_Disposed = false;
 			}
 
 			if (Components.Count > 0)
-				ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
+				ValidateName(Components[0]);
 
 			//检查prefab前缀
 			string goName = gameObject.name;
@@ -89,7 +88,7 @@ namespace Icy.UI
 			if (info.ChangeType == CollectionChangeType.RemoveValue || info.ChangeType == CollectionChangeType.RemoveKey || info.ChangeType == CollectionChangeType.RemoveIndex)
 			{
 				if (Components.Count > 0)
-					ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = Components[0] });
+					ValidateName(Components[0]);
 			}
 		}
 
@@ -103,32 +102,29 @@ namespace Icy.UI
 		/// <summary>
 		/// 有字段重名时，红色提示
 		/// </summary>
-		private void ValidateName(int eventID, IEventParam item)
+		public void ValidateName(UICodeGeneratorItem item)
 		{
-			if (item is EventParam<UICodeGeneratorItem> eventParam)
+			if (Components.Contains(item))
 			{
-				if (Components.Contains(eventParam.Value))
+				_ForDuplicateName.Clear();
+				for (int i = 0; i < Components.Count; i++)
 				{
-					_ForDuplicateName.Clear();
-					for (int i = 0; i < Components.Count; i++)
+					Components[i].RedName = false;
+					string name = Components[i].Name;
+
+					//检测命名合法性
+					bool isValidName = CSharpVariableValidator.IsValidCSharpVariableName(name);
+					if (!isValidName)
+						Components[i].RedName = true;
+
+					//检测重名
+					if (_ForDuplicateName.ContainsKey(name))
 					{
-						Components[i].RedName = false;
-						string name = Components[i].Name;
-
-						//检测命名合法性
-						bool isValidName = CSharpVariableValidator.IsValidCSharpVariableName(name);
-						if (!isValidName)
-							Components[i].RedName = true;
-
-						//检测重名
-						if (_ForDuplicateName.ContainsKey(name))
-						{
-							Components[i].RedName = true;
-							_ForDuplicateName[name].RedName = true;
-						}
-						else
-							_ForDuplicateName.Add(name, Components[i]);
+						Components[i].RedName = true;
+						_ForDuplicateName[name].RedName = true;
 					}
+					else
+						_ForDuplicateName.Add(name, Components[i]);
 				}
 			}
 		}
@@ -166,7 +162,6 @@ namespace Icy.UI
 		{
 			if (!_Disposed)
 			{
-				EventManager.RemoveListener(EventDefine.UICodeGeneratorNameChanged, ValidateName);
 				_Disposed = true;
 				_Inited = false;
 			}
@@ -204,6 +199,7 @@ namespace Icy.UI
 				{
 					UICodeGeneratorItem item = new UICodeGeneratorItem();
 					generator.Components.Add(item);
+					item.Generator = generator;
 					item.Object = allSelect[i];
 					item.Name = allSelect[i].name;
 				}
@@ -213,7 +209,7 @@ namespace Icy.UI
 			AssetDatabase.SaveAssets();
 
 			if (generator.Components.Count > 0)
-				generator.ValidateName(EventDefine.UICodeGeneratorNameChanged, new EventParam<UICodeGeneratorItem> { Value = generator.Components[0] });
+				generator.ValidateName(generator.Components[0]);
 
 			EditorApplication.delayCall += () =>
 			{ 

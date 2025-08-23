@@ -22,13 +22,6 @@ namespace Icy.Base
 	/// </summary>
 	public static class EventDefine
 	{
-		#region UI代码生成
-		/// <summary>
-		/// UICodeGenerator的其中一个Item的Name字段发生了变化
-		/// </summary>
-		public static readonly int UICodeGeneratorNameChanged = -1000;
-		#endregion
-
 		#region 资源
 		/// <summary>
 		/// 从远端更新资源版本信息结束

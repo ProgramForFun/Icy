@@ -36,6 +36,12 @@ namespace Icy.UI
 		private static HashSet<string> IGNORE_COMPONENTS = new HashSet<string>() { "CanvasRenderer" };
 
 		/// <summary>
+		/// 所属的UICodeGenerator
+		/// </summary>
+		[HideInInspector]
+		public UICodeGenerator Generator;
+
+		/// <summary>
 		/// 置为true的话，Name显示红色
 		/// </summary>
 		[NonSerialized]
@@ -148,9 +154,7 @@ namespace Icy.UI
 
 		private void OnNameChanged()
 		{
-			EventParam<UICodeGeneratorItem> eventParam = EventManager.GetParam<EventParam<UICodeGeneratorItem>>();
-			eventParam.Value = this;
-			EventManager.Trigger(EventDefine.UICodeGeneratorNameChanged, eventParam);
+			Generator.ValidateName(this);
 		}
 	}
 }
