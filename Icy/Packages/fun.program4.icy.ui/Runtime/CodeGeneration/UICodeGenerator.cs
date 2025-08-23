@@ -16,10 +16,12 @@
 
 
 using UnityEngine;
-using System.Collections.Generic;
-using Icy.Base;
 
 #if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using Icy.Base;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using Sirenix.OdinInspector;
@@ -134,25 +136,30 @@ namespace Icy.UI
 		[Button("Generate Logic Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		public void GenerateLogicCode()
 		{
-			EventParam_String eventParam = EventManager.GetParam<EventParam_String>();
-			eventParam.Value = UIName;
-			EventManager.Trigger(EventDefine.GenerateUILogicCode, eventParam);
+			MethodInfo method = ReflectGetMethod("GenerateUILogicCode");
+			method.Invoke(null, new object[1] { this });
 		}
 
 		[Button("Generate UI Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		public void GenerateUICode()
 		{
-			EventParam<UICodeGenerator> eventParam = EventManager.GetParam<EventParam<UICodeGenerator>>();
-			eventParam.Value = this;
-			EventManager.Trigger(EventDefine.GenerateUICode, eventParam);
+			MethodInfo method = ReflectGetMethod("GenerateUICode");
+			method.Invoke(null, new object[1] { this });
 		}
 
 		[Button("Generate Both", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		public void GenerateBoth()
 		{
-			EventParam<UICodeGenerator> eventParam = EventManager.GetParam<EventParam<UICodeGenerator>>();
-			eventParam.Value = this;
-			EventManager.Trigger(EventDefine.GenerateUICodeBoth, eventParam);
+			MethodInfo method = ReflectGetMethod("GenerateBoth");
+			method.Invoke(null, new object[1] { this });
+		}
+
+		private MethodInfo ReflectGetMethod(string methodName)
+		{
+			Assembly assembly = Assembly.Load("Icy.UI.Editor");
+			Type type = assembly.GetType("Icy.UI.Editor.UICodeGeneratorEditor");
+			MethodInfo method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+			return method;
 		}
 
 		private void OnInspectorDispose()
