@@ -27,7 +27,8 @@ using UnityEngine;
 namespace Icy.UI.Editor
 {
 	/// <summary>
-	/// UI代码生成器的逻辑部分，Editor UI部分见UICodeGenerator类
+	/// UI代码生成器的逻辑部分，Editor UI部分见UICodeGenerator类；
+	/// 注意，此类被UICodeGenerator反射依赖；
 	/// </summary>
 	public class UICodeGeneratorEditor
 	{
@@ -82,6 +83,9 @@ namespace Icy.UI.Editor
 			}
 		}
 
+		/// <summary>
+		/// 注意，此方法被UICodeGenerator反射依赖
+		/// </summary>
 		private static void GenerateUICode(UICodeGenerator generator)
 		{
 			BiProgress.Show("Generate UI Code", "Generating UI Code", 0.5f);
@@ -177,6 +181,9 @@ namespace Icy.UI.Editor
 			return false;
 		}
 
+		/// <summary>
+		/// 注意，此方法被UICodeGenerator反射依赖
+		/// </summary>
 		private static void GenerateUILogicCode(UICodeGenerator generator)
 		{
 			BiProgress.Show("Generate UI Code", "Generating UI Logic Code", 0.5f);
@@ -208,6 +215,9 @@ namespace Icy.UI.Editor
 			return false;
 		}
 
+		/// <summary>
+		/// 注意，此方法被UICodeGenerator反射依赖
+		/// </summary>
 		private static void GenerateBoth(UICodeGenerator generator)
 		{
 			BiProgress.Show("Generate UI Code", "Generating UI and UI Logic Code", 0.5f);
