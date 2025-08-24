@@ -212,10 +212,17 @@ namespace Icy.Network
 				await Task.Delay(DelayMsWhenSendWaitCountLimit);
 
 #if USE_KCP_SHARP
-			_Kcp.Send(msg, startIdx, length);
+			int sendRtn = _Kcp.Send(msg, startIdx, length);
 #else
-			KcpDll.KcpSend(_Kcp, msg, length);
+			int sendRtn = KcpDll.KcpSend(_Kcp, msg, length);
 #endif
+
+			if (sendRtn < 0)
+			{
+				Exception e = new Exception($"Kcp send error code {sendRtn}");
+				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				OnError?.Invoke(NetworkError.SendFailed, e);
+			}	
 		}
 
 #if USE_KCP_SHARP
