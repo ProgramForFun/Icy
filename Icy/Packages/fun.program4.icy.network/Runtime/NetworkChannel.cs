@@ -335,7 +335,8 @@ namespace Icy.Network
 		{
 			_CancellationTokenSource.Cancel();
 			await UniTask.Delay(1000);
-			await Session.Disconnect(fin);
+			if (Session.IsConnected)
+				await Session.Disconnect(fin);
 			Session.OnReceive = null;
 			Session.Dispose();
 		}
