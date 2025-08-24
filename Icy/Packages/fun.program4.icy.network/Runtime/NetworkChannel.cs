@@ -238,7 +238,7 @@ namespace Icy.Network
 				if (_SendQueue1.Count > 0)
 				{
 					T toSend;
-					lock(_SendLock)
+					lock (_SendLock)
 					{
 						toSend = _SendQueue1.Dequeue();
 						_ToSendCount--;
@@ -319,7 +319,9 @@ namespace Icy.Network
 			if (totalCount >= SEND_QUEUE_COUNT_ALERT)
 			{
 				string content = ZString.Format("To send msg is backlogging, {0} - {1} - {2} - {3}", _SendQueue1.Count, _SendQueue2.Count, _SendQueue3.Count, _SendQueue4.Count);
+				Exception e = new Exception(content);
 				Log.LogError(content, nameof(NetworkChannel<T>));
+				OnError?.Invoke(NetworkError.SendQueueBacklog, e);
 				return false;
 			}
 			return true;

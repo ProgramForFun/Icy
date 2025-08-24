@@ -31,6 +31,10 @@ namespace Icy.Network
 		/// </summary>
 		SendWhenDisconnected,
 		/// <summary>
+		/// 发送队列积压
+		/// </summary>
+		SendQueueBacklog,
+		/// <summary>
 		/// 发送失败
 		/// </summary>
 		SendFailed,
