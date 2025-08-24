@@ -22,6 +22,7 @@ using Icy.Base;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 #if !USE_KCP_SHARP
 using System.Runtime.InteropServices;
 #endif
@@ -34,6 +35,18 @@ namespace Icy.Network
 	public class KcpSession : NetworkSessionBase, IUpdateable
 	{
 		private static readonly long epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
+		/// <summary>
+		/// 发送窗口大小
+		/// </summary>
+		protected int SendWindowSize = 32;
+		/// <summary>
+		/// 接收窗口大小
+		/// </summary>
+		protected int ReceiveWindowSize = 32;
+		/// <summary>
+		/// 等待发送的数量太多时，暂停发送的时间，单位ms
+		/// </summary>
+		protected int DelayMsWhenSendWaitCountLimit = 200;
 
 		/// <summary>
 		/// Session创建时间，单位ms
@@ -127,14 +140,14 @@ namespace Icy.Network
 			_Kcp.SetOutput(KcpOutput);
 
 			_Kcp.NoDelay(1, 10, 1, 1);
-			_Kcp.WndSize(32, 32);
+			_Kcp.WndSize(SendWindowSize, ReceiveWindowSize);
 			_Kcp.SetMTU(470);
 #else
 			_Kcp = KcpDll.KcpCreate(_Conv, new IntPtr(_Conv));
 			SetOutput();
 
 			KcpDll.KcpNodelay(_Kcp, 1, 10, 1, 1);
-			KcpDll.KcpWndsize(_Kcp, 32, 32);
+			KcpDll.KcpWndsize(_Kcp, SendWindowSize, ReceiveWindowSize);
 			KcpDll.KcpSetmtu(_Kcp, 470);
 #endif
 
@@ -188,13 +201,21 @@ namespace Icy.Network
 				return;
 			}
 
-			//TODO：处理Send的返回值
+#if USE_KCP_SHARP
+			int waitCount = _Kcp.WaitSnd();
+#else
+			int waitCount = KcpDll.KcpWaitsnd(_Kcp);
+#endif
+
+			//待发送的数量 >= 2倍的发送窗口大小时，暂停发送，给Kcp时间消化一下
+			while (waitCount >= SendWindowSize * 2)
+				await Task.Delay(DelayMsWhenSendWaitCountLimit);
+
 #if USE_KCP_SHARP
 			_Kcp.Send(msg, startIdx, length);
 #else
 			KcpDll.KcpSend(_Kcp, msg, length);
 #endif
-			await UniTask.CompletedTask;
 		}
 
 #if USE_KCP_SHARP
