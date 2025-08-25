@@ -53,9 +53,10 @@ namespace Icy.Editor
 					ConfigSetting setting = ConfigSetting.Parser.ParseFrom(bytes);
 					if (setting != null)
 						batFilePath = setting.GenerateBatPath;
-					if (string.IsNullOrEmpty(batFilePath))
+					if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(setting.CodeOutputDir) 
+						|| string.IsNullOrEmpty(setting.BinOutputDir) || string.IsNullOrEmpty(setting.JsonOutputDir))
 					{
-						EditorUtility.DisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，设置 生成Config的Bat脚本路径", "OK");
+						EditorUtility.DisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，完成所有的设置", "OK");
 						Clear();
 						return;
 					}
