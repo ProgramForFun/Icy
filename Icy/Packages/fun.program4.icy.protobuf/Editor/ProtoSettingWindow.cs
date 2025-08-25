@@ -37,18 +37,21 @@ namespace Icy.Protobuf.Editor
 		[Delayed]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsCompileBatPathValid", "Invalid compile bat path", InfoMessageType.Error)]
 		public string CompileBatPath;
 
 		[Title("Proto编译后的代码的输出目录")]
 		[FolderPath]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsProtoOutputDirValid", "Invalid proto output dir", InfoMessageType.Error)]
 		public string ProtoOutputDir;
 
-		[Title("Proto的程序集名称")]
+		[Title("Proto的程序集名称，不 包括扩展名")]
 		[Delayed]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsProtoAssemblyNameValid", "Invalid asmdef name", InfoMessageType.Error)]
 		public string ProtoAssemblyName;
 
 
@@ -75,18 +78,73 @@ namespace Icy.Protobuf.Editor
 			}
 		}
 
+		private bool IsCompileBatPathValid()
+		{
+			if (!string.IsNullOrEmpty(CompileBatPath))
+			{
+				string curDir = Directory.GetCurrentDirectory();
+				if (!string.IsNullOrEmpty(CompileBatPath) && !File.Exists(Path.Combine(curDir, CompileBatPath)))
+					return false;
+			}
+			return true;
+		}
+
+		private bool IsProtoOutputDirValid()
+		{
+			if (!string.IsNullOrEmpty(ProtoOutputDir))
+			{
+				string curDir = Directory.GetCurrentDirectory();
+				if (!string.IsNullOrEmpty(ProtoOutputDir) && !Directory.Exists(Path.Combine(curDir, ProtoOutputDir)))
+					return false;
+			}
+			return true;
+		}
+
+		private bool IsProtoAssemblyNameValid()
+		{
+			if (!string.IsNullOrEmpty(ProtoAssemblyName))
+			{
+				string[] guids = AssetDatabase.FindAssets("t:AssemblyDefinitionAsset");
+
+				string asmdefPath = null;
+				foreach (string guid in guids)
+				{
+					string path = AssetDatabase.GUIDToAssetPath(guid);
+					string fileName = Path.GetFileNameWithoutExtension(path);
+
+					if (fileName == ProtoAssemblyName)
+					{
+						asmdefPath = path;
+						string asmdefName = $"/{ProtoAssemblyName}.asmdef";
+						string asmDefDir = asmdefPath.Remove(asmdefPath.Length - asmdefName.Length);
+						if (!string.IsNullOrEmpty(ProtoOutputDir) && asmDefDir != ProtoOutputDir)
+							return false;
+					}
+				}
+
+				if (string.IsNullOrEmpty(asmdefPath))
+					return false;
+			}
+			return true;
+		}
+
 		private void OnDataChanged()
 		{
-			string curDir = Directory.GetCurrentDirectory();
-			if (!string.IsNullOrEmpty(CompileBatPath) && !File.Exists(Path.Combine(curDir, CompileBatPath)))
+			if (!IsCompileBatPathValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {CompileBatPath} 文件，请检查路径", "OK");
 				return;
 			}
 
-			if (!string.IsNullOrEmpty(ProtoOutputDir) && !Directory.Exists(Path.Combine(curDir, ProtoOutputDir)))
+			if (!IsProtoOutputDirValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {ProtoOutputDir} 目录，请检查路径", "OK");
+				return;
+			}
+
+			if (!IsProtoAssemblyNameValid())
+			{
+				EditorUtility.DisplayDialog("", $"找不到{ProtoAssemblyName}程序集，或程序集没有和ProtoOutputDir在一个目录", "OK");
 				return;
 			}
 
