@@ -37,24 +37,28 @@ namespace Icy.Editor
 		[Delayed]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsGenerateBatPathValid", "Invalid path", InfoMessageType.Error)]
 		public string GenerateBatPath;
 
 		[Title("Config代码的导出输出目录")]
 		[FolderPath]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsCodeOutputDirValid", "Invalid dir", InfoMessageType.Error)]
 		public string CodeOutputDir;
 
 		[Title("Bin格式的Config的导出输出目录")]
 		[FolderPath]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsBinOutputDirValid", "Invalid dir", InfoMessageType.Error)]
 		public string BinOutputDir;
 
 		[Title("Json格式的Config的导出输出目录")]
 		[FolderPath]
 		[Required]
 		[OnValueChanged("OnDataChanged")]
+		[ValidateInput("IsJsonOutputDirValid", "Invalid dir", InfoMessageType.Error)]
 		public string JsonOutputDir;
 
 
@@ -82,28 +86,59 @@ namespace Icy.Editor
 			}
 		}
 
-		private void OnDataChanged()
+		private bool IsGenerateBatPathValid()
 		{
 			string curDir = Directory.GetCurrentDirectory();
-			if (!string.IsNullOrEmpty(GenerateBatPath) && !File.Exists(Path.Combine(curDir, GenerateBatPath)))
+			if (string.IsNullOrEmpty(GenerateBatPath) || !File.Exists(Path.Combine(curDir, GenerateBatPath)))
+				return false;
+			return true;
+		}
+
+		private bool IsCodeOutputDirValid()
+		{
+			string curDir = Directory.GetCurrentDirectory();
+			if (string.IsNullOrEmpty(CodeOutputDir) || !Directory.Exists(Path.Combine(curDir, CodeOutputDir)))
+				return false;
+			return true;
+		}
+
+		private bool IsBinOutputDirValid()
+		{
+			string curDir = Directory.GetCurrentDirectory();
+			if (string.IsNullOrEmpty(BinOutputDir) || !Directory.Exists(Path.Combine(curDir, BinOutputDir)))
+				return false;
+			return true;
+		}
+
+		private bool IsJsonOutputDirValid()
+		{
+			string curDir = Directory.GetCurrentDirectory();
+			if (string.IsNullOrEmpty(JsonOutputDir) || !Directory.Exists(Path.Combine(curDir, JsonOutputDir)))
+				return false;
+			return true;
+		}
+
+		private void OnDataChanged()
+		{
+			if (!IsGenerateBatPathValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {GenerateBatPath} 文件，请检查路径", "OK");
 				return;
 			}
 
-			if (!string.IsNullOrEmpty(CodeOutputDir) && !Directory.Exists(Path.Combine(curDir, CodeOutputDir)))
+			if (!IsCodeOutputDirValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {CodeOutputDir} 目录，请检查路径", "OK");
 				return;
 			}
 
-			if (!string.IsNullOrEmpty(BinOutputDir) && !Directory.Exists(Path.Combine(curDir, BinOutputDir)))
+			if (!IsBinOutputDirValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {BinOutputDir} 目录，请检查路径", "OK");
 				return;
 			}
 
-			if (!string.IsNullOrEmpty(JsonOutputDir) && !Directory.Exists(Path.Combine(curDir, JsonOutputDir)))
+			if (!IsJsonOutputDirValid())
 			{
 				EditorUtility.DisplayDialog("", $"找不到 {JsonOutputDir} 目录，请检查路径", "OK");
 				return;
