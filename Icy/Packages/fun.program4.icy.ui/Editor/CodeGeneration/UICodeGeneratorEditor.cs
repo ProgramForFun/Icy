@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -46,6 +47,8 @@ namespace Icy.UI.Editor
 		{
 			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
 			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
+			CompilationPipeline.compilationFinished -= OnCompilationFinished;
+			CompilationPipeline.compilationFinished += OnCompilationFinished;
 		}
 
 		private static void OnAllAssemblyReload()
@@ -81,6 +84,22 @@ namespace Icy.UI.Editor
 					EditorLocalPrefs.Save();
 				};
 			}
+		}
+
+		private static void OnCompilationFinished(object _)
+		{
+			EditorApplication.delayCall += () =>
+			{
+				//有编译错误时，关闭ProgressBar，避免卡死edtior
+				if (EditorUtility.scriptCompilationFailed)
+				{
+					EditorUtility.DisplayDialog("", $"已生成代码，但有编译错误，如果是删除、改名、改类型了{nameof(UICodeGenerator)}中的字段，这个报错是正常的", "OK");
+					BiProgress.Hide();
+					EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
+					EditorLocalPrefs.RemoveKey(GENERATING_UI_LOGIC_NAME_KEY);
+					EditorLocalPrefs.Save();
+				}
+			};
 		}
 
 		/// <summary>

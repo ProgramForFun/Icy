@@ -19,7 +19,6 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Icy.Base;
 using Sirenix.OdinInspector;
 
 namespace Icy.UI
