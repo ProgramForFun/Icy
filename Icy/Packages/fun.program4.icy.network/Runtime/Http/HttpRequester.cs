@@ -140,13 +140,7 @@ namespace Icy.Network
 					await request.SendWebRequest();
 
 					lastResponseCode = (int)request.responseCode;
-					if (request.result != UnityWebRequest.Result.Success)
-					{
-						lastError = request.error;
-						Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
-										$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
-					}
-					else
+					if (request.result == UnityWebRequest.Result.Success)
 					{
 						string content = DownloadHandlerBuffer.GetContent(request);
 
@@ -157,6 +151,12 @@ namespace Icy.Network
 						callback?.Invoke(rtnSucceed);
 
 						return rtnSucceed;
+					}
+					else
+					{
+						lastError = request.error;
+						Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+										$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 					}
 				}
 				catch (Exception ex)
