@@ -90,8 +90,10 @@ namespace Icy.UI.Editor
 		{
 			EditorApplication.delayCall += () =>
 			{
+				string generatingUIName = EditorLocalPrefs.GetString(GENERATING_UI_NAME_KEY, "");
+				string generatingLogicUIName = EditorLocalPrefs.GetString(GENERATING_UI_LOGIC_NAME_KEY, "");
 				//有编译错误时，关闭ProgressBar，避免卡死edtior
-				if (EditorUtility.scriptCompilationFailed)
+				if (EditorUtility.scriptCompilationFailed && (!string.IsNullOrEmpty(generatingUIName) || !string.IsNullOrEmpty(generatingLogicUIName)))
 				{
 					EditorUtility.DisplayDialog("", $"已生成代码，但有编译错误，如果是删除、改名、改类型了{nameof(UICodeGenerator)}中的字段，这个报错是正常的", "OK");
 					BiProgress.Hide();
