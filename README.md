@@ -73,7 +73,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |UI-UIButton||待开始|
 |UI-本地化||待开始|
 |UI-后退栈||✔️|
-|UI-红点||待开始|
+|UI-红点||✔️|
 |UI-背景模糊||待开始|
 |UI-状态记录组件|序列化进Prefab的UI状态记录，<br>支持一键切换多个UI节点的状态|待开始|
 |UI-集成[UIEffect](https://github.com/mob-sakai/UIEffect)|各种常用UI效果合集|✔️|
