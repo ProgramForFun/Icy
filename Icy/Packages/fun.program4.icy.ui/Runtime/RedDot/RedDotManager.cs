@@ -53,12 +53,20 @@ namespace Icy.UI
 		/// </summary>
 		public bool TryToRefresh(string id)
 		{
-			if (_IDDotMap.ContainsKey(id))
+			if (_IDDotMap.TryGetValue(id, out RedDot redDot))
 			{
-				_IDDotMap[id]?.Refresh();
+				redDot.Refresh();
 				return true;
 			}
 			return false;
+		}
+
+		/// <summary>
+		/// 是否存在指定ID的红点，无关是否显示
+		/// </summary>
+		public bool Exist(string id)
+		{
+			return _IDDotMap.ContainsKey(id);
 		}
 
 		/// <summary>
@@ -71,18 +79,16 @@ namespace Icy.UI
 
 			if (parentID != null)
 			{
-				if (_ChildParentMap.ContainsKey(redDot.ID))
+				if (_ChildParentMap.TryGetValue(redDot.ID, out HashSet<string> parents))
 				{
-					HashSet<string> parents = _ChildParentMap[redDot.ID];
 					if (!parents.Contains(parentID))
 						parents.Add(parentID);
 				}
 				else
 					_ChildParentMap.Add(redDot.ID, new HashSet<string>() { parentID });
 
-				if (_ParentChildMap.ContainsKey(parentID))
+				if (_ParentChildMap.TryGetValue(parentID, out HashSet<string> children))
 				{
-					HashSet<string> children = _ParentChildMap[parentID];
 					if (!children.Contains(redDot.ID))
 						children.Add(redDot.ID);
 				}
@@ -91,10 +97,9 @@ namespace Icy.UI
 			}
 
 			//如果已经存在以redDot为parent的子红点了，计算redDot的CountChildren
-			if (_ParentChildMap.ContainsKey(redDot.ID))
+			if (_ParentChildMap.TryGetValue(redDot.ID, out HashSet<string> allChildren))
 			{
 				int countChildren = 0;
-				HashSet<string> allChildren = _ParentChildMap[redDot.ID];
 				foreach (string item in allChildren)
 					countChildren += _IDDotMap[item].Count;
 				redDot.SetCountChildren(countChildren);
@@ -111,14 +116,6 @@ namespace Icy.UI
 		}
 
 		/// <summary>
-		/// 是否存在指定ID的红点
-		/// </summary>
-		internal bool ExistRedDot(string id)
-		{
-			return _IDDotMap.ContainsKey(id);
-		}
-
-		/// <summary>
 		/// 移除一个红点
 		/// </summary>
 		internal void Remove(RedDot redDot)
@@ -131,9 +128,8 @@ namespace Icy.UI
 				_IDDotMap.Remove(redDot.ID);
 			}
 
-			if (_ChildParentMap.ContainsKey(redDot.ID))
+			if (_ChildParentMap.TryGetValue(redDot.ID, out HashSet<string> parents))
 			{
-				HashSet<string> parents = _ChildParentMap[redDot.ID];
 				foreach (string parent in parents)
 				{
 					if (_ParentChildMap.ContainsKey(parent))
@@ -148,14 +144,12 @@ namespace Icy.UI
 		/// </summary>
 		internal void Refresh(string id, int prevCount, int newCount)
 		{
-			if (_ChildParentMap.ContainsKey(id))
+			if (_ChildParentMap.TryGetValue(id, out HashSet<string> parents))
 			{
-				HashSet<string> parents = _ChildParentMap[id];
 				foreach (string parentID in parents)
 				{
-					if (_IDDotMap.ContainsKey(parentID))
+					if (_IDDotMap.TryGetValue(parentID, out RedDot parentRedDot))
 					{
-						RedDot parentRedDot = _IDDotMap[parentID];
 						int count = parentRedDot._CountChildren - prevCount + newCount;
 						//Log.LogInfo($"{parentID} be set -{prevCount} + {newCount}");
 						parentRedDot.SetCountChildren(count);

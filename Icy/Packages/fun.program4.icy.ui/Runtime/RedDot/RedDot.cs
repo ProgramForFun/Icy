@@ -79,12 +79,12 @@ namespace Icy.UI
 		/// <summary>
 		/// 初始化
 		/// </summary>
-		/// <param name="id">string类型的ID / 名字</param>
-		/// <param name="calculator">红点数量的计算方法，不显示返回0，返回>0会显示红点，如果有是DotWithCount类型，还会显示数量</param>
-		/// <param name="parentID"></param>
+		/// <param name="id">string类型的红点ID / 名字</param>
+		/// <param name="calculator">红点数量的计算方法，返回0红点隐藏，返回>0会显示红点，如果是DotWithCount类型，还会显示数量</param>
+		/// <param name="parentID">父红点ID，没有的话可以不传</param>
 		public void Init(string id, Func<int> calculator = null, string parentID = null)
 		{
-			if (RedDotManager.Instance.ExistRedDot(id))
+			if (RedDotManager.Instance.Exist(id))
 			{
 				Log.LogError($"Trying to init a RedDot more than once, id = {id}", nameof(RedDot));
 				return;
