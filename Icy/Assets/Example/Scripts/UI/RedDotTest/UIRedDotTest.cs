@@ -89,6 +89,11 @@ public class UIRedDotTest : UIBase
 			_RedDot_1.Init("RD_1", Calc1, _RedDot_0.ID);
 			_RedDot_1.Refresh();
 		}
+
+		if (Input.GetKeyUp(KeyCode.A))
+		{
+			Log.LogInfo(RedDotManager.Instance.Dump());
+		}
 	}
 
 	public override void Destroy()

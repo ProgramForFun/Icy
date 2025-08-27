@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Cysharp.Text;
 using Icy.Base;
 using System.Collections.Generic;
 
@@ -156,7 +157,7 @@ namespace Icy.UI
 					{
 						RedDot parentRedDot = _IDDotMap[parentID];
 						int count = parentRedDot._CountChildren - prevCount + newCount;
-						Log.LogInfo($"{parentID} be set -{prevCount} + {newCount}");
+						//Log.LogInfo($"{parentID} be set -{prevCount} + {newCount}");
 						parentRedDot.SetCountChildren(count);
 						parentRedDot.Refresh();
 					}
@@ -169,7 +170,38 @@ namespace Icy.UI
 		/// </summary>
 		public string Dump()
 		{
-			return string.Empty;
+			Utf16ValueStringBuilder builder = ZString.CreateStringBuilder();
+			builder.Append("Total red dot count = ");
+			builder.Append(_IDDotMap.Count);
+			builder.AppendLine();
+
+			foreach (KeyValuePair<string, RedDot> item in _IDDotMap)
+			{
+				if (_ChildParentMap.ContainsKey(item.Key))
+				{
+					HashSet<string> parents = _ChildParentMap[item.Key];
+					builder.Append(item.Key);
+					builder.Append(" --parent--> ");
+					foreach (string parent in parents)
+					{
+						builder.Append(" ");
+						builder.Append(parent);
+					}
+					builder.Append(", count = ");
+					builder.Append(_IDDotMap[item.Key].Count);
+					builder.AppendLine();
+				}
+				else
+				{
+					builder.Append(item.Key);
+					builder.Append(" --<TOP>-- ");
+					builder.Append(", count = ");
+					builder.Append(item.Value.Count);
+					builder.AppendLine();
+				}
+			}
+
+			return builder.ToString();
 		}
 	}
 
