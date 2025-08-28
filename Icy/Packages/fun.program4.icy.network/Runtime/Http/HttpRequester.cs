@@ -74,7 +74,7 @@ namespace Icy.Network
 		/// <summary>
 		/// .Net的HttpClient
 		/// </summary>
-		private HttpClient _HttpClient;
+		public HttpClient HttpClient { get; private set; }
 #else
 		/// 当前正在执行的请求
 		/// </summary>
@@ -105,8 +105,8 @@ namespace Icy.Network
 			_RetryTimes = retryTimes;
 
 #if USE_HTTP_CLIENT
-			_HttpClient = new HttpClient();
-			_HttpClient.Timeout = TimeSpan.FromSeconds(_Timeout);
+			HttpClient = new HttpClient();
+			HttpClient.Timeout = TimeSpan.FromSeconds(_Timeout);
 #else
 			_CurRequests = new HashSet<UnityWebRequest>();
 #endif
@@ -169,12 +169,12 @@ namespace Icy.Network
 				{
 					HttpResponseMessage response = null;
 					if (method == SupportMethod.GET)
-						response = await _HttpClient.GetAsync(url);
+						response = await HttpClient.GetAsync(url);
 					else if (method == SupportMethod.POST)
 					{
 						using (HttpContent httpContent = new StringContent(content2Send, Encoding.UTF8, _ContentType))
 						{
-							response = await _HttpClient.PostAsync(url, httpContent);
+							response = await HttpClient.PostAsync(url, httpContent);
 						}
 					}
 					else
@@ -299,7 +299,7 @@ namespace Icy.Network
 		public void Dispose()
 		{
 #if USE_HTTP_CLIENT
-			_HttpClient.Dispose();
+			HttpClient.Dispose();
 #else
 			foreach (UnityWebRequest item in _CurRequests)
 				item?.Dispose();
