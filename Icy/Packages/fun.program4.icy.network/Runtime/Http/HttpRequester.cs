@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
+//这里仅做测试用途，如果要开启请在PlayerSeting中配置Define Symbol
+//#define USE_HTTP_CLIENT
+
+//HttpClient不支持WebGL平台，WebGL平台下强制使用UnityWebRequest
+#if UNITY_WEBGL && USE_HTTP_CLIENT
+#undef USE_HTTP_CLIENT
+#endif
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
+#if USE_HTTP_CLIENT
+using System.Net.Http;
+using System.Text;
+#else
 using System.Collections.Generic;
 using UnityEngine.Networking;
+#endif
+
 
 namespace Icy.Network
 {
 	/// <summary>
-	/// 带有重试的Http封装
+	/// 带有重试的Http封装，可选使用UnityWebRequest或HttpClient
 	/// </summary>
 	public sealed class HttpRequester : IDisposable
 	{
@@ -53,9 +66,22 @@ namespace Icy.Network
 		}
 
 		/// <summary>
+		/// Post请求的Content-Type
+		/// </summary>
+		private string _ContentType;
+
+#if USE_HTTP_CLIENT
+		/// <summary>
+		/// .Net的HttpClient
+		/// </summary>
+		private HttpClient _HttpClient;
+#else
 		/// 当前正在执行的请求
 		/// </summary>
+		/// <summary>
 		private HashSet<UnityWebRequest> _CurRequests;
+#endif
+
 		/// <summary>
 		/// 一个请求发送失败的重试次数
 		/// </summary>
@@ -66,11 +92,24 @@ namespace Icy.Network
 		private int _Timeout;
 
 
-		public HttpRequester(int timeoutPerRequest = 5, int retryTimes = 3)
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="contentType">Post请求的Content-Type</param>
+		/// <param name="timeoutPerRequest">每次请求的超时时间</param>
+		/// <param name="retryTimes">请求失败后的重试次数</param>
+		public HttpRequester(string contentType, int timeoutPerRequest = 5, int retryTimes = 3)
 		{
+			_ContentType = contentType;
 			_Timeout = timeoutPerRequest;
 			_RetryTimes = retryTimes;
+
+#if USE_HTTP_CLIENT
+			_HttpClient = new HttpClient();
+			_HttpClient.Timeout = TimeSpan.FromSeconds(_Timeout);
+#else
 			_CurRequests = new HashSet<UnityWebRequest>();
+#endif
 		}
 
 		/// <summary>
@@ -97,25 +136,85 @@ namespace Icy.Network
 		/// 发送POST请求
 		/// </summary>
 		/// <param name="url">请求的url</param>
-		/// <param name="dict">要发送的内容</param>
+		/// <param name="content2Send">要发送的内容</param>
 		/// <param name="callback"></param>
 		/// <returns>如果当前正在发送其他请求，返回false；否则返回true</returns>
-		public void Post(string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
+		public void Post(string url, string content2Send, Action<HttpResponse> callback)
 		{
-			RequestAsync(SupportMethod.POST, url, dict, callback).Forget();
+			RequestAsync(SupportMethod.POST, url, content2Send, callback).Forget();
 		}
 
 		/// <summary>
 		/// 发送POST请求
 		/// </summary>
 		/// <param name="url">请求的url</param>
-		/// <param name="dict">要发送的内容</param>
-		public async UniTask<HttpResponse> PostAsync(string url, Dictionary<string, string> dict)
+		/// <param name="content2Send">要发送的内容</param>
+		public async UniTask<HttpResponse> PostAsync(string url, string content2Send)
 		{
-			return await RequestAsync(SupportMethod.POST, url, dict, null);
+			return await RequestAsync(SupportMethod.POST, url, content2Send, null);
 		}
 
-		private async UniTask<HttpResponse> RequestAsync(SupportMethod method, string url, Dictionary<string, string> dict, Action<HttpResponse> callback)
+#if USE_HTTP_CLIENT
+		/// <summary>
+		/// 基于HttpClient
+		/// </summary>
+		private async UniTask<HttpResponse> RequestAsync(SupportMethod method, string url, string content2Send, Action<HttpResponse> callback)
+		{
+			int retry = 0;
+			int lastResponseCode = 0;
+			string lastError;
+			do
+			{
+				try
+				{
+					HttpResponseMessage response = null;
+					if (method == SupportMethod.GET)
+						response = await _HttpClient.GetAsync(url);
+					else if (method == SupportMethod.POST)
+					{
+						using (HttpContent httpContent = new StringContent(content2Send, Encoding.UTF8, _ContentType))
+						{
+							response = await _HttpClient.PostAsync(url, httpContent);
+						}
+					}
+					else
+					{
+						string error = $"{nameof(HttpRequester)} does NOT support method {method} yet";
+						Log.LogError(error, nameof(HttpRequester));
+						return new HttpResponse() { Code = -1, Content = error };
+					}
+
+					response.EnsureSuccessStatusCode();
+					lastResponseCode = (int)response.StatusCode;
+					string content = await response.Content.ReadAsStringAsync();
+					HttpResponse rtnSucceed = new HttpResponse() { Code = lastResponseCode, Content = content };
+					callback?.Invoke(rtnSucceed);
+
+					return rtnSucceed;
+				}
+				catch (Exception e)
+				{
+					lastError = e.Message;
+					Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}" +
+									$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
+				}
+
+				retry++;
+				Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
+			} while (retry < _RetryTimes);
+
+			Log.LogError($"{nameof(HttpRequester)} failed, url = {url}" +
+							$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
+
+			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
+			callback?.Invoke(rtnFailed);
+			return rtnFailed;
+		}
+#else
+		/// <summary>
+		/// 基于UnityWebRequest
+		/// </summary>
+		private async UniTask<HttpResponse> RequestAsync(SupportMethod method, string url, string content2Send, Action<HttpResponse> callback)
 		{
 			UnityWebRequest request = null;
 			int retry = 0;
@@ -128,7 +227,7 @@ namespace Icy.Network
 					if (method == SupportMethod.GET)
 						request = UnityWebRequest.Get(url);
 					else if (method == SupportMethod.POST)
-						request = UnityWebRequest.Post(url, dict);
+						request = UnityWebRequest.Post(url, content2Send, _ContentType);
 					else
 					{
 						string error = $"{nameof(HttpRequester)} does NOT support method {method} yet";
@@ -146,7 +245,6 @@ namespace Icy.Network
 
 						_CurRequests.Remove(request);
 						request.Dispose();
-						request = null;
 						HttpResponse rtnSucceed = new HttpResponse() { Code = lastResponseCode, Content = content };
 						callback?.Invoke(rtnSucceed);
 
@@ -174,11 +272,11 @@ namespace Icy.Network
 
 			_CurRequests.Remove(request);
 			request.Dispose();
-			request = null;
 			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
 			callback?.Invoke(rtnFailed);
 			return rtnFailed;
 		}
+#endif
 
 		/// <summary>
 		/// 设置重试次数
@@ -198,18 +296,14 @@ namespace Icy.Network
 			_Timeout = timeout;
 		}
 
-		/// <summary>
-		/// 获取当前有多少个请求正在执行
-		/// </summary>
-		public int GetCurrentRequestCount()
-		{
-			return _CurRequests.Count;
-		}
-
 		public void Dispose()
 		{
-			foreach (var item in _CurRequests)
+#if USE_HTTP_CLIENT
+			_HttpClient.Dispose();
+#else
+			foreach (UnityWebRequest item in _CurRequests)
 				item?.Dispose();
+#endif
 		}
 	}
 }

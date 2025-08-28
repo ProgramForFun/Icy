@@ -26,26 +26,25 @@ namespace Icy.Network
 	{
 		public static void Test()
 		{
-			HttpRequester httpRequester = new HttpRequester();
+			HttpRequester httpRequester = new HttpRequester("application/json");
 			
 			//Get成功
-			httpRequester.Get("www.baidu.com", (HttpRequester.HttpResponse response) =>
+			httpRequester.Get("https://www.baidu.com", (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("GET responseCode = " + response.Code);
 				Log.LogInfo("GET content = " + response.Content);
 			});
 			
 			//Get重试几次后失败
-			httpRequester.Get("program4.fun", (HttpRequester.HttpResponse response) =>
+			httpRequester.Get("https://program4.fun", (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("GET responseCode = " + response.Code);
 				Log.LogInfo("GET content = " + response.Content);
 			});
-			
+
 			//Post成功
-			Dictionary<string, string> args = new Dictionary<string, string>();
-			args["TestKey"] = "TestValue";
-			httpRequester.Post("jsonplaceholder.typicode.com/posts", args, (HttpRequester.HttpResponse response) =>
+			string json = @"{""TestKey1"":""TestValue2""}";
+			httpRequester.Post("https://jsonplaceholder.typicode.com/posts", json, (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("POST responseCode = " + response.Code);
 				Log.LogInfo("POST content = " + response.Content);
@@ -57,8 +56,8 @@ namespace Icy.Network
 		private static async UniTask TestAsync()
 		{
 			//async风格Get
-			HttpRequester httpRequester = new HttpRequester();
-			HttpRequester.HttpResponse response = await httpRequester.GetAsync("www.baidu.com");
+			HttpRequester httpRequester = new HttpRequester("application/json");
+			HttpRequester.HttpResponse response = await httpRequester.GetAsync("https://www.baidu.com");
 			Log.LogInfo("async GET responseCode = " + response.Code);
 			Log.LogInfo("async GET content = " + response.Content);
 		}
