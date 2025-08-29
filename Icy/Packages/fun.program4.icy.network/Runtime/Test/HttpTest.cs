@@ -18,25 +18,27 @@
 #if UNITY_EDITOR
 using Cysharp.Threading.Tasks;
 using Icy.Base;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace Icy.Network
 {
 	public static class HttpTest
 	{
+		private static HttpRequester _HttpRequester;
+
 		public static void Test()
 		{
-			HttpRequester httpRequester = new HttpRequester("application/json");
-			
+			_HttpRequester = new HttpRequester("application/json");
+
 			//Get成功
-			httpRequester.Get("https://www.baidu.com", (HttpRequester.HttpResponse response) =>
+			_HttpRequester.Get("https://www.baidu.com", (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("GET responseCode = " + response.Code);
 				Log.LogInfo("GET content = " + response.Content);
 			});
-			
+
 			//Get重试几次后失败
-			httpRequester.Get("https://program4.fun", (HttpRequester.HttpResponse response) =>
+			_HttpRequester.Get("https://program4.fun", (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("GET responseCode = " + response.Code);
 				Log.LogInfo("GET content = " + response.Content);
@@ -44,7 +46,7 @@ namespace Icy.Network
 
 			//Post成功
 			string json = @"{""TestKey1"":""TestValue2""}";
-			httpRequester.Post("https://jsonplaceholder.typicode.com/posts", json, (HttpRequester.HttpResponse response) =>
+			_HttpRequester.Post("https://jsonplaceholder.typicode.com/posts", json, (HttpRequester.HttpResponse response) =>
 			{
 				Log.LogInfo("POST responseCode = " + response.Code);
 				Log.LogInfo("POST content = " + response.Content);
@@ -56,10 +58,15 @@ namespace Icy.Network
 		private static async UniTask TestAsync()
 		{
 			//async风格Get
-			HttpRequester httpRequester = new HttpRequester("application/json");
-			HttpRequester.HttpResponse response = await httpRequester.GetAsync("https://www.baidu.com");
+			HttpRequester.HttpResponse response = await _HttpRequester.GetAsync("https://www.baidu.com");
 			Log.LogInfo("async GET responseCode = " + response.Code);
 			Log.LogInfo("async GET content = " + response.Content);
+		}
+
+		public static void Update()
+		{
+			if (Input.GetKeyUp(KeyCode.D))
+				_HttpRequester.Dispose();
 		}
 	}
 }

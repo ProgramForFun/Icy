@@ -90,6 +90,10 @@ namespace Icy.Network
 		/// 单次请求的超时时间，单位秒；如果重试3次的话，总体超时时间就是timeout x 3
 		/// </summary>
 		private int _Timeout;
+		/// <summary>
+		/// 是否已经Dispose
+		/// </summary>
+		private bool _Disposed;
 
 
 		/// <summary>
@@ -110,6 +114,7 @@ namespace Icy.Network
 #else
 			_CurRequests = new HashSet<UnityWebRequest>();
 #endif
+			_Disposed = false;
 		}
 
 		/// <summary>
@@ -201,12 +206,15 @@ namespace Icy.Network
 
 				retry++;
 				Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
-			} while (retry < _RetryTimes);
+			} while (retry < _RetryTimes && !_Disposed);
 
-			Log.LogError($"{nameof(HttpRequester)} failed, url = {url}" +
+			if (!_Disposed)
+			{
+				Log.LogError($"{nameof(HttpRequester)} failed, url = {url}" +
 							$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
+			}
 
-			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
+			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = _Disposed ? $"{nameof(HttpRequester)} disposed" : lastError };
 			callback?.Invoke(rtnFailed);
 			return rtnFailed;
 		}
@@ -265,14 +273,17 @@ namespace Icy.Network
 
 				retry++;
 				Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
-			} while (retry < _RetryTimes);
+			} while (retry < _RetryTimes && !_Disposed);
 
-			Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
-							$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
+			if (!_Disposed)
+			{
+				Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+								$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
+			}
 
 			_CurRequests.Remove(request);
 			request.Dispose();
-			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = lastError };
+			HttpResponse rtnFailed = new HttpResponse() { Code = lastResponseCode, Content = _Disposed ? $"{nameof(HttpRequester)} disposed" : lastError };
 			callback?.Invoke(rtnFailed);
 			return rtnFailed;
 		}
@@ -298,12 +309,14 @@ namespace Icy.Network
 
 		public void Dispose()
 		{
+			_Disposed = true;
 #if USE_HTTP_CLIENT
 			HttpClient.Dispose();
 #else
 			foreach (UnityWebRequest item in _CurRequests)
 				item?.Dispose();
 #endif
+			Log.LogInfo($"{nameof(HttpRequester)} disposed");
 		}
 	}
 }
