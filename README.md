@@ -62,7 +62,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|非常好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
 |Network-[NativeWebSocket](https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC)|支持WebGL平台的开源WebSocket库|✔️|
-|Network-HTTP|基于UnityWebRequest、HttpClient的封装|待开始|
+|Network-HTTP|基于UnityWebRequest、HttpClient的封装|✔️|
 |Network-TCP|基于.Net TCP实现|✔️|
 |Network-[KCP](https://github.com/passiony/kcp-unity)|以速度著称的Reliable UDP|✔️|
 |Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|✔️|
