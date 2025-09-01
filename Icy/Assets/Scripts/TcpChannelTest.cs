@@ -10,16 +10,16 @@ using UnityEngine;
 
 namespace Icy.Network
 {
-	public class ProtoBufSender : NetworkSenderBase<IMessage>
+	public class ProtoSender : NetworkSenderBase<IMessage>
 	{
-		public ProtoBufSender() : base(4096)
+		public ProtoSender() : base(4096)
 		{
 
 		}
 
 		public override async UniTask Encode(int msgID, IMessage proto)
 		{
-			Log.LogInfo("[ProtoBufSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.LogInfo("[ProtoSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//一个int类型消息ID + protobuf消息
 			int msgIDSize = sizeof(int);
 			BitConverter.TryWriteBytes(_Buffer, msgID);
@@ -39,13 +39,13 @@ namespace Icy.Network
 		}
 	}
 
-	public class ProtoBufReceiver : NetworkReceiverBase
+	public class ProtoReceiver : NetworkReceiverBase
 	{
 		private Dictionary<int, IMessage> _Cache = new Dictionary<int, IMessage>();
 
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
-			Log.LogInfo("[ProtoBufReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.LogInfo("[ProtoReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//解析int类型的消息ID
 			int msgID = BitConverter.ToInt32(data, startIdx);
 			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
@@ -93,7 +93,7 @@ namespace Icy.Network
 			_MessageResult = new TestMessageResult();
 
 			TcpSession session = new TcpSession("127.0.0.1", 12321, 4096);
-			_TcpChannel = new NetworkChannel<IMessage>(session, new ProtoBufSender(), new ProtoBufReceiver());
+			_TcpChannel = new NetworkChannel<IMessage>(session, new ProtoSender(), new ProtoReceiver());
 			_TcpChannel.OnConnected = OnConnect;
 			_TcpChannel.OnDisconnected += OnDisconnect;
 			_TcpChannel.OnError += OnError;

@@ -19,7 +19,7 @@ namespace Icy.Network
 			_MessageResult = new TestMessageResult();
 
 			KcpSession session = new KcpSession("127.0.0.1", 12333, 4096);
-			_KcpChannel = new NetworkChannel<IMessage>(session, new ProtoBufSender(), new ProtoBufReceiver());
+			_KcpChannel = new NetworkChannel<IMessage>(session, new ProtoSender(), new ProtoReceiver());
 			_KcpChannel.OnConnected = OnConnect;
 			_KcpChannel.OnDisconnected += OnDisconnect;
 			_KcpChannel.OnError += OnError;

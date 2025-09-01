@@ -19,7 +19,7 @@ namespace Icy.Network
 			_MessageResult = new TestMessageResult();
 
 			WebSocketSession session = new WebSocketSession("ws://localhost", 12888);
-			_WebSocketChannel = new NetworkChannel<IMessage>(session, new ProtoBufSender(), new ProtoBufReceiver());
+			_WebSocketChannel = new NetworkChannel<IMessage>(session, new ProtoSender(), new ProtoReceiver());
 			_WebSocketChannel.OnConnected = OnConnect;
 			_WebSocketChannel.OnDisconnected += OnDisconnect;
 			_WebSocketChannel.OnError += OnError;
