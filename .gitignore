@@ -75,3 +75,6 @@ crashlytics-build.properties
 # Required Paid Plugins
 /Icy/Packages/fun.program4.icy.gm/StompyRobot
 /Icy/Assets/Plugins/Sirenix
+
+# HybridCLR install dir
+/Icy/HybridCLRData
