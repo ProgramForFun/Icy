@@ -256,13 +256,47 @@ namespace Icy.Asset.Editor
 			return SettingsHelper.GetBuildSettingNameEditor(_CurrBuildTarget);
 		}
 
-		[Title("打包")]
+		[HorizontalGroup("Build", Title = "打包")]
+		[Button("HybridCLR Generate All", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		protected virtual void HybridCLRGenerateAll()
+		{
+			HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
+		}
+
+		[HorizontalGroup("Build")]
+		[Button("Compile HybridCLR DLL", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		protected virtual void CompileHybridCLRDLL()
+		{
+			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
+			{
+				Log.Assert(false, $"Compile HybridCLR DLL 未执行；不推荐在A平台编译B平台的DLL，请先切换对应平台再编译；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 当前选择的平台 = {_CurrBuildTarget}");
+				return;
+			}
+
+			switch (_CurrBuildTarget)
+			{
+				case BuildTarget.Android:
+					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllAndroid();
+					break;
+				case BuildTarget.iOS:
+					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllIOS();
+					break;
+				case BuildTarget.StandaloneWindows64:
+					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllWin64();
+					break;
+				default:
+					Log.Assert(false, $"Compile HybridCLR DLL 未执行，暂不支持的平台 = {_CurrBuildTarget}");
+					break;
+			}
+		}
+
+		[HorizontalGroup("Build")]
 		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
 			{
-				Log.Assert(false, $"打包未执行；不推荐在打包时切换BuildTarget平台，请先切换完毕再打包；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 选择的打包平台 = {_CurrBuildTarget}");
+				Log.Assert(false, $"打包未执行；不推荐在打包时切换BuildTarget平台，请先切换完毕再打包；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 当前选择的平台 = {_CurrBuildTarget}");
 				return;
 			}
 
