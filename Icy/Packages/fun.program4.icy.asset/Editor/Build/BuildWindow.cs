@@ -117,6 +117,12 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("SaveSetting")]
 		public BuildOptionDev DevOptions;
 
+		[PropertySpace(5)]
+		[DisplayAsString(EnableRichText = true)]
+		[HideLabel]
+		[ShowInInspector]
+		protected string _BuildTitle = "<b>打包</b>";
+
 		protected bool _ShowAssetBundleOptionsTips = false;
 		protected virtual void SwitchAssetBundleOptionsTips() => _ShowAssetBundleOptionsTips = !_ShowAssetBundleOptionsTips;
 
@@ -256,13 +262,21 @@ namespace Icy.Asset.Editor
 			return SettingsHelper.GetBuildSettingNameEditor(_CurrBuildTarget);
 		}
 
-		[HorizontalGroup("BuildHybridCLR", Title = "打包")]
+		[ShowIf("IsHybridCLREnabled")]
+		[HorizontalGroup("BuildHybridCLR")]
 		[Button("HybridCLR Generate All", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void HybridCLRGenerateAll()
 		{
+			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
+			{
+				Log.Assert(false, $"HybridCLR Generate All 未执行；不推荐在A平台Generate All B平台，请先切换对应平台再编译；\n当前平台 = {EditorUserBuildSettings.activeBuildTarget}, 当前选择的平台 = {_CurrBuildTarget}");
+				return;
+			}
+
 			HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
 		}
 
+		[ShowIf("IsHybridCLREnabled")]
 		[HorizontalGroup("BuildHybridCLR")]
 		[Button("Compile HybridCLR DLL", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void CompileHybridCLRDLL()
@@ -291,7 +305,6 @@ namespace Icy.Asset.Editor
 		}
 
 		[PropertySpace(5)]
-		[HorizontalGroup("Build")]
 		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
 		{
@@ -346,6 +359,11 @@ namespace Icy.Asset.Editor
 			}
 
 			return rtn;
+		}
+
+		protected bool IsHybridCLREnabled()
+		{
+			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable;
 		}
 
 		protected virtual void OnChangeBuildStep(ProcedureStep step)
