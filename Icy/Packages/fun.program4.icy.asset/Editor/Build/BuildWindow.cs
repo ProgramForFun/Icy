@@ -256,15 +256,15 @@ namespace Icy.Asset.Editor
 			return SettingsHelper.GetBuildSettingNameEditor(_CurrBuildTarget);
 		}
 
-		[HorizontalGroup("Build", Title = "打包")]
-		[Button("HybridCLR Generate All", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		[HorizontalGroup("BuildHybridCLR", Title = "打包")]
+		[Button("HybridCLR Generate All", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void HybridCLRGenerateAll()
 		{
 			HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
 		}
 
-		[HorizontalGroup("Build")]
-		[Button("Compile HybridCLR DLL", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		[HorizontalGroup("BuildHybridCLR")]
+		[Button("Compile HybridCLR DLL", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void CompileHybridCLRDLL()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
@@ -290,6 +290,7 @@ namespace Icy.Asset.Editor
 			}
 		}
 
+		[PropertySpace(5)]
 		[HorizontalGroup("Build")]
 		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
