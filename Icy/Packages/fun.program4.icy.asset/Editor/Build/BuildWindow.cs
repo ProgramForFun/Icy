@@ -287,21 +287,7 @@ namespace Icy.Asset.Editor
 				return;
 			}
 
-			switch (_CurrBuildTarget)
-			{
-				case BuildTarget.Android:
-					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllAndroid();
-					break;
-				case BuildTarget.iOS:
-					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllIOS();
-					break;
-				case BuildTarget.StandaloneWindows64:
-					HybridCLR.Editor.Commands.CompileDllCommand.CompileDllWin64();
-					break;
-				default:
-					Log.Assert(false, $"Compile HybridCLR DLL 未执行，暂不支持的平台 = {_CurrBuildTarget}");
-					break;
-			}
+			CompilePatchDLLStep.Compile(_CurrBuildTarget);
 		}
 
 		[PropertySpace(5)]
