@@ -15,7 +15,6 @@
  */
 
 
-using Icy.Base;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEditor;
@@ -31,21 +30,20 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
+			BuildTarget buildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget", true);
 			BuildSetting buildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting", true) as BuildSetting;
-			Build(buildSetting);
+			Build(buildTarget, buildSetting);
 			Finish();
 			await UniTask.CompletedTask;
 		}
 
-		public static void Build(BuildSetting buildSetting)
+		public static void Build(BuildTarget buildTarget, BuildSetting buildSetting)
 		{
-			BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
-
 			string outputDir = buildSetting.OutputDir + "/" + buildTarget.ToString();
 			if (Directory.Exists(outputDir))
 				Directory.Delete(outputDir, true);
 
-			// 场景列表（根据项目实际场景修改）
+			// 场景列表
 			List<string> scenes = new List<string>();
 			foreach (var scene in EditorBuildSettings.scenes)
 			{

@@ -29,7 +29,7 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			BuildTarget buildTarget = EditorUserBuildSettings.activeBuildTarget;
+			BuildTarget buildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget", true);
 
 			bool succeed = Compile(buildTarget);
 			if (!succeed)
