@@ -124,7 +124,7 @@ namespace Icy.Base
 				case UnityEditor.BuildTarget.StandaloneWindows64:
 					return "BuildSetting_Win64.json";
 				default:
-					Log.Assert(false, $"Unsupported platform {UnityEditor.EditorUserBuildSettings.activeBuildTarget}");
+					Log.Assert(false, $"Unsupported platform {buildTarget}");
 					return "";
 			}
 		}
