@@ -9,4 +9,6 @@ message AssetSetting
     string AssetHostServerAddressMain = 1;
     //热更新资源Host地址（备）
     string AssetHostServerAddressStandby = 2;
+	//打包过程中，会将HybridCLR编译出的热更DLL，Copy到PatchDLLCopyToDir目录，方便业务侧打包成AB
+    string PatchDLLCopyToDir = 3;
 }

@@ -34,15 +34,23 @@ namespace Icy.Asset.Editor
 
 		[Title("热更新资源Host地址（主）")]
 		[DelayedProperty]
+		[Required]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
 		[OnValueChanged("OnAssetHostServerAddressMainChanged")]
 		public string AssetHostServerAddressMain;
 
 		[Title("热更新资源Host地址（备）")]
 		[DelayedProperty]
+		[Required]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
 		public string AssetHostServerAddressStandby;
+
+		[Title("打包过程中，会将HybridCLR编译出的热更DLL，Copy到PatchDLLCopyToDir目录，方便业务侧打包成AB")]
+		[FolderPath]
+		[Required]
+		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		public string PatchDLLCopyToDir;
 
 
 		[MenuItem("Icy/Asset/Setting", false, 30)]
@@ -59,6 +67,7 @@ namespace Icy.Asset.Editor
 			_Setting = GetAssetSetting();
 			AssetHostServerAddressMain = _Setting.AssetHostServerAddressMain;
 			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
+			PatchDLLCopyToDir = _Setting.PatchDLLCopyToDir;
 		}
 
 		private AssetSetting GetAssetSetting()
@@ -87,6 +96,8 @@ namespace Icy.Asset.Editor
 				_Setting.AssetHostServerAddressMain = AssetHostServerAddressMain;
 			else
 				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
+
+			_Setting.PatchDLLCopyToDir = PatchDLLCopyToDir;
 
 			string targetDir = SettingsHelper.GetSettingDir();
 			SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());

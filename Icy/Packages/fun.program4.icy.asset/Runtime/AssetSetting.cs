@@ -24,13 +24,14 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCJZCgxBc3NldFNldHRp",
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCJ0CgxBc3NldFNldHRp",
             "bmcSIgoaQXNzZXRIb3N0U2VydmVyQWRkcmVzc01haW4YASABKAkSJQodQXNz",
-            "ZXRIb3N0U2VydmVyQWRkcmVzc1N0YW5kYnkYAiABKAliBnByb3RvMw=="));
+            "ZXRIb3N0U2VydmVyQWRkcmVzc1N0YW5kYnkYAiABKAkSGQoRUGF0Y2hETExD",
+            "b3B5VG9EaXIYAyABKAliBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,6 +75,7 @@ namespace Icy.Asset {
     public AssetSetting(AssetSetting other) : this() {
       assetHostServerAddressMain_ = other.assetHostServerAddressMain_;
       assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
+      patchDLLCopyToDir_ = other.patchDLLCopyToDir_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -113,6 +115,21 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "PatchDLLCopyToDir" field.</summary>
+    public const int PatchDLLCopyToDirFieldNumber = 3;
+    private string patchDLLCopyToDir_ = "";
+    /// <summary>
+    ///打包过程中，将HybridCLR编译出的热更DLL，Copy到PatchDLLCopyToDir目录，方便业务侧打包成AB
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PatchDLLCopyToDir {
+      get { return patchDLLCopyToDir_; }
+      set {
+        patchDLLCopyToDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -130,6 +147,7 @@ namespace Icy.Asset {
       }
       if (AssetHostServerAddressMain != other.AssetHostServerAddressMain) return false;
       if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
+      if (PatchDLLCopyToDir != other.PatchDLLCopyToDir) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -139,6 +157,7 @@ namespace Icy.Asset {
       int hash = 1;
       if (AssetHostServerAddressMain.Length != 0) hash ^= AssetHostServerAddressMain.GetHashCode();
       if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
+      if (PatchDLLCopyToDir.Length != 0) hash ^= PatchDLLCopyToDir.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -165,6 +184,10 @@ namespace Icy.Asset {
         output.WriteRawTag(18);
         output.WriteString(AssetHostServerAddressStandby);
       }
+      if (PatchDLLCopyToDir.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(PatchDLLCopyToDir);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -183,6 +206,10 @@ namespace Icy.Asset {
         output.WriteRawTag(18);
         output.WriteString(AssetHostServerAddressStandby);
       }
+      if (PatchDLLCopyToDir.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(PatchDLLCopyToDir);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -198,6 +225,9 @@ namespace Icy.Asset {
       }
       if (AssetHostServerAddressStandby.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetHostServerAddressStandby);
+      }
+      if (PatchDLLCopyToDir.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PatchDLLCopyToDir);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -216,6 +246,9 @@ namespace Icy.Asset {
       }
       if (other.AssetHostServerAddressStandby.Length != 0) {
         AssetHostServerAddressStandby = other.AssetHostServerAddressStandby;
+      }
+      if (other.PatchDLLCopyToDir.Length != 0) {
+        PatchDLLCopyToDir = other.PatchDLLCopyToDir;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -244,6 +277,10 @@ namespace Icy.Asset {
             AssetHostServerAddressStandby = input.ReadString();
             break;
           }
+          case 26: {
+            PatchDLLCopyToDir = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -269,6 +306,10 @@ namespace Icy.Asset {
           }
           case 18: {
             AssetHostServerAddressStandby = input.ReadString();
+            break;
+          }
+          case 26: {
+            PatchDLLCopyToDir = input.ReadString();
             break;
           }
         }
