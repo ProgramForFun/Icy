@@ -44,6 +44,14 @@ namespace Icy.Asset.Editor
 
 		public static bool Compile(BuildTarget buildTarget)
 		{
+			string[] patchAssembleNames = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateAssemblies;
+			UnityEditorInternal.AssemblyDefinitionAsset[] patchAsmDefs = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateAssemblyDefinitions;
+			if (patchAssembleNames.Length == 0 && patchAsmDefs.Length == 0)
+			{
+				Log.LogError("CompilePatchDLLStep 未执行，请先在HybridCLR的Setting界面配置热更程序集");
+				return false;
+			}
+
 			try
 			{
 				switch (buildTarget)
