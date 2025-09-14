@@ -26,7 +26,7 @@ using System.Collections.Generic;
 namespace Icy.Asset.Editor
 {
 	/// <summary>
-	/// 打包AssetBundle，并Copy到StreamingAssets目录下
+	/// 将打包完的AssetBundle，Copy到StreamingAssets目录下
 	/// </summary>
 	public class CopyAssetBundle2StreamingAssetsStep : BuildStep
 	{
