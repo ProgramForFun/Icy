@@ -24,14 +24,15 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCJ0CgxBc3NldFNldHRp",
-            "bmcSIgoaQXNzZXRIb3N0U2VydmVyQWRkcmVzc01haW4YASABKAkSJQodQXNz",
-            "ZXRIb3N0U2VydmVyQWRkcmVzc1N0YW5kYnkYAiABKAkSGQoRUGF0Y2hETExD",
-            "b3B5VG9EaXIYAyABKAliBnByb3RvMw=="));
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKSAQoMQXNzZXRTZXR0",
+            "aW5nEiIKGkFzc2V0SG9zdFNlcnZlckFkZHJlc3NNYWluGAEgASgJEiUKHUFz",
+            "c2V0SG9zdFNlcnZlckFkZHJlc3NTdGFuZGJ5GAIgASgJEhkKEVBhdGNoRExM",
+            "Q29weVRvRGlyGAMgASgJEhwKFE1ldGFEYXRhRExMQ29weVRvRGlyGAQgASgJ",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir" }, null, null, null, null)
           }));
     }
     #endregion
@@ -76,6 +77,7 @@ namespace Icy.Asset {
       assetHostServerAddressMain_ = other.assetHostServerAddressMain_;
       assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
       patchDLLCopyToDir_ = other.patchDLLCopyToDir_;
+      metaDataDLLCopyToDir_ = other.metaDataDLLCopyToDir_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -119,7 +121,7 @@ namespace Icy.Asset {
     public const int PatchDLLCopyToDirFieldNumber = 3;
     private string patchDLLCopyToDir_ = "";
     /// <summary>
-    ///打包过程中，将HybridCLR编译出的热更DLL，Copy到PatchDLLCopyToDir目录，方便业务侧打包成AB
+    ///打包过程中，会将HybridCLR编译出的热更DLL，Copy到此目录，方便业务侧将其打包成AB
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -127,6 +129,21 @@ namespace Icy.Asset {
       get { return patchDLLCopyToDir_; }
       set {
         patchDLLCopyToDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "MetaDataDLLCopyToDir" field.</summary>
+    public const int MetaDataDLLCopyToDirFieldNumber = 4;
+    private string metaDataDLLCopyToDir_ = "";
+    /// <summary>
+    ///在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string MetaDataDLLCopyToDir {
+      get { return metaDataDLLCopyToDir_; }
+      set {
+        metaDataDLLCopyToDir_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -148,6 +165,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressMain != other.AssetHostServerAddressMain) return false;
       if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
       if (PatchDLLCopyToDir != other.PatchDLLCopyToDir) return false;
+      if (MetaDataDLLCopyToDir != other.MetaDataDLLCopyToDir) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -158,6 +176,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressMain.Length != 0) hash ^= AssetHostServerAddressMain.GetHashCode();
       if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
       if (PatchDLLCopyToDir.Length != 0) hash ^= PatchDLLCopyToDir.GetHashCode();
+      if (MetaDataDLLCopyToDir.Length != 0) hash ^= MetaDataDLLCopyToDir.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -188,6 +207,10 @@ namespace Icy.Asset {
         output.WriteRawTag(26);
         output.WriteString(PatchDLLCopyToDir);
       }
+      if (MetaDataDLLCopyToDir.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(MetaDataDLLCopyToDir);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -210,6 +233,10 @@ namespace Icy.Asset {
         output.WriteRawTag(26);
         output.WriteString(PatchDLLCopyToDir);
       }
+      if (MetaDataDLLCopyToDir.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(MetaDataDLLCopyToDir);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -228,6 +255,9 @@ namespace Icy.Asset {
       }
       if (PatchDLLCopyToDir.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PatchDLLCopyToDir);
+      }
+      if (MetaDataDLLCopyToDir.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(MetaDataDLLCopyToDir);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -249,6 +279,9 @@ namespace Icy.Asset {
       }
       if (other.PatchDLLCopyToDir.Length != 0) {
         PatchDLLCopyToDir = other.PatchDLLCopyToDir;
+      }
+      if (other.MetaDataDLLCopyToDir.Length != 0) {
+        MetaDataDLLCopyToDir = other.MetaDataDLLCopyToDir;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -281,6 +314,10 @@ namespace Icy.Asset {
             PatchDLLCopyToDir = input.ReadString();
             break;
           }
+          case 34: {
+            MetaDataDLLCopyToDir = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -310,6 +347,10 @@ namespace Icy.Asset {
           }
           case 26: {
             PatchDLLCopyToDir = input.ReadString();
+            break;
+          }
+          case 34: {
+            MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
         }

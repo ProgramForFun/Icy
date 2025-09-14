@@ -52,6 +52,12 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
 		public string PatchDLLCopyToDir;
 
+		[Title("在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB")]
+		[FolderPath]
+		[Required]
+		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		public string MetaDataDLLCopyToDir;
+
 
 		[MenuItem("Icy/Asset/Setting", false, 30)]
 		public static void Open()
@@ -68,6 +74,7 @@ namespace Icy.Asset.Editor
 			AssetHostServerAddressMain = _Setting.AssetHostServerAddressMain;
 			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
 			PatchDLLCopyToDir = _Setting.PatchDLLCopyToDir;
+			MetaDataDLLCopyToDir = _Setting.MetaDataDLLCopyToDir;
 		}
 
 		private AssetSetting GetAssetSetting()
@@ -98,6 +105,7 @@ namespace Icy.Asset.Editor
 				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 
 			_Setting.PatchDLLCopyToDir = PatchDLLCopyToDir;
+			_Setting.MetaDataDLLCopyToDir = MetaDataDLLCopyToDir;
 
 			string targetDir = SettingsHelper.GetSettingDir();
 			SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
