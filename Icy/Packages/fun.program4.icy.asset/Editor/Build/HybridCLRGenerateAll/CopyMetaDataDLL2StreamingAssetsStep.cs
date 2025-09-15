@@ -18,7 +18,9 @@
 using Icy.Base;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
-using YooAsset.Editor;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Icy.Asset.Editor
 {
@@ -29,16 +31,51 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			string buildPackage = OwnerProcedure.Blackboard.ReadString("BuildPackage", true);
-			string buildOutputPath = OwnerProcedure.Blackboard.ReadString("BuildOutputPath", true);
-			ScriptableBuildParameters buildParam = OwnerProcedure.Blackboard.ReadObject("BuildParam", true) as ScriptableBuildParameters;
-			CopyMetaDataDLL(buildPackage, buildOutputPath, buildParam);
+			await UniTask.WaitForSeconds(5);
+
+			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
+			List<string> metaDataDLLList = ParseMetaDLLList(metaDataDllListPath);
+			if (metaDataDLLList == null || metaDataDLLList.Count == 0)
+			{
+				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容");
+				OwnerProcedure.Abort();
+				return;
+			}
+
+
+			CopyMetaDataDLL();
 
 			Finish();
-			await UniTask.CompletedTask;
 		}
 
-		protected virtual void CopyMetaDataDLL(string buildPackage, string outputPath, ScriptableBuildParameters buildParam)
+		protected List<string> ParseMetaDLLList(string path)
+		{
+			if (File.Exists(path))
+			{
+				string all = File.ReadAllText(path);
+
+				// 匹配 PatchedAOTAssemblyList 后的大括号内容
+				Match blockMatch = Regex.Match(all,
+					@"PatchedAOTAssemblyList\s*=\s*new\s+List<string>\s*{\s*([\s\S]*?)\s*};",
+					RegexOptions.Singleline);
+
+				if (!blockMatch.Success)
+					return null;
+
+				string innerContent = blockMatch.Groups[1].Value;
+
+				// 提取所有引号内的字符串
+				MatchCollection stringMatches = Regex.Matches(innerContent, @"\""([^\""]+)\""");
+
+				List<string> rtn = new List<string>();
+				foreach (Match match in stringMatches)
+					rtn.Add(match.Groups[1].Value);
+				return rtn;
+			}
+			return null;
+		}
+
+		protected virtual void CopyMetaDataDLL()
 		{
 
 			//AssetDatabase.SaveAssets();
