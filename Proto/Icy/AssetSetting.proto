@@ -13,4 +13,6 @@ message AssetSetting
     string PatchDLLCopyToDir = 3;
 	//在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB
 	string MetaDataDLLCopyToDir = 4;
+	//HybridCLR补充元数据DLL列表
+	repeated string MetaDataDLLs = 5;
 }

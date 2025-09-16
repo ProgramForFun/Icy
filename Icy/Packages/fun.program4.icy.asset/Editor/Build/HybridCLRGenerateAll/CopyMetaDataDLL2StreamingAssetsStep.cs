@@ -21,6 +21,7 @@ using UnityEditor;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Google.Protobuf;
 
 namespace Icy.Asset.Editor
 {
@@ -29,13 +30,15 @@ namespace Icy.Asset.Editor
 	/// </summary>
 	public class CopyMetaDataDLL2StreamingAssetsStep : BuildStep
 	{
+		protected List<string> _MetaDataDLLs;
+
 		public override async UniTask Activate()
 		{
 			await UniTask.WaitForSeconds(5);
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
-			List<string> metaDataDLLList = ParseMetaDLLList(metaDataDllListPath);
-			if (metaDataDLLList == null || metaDataDLLList.Count == 0)
+			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
+			if (_MetaDataDLLs == null || _MetaDataDLLs.Count == 0)
 			{
 				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容");
 				OwnerProcedure.Abort();
@@ -84,6 +87,22 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Deactivate()
 		{
+			if (_MetaDataDLLs != null)
+			{
+				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
+				AssetSetting setting;
+				if (bytes == null)
+					setting = new AssetSetting();
+				else
+					setting = AssetSetting.Parser.ParseFrom(bytes);
+
+				for (int i = 0; i < _MetaDataDLLs.Count; i++)
+					setting.MetaDataDLLs.Add(_MetaDataDLLs[i]);
+
+				string targetDir = SettingsHelper.GetSettingDir();
+				SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", setting.ToByteArray());
+			}
+
 			await UniTask.CompletedTask;
 		}
 	}

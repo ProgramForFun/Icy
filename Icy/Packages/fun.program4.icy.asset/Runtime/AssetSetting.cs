@@ -24,15 +24,15 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKSAQoMQXNzZXRTZXR0",
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKoAQoMQXNzZXRTZXR0",
             "aW5nEiIKGkFzc2V0SG9zdFNlcnZlckFkZHJlc3NNYWluGAEgASgJEiUKHUFz",
             "c2V0SG9zdFNlcnZlckFkZHJlc3NTdGFuZGJ5GAIgASgJEhkKEVBhdGNoRExM",
             "Q29weVRvRGlyGAMgASgJEhwKFE1ldGFEYXRhRExMQ29weVRvRGlyGAQgASgJ",
-            "YgZwcm90bzM="));
+            "EhQKDE1ldGFEYXRhRExMcxgFIAMoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir", "MetaDataDLLs" }, null, null, null, null)
           }));
     }
     #endregion
@@ -78,6 +78,7 @@ namespace Icy.Asset {
       assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
       patchDLLCopyToDir_ = other.patchDLLCopyToDir_;
       metaDataDLLCopyToDir_ = other.metaDataDLLCopyToDir_;
+      metaDataDLLs_ = other.metaDataDLLs_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -147,6 +148,20 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "MetaDataDLLs" field.</summary>
+    public const int MetaDataDLLsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_metaDataDLLs_codec
+        = pb::FieldCodec.ForString(42);
+    private readonly pbc::RepeatedField<string> metaDataDLLs_ = new pbc::RepeatedField<string>();
+    /// <summary>
+    ///HybridCLR补充元数据DLL列表
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> MetaDataDLLs {
+      get { return metaDataDLLs_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -166,6 +181,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
       if (PatchDLLCopyToDir != other.PatchDLLCopyToDir) return false;
       if (MetaDataDLLCopyToDir != other.MetaDataDLLCopyToDir) return false;
+      if(!metaDataDLLs_.Equals(other.metaDataDLLs_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -177,6 +193,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
       if (PatchDLLCopyToDir.Length != 0) hash ^= PatchDLLCopyToDir.GetHashCode();
       if (MetaDataDLLCopyToDir.Length != 0) hash ^= MetaDataDLLCopyToDir.GetHashCode();
+      hash ^= metaDataDLLs_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -211,6 +228,7 @@ namespace Icy.Asset {
         output.WriteRawTag(34);
         output.WriteString(MetaDataDLLCopyToDir);
       }
+      metaDataDLLs_.WriteTo(output, _repeated_metaDataDLLs_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -237,6 +255,7 @@ namespace Icy.Asset {
         output.WriteRawTag(34);
         output.WriteString(MetaDataDLLCopyToDir);
       }
+      metaDataDLLs_.WriteTo(ref output, _repeated_metaDataDLLs_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -259,6 +278,7 @@ namespace Icy.Asset {
       if (MetaDataDLLCopyToDir.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(MetaDataDLLCopyToDir);
       }
+      size += metaDataDLLs_.CalculateSize(_repeated_metaDataDLLs_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -283,6 +303,7 @@ namespace Icy.Asset {
       if (other.MetaDataDLLCopyToDir.Length != 0) {
         MetaDataDLLCopyToDir = other.MetaDataDLLCopyToDir;
       }
+      metaDataDLLs_.Add(other.metaDataDLLs_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -318,6 +339,10 @@ namespace Icy.Asset {
             MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
+          case 42: {
+            metaDataDLLs_.AddEntriesFrom(input, _repeated_metaDataDLLs_codec);
+            break;
+          }
         }
       }
     #endif
@@ -351,6 +376,10 @@ namespace Icy.Asset {
           }
           case 34: {
             MetaDataDLLCopyToDir = input.ReadString();
+            break;
+          }
+          case 42: {
+            metaDataDLLs_.AddEntriesFrom(ref input, _repeated_metaDataDLLs_codec);
             break;
           }
         }
