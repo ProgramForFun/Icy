@@ -30,28 +30,35 @@ namespace Icy.Asset.Editor
 	/// </summary>
 	public class CopyMetaDataDLL2StreamingAssetsStep : BuildStep
 	{
+		protected AssetSetting _Setting;
 		protected List<string> _MetaDataDLLs;
 
 		public override async UniTask Activate()
 		{
+			//确保HybridCLRGenerate/AOTGenericReferences.cs生成完成
 			await UniTask.WaitForSeconds(5);
+			GetAssetSetting();
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
 			if (_MetaDataDLLs == null || _MetaDataDLLs.Count == 0)
 			{
-				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容");
+				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLL2StreamingAssetsStep));
 				OwnerProcedure.Abort();
 				return;
 			}
 
-
-			CopyMetaDataDLL();
+			if (!CopyMetaDataDLL())
+			{
+				Log.LogError($"复制补充元数据DLL失败", nameof(CopyMetaDataDLL2StreamingAssetsStep));
+				OwnerProcedure.Abort();
+				return;
+			}
 
 			Finish();
 		}
 
-		protected List<string> ParseMetaDLLList(string path)
+		protected virtual List<string> ParseMetaDLLList(string path)
 		{
 			if (File.Exists(path))
 			{
@@ -78,29 +85,51 @@ namespace Icy.Asset.Editor
 			return null;
 		}
 
-		protected virtual void CopyMetaDataDLL()
+		protected virtual bool CopyMetaDataDLL()
 		{
+			string settingDir = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.strippedAOTDllOutputRootDir;
+			string srcDir = Path.Combine(settingDir, EditorUserBuildSettings.activeBuildTarget.ToString());
+			string copy2Dir = _Setting.MetaDataDLLCopyToDir;
 
-			//AssetDatabase.SaveAssets();
-			//AssetDatabase.Refresh();
+			for (int i = 0; i < _MetaDataDLLs.Count; i++)
+			{
+				string dllPath = Path.Combine(srcDir, _MetaDataDLLs[i]);
+				if (File.Exists(dllPath))
+				{
+					string copy2Path = Path.Combine(copy2Dir, _MetaDataDLLs[i]);
+					File.Copy(dllPath, copy2Path, true);
+				}
+				else
+				{
+					Log.LogError($"CopyMetaDataDLL 失败，没有找到{dllPath}", nameof(CopyMetaDataDLL2StreamingAssetsStep));
+					return false;
+				}
+			}
+
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+			return true;
+		}
+
+		protected AssetSetting GetAssetSetting()
+		{
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
+			if (bytes == null)
+				_Setting = new AssetSetting();
+			else
+				_Setting = AssetSetting.Parser.ParseFrom(bytes);
+			return _Setting;
 		}
 
 		public override async UniTask Deactivate()
 		{
 			if (_MetaDataDLLs != null)
 			{
-				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
-				AssetSetting setting;
-				if (bytes == null)
-					setting = new AssetSetting();
-				else
-					setting = AssetSetting.Parser.ParseFrom(bytes);
-
 				for (int i = 0; i < _MetaDataDLLs.Count; i++)
-					setting.MetaDataDLLs.Add(_MetaDataDLLs[i]);
+					_Setting.MetaDataDLLs.Add(_MetaDataDLLs[i]);
 
 				string targetDir = SettingsHelper.GetSettingDir();
-				SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", setting.ToByteArray());
+				SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
 			}
 
 			await UniTask.CompletedTask;
