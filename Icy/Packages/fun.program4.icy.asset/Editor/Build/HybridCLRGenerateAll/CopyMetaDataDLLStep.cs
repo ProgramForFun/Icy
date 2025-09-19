@@ -26,9 +26,9 @@ using Google.Protobuf;
 namespace Icy.Asset.Editor
 {
 	/// <summary>
-	/// 将HybirdCLR编译出来的补充元数据DLL，Copy到StreamingAssets目录下
+	/// 将HybirdCLR编译出来的补充元数据DLL，Copy到AssetSetting中的指定目录下
 	/// </summary>
-	public class CopyMetaDataDLL2StreamingAssetsStep : BuildStep
+	public class CopyMetaDataDLLStep : BuildStep
 	{
 		protected AssetSetting _Setting;
 		protected List<string> _MetaDataDLLs;
@@ -43,14 +43,14 @@ namespace Icy.Asset.Editor
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
 			if (_MetaDataDLLs == null || _MetaDataDLLs.Count == 0)
 			{
-				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLL2StreamingAssetsStep));
+				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
 
 			if (!CopyMetaDataDLL())
 			{
-				Log.LogError($"复制补充元数据DLL失败", nameof(CopyMetaDataDLL2StreamingAssetsStep));
+				Log.LogError($"复制补充元数据DLL失败", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
@@ -101,7 +101,7 @@ namespace Icy.Asset.Editor
 				}
 				else
 				{
-					Log.LogError($"CopyMetaDataDLL 失败，没有找到{dllPath}", nameof(CopyMetaDataDLL2StreamingAssetsStep));
+					Log.LogError($"CopyMetaDataDLL 失败，没有找到{dllPath}", nameof(CopyMetaDataDLLStep));
 					return false;
 				}
 			}
