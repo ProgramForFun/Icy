@@ -113,7 +113,7 @@ namespace Icy.Asset.Editor
 
 		protected AssetSetting GetAssetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
 			if (bytes == null)
 				_Setting = new AssetSetting();
 			else
@@ -129,7 +129,7 @@ namespace Icy.Asset.Editor
 					_Setting.MetaDataDLLs.Add(_MetaDataDLLs[i]);
 
 				string targetDir = SettingsHelper.GetSettingDir();
-				SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
+				SettingsHelper.SaveSetting(targetDir, SettingsHelper.AssetSetting, _Setting.ToByteArray());
 			}
 
 			await UniTask.CompletedTask;

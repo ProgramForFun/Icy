@@ -370,7 +370,7 @@ namespace Icy.UI.Editor
 		{
 			if (string.IsNullOrEmpty(_UIRootDir))
 			{
-				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
+				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
 				if (bytes != null)
 				{
 					UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);

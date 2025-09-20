@@ -22,6 +22,14 @@ namespace Icy.Base
 {
 	public static class SettingsHelper
 	{
+		public static readonly string AssetSetting = "AssetSetting.json";
+		public static readonly string ProtoSetting = "ProtoSetting.json";
+		public static readonly string ConfigSetting = "ConfigSetting.json";
+		public static readonly string UISetting = "UISetting.json";
+		public static readonly string BuildSetting_Android = "BuildSetting_Android.json";
+		public static readonly string BuildSetting_iOS = "BuildSetting_iOS.json";
+		public static readonly string BuildSetting_Win64 = "BuildSetting_Win64.json";
+
 		/// <summary>
 		/// 获取框架Setting的根目录；
 		/// Editor下是相对于项目根目录的相对路径，其他情况下是相对于SteamingAssets的相对路径
@@ -100,11 +108,11 @@ namespace Icy.Base
 			switch (UnityEngine.Application.platform)
 			{
 				case UnityEngine.RuntimePlatform.Android:
-					return "BuildSetting_Android.json";
+					return BuildSetting_Android;
 				case UnityEngine.RuntimePlatform.IPhonePlayer:
-					return "BuildSetting_iOS.json";
+					return BuildSetting_iOS;
 				case UnityEngine.RuntimePlatform.WindowsPlayer:
-					return "BuildSetting_Win64.json";
+					return BuildSetting_Win64;
 				default:
 					Log.Assert(false, $"Unsupported platform {UnityEngine.Application.platform}");
 					return "";
@@ -118,11 +126,11 @@ namespace Icy.Base
 			switch (buildTarget)
 			{
 				case UnityEditor.BuildTarget.Android:
-					return "BuildSetting_Android.json";
+					return BuildSetting_Android;
 				case UnityEditor.BuildTarget.iOS:
-					return "BuildSetting_iOS.json";
+					return BuildSetting_iOS;
 				case UnityEditor.BuildTarget.StandaloneWindows64:
-					return "BuildSetting_Win64.json";
+					return BuildSetting_Win64;
 				default:
 					Log.Assert(false, $"Unsupported platform {buildTarget}");
 					return "";

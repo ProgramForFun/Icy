@@ -639,7 +639,7 @@ namespace Icy.UI
 		/// <param name="uiName"></param>
 		private void ValidateUICode(string uiName, UIBase ui)
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
 			if (bytes == null)
 				Log.LogError("Can not find UI setting");
 			else

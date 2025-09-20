@@ -49,7 +49,7 @@ namespace Icy.UI.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "UISetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
 			if (bytes == null)
 				_Setting = new UISetting();
 			else
@@ -64,7 +64,7 @@ namespace Icy.UI.Editor
 			_Setting.UIRootDir = UIRootPath;
 
 			string targetDir = SettingsHelper.GetEditorOnlySettingDir();
-			SettingsHelper.SaveSetting(targetDir, "UISetting.json", _Setting.ToByteArray());
+			SettingsHelper.SaveSetting(targetDir, SettingsHelper.UISetting, _Setting.ToByteArray());
 		}
 	}
 }

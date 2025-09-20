@@ -81,7 +81,7 @@ namespace Icy.Asset
 				YooAssets.SetDefaultPackage(_Package);
 			}
 
-			byte[] assetSettingBytes = await SettingsHelper.LoadSetting("AssetSetting.json");
+			byte[] assetSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.AssetSetting);
 			_AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
 
 			IDecryptionServices decryptionServices = null;

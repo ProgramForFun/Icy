@@ -41,10 +41,10 @@ namespace Icy.Editor
 			{
 				BiProgress.Show("Generate Config", "Generating config...", 0.5f);
 
-				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ConfigSetting.json");
+				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.ConfigSetting);
 				if (bytes == null)
 				{
-					EditorUtility.DisplayDialog("", $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/ConfigSetting.json", "OK");
+					EditorUtility.DisplayDialog("", $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/{SettingsHelper.ConfigSetting}", "OK");
 					Clear();
 				}
 				else

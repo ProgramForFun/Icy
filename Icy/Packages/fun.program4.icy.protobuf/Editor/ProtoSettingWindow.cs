@@ -66,7 +66,7 @@ namespace Icy.Protobuf.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "ProtoSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.ProtoSetting);
 			if (bytes == null)
 				_Setting = new ProtoSetting();
 			else
@@ -153,7 +153,7 @@ namespace Icy.Protobuf.Editor
 			_Setting.ProtoAssemblyName = ProtoAssemblyName;
 
 			string targetDir = SettingsHelper.GetSettingDir();
-			SettingsHelper.SaveSetting(targetDir, "ProtoSetting.json", _Setting.ToByteArray());
+			SettingsHelper.SaveSetting(targetDir, SettingsHelper.ProtoSetting, _Setting.ToByteArray());
 		}
 	}
 }

@@ -79,7 +79,7 @@ namespace Icy.Asset.Editor
 
 		private AssetSetting GetAssetSetting()
 		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), "AssetSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
 			if (bytes == null)
 				_Setting = new AssetSetting();
 			else
@@ -108,7 +108,7 @@ namespace Icy.Asset.Editor
 			_Setting.MetaDataDLLCopyToDir = MetaDataDLLCopyToDir;
 
 			string targetDir = SettingsHelper.GetSettingDir();
-			SettingsHelper.SaveSetting(targetDir, "AssetSetting.json", _Setting.ToByteArray());
+			SettingsHelper.SaveSetting(targetDir, SettingsHelper.AssetSetting, _Setting.ToByteArray());
 		}
 
 		private bool IsValidHttpOrHttpsUrl(string url)

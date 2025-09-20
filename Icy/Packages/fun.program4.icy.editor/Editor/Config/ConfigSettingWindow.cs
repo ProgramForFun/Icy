@@ -73,7 +73,7 @@ namespace Icy.Editor
 		protected override void Initialize()
 		{
 			base.Initialize();
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), "ConfigSetting.json");
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.ConfigSetting);
 			if (bytes == null)
 				_Setting = new ConfigSetting();
 			else
@@ -150,7 +150,7 @@ namespace Icy.Editor
 			_Setting.JsonOutputDir = JsonOutputDir;
 
 			string targetDir = SettingsHelper.GetEditorOnlySettingDir();
-			SettingsHelper.SaveSetting(targetDir, "ConfigSetting.json", _Setting.ToByteArray());
+			SettingsHelper.SaveSetting(targetDir, SettingsHelper.ConfigSetting, _Setting.ToByteArray());
 		}
 	}
 }

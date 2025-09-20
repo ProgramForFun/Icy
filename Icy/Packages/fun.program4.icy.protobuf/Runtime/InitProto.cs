@@ -27,15 +27,13 @@ namespace Icy.Protobuf
 	/// </summary>
 	public class InitProto
 	{
-		private const string PROTO_SETTING_NAME = "ProtoSetting.json";
-
 		/// <summary>
 		/// 反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
 		/// TODO：接入HybridCLR后，这里的调用时机要改
 		/// </summary>
 		public async UniTaskVoid InitProtoMsgIDRegistry()
 		{
-			byte[] settingBytes = await SettingsHelper.LoadSetting(PROTO_SETTING_NAME);
+			byte[] settingBytes = await SettingsHelper.LoadSetting(SettingsHelper.ProtoSetting);
 			if (settingBytes != null)
 			{
 				ProtoSetting protoSetting = ProtoSetting.Parser.ParseFrom(settingBytes);
