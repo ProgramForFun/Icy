@@ -129,7 +129,7 @@ namespace Icy.Asset.Editor
 
 		protected virtual string GetSettingFileName()
 		{
-			return string.Format($"BuildSetting_{_CurrBuildTarget}.json");
+			return string.Format($"BuildSetting_{_CurrPlatformName}.json");
 		}
 
 		protected void UpdateBuiltAssetBundleVersion(BuildTarget buildTarget)
