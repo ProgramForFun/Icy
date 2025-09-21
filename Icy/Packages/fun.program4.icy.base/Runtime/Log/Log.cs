@@ -90,10 +90,10 @@ namespace Icy.Base
 		private static Thread _Write2FileThread;
 		#endregion
 
-		public static void Init(bool write2File)
+		public static void Init(bool writeLog2File = false)
 		{
 			#region WriteLog2File
-			if (write2File)
+			if (writeLog2File)
 			{
 				_QueueLock = new object();
 				_LogQueue = new Queue<string>();
@@ -131,29 +131,29 @@ namespace Icy.Base
 #endif
 		}
 
-		public static void LogInfo(string msg, string tag = null)
+		public static void LogInfo(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Info))
 				return;
 
-			Debug.Log(FormatByTag(tag,msg));
+			Debug.Log(FormatByTag(tag, msg));
 		}
 
-		public static void LogWarning(string msg, string tag = null)
+		public static void LogWarning(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Warning))
 				return;
 			Debug.LogWarning(FormatByTag(tag, msg));
 		}
 
-		public static void LogError(string msg, string tag = null)
+		public static void LogError(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Error))
 				return;
 			Debug.LogError(FormatByTag(tag, msg));
 		}
 
-		public static void Assert(bool condition, string msg, string tag = null)
+		public static void Assert(bool condition, object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Assert))
 				return;
@@ -166,7 +166,7 @@ namespace Icy.Base
 				{
 					if (UnityEditor.EditorApplication.isPlaying)
 						Debug.Break();
-					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg, "Oh  No");
+					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg.ToString(), "Oh  No");
 				}
 #endif
 			}
@@ -213,7 +213,7 @@ namespace Icy.Base
 			}
 		}
 
-		private static string FormatByTag(string tag, string msg)
+		private static string FormatByTag(string tag, object msg)
 		{
 			string now = DateTime.Now.ToString("HH:mm:ss.fff");
 			string logFormatted;
