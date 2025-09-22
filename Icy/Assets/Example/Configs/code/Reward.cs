@@ -19,10 +19,10 @@ public partial class Reward
     
     public Reward(ByteBuf _buf)
     {
-        _dataMap = new System.Collections.Generic.Dictionary<int, RewardCfg>();
-        _dataList = new System.Collections.Generic.List<RewardCfg>();
-        
-        for(int n = _buf.ReadSize() ; n > 0 ; --n)
+        int n = _buf.ReadSize();
+        _dataMap = new System.Collections.Generic.Dictionary<int, RewardCfg>(n);
+        _dataList = new System.Collections.Generic.List<RewardCfg>(n);
+        for(int i = n ; i > 0 ; --i)
         {
             RewardCfg _v;
             _v = global::cfg.RewardCfg.DeserializeRewardCfg(_buf);
@@ -34,7 +34,7 @@ public partial class Reward
     public System.Collections.Generic.Dictionary<int, RewardCfg> DataMap => _dataMap;
     public System.Collections.Generic.List<RewardCfg> DataList => _dataList;
 
-    public RewardCfg GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+    public RewardCfg GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
     public RewardCfg Get(int key) => _dataMap[key];
     public RewardCfg this[int key] => _dataMap[key];
 
