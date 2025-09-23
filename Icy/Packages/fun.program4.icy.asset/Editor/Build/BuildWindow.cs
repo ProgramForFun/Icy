@@ -132,6 +132,9 @@ namespace Icy.Asset.Editor
 		protected static string BUILD_PLAYER_PROCEDURE_CFG_NAME = "BuildPlayerProcedureCfg.json";
 		protected static string ICY_BUILD_PLAYER_PROCEDURE_CFG_PATH = "Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure/" + BUILD_PLAYER_PROCEDURE_CFG_NAME;
 
+		protected static string HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME = "HybridCLRGenerateAllProcedureCfg.json";
+		protected static string ICY_HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME = "Packages/fun.program4.icy.asset/Editor/Build/HybridCLRGenerateAll/" + HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME;
+
 
 		/// <summary>
 		/// 当前选中平台的Setting文件
@@ -197,7 +200,7 @@ namespace Icy.Asset.Editor
 			}
 
 			BuildSteps = new List<string>();
-			List<string> allSteps = GetAllStepNames();
+			List<string> allSteps = GetBuildPlayerStepNames();
 			SetBuildSteps(BuildSteps, allSteps, 0);
 
 			return _Setting;
@@ -274,6 +277,27 @@ namespace Icy.Asset.Editor
 			}
 
 			HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
+
+			////解析/AOTGenericReferences.cs，读取补充元数据DLL
+			//Procedure procedure = new Procedure("HybridCLRGenerateAll");
+			//List<string> allSteps = GetHybridCLRGenerateAllStepNames();
+			//for (int i = 0; i < allSteps.Count; i++)
+			//{
+			//	string typeWithNameSpace = allSteps[i];
+			//	Type type = Type.GetType(typeWithNameSpace);
+			//	if (type == null)
+			//	{
+			//		Log.Assert(false, $"Can not find HybridCLRGenerateAll step {typeWithNameSpace}");
+			//		return;
+			//	}
+
+			//	ProcedureStep step = Activator.CreateInstance(type) as ProcedureStep;
+			//	procedure.AddStep(step);
+			//}
+
+			//procedure.OnChangeStep += OnChangeBuildStep;
+			//procedure.OnFinish += OnBuildPlayerProcedureFinish;
+			//procedure.Start();
 		}
 
 		[ShowIf("IsHybridCLREnabled")]
@@ -304,7 +328,7 @@ namespace Icy.Asset.Editor
 
 
 			Procedure procedure = new Procedure("BuildPlayer");
-			List<string> allSteps = GetAllStepNames();
+			List<string> allSteps = GetBuildPlayerStepNames();
 			for (int i = 0; i < allSteps.Count; i++)
 			{
 				string typeWithNameSpace = allSteps[i];
@@ -329,7 +353,7 @@ namespace Icy.Asset.Editor
 		/// <summary>
 		/// 获取所有的打包Player的步骤类名
 		/// </summary>
-		protected virtual List<string> GetAllStepNames()
+		protected virtual List<string> GetBuildPlayerStepNames()
 		{
 			JSONArray jsonArray;
 			if (File.Exists(BUILD_PLAYER_PROCEDURE_CFG_NAME))
@@ -337,6 +361,25 @@ namespace Icy.Asset.Editor
 			else
 				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_BUILD_PLAYER_PROCEDURE_CFG_PATH)) as JSONArray;
 
+			return GetProcedureStepsFromJsonArray(jsonArray);
+		}
+
+		/// <summary>
+		/// 获取执行HybridCLR GenerateAll的步骤类名
+		/// </summary>
+		protected virtual List<string> GetHybridCLRGenerateAllStepNames()
+		{
+			JSONArray jsonArray;
+			if (File.Exists(HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME))
+				jsonArray = JSONNode.Parse(File.ReadAllText(HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME)) as JSONArray;
+			else
+				jsonArray = JSONNode.Parse(File.ReadAllText(ICY_HYBRIDCLR_GENERATE_ALL_PROCEDURE_CFG_NAME)) as JSONArray;
+
+			return GetProcedureStepsFromJsonArray(jsonArray);
+		}
+
+		public List<string> GetProcedureStepsFromJsonArray(JSONArray jsonArray)
+		{
 			List<string> rtn = new List<string>(8);
 			for (int i = 0; i < jsonArray.Count; i++)
 			{
