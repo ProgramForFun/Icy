@@ -48,7 +48,7 @@ namespace Icy.Asset.Editor
 				return;
 			}
 
-			if (!CopyMetaDataDLL())
+			if (!CopyMetaDataDLLs())
 			{
 				Log.LogError($"复制补充元数据DLL失败", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
@@ -85,7 +85,7 @@ namespace Icy.Asset.Editor
 			return null;
 		}
 
-		protected virtual bool CopyMetaDataDLL()
+		protected virtual bool CopyMetaDataDLLs()
 		{
 			string settingDir = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.strippedAOTDllOutputRootDir;
 			string srcDir = Path.Combine(settingDir, EditorUserBuildSettings.activeBuildTarget.ToString());
