@@ -56,8 +56,6 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Base-FSM|有限状态机|✔️|
 |Base-基于FSM的Procedure|基于FSM的顺序执行的流程|✔️|
 |Base-Log||✔️|
-|Base-Timer||✔️|
-|Base-Pool||✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
 |Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|非常好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
