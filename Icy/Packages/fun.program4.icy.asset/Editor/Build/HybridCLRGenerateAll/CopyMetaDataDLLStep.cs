@@ -41,9 +41,16 @@ namespace Icy.Asset.Editor
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
-			if (_MetaDataDLLs == null || _MetaDataDLLs.Count == 0)
+			if (_MetaDataDLLs == null)
 			{
-				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在，以及其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLLStep));
+				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在", nameof(CopyMetaDataDLLStep));
+				OwnerProcedure.Abort();
+				return;
+			}
+
+			if (_MetaDataDLLs.Count == 0)
+			{
+				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
