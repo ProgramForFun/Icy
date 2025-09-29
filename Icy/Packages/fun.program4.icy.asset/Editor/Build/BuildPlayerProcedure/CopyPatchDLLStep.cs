@@ -51,6 +51,12 @@ namespace Icy.Asset.Editor
 			string srcDir = Path.Combine(patchDLLOutputPath, EditorUserBuildSettings.activeBuildTarget.ToString());
 			string copy2Dir = _Setting.PatchDLLCopyToDir;
 
+			if (string.IsNullOrEmpty(copy2Dir))
+			{
+				Log.LogError($"CopyPatchDLLs 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.PatchDLLCopyToDir)}", nameof(CopyPatchDLLStep));
+				return false;
+			}
+
 			for (int i = 0; i < _PatchDLLs.Count; i++)
 			{
 				string dllPath = Path.Combine(srcDir, _PatchDLLs[i]);

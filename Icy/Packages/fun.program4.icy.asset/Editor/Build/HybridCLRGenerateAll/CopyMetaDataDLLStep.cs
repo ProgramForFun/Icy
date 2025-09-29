@@ -98,6 +98,12 @@ namespace Icy.Asset.Editor
 			string srcDir = Path.Combine(settingDir, EditorUserBuildSettings.activeBuildTarget.ToString());
 			string copy2Dir = _Setting.MetaDataDLLCopyToDir;
 
+			if (string.IsNullOrEmpty(copy2Dir))
+			{
+				Log.LogError($"CopyMetaDataDLL 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.MetaDataDLLCopyToDir)}", nameof(CopyMetaDataDLLStep));
+				return false;
+			}
+
 			for (int i = 0; i < _MetaDataDLLs.Count; i++)
 			{
 				string dllPath = Path.Combine(srcDir, _MetaDataDLLs[i]);
