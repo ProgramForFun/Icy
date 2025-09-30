@@ -16,7 +16,6 @@
 
 #if ICY_USE_SRDEBUGGER
 
-using Icy.Base;
 using SRDebugger.Services;
 using SRF.Service;
 
@@ -33,10 +32,7 @@ namespace Icy.GM
 		public static void Init(IGMOptions gmOptions)
 		{
 			if (IsInited())
-			{
-				Log.LogError("Duplicate Init to GM is invalid", nameof(GM));
 				return;
-			}
 
 			SRDebug.Init();
 			//注册SRDebugger的Options
