@@ -276,28 +276,23 @@ namespace Icy.Asset.Editor
 				return;
 			}
 
-			HybridCLR.Editor.Commands.PrebuildCommand.GenerateAll();
+			Procedure procedure = new Procedure("HybridCLRGenerateAll");
+			List<string> allSteps = GetHybridCLRGenerateAllStepNames();
+			for (int i = 0; i < allSteps.Count; i++)
+			{
+				string typeWithNameSpace = allSteps[i];
+				Type type = Type.GetType(typeWithNameSpace);
+				if (type == null)
+				{
+					Log.Assert(false, $"Can not find HybridCLRGenerateAll step {typeWithNameSpace}");
+					return;
+				}
 
-			////解析/AOTGenericReferences.cs，读取补充元数据DLL
-			//Procedure procedure = new Procedure("HybridCLRGenerateAll");
-			//List<string> allSteps = GetHybridCLRGenerateAllStepNames();
-			//for (int i = 0; i < allSteps.Count; i++)
-			//{
-			//	string typeWithNameSpace = allSteps[i];
-			//	Type type = Type.GetType(typeWithNameSpace);
-			//	if (type == null)
-			//	{
-			//		Log.Assert(false, $"Can not find HybridCLRGenerateAll step {typeWithNameSpace}");
-			//		return;
-			//	}
+				ProcedureStep step = Activator.CreateInstance(type) as ProcedureStep;
+				procedure.AddStep(step);
+			}
 
-			//	ProcedureStep step = Activator.CreateInstance(type) as ProcedureStep;
-			//	procedure.AddStep(step);
-			//}
-
-			//procedure.OnChangeStep += OnChangeBuildStep;
-			//procedure.OnFinish += OnBuildPlayerProcedureFinish;
-			//procedure.Start();
+			procedure.Start();
 		}
 
 		[ShowIf("IsHybridCLREnabled")]
