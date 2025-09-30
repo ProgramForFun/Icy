@@ -47,6 +47,7 @@ namespace Icy.Asset.Editor
 			}
 			catch(Exception e)
 			{
+				Log.Assert(false, "HybridCLR GenerateAll failed", nameof(HybridCLRGenerateAllStep));
 				Log.LogError(e.ToString());
 				return false;
 			}
