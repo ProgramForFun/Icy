@@ -44,6 +44,7 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
+				Log.LogInfo("Step A Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -59,6 +60,7 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
+				Log.LogInfo("Step B Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -74,6 +76,7 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
+				Log.LogInfo("Step C Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -89,6 +92,8 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
+				//注意：Abort后，Deactivate不会执行
+				Log.LogInfo("Step D Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -104,6 +109,7 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
+				Log.LogInfo("Step E Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
