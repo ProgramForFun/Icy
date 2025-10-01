@@ -32,8 +32,18 @@ namespace Icy.Asset.Editor
 		protected AssetSetting _Setting;
 		protected List<string> _PatchDLLs;
 
+		[System.Serializable]
+		public class AssemblyDefinitionData
+		{
+			public string name;
+		}
+
 		public override async UniTask Activate()
 		{
+			//确保热更DLL生成完成
+			await UniTask.WaitForSeconds(5);
+			GetPatchDLLList();
+
 			string patchDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateDllCompileOutputRootDir);
 			CopyPatchDLLs(patchDllListPath);
 			await UniTask.CompletedTask;
@@ -44,6 +54,22 @@ namespace Icy.Asset.Editor
 		{
 			_PatchDLLs = new List<string>(4);
 
+			string[] patchAssembleNames = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateAssemblies;
+			if (patchAssembleNames != null)
+			{
+				for (int i = 0; i < patchAssembleNames.Length; i++)
+					_PatchDLLs.Add(patchAssembleNames[i] + ".dll");
+			}
+
+			UnityEditorInternal.AssemblyDefinitionAsset[] patchAsmDefs = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateAssemblyDefinitions;
+			if (patchAsmDefs != null)
+			{
+				for (int i = 0; i < patchAsmDefs.Length; i++)
+				{
+					AssemblyDefinitionData data = JsonUtility.FromJson<AssemblyDefinitionData>(patchAsmDefs[i].text);
+					_PatchDLLs.Add(data.name + ".dll");
+				}
+			}
 		}
 
 		protected virtual bool CopyPatchDLLs(string patchDLLOutputPath)
