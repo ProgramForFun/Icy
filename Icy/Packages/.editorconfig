@@ -4,5 +4,5 @@ root = true  # 所在目录是项目根目录，此目录及子目录下保存�
 indent_style = tab  # 缩进风格
 tab_width = 4  # 缩进宽度
 charset = utf-8  # 文件编码格式
-end_of_line = crlf  # 行尾格式，Windows一般为CRLF，Linux一般为LF，根据需要更改
+end_of_line = lf  # 行尾格式，Windows一般为CRLF，Linux一般为LF，根据需要更改
 insert_final_newline = true   #文件结尾添加换行符，以防警告
