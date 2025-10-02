@@ -21,6 +21,7 @@ using Cysharp.Threading.Tasks;
 using System.IO;
 using UnityEditor;
 using System.Collections.Generic;
+using Google.Protobuf;
 
 namespace Icy.Asset.Editor
 {
@@ -115,6 +116,15 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Deactivate()
 		{
+			if (_PatchDLLs != null)
+			{
+				for (int i = 0; i < _PatchDLLs.Count; i++)
+					_Setting.PatchDLLs.Add(_PatchDLLs[i]);
+
+				string targetDir = SettingsHelper.GetSettingDir();
+				SettingsHelper.SaveSetting(targetDir, SettingsHelper.AssetSetting, _Setting.ToByteArray());
+			}
+
 			await UniTask.CompletedTask;
 		}
 	}
