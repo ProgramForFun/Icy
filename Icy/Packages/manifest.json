@@ -2,7 +2,7 @@
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://github.com/focus-creative-games/hybridclr_unity.git",
     "com.code-philosophy.luban": "https://github.com/focus-creative-games/luban_unity.git",
-    "com.coffee.ui-effect": "5.9.7",
+    "com.coffee.ui-effect": "5.10.1",
     "com.coffee.ui-particle": "4.11.2",
     "com.cysharp.zstring": "https://github.com/Cysharp/ZString.git?path=src/ZString.Unity/Assets/Scripts/ZString",
     "com.endel.nativewebsocket": "https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC.git#upm",
