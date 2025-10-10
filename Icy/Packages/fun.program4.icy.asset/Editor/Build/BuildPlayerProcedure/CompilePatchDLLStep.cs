@@ -29,6 +29,13 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
+			if (!HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable)
+			{
+				Log.LogWarning("HybridCLR enable = false，跳过CompilePatchDLLStep");
+				Finish();
+				return;
+			}
+
 			BuildTarget buildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget", true);
 
 			bool succeed = Compile(buildTarget);

@@ -41,6 +41,13 @@ namespace Icy.Asset.Editor
 
 		public override async UniTask Activate()
 		{
+			if (!HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable)
+			{
+				Log.LogWarning("HybridCLR enable = false，跳过CopyPatchDLLStep");
+				Finish();
+				return;
+			}
+
 			//确保热更DLL生成完成
 			await UniTask.WaitForSeconds(5);
 			GetPatchDLLList();
