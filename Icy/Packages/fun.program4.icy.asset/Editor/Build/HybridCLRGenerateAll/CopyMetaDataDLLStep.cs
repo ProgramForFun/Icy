@@ -138,6 +138,7 @@ namespace Icy.Asset.Editor
 		{
 			if (_MetaDataDLLs != null)
 			{
+				_Setting.MetaDataDLLs.Clear();
 				for (int i = 0; i < _MetaDataDLLs.Count; i++)
 					_Setting.MetaDataDLLs.Add(_MetaDataDLLs[i]);
 

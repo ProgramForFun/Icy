@@ -126,6 +126,7 @@ namespace Icy.Asset.Editor
 		{
 			if (_PatchDLLs != null)
 			{
+				_Setting.PatchDLLs.Clear();
 				for (int i = 0; i < _PatchDLLs.Count; i++)
 					_Setting.PatchDLLs.Add(_PatchDLLs[i]);
 
