@@ -110,7 +110,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 执行下一步
 		/// </summary>
-		public void NextStep()
+		public async UniTask NextStep()
 		{
 			if (State == StateType.Finishing || State == StateType.Finished)
 				return;
@@ -122,7 +122,12 @@ namespace Icy.Base
 				_FSM.ChangeState(_Steps[_CurrStepIdx]);
 			}
 			else
+			{
+				//执行最后一步的Deactivate
+				await _Steps[_CurrStepIdx - 1].Deactivate();
+
 				End(false);
+			}
 		}
 
 		/// <summary>

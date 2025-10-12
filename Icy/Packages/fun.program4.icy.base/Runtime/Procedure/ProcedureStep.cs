@@ -53,7 +53,7 @@ namespace Icy.Base
 		private async UniTaskVoid DoFinish()
 		{
 			await WaitChangeStepFinish();
-			OwnerProcedure.NextStep();
+			await OwnerProcedure.NextStep();
 		}
 
 		private async UniTaskVoid DoFinishAndGoto<T>() where T : ProcedureStep
