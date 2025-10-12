@@ -49,7 +49,7 @@ namespace Icy.Asset.Editor
 			}
 
 			//确保热更DLL生成完成
-			await UniTask.WaitForSeconds(5);
+			await UniTask.WaitForSeconds(1);
 			GetAssetSetting();
 			GetPatchDLLList();
 
@@ -99,6 +99,7 @@ namespace Icy.Asset.Editor
 				{
 					string copy2Path = Path.Combine(copy2Dir, _PatchDLLs[i]);
 					File.Copy(dllPath, copy2Path, true);
+					Log.LogInfo($"Copy {dllPath}  to  {copy2Path}", nameof(CopyPatchDLLStep));
 				}
 				else
 				{
