@@ -53,7 +53,7 @@ namespace Icy.Asset.Editor
 			GetAssetSetting();
 			GetPatchDLLList();
 
-			string patchDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateDllCompileOutputRootDir);
+			string patchDllListPath = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateDllCompileOutputRootDir;
 			CopyPatchDLLs(patchDllListPath);
 			await UniTask.CompletedTask;
 			Finish();
