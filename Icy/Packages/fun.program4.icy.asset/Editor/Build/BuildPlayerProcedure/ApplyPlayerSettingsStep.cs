@@ -15,7 +15,6 @@
  */
 
 
-using Icy.Base;
 using Cysharp.Threading.Tasks;
 using UnityEditor;
 
@@ -37,7 +36,7 @@ namespace Icy.Asset.Editor
 			if (_BuildSetting != null)
 			{
 				if (!string.IsNullOrEmpty(_BuildSetting.ApplicationIdentifier))
-					PlayerSettings.applicationIdentifier = _BuildSetting.ApplicationIdentifier;
+					PlayerSettings.SetApplicationIdentifier(EditorUserBuildSettings.selectedBuildTargetGroup, _BuildSetting.ApplicationIdentifier);
 
 				if (!string.IsNullOrEmpty(_BuildSetting.ProductName))
 					PlayerSettings.productName = _BuildSetting.ProductName;
