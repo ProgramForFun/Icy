@@ -50,6 +50,7 @@ namespace Icy.Asset.Editor
 
 			//确保热更DLL生成完成
 			await UniTask.WaitForSeconds(5);
+			GetAssetSetting();
 			GetPatchDLLList();
 
 			string patchDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateDllCompileOutputRootDir);
