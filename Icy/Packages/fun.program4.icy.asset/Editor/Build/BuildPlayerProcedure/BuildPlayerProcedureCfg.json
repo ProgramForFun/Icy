@@ -1,8 +1,6 @@
 [
   "Icy.Asset.Editor.CopySettingsStep",
   "Icy.Asset.Editor.ApplyPlayerSettingsStep",
-  "Icy.Asset.Editor.CompilePatchDLLStep",
-  "Icy.Asset.Editor.CopyPatchDLLStep",
   "Icy.Asset.Editor.SubProcedureBuildAssetBundleStep",
   "Icy.Asset.Editor.BuildPlayerStep"
 ]
