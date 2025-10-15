@@ -216,7 +216,7 @@ namespace Icy.Asset.Editor
 			for (int indentIdx = 0; indentIdx < indent - 1; indentIdx++)
 				indentStr += "    ";
 			if (indent > 0)
-				indentStr += "└-";
+				indentStr += "└--";
 
 			//递归添加steps
 			for (int i = 0; i < steps2Add.Count; i++)
@@ -232,6 +232,8 @@ namespace Icy.Asset.Editor
 
 					List<string> subSteps = step.GetAllStepNames();
 					SetBuildSteps(dest, subSteps, indent);
+
+					indent--;
 				}
 			}
 		}
