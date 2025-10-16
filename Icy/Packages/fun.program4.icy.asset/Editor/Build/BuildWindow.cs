@@ -308,7 +308,7 @@ namespace Icy.Asset.Editor
 				return;
 			}
 
-			CompilePatchDLLStep.Compile(_CurrBuildTarget);
+			SubProcedureCompilePatchDLLStep.Compile(_CurrBuildTarget, null);
 		}
 
 		[PropertySpace(5)]
