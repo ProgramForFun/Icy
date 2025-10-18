@@ -20,6 +20,7 @@ using Icy.Base;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 
 namespace Icy.Asset.Editor
@@ -58,6 +59,14 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
 		public string MetaDataDLLCopyToDir;
 
+		[Title("热更DLL列表")]
+		[ReadOnly]
+		public List<string> PatchDLLs;
+
+		[Title("补充元数据DLL列表")]
+		[ReadOnly]
+		public List<string> MetaDataDLLs;
+
 
 		[MenuItem("Icy/Asset/Setting", false, 30)]
 		public static void Open()
@@ -75,6 +84,14 @@ namespace Icy.Asset.Editor
 			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
 			PatchDLLCopyToDir = _Setting.PatchDLLCopyToDir;
 			MetaDataDLLCopyToDir = _Setting.MetaDataDLLCopyToDir;
+
+			PatchDLLs = new List<string>();
+			for (int i = 0; i < _Setting.PatchDLLs.Count; i++)
+				PatchDLLs.Add(_Setting.PatchDLLs[i]);
+
+			MetaDataDLLs = new List<string>();
+			for (int i = 0; i < _Setting.MetaDataDLLs.Count; i++)
+				MetaDataDLLs.Add(_Setting.MetaDataDLLs[i]);
 		}
 
 		private AssetSetting GetAssetSetting()
