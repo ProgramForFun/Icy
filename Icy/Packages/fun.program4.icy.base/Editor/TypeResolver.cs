@@ -42,8 +42,8 @@ namespace Icy.Base.Editor
 		[InitializeOnLoadMethod]
 		static void Init()
 		{
-			AssemblyReloadEvents.afterAssemblyReload -= OnAllAssemblyReload;
-			AssemblyReloadEvents.afterAssemblyReload += OnAllAssemblyReload;
+			AssemblyReloadEvents.afterAssemblyReload -= ClearCache;
+			AssemblyReloadEvents.afterAssemblyReload += ClearCache;
 		}
 
 		/// <summary>
@@ -184,11 +184,6 @@ namespace Icy.Base.Editor
 			}
 
 			return null;
-		}
-
-		private static void OnAllAssemblyReload()
-		{
-			ClearCache();
 		}
 
 		public static void ClearCache()
