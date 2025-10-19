@@ -37,35 +37,53 @@ namespace Icy.Asset.Editor
 		[DelayedProperty]
 		[Required]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
-		[OnValueChanged("OnAssetHostServerAddressMainChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string AssetHostServerAddressMain;
 
 		[Title("热更新资源Host地址（备）")]
 		[DelayedProperty]
 		[Required]
 		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
-		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string AssetHostServerAddressStandby;
 
 		[Title("打包过程中，会将HybridCLR编译出的热更DLL，Copy到此目录，方便业务侧将其打包成AB")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string PatchDLLCopyToDir;
 
 		[Title("在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
+		[OnValueChanged("SaveSetting")]
 		public string MetaDataDLLCopyToDir;
 
-		[Title("热更DLL列表")]
+		[FoldoutGroup("热更DLL列表", Expanded = false)]
+		[HorizontalGroup("热更DLL列表/PatchDLLs")]
 		[ReadOnly]
 		public List<string> PatchDLLs;
 
-		[Title("补充元数据DLL列表")]
+		[Button("Clear", ButtonSizes.Medium)]
+		[HorizontalGroup("热更DLL列表/PatchDLLs", Width = 100)]
+		void ClearPatchDLLs()
+		{
+			PatchDLLs.Clear();
+			SaveSetting();
+		}
+
+		[FoldoutGroup("补充元数据DLL列表", Expanded = false)]
+		[HorizontalGroup("补充元数据DLL列表/MetaDataDLLs")]
 		[ReadOnly]
 		public List<string> MetaDataDLLs;
+
+		[Button("Clear", ButtonSizes.Medium)]
+		[HorizontalGroup("补充元数据DLL列表/MetaDataDLLs", Width = 100)]
+		void ClearMetaDataDLLs()
+		{
+			MetaDataDLLs.Clear();
+			SaveSetting();
+		}
 
 
 		[MenuItem("Icy/Asset/Setting", false, 30)]
@@ -104,25 +122,20 @@ namespace Icy.Asset.Editor
 			return _Setting;
 		}
 
-		private void OnAssetHostServerAddressMainChanged()
+		private void SaveSetting()
 		{
-			OnAssetHostServerAddressChanged(true);
-		}
-
-		private void OnAssetHostServerAddressStandbyChanged()
-		{
-			OnAssetHostServerAddressChanged(false);
-		}
-
-		private void OnAssetHostServerAddressChanged(bool isMain)
-		{
-			if (isMain)
-				_Setting.AssetHostServerAddressMain = AssetHostServerAddressMain;
-			else
-				_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
-
+			_Setting.AssetHostServerAddressMain = AssetHostServerAddressMain;
+			_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 			_Setting.PatchDLLCopyToDir = PatchDLLCopyToDir;
 			_Setting.MetaDataDLLCopyToDir = MetaDataDLLCopyToDir;
+
+			_Setting.PatchDLLs.Clear();
+			for (int i = 0; i < PatchDLLs.Count; i++)
+				_Setting.PatchDLLs.Add(PatchDLLs[i]);
+
+			_Setting.MetaDataDLLs.Clear();
+			for (int i = 0; i < MetaDataDLLs.Count; i++)
+				_Setting.MetaDataDLLs.Add(MetaDataDLLs[i]);
 
 			string targetDir = SettingsHelper.GetSettingDir();
 			SettingsHelper.SaveSetting(targetDir, SettingsHelper.AssetSetting, _Setting.ToByteArray());
