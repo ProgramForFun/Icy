@@ -25,6 +25,7 @@ using Google.Protobuf;
 using UnityEngine;
 using Icy.Editor;
 using System.Collections.Generic;
+using Icy.Base.Editor;
 
 namespace Icy.Asset.Editor
 {
@@ -224,7 +225,7 @@ namespace Icy.Asset.Editor
 				string typeWithNameSpace = steps2Add[i];
 				dest.Add(indentStr + steps2Add[i]);
 
-				Type type = Type.GetType(typeWithNameSpace);
+				Type type = TypeResolver.GetType(typeWithNameSpace);
 				BuildStep step = Activator.CreateInstance(type) as BuildStep;
 				if (step != null && step.IsSubProcedure())
 				{
@@ -283,7 +284,7 @@ namespace Icy.Asset.Editor
 			for (int i = 0; i < allSteps.Count; i++)
 			{
 				string typeWithNameSpace = allSteps[i];
-				Type type = Type.GetType(typeWithNameSpace);
+				Type type = TypeResolver.GetType(typeWithNameSpace);
 				if (type == null)
 				{
 					Log.Assert(false, $"Can not find HybridCLRGenerateAll step {typeWithNameSpace}");
@@ -329,7 +330,7 @@ namespace Icy.Asset.Editor
 			for (int i = 0; i < allSteps.Count; i++)
 			{
 				string typeWithNameSpace = allSteps[i];
-				Type type = Type.GetType(typeWithNameSpace);
+				Type type = TypeResolver.GetType(typeWithNameSpace);
 				if (type == null)
 				{
 					Log.Assert(false, $"Can not find BuildPlayerProcedure step {typeWithNameSpace}");
