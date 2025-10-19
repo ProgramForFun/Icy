@@ -47,7 +47,7 @@ namespace Icy.Asset.Editor
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
 		public string AssetHostServerAddressStandby;
 
-		[Title("打包过程中，会将HybridCLR编译出的热更DLL，Copy到PatchDLLCopyToDir目录，方便业务侧打包成AB")]
+		[Title("打包过程中，会将HybridCLR编译出的热更DLL，Copy到此目录，方便业务侧将其打包成AB")]
 		[FolderPath]
 		[Required]
 		[OnValueChanged("OnAssetHostServerAddressStandbyChanged")]
