@@ -15,13 +15,18 @@
  */
 
 
+using UnityEngine.Scripting;
+
+
 /// <summary>
 /// 显示引用Unity的各种类，避免被裁剪掉；
 /// 以保证HybridCLR热更时使用了一个之前没用过的类时、都可以找得到
 /// </summary>
+[Preserve]
 public class UnityClassReferencer
 {
-	public static void Reserve()
+	[Preserve]
+	public static void Preserve()
 	{
 		// 基本类型
 		typeof(UnityEngine.Object).ToString();
