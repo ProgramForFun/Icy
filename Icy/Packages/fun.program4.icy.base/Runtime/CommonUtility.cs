@@ -19,6 +19,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -355,6 +356,31 @@ namespace Icy.Base
 			return UnityEditor.EditorUtility.scriptCompilationFailed;
 		}
 #endif
+
+#if UNITY_EDITOR
+		/// <summary>
+		/// 获取调用此函数的C#类，所在的路径
+		/// </summary>
+		public static string GetCurrentScriptDirectory()
+		{
+			// 获取调用堆栈
+			StackTrace stackTrace = new StackTrace(true);
+			// 1：跳过当前方法（GetCurrentScriptDirectory）的frame
+			for (int i = 1; i < stackTrace.FrameCount; i++)
+			{
+				StackFrame frame = stackTrace.GetFrame(i);
+				string fileName = frame.GetFileName();
+
+				// 确保文件名不为空且是.cs文件
+				if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".cs"))
+				{
+					return Path.GetDirectoryName(fileName);
+				}
+			}
+			return null;
+		}
+#endif
+
 
 		#region Vector
 		/// <summary>
