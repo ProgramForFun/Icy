@@ -359,7 +359,7 @@ namespace Icy.Base
 
 #if UNITY_EDITOR
 		/// <summary>
-		/// 获取调用此函数的C#类，所在的路径
+		/// 获取调用此函数的C#类，所在的目录
 		/// </summary>
 		public static string GetCurrentScriptDirectory()
 		{
@@ -373,9 +373,7 @@ namespace Icy.Base
 
 				// 确保文件名不为空且是.cs文件
 				if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".cs"))
-				{
 					return Path.GetDirectoryName(fileName);
-				}
 			}
 			return null;
 		}
