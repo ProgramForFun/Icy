@@ -79,7 +79,8 @@ namespace Icy.Asset.Editor
 							_CurrBuildTarget = BuildTarget.StandaloneWindows64;
 							break;
 						default:
-							Log.Assert(false, $"Unsupported platform {_CurrPlatformName}");
+							Log.LogError(false, $"Unsupported platform {_CurrPlatformName}");
+							_CurrBuildTarget = BuildTarget.Android;
 							break;
 					}
 
