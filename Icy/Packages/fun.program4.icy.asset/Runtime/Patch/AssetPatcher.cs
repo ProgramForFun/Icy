@@ -40,10 +40,9 @@ namespace Icy.Asset
 			IsFinished = false;
 
 			Log.LogInfo($"Start patch procedure", nameof(AssetPatcher));
-			Start().Forget();
 		}
 
-		private async UniTaskVoid Start()
+		internal async UniTask Start()
 		{
 			Procedure patchProcedure = new Procedure(nameof(AssetPatcher));
 			patchProcedure.AddStep(new RequestAssetPatchInfoStep());

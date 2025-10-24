@@ -243,10 +243,10 @@ namespace Icy.Asset
 		public async UniTask StartPatch()
 		{
 			_Patcher = new AssetPatcher(_Package);
-			while (!_Patcher.IsFinished)
-				await UniTask.NextFrame();
+			await _Patcher.Start();
 
-			Timer.RepeatByTime(UnloadUnusedAssetsWrap, _AutoUnloadUnusedAssetsInterval, 0);
+			await UniTask.Delay(1000);
+			UnloadUnusedAssetsWrap();
 		}
 		#endregion
 
