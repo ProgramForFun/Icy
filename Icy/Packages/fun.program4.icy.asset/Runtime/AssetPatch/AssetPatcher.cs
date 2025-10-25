@@ -39,7 +39,7 @@ namespace Icy.Asset
 			Package = package;
 			IsFinished = false;
 
-			Log.LogInfo($"Start patch procedure", nameof(AssetPatcher));
+			Log.LogInfo($"Start asset patch procedure", nameof(AssetPatcher));
 		}
 
 		internal async UniTask Start()
