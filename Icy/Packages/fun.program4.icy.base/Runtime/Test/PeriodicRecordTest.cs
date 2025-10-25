@@ -40,8 +40,8 @@ namespace Icy.Base
 			//获取一个key的失效时间
 			DateTime invalidDateTime = PeriodicRecord.GetInvalidDateTime(key);
 
-			Log.LogInfo($"Is Valid {PeriodicRecord.IsValid(key).ToString()}");
-			Log.LogInfo($"Invalid time {PeriodicRecord.GetInvalidDateTime(key)}");
+			Log.Info($"Is Valid {PeriodicRecord.IsValid(key).ToString()}");
+			Log.Info($"Invalid time {PeriodicRecord.GetInvalidDateTime(key)}");
 		}
 	}
 }

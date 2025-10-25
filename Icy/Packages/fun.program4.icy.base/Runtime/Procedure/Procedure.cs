@@ -150,7 +150,7 @@ namespace Icy.Base
 
 			if (gotoIdx == -1)
 			{
-				Log.LogError($"{typeof(T).Name} is not belonged to Procedure {Name}", nameof(Procedure));
+				Log.Error($"{typeof(T).Name} is not belonged to Procedure {Name}", nameof(Procedure));
 				return;
 			}
 
@@ -185,9 +185,9 @@ namespace Icy.Base
 			_FSM.Dispose();
 
 			if (isAbort)
-				Log.LogInfo($"Procedure {_FSM.Name} aborted", nameof(Procedure));
+				Log.Info($"Procedure {_FSM.Name} aborted", nameof(Procedure));
 			else
-				Log.LogInfo($"Procedure {_FSM.Name} finished", nameof(Procedure));
+				Log.Info($"Procedure {_FSM.Name} finished", nameof(Procedure));
 		}
 	}
 }

@@ -50,7 +50,7 @@ namespace Icy.Base
 			{
 				string log = string.Format("Construct RandomWeight failed, T = {0}, weights count = {1}, values count = {2}"
 									, typeof(T).Name, weights.Length, values.Length);
-				Log.LogError(log);
+				Log.Error(log);
 			}
 
 			_TotalWeight = 0.0f;
@@ -87,7 +87,7 @@ namespace Icy.Base
 					return _WeightDistribute[i].Value;
 			}
 
-			Log.LogError("Invalid return path of RandomWeight.Random, T = " + typeof(T).Name);
+			Log.Error("Invalid return path of RandomWeight.Random, T = " + typeof(T).Name);
 			return _WeightDistribute[0].Value;
 		}
 	}

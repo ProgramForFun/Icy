@@ -83,7 +83,7 @@ namespace Icy.UI
 				return _LayerGameObjMap[layer];
 			else
 			{
-				Log.LogError($"Unexpected UIlayer = {layer}", nameof(UIRoot));
+				Log.Error($"Unexpected UIlayer = {layer}", nameof(UIRoot));
 				return _LayerGameObjMap[UILayer.Medium];
 			}
 		}
@@ -95,7 +95,7 @@ namespace Icy.UI
 		{
 			if (baseCamera == null)
 			{
-				Log.LogError("Trying to add UICamera to a null baseCamera", nameof(UIRoot));
+				Log.Error("Trying to add UICamera to a null baseCamera", nameof(UIRoot));
 				return;
 			}
 
@@ -103,7 +103,7 @@ namespace Icy.UI
 			UniversalAdditionalCameraData baseCameraData = baseCamera.GetUniversalAdditionalCameraData();
 			if (baseCameraData.renderType != CameraRenderType.Base)
 			{
-				Log.LogError($"Trying to add UICamera to a overlay camera, camera gameObject name = {baseCamera.gameObject.name}", nameof(UIRoot));
+				Log.Error($"Trying to add UICamera to a overlay camera, camera gameObject name = {baseCamera.gameObject.name}", nameof(UIRoot));
 				return;
 			}
 
@@ -119,7 +119,7 @@ namespace Icy.UI
 		{
 			if (baseCamera == null)
 			{
-				Log.LogError("Trying to remove UICamera from a null baseCamera", nameof(UIRoot));
+				Log.Error("Trying to remove UICamera from a null baseCamera", nameof(UIRoot));
 				return;
 			}
 
@@ -127,7 +127,7 @@ namespace Icy.UI
 			UniversalAdditionalCameraData baseCameraData = baseCamera.GetUniversalAdditionalCameraData();
 			if (!baseCameraData.cameraStack.Contains(UICamera))
 			{
-				Log.LogError("Trying to remove UICamera from a baseCamera which UICamera doesn't add to", nameof(UIRoot));
+				Log.Error("Trying to remove UICamera from a baseCamera which UICamera doesn't add to", nameof(UIRoot));
 				return;
 			}
 			baseCameraData.cameraStack.Remove(UICamera);

@@ -70,7 +70,7 @@ namespace Icy.Network
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"Connect exception : {ex}", nameof(WebSocketSession));
+				Log.Error($"Connect exception : {ex}", nameof(WebSocketSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, ex);
 			}
 		}
@@ -137,7 +137,7 @@ namespace Icy.Network
 			if (!IsConnected)
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(WebSocketSession)} is disconnected");
-				Log.LogError(e.ToString(), nameof(WebSocketSession));
+				Log.Error(e.ToString(), nameof(WebSocketSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;
 			}
@@ -162,7 +162,7 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Disconnect when disconnected", nameof(WebSocketSession));
+				Log.Error("Disconnect when disconnected", nameof(WebSocketSession));
 				return;
 			}
 
@@ -179,7 +179,7 @@ namespace Icy.Network
 #endif
 			if (IsConnected)
 				Disconnect().Forget();
-			Log.LogInfo("Dispose", nameof(WebSocketSession));
+			Log.Info("Dispose", nameof(WebSocketSession));
 		}
 
 		public void Update(float delta)

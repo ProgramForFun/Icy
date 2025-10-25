@@ -66,7 +66,7 @@ namespace Icy.Asset.Editor
 				{
 					_CurrPlatformName = currTabName;
 
-					Log.LogInfo($"Switch to platform {_CurrPlatformName}", nameof(BuildWindow));
+					Log.Info($"Switch to platform {_CurrPlatformName}", nameof(BuildWindow));
 					switch (_CurrPlatformName)
 					{
 						case "Android":
@@ -79,7 +79,7 @@ namespace Icy.Asset.Editor
 							_CurrBuildTarget = BuildTarget.StandaloneWindows64;
 							break;
 						default:
-							Log.LogError(false, $"Unsupported platform {_CurrPlatformName}");
+							Log.Error(false, $"Unsupported platform {_CurrPlatformName}");
 							_CurrBuildTarget = BuildTarget.Android;
 							break;
 					}

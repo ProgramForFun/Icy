@@ -61,7 +61,7 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 			{
-				Log.LogError("Duplicate Connect", nameof(TcpSession));
+				Log.Error("Duplicate Connect", nameof(TcpSession));
 				return;
 			}
 
@@ -73,11 +73,11 @@ namespace Icy.Network
 				_Stream = _TcpClient.GetStream();
 				IsConnected = true;
 				OnConnected?.Invoke();
-				Log.LogInfo("Connected", nameof(TcpSession));
+				Log.Info("Connected", nameof(TcpSession));
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"Connect exception : {ex}", nameof(TcpSession));
+				Log.Error($"Connect exception : {ex}", nameof(TcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, ex);
 			}
 		}
@@ -99,7 +99,7 @@ namespace Icy.Network
 					if (!IsConnected)
 						return;
 
-					Log.LogError($"Receive failed, {ex}", nameof(TcpSession));
+					Log.Error($"Receive failed, {ex}", nameof(TcpSession));
 					OnError?.Invoke(NetworkError.ReceiveFailed, ex);
 					await Disconnect();
 				}
@@ -114,7 +114,7 @@ namespace Icy.Network
 			if (!IsConnected)
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(TcpSession)} is disconnected");
-				Log.LogError(e.ToString(), nameof(TcpSession));
+				Log.Error(e.ToString(), nameof(TcpSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;
 			}
@@ -135,7 +135,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Send failed, {e}", nameof(TcpSession));
+				Log.Error($"Send failed, {e}", nameof(TcpSession));
 				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 		}
@@ -147,14 +147,14 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Disconnect when disconnected", nameof(TcpSession));
+				Log.Error("Disconnect when disconnected", nameof(TcpSession));
 				return;
 			}
 			IsConnected = false;
 			_TcpClient.Close();
 			_TcpClient = null;
 			OnDisconnected?.Invoke();
-			Log.LogInfo("Disconnect", nameof(TcpSession));
+			Log.Info("Disconnect", nameof(TcpSession));
 			await UniTask.CompletedTask;
 		}
 
@@ -204,7 +204,7 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 				Disconnect().Forget();
-			Log.LogInfo("Dispose", nameof(TcpSession));
+			Log.Info("Dispose", nameof(TcpSession));
 		}
 	}
 }

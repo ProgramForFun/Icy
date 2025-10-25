@@ -96,7 +96,7 @@ namespace Icy.UI
 		{
 			if (_Inited)
 			{
-				Log.LogError("Duplicate call Init, UIName = " + UIName, nameof(UIBase));
+				Log.Error("Duplicate call Init, UIName = " + UIName, nameof(UIBase));
 				return;
 			}
 			RectTransform = transform as RectTransform;
@@ -162,7 +162,7 @@ namespace Icy.UI
 					gameObject.transform.localPosition = MOVE_OUT_POS;
 					break;
 				default:
-					Log.LogError($"Invalid HideType {HideType}", nameof(UIBase));
+					Log.Error($"Invalid HideType {HideType}", nameof(UIBase));
 					break;
 			}
 		}
@@ -171,7 +171,7 @@ namespace Icy.UI
 		{
 			if (IsDestroyed)
 			{
-				Log.LogError($"Duplicate Destroy to {GetType().Name}", nameof(UIBase));
+				Log.Error($"Duplicate Destroy to {GetType().Name}", nameof(UIBase));
 				return;
 			}
 
@@ -187,7 +187,7 @@ namespace Icy.UI
 		protected void OnDestroy()
 		{
 			if (!IsDestroyed && !_IsExitingPlayMode)
-				Log.LogError($"UI GameObject of {GetType().Name} is unexpected destroyed", nameof(UIBase));
+				Log.Error($"UI GameObject of {GetType().Name} is unexpected destroyed", nameof(UIBase));
 		}
 
 #if UNITY_EDITOR

@@ -76,7 +76,7 @@ namespace Icy.Base
 				}
 				catch (Exception e)
 				{
-					Log.LogWarning($"{GetType().Name} step UniTask.WaitUntil exception, {e}");
+					Log.Warn($"{GetType().Name} step UniTask.WaitUntil exception, {e}");
 				}
 			}
 #else

@@ -70,7 +70,7 @@ namespace Icy.UI
 			_rectTrans.anchorMin = anchorMin;
 			_rectTrans.anchorMax = anchorMax;
 
-			Log.LogInfo($"New safe area applied to {name}: x={r.x}, y={r.y}, w={r.width}, h={r.height} on full extents w={Screen.width}, h={Screen.height}", "NotchScreenAdapter");
+			Log.Info($"New safe area applied to {name}: x={r.x}, y={r.y}, w={r.width}, h={r.height} on full extents w={Screen.width}, h={Screen.height}", "NotchScreenAdapter");
 		}
 	}
 }

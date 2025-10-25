@@ -86,7 +86,7 @@ namespace Icy.UI
 		{
 			if (RedDotManager.Instance.Exist(id))
 			{
-				Log.LogError($"Trying to init a RedDot more than once, id = {id}", nameof(RedDot));
+				Log.Error($"Trying to init a RedDot more than once, id = {id}", nameof(RedDot));
 				return;
 			}
 
@@ -109,7 +109,7 @@ namespace Icy.UI
 			if (_Disposed || gameObject == null)
 			{
 				string id = gameObject == null ? "unknown" : ID;
-				Log.LogError($"Try to refresh a disposed RedDot, id = {id}", nameof(RedDot));
+				Log.Error($"Try to refresh a disposed RedDot, id = {id}", nameof(RedDot));
 				return;
 			}
 
@@ -121,7 +121,7 @@ namespace Icy.UI
 			catch (Exception e)
 			{
 				_CountThis = 0;
-				Log.LogError($"Calculate RedDot count failed , id = {ID}, exception = {e}", nameof(RedDot));
+				Log.Error($"Calculate RedDot count failed , id = {ID}, exception = {e}", nameof(RedDot));
 			}
 			finally
 			{
@@ -168,7 +168,7 @@ namespace Icy.UI
 			if (_Disposed)
 			{
 				string id = gameObject == null ? "unknown" : ID;
-				Log.LogError($"Trying to dispose a disposed RedDot, id = {id}", nameof(RedDot));
+				Log.Error($"Trying to dispose a disposed RedDot, id = {id}", nameof(RedDot));
 				return;
 			}
 

@@ -109,7 +109,7 @@ namespace Icy.Base
 				if (HasAlreadyListened(eventID, listener))
 				{
 					MethodInfo listenerMethod = listener.Method;
-					Log.LogError($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", nameof(EventManager));
+					Log.Error($"Duplicate listener register, eventID = {eventID}, listener = {listenerMethod.DeclaringType?.FullName}.{listenerMethod.Name}", nameof(EventManager));
 					return;
 				}
 
@@ -213,7 +213,7 @@ namespace Icy.Base
 		public static void ClearAll()
 		{
 			Log.ForceLogOnce();
-			Log.LogInfo("Clear EventManager");
+			Log.Info("Clear EventManager");
 			lock (_EventLock)
 				_EventListenerMap.Clear();
 			lock (_ParamLock)

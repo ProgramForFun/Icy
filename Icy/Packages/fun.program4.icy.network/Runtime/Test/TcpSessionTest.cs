@@ -39,23 +39,23 @@ namespace Icy.Network
 
 		private static void OnConnect()
 		{
-			Log.LogInfo("Tcp Connected");
+			Log.Info("Tcp Connected");
 		}
 
 		private static void OnDisconnect()
 		{
-			Log.LogInfo("Tcp Disconnected");
+			Log.Info("Tcp Disconnected");
 		}
 
 		private static void OnReceiveData(byte[] buffer, int start, int length)
 		{
 			string msg = Encoding.UTF8.GetString(buffer, start, length);
-			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
+			Log.Info($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"Tcp error = {error}, exception = {ex}");
+			Log.Error($"Tcp error = {error}, exception = {ex}");
 		}
 
 		public static async void Update()

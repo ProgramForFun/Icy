@@ -176,7 +176,7 @@ namespace Icy.UI
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+				Log.Error($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
 				OnUIOpenException?.Invoke(ui, ex);
 			}
 			finally
@@ -208,7 +208,7 @@ namespace Icy.UI
 				}
 				catch (Exception ex)
 				{
-					Log.LogError($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+					Log.Error($"Show<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
 					OnUIOpenException?.Invoke(ui, ex);
 					callback?.Invoke(null);
 				}
@@ -242,7 +242,7 @@ namespace Icy.UI
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"ShowUntil<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
+				Log.Error($"ShowUntil<{typeof(T).Name}> failed, exception = {ex}", nameof(UIManager));
 				OnUIOpenException?.Invoke(ui, ex);
 			}
 			finally
@@ -338,7 +338,7 @@ namespace Icy.UI
 
 			UIBase uiBase = uiGo.GetComponent<UIBase>();
 			if (uiBase == null)
-				Log.LogError($"{uiName} is Not a UI prefab", nameof(UIManager));
+				Log.Error($"{uiName} is Not a UI prefab", nameof(UIManager));
 			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
 
@@ -449,7 +449,7 @@ namespace Icy.UI
 			}
 			catch (Exception ex)
 			{
-				Log.LogError($"Init {uiName} failed, Exception = {ex}", nameof(UIManager));
+				Log.Error($"Init {uiName} failed, Exception = {ex}", nameof(UIManager));
 				OnUIOpenException?.Invoke(newUI, ex);
 			}
 
@@ -473,7 +473,7 @@ namespace Icy.UI
 			eventParam.Value = uiData.Type;
 			EventManager.Trigger(EventDefine.UIShown, eventParam);
 
-			Log.LogInfo($"Show {ui.UIName}", nameof(UIManager));
+			Log.Info($"Show {ui.UIName}", nameof(UIManager));
 		}
 
 		internal void Hide(UIBase ui)
@@ -504,7 +504,7 @@ namespace Icy.UI
 					}
 					catch (Exception ex)
 					{
-						Log.LogError($"ShowPrev {prev.Name} failed, exception = {ex}", nameof(UIManager));
+						Log.Error($"ShowPrev {prev.Name} failed, exception = {ex}", nameof(UIManager));
 						OnUIOpenException?.Invoke(ui, ex);
 					}
 				});
@@ -538,7 +538,7 @@ namespace Icy.UI
 			{
 				_Stack.Push(_UIMap[ui]);
 				RemoveDuplicateInStack();
-				Log.LogInfo($"Push {ui.UIName}, stack count = {_Stack.Count}", nameof(UIManager));
+				Log.Info($"Push {ui.UIName}, stack count = {_Stack.Count}", nameof(UIManager));
 			}
 		}
 
@@ -549,7 +549,7 @@ namespace Icy.UI
 				UIData top = _Stack.Peek();
 				if (_StackBottomUI == null || top.Name != _StackBottomUI.Name)
 				{
-					Log.LogInfo($"Pop {top.Name}, stack count = {_Stack.Count - 1}", nameof(UIManager));
+					Log.Info($"Pop {top.Name}, stack count = {_Stack.Count - 1}", nameof(UIManager));
 					return _Stack.Pop();
 				}
 			}
@@ -641,13 +641,13 @@ namespace Icy.UI
 		{
 			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.UISetting);
 			if (bytes == null)
-				Log.LogError("Can not find UI setting");
+				Log.Error("Can not find UI setting");
 			else
 			{
 				UISetting uiSetting = UISetting.Parser.ParseFrom(bytes);
 				if (string.IsNullOrEmpty(uiSetting.UIRootDir))
 				{
-					Log.LogError($"Please set UI root path first. Go to menu Icy/UI/Setting to set it");
+					Log.Error($"Please set UI root path first. Go to menu Icy/UI/Setting to set it");
 					return;
 				}
 				//基于正则匹配简单检查BindableData的BindTo和UnbindTo的配对情况，避免内存泄露
@@ -671,7 +671,7 @@ namespace Icy.UI
 				int bindCount = regexBind.Matches(allCodes).Count;
 				int unbindCount = regexUnbind.Matches(allCodes).Count;
 				if (bindCount > unbindCount)
-					Log.LogError($"{scriptName} may be leaked memory, BindTo count = {bindCount}, UnbindTo count = {unbindCount}");
+					Log.Error($"{scriptName} may be leaked memory, BindTo count = {bindCount}, UnbindTo count = {unbindCount}");
 			}
 		}
 #endif

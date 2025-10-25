@@ -43,7 +43,7 @@ namespace Icy.Base
 
 #if UNITY_EDITOR
 			if (typeof(T) == typeof(GameObject) && this.GetType() != typeof(GameObjectPool))
-				Log.LogError($"ObjectPool<GameObject> is unexpected, Use {nameof(GameObjectPool)} instead");
+				Log.Error($"ObjectPool<GameObject> is unexpected, Use {nameof(GameObjectPool)} instead");
 #endif
 		}
 
@@ -70,7 +70,7 @@ namespace Icy.Base
 			if (_OutPool.Remove(obj))
 				_InPool.Add(obj);
 			else
-				Log.LogError("Trying to put an invalid object to ObjectPool, object = " + obj.ToString());
+				Log.Error("Trying to put an invalid object to ObjectPool, object = " + obj.ToString());
 		}
 
 		protected virtual T InstantiateOne()
@@ -81,7 +81,7 @@ namespace Icy.Base
 		public virtual void Dispose()
 		{
 			if (_OutPool.Count > 0)
-				Log.LogWarning("Dispose ObjectPool when there are objects outside, first outside object = " + _OutPool[0].ToString());
+				Log.Warn("Dispose ObjectPool when there are objects outside, first outside object = " + _OutPool[0].ToString());
 		}
 	}
 }

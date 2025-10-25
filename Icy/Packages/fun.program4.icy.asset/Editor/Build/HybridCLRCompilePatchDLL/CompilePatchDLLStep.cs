@@ -31,7 +31,7 @@ namespace Icy.Asset.Editor
 		{
 			if (!HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable)
 			{
-				Log.LogWarning("HybridCLR enable = false，跳过CompilePatchDLLStep");
+				Log.Warn("HybridCLR enable = false，跳过CompilePatchDLLStep");
 				Finish();
 				return;
 			}
@@ -55,7 +55,7 @@ namespace Icy.Asset.Editor
 			UnityEditorInternal.AssemblyDefinitionAsset[] patchAsmDefs = HybridCLR.Editor.Settings.HybridCLRSettings.Instance.hotUpdateAssemblyDefinitions;
 			if (patchAssembleNames.Length == 0 && patchAsmDefs.Length == 0)
 			{
-				Log.LogError("CompilePatchDLLStep 未执行，请先在HybridCLR的Setting界面配置热更程序集");
+				Log.Error("CompilePatchDLLStep 未执行，请先在HybridCLR的Setting界面配置热更程序集");
 				return false;
 			}
 
@@ -80,7 +80,7 @@ namespace Icy.Asset.Editor
 			catch (Exception e)
 			{
 				Log.Assert(false, "Compile patch DLL failed", nameof(CompilePatchDLLStep));
-				Log.LogError(e.ToString());
+				Log.Error(e.ToString());
 				return false;
 			}
 

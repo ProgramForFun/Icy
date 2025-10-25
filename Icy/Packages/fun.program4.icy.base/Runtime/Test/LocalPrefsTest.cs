@@ -26,31 +26,31 @@ namespace Icy.Base
 		public static void Test()
 		{
 			//int
-			Log.LogInfo($"Last time int = LocalPrefs.GetInt {LocalPrefs.GetInt("TestLocalSave_int")}");
+			Log.Info($"Last time int = LocalPrefs.GetInt {LocalPrefs.GetInt("TestLocalSave_int")}");
 
 			int randInt = Random.Range(0, 9);
 			LocalPrefs.SetInt("TestLocalSave_int", randInt);
-			Log.LogInfo($"LocalPrefs.SetInt {randInt}");
+			Log.Info($"LocalPrefs.SetInt {randInt}");
 
 			LocalPrefs.Save();
-			Log.LogInfo($"LocalPrefs.GetInt {LocalPrefs.GetInt("TestLocalSave_int")}");
+			Log.Info($"LocalPrefs.GetInt {LocalPrefs.GetInt("TestLocalSave_int")}");
 
 			//Vector3
-			Log.LogInfo($"Last time Vector3 = LocalPrefs.GetVector3 {LocalPrefs.GetVector3("TestLocalSave_Vector3")}");
+			Log.Info($"Last time Vector3 = LocalPrefs.GetVector3 {LocalPrefs.GetVector3("TestLocalSave_Vector3")}");
 
 			Vector3 randVector3 = new Vector3(Random.Range(0, 9), Random.Range(0, 9), Random.Range(0, 9));
 			LocalPrefs.SetVector3("TestLocalSave_Vector3", randVector3);
-			Log.LogInfo($"LocalPrefs.SetVector3 {randVector3}");
+			Log.Info($"LocalPrefs.SetVector3 {randVector3}");
 
 			LocalPrefs.Save();
-			Log.LogInfo($"LocalPrefs.GetVector3 {LocalPrefs.GetVector3("TestLocalSave_Vector3")}");
+			Log.Info($"LocalPrefs.GetVector3 {LocalPrefs.GetVector3("TestLocalSave_Vector3")}");
 
 			//Prefix
 			int palyerID = 123456;
 			LocalPrefs.SetKeyPrefix(palyerID + "_");
 			LocalPrefs.SetInt("PrefixText_int", 100);
-			Log.LogInfo($"LocalPrefs.GetInt {LocalPrefs.GetInt("PrefixText_int")}");
-			Log.LogInfo($"Key with prefix {LocalPrefs.Data.ints.KeyByValue(100)}");
+			Log.Info($"LocalPrefs.GetInt {LocalPrefs.GetInt("PrefixText_int")}");
+			Log.Info($"Key with prefix {LocalPrefs.Data.ints.KeyByValue(100)}");
 		}
 	}
 }

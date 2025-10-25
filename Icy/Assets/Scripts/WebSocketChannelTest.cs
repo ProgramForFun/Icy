@@ -31,27 +31,27 @@ namespace Icy.Network
 
 		private static void OnConnect()
 		{
-			Log.LogInfo("WebSocketChannel Connected");
+			Log.Info("WebSocketChannel Connected");
 			EventManager.AddListener(123, Handle);
 		}
 
 		private static void OnDisconnect()
 		{
-			Log.LogInfo("WebSocketChannel Disconnected");
+			Log.Info("WebSocketChannel Disconnected");
 			EventManager.RemoveListener(123, Handle);
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"WebSocketChannel error = {error}, exception = {ex}");
+			Log.Error($"WebSocketChannel error = {error}, exception = {ex}");
 		}
 
 		private static void Handle(int eventID, IEventParam param)
 		{
 			if (param is EventParam<IMessage> msg)
 			{
-				Log.LogInfo("[WebSocketChannel.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
-				Log.LogInfo((msg.Value as TestMessageResult).ErrorMsg);
+				Log.Info("[WebSocketChannel.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.Info((msg.Value as TestMessageResult).ErrorMsg);
 			}
 		}
 

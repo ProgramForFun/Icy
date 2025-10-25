@@ -66,7 +66,7 @@ namespace Icy.Asset.Editor
 
 		private static async UniTask<bool> DoBuildAssetBundle(BuildTarget buildTarget, bool clearBuildCacheFiles = false, bool encrypt = true, bool useAssetDependencyDB = true)
 		{
-			Log.LogInfo($"Start build asset bundle, platform = {buildTarget}");
+			Log.Info($"Start build asset bundle, platform = {buildTarget}");
 
 			string buildOutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
 			string streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
@@ -99,14 +99,14 @@ namespace Icy.Asset.Editor
 			BuildResult buildResult = pipeline.Run(buildParameters, true);
 			if (buildResult.Success)
 			{
-				Log.LogInfo($"Build asset bundle succeed : {buildResult.OutputPackageDirectory}");
+				Log.Info($"Build asset bundle succeed : {buildResult.OutputPackageDirectory}");
 				await UniTask.Yield();
 				_BuildOutputPath = buildResult.OutputPackageDirectory;
 				return true;
 			}
 			else
 			{
-				Log.LogInfo($"Build asset bundle failed : {buildResult.ErrorInfo}");
+				Log.Info($"Build asset bundle failed : {buildResult.ErrorInfo}");
 				_BuildOutputPath = null;
 				return false;
 			}

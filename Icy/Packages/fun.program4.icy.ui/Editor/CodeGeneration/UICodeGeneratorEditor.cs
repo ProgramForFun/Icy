@@ -268,13 +268,13 @@ namespace Icy.UI.Editor
 			string uiRootDir = GetUIRootDir();
 			if (string.IsNullOrEmpty(uiRootDir))
 			{
-				Log.LogError($"Generate UI {typeName} code failed, please set UI root path first. Go to menu Icy/UI/Setting to set it");
+				Log.Error($"Generate UI {typeName} code failed, please set UI root path first. Go to menu Icy/UI/Setting to set it");
 				return null;
 			}
 
 			if (string.IsNullOrEmpty(uiName))
 			{
-				Log.LogError($"Generate UI {typeName} code failed, UI name is null or empty");
+				Log.Error($"Generate UI {typeName} code failed, UI name is null or empty");
 				return null;
 			}
 
@@ -283,7 +283,7 @@ namespace Icy.UI.Editor
 			string filePath = Path.Combine(uiRootDir, uiName, fileName);
 			if (File.Exists(filePath) && !string.IsNullOrEmpty(typeName))
 			{
-				Log.LogError($"Generate UI {typeName} code failed, {filePath} is alreay exist");
+				Log.Error($"Generate UI {typeName} code failed, {filePath} is alreay exist");
 				return null;
 			}
 
@@ -294,7 +294,7 @@ namespace Icy.UI.Editor
 				{
 					if (!CSharpVariableValidator.IsValidCSharpVariableName(components[i].Name))
 					{
-						Log.LogError($"Generate UI {typeName} code failed, {components[i].Name} is NOT a valid C# variable name");
+						Log.Error($"Generate UI {typeName} code failed, {components[i].Name} is NOT a valid C# variable name");
 						return null;
 					}
 				}
@@ -325,7 +325,7 @@ namespace Icy.UI.Editor
 				Type type = Type.GetType(typeName);
 				if (type == null)
 				{
-					Log.LogError("Get type just generated failed, type name = " + typeName, "UICodeGeneratorEditor");
+					Log.Error("Get type just generated failed, type name = " + typeName, "UICodeGeneratorEditor");
 					return;
 				}
 				//不能直接用prefabInstance.AddComponent，会Inspector刷新不及时，看不到新挂上的UI脚本
@@ -343,7 +343,7 @@ namespace Icy.UI.Editor
 				SerializedProperty p = target.FindProperty(fieldName);
 				if (p == null)
 				{
-					Log.LogError("Copy serialized field failed, filed name = " + fieldName, "UICodeGeneratorEditor");
+					Log.Error("Copy serialized field failed, filed name = " + fieldName, "UICodeGeneratorEditor");
 					continue;
 				}
 

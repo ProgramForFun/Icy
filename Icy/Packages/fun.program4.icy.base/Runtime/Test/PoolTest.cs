@@ -32,22 +32,22 @@ namespace Icy.Base
 			{
 				//ObjectPool：对象类型
 				ObjectPool<Blackboard> classObjectPool = new ObjectPool<Blackboard>();
-				Log.LogInfo("1、CacheCount = " + classObjectPool.CacheCount);
+				Log.Info("1、CacheCount = " + classObjectPool.CacheCount);
 				Blackboard b = classObjectPool.Get();
 				b.WriteFloat("Test", 1);
 				classObjectPool.Put(b);
-				Log.LogInfo("2、CacheCount = " + classObjectPool.CacheCount);
+				Log.Info("2、CacheCount = " + classObjectPool.CacheCount);
 				classObjectPool.Dispose();
 			}
 
 			{
 				//ObjectPool：值类型
 				ObjectPool<Value> valueObjectPool = new ObjectPool<Value>();
-				Log.LogInfo("3、CacheCount = " + valueObjectPool.CacheCount);
+				Log.Info("3、CacheCount = " + valueObjectPool.CacheCount);
 				Value v = valueObjectPool.Get();
 				v.v = 0;
 				valueObjectPool.Put(v);
-				Log.LogInfo("4、CacheCount = " + valueObjectPool.CacheCount);
+				Log.Info("4、CacheCount = " + valueObjectPool.CacheCount);
 			}
 
 			{
@@ -77,7 +77,7 @@ namespace Icy.Base
 				g.name = "TestGameObjectName";
 				gop.Put(g);
 				g = gop.Get();
-				Log.LogInfo("GameObject name = " + g.name);
+				Log.Info("GameObject name = " + g.name);
 				gop.Dispose();
 			}
 		}

@@ -42,12 +42,12 @@ namespace Icy.Network
 
 		private static void OnConnect()
 		{
-			Log.LogInfo("WebSocket Connected");
+			Log.Info("WebSocket Connected");
 		}
 
 		private static void OnDisconnect()
 		{
-			Log.LogInfo("WebSocket Disconnected");
+			Log.Info("WebSocket Disconnected");
 		}
 
 		private static void OnReceiveData(byte[] buffer, int start, int length)
@@ -58,7 +58,7 @@ namespace Icy.Network
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"WebSocket error = {error}, exception = {ex}");
+			Log.Error($"WebSocket error = {error}, exception = {ex}");
 		}
 
 		public static async void Update()

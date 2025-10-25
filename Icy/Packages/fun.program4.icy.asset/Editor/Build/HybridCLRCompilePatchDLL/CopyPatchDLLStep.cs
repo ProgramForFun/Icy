@@ -43,7 +43,7 @@ namespace Icy.Asset.Editor
 		{
 			if (!HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable)
 			{
-				Log.LogWarning("HybridCLR enable = false，跳过CopyPatchDLLStep");
+				Log.Warn("HybridCLR enable = false，跳过CopyPatchDLLStep");
 				Finish();
 				return;
 			}
@@ -92,7 +92,7 @@ namespace Icy.Asset.Editor
 
 			if (string.IsNullOrEmpty(copy2Dir))
 			{
-				Log.LogError($"CopyPatchDLLs 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.PatchDLLCopyToDir)}", nameof(CopyPatchDLLStep));
+				Log.Error($"CopyPatchDLLs 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.PatchDLLCopyToDir)}", nameof(CopyPatchDLLStep));
 				return false;
 			}
 
@@ -103,11 +103,11 @@ namespace Icy.Asset.Editor
 				{
 					string copy2Path = Path.Combine(copy2Dir, _PatchDLLs[i]);
 					File.Copy(dllPath, copy2Path, true);
-					Log.LogInfo($"Copy {dllPath}  to  {copy2Path}", nameof(CopyPatchDLLStep));
+					Log.Info($"Copy {dllPath}  to  {copy2Path}", nameof(CopyPatchDLLStep));
 				}
 				else
 				{
-					Log.LogError($"CopyPatchDLLs 失败，没有找到{dllPath}", nameof(CopyPatchDLLStep));
+					Log.Error($"CopyPatchDLLs 失败，没有找到{dllPath}", nameof(CopyPatchDLLStep));
 					return false;
 				}
 			}

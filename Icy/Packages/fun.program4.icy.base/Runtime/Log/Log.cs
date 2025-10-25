@@ -131,7 +131,7 @@ namespace Icy.Base
 #endif
 		}
 
-		public static void LogInfo(object msg, string tag = null)
+		public static void Info(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Info))
 				return;
@@ -139,14 +139,14 @@ namespace Icy.Base
 			Debug.Log(FormatByTag(tag, msg));
 		}
 
-		public static void LogWarning(object msg, string tag = null)
+		public static void Warn(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Warning))
 				return;
 			Debug.LogWarning(FormatByTag(tag, msg));
 		}
 
-		public static void LogError(object msg, string tag = null)
+		public static void Error(object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Error))
 				return;
@@ -160,7 +160,7 @@ namespace Icy.Base
 
 			if (!condition)
 			{
-				LogError("[ASSERT] " + msg, tag);
+				Error("[ASSERT] " + msg, tag);
 #if UNITY_EDITOR
 				if (!Application.isBatchMode)
 				{
@@ -302,11 +302,11 @@ namespace Icy.Base
 						sw.Flush();
 					}
 				}
-				Log.LogInfo("Write to file thread stopped", nameof(Log));
+				Log.Info("Write to file thread stopped", nameof(Log));
 			}
 			catch (Exception ex)
 			{
-				LogError($"Write log to file exception : {ex}", nameof(Log));
+				Error($"Write log to file exception : {ex}", nameof(Log));
 			}
 			finally
 			{

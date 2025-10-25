@@ -9,7 +9,7 @@ public static class ConfigTest
 	{
 		cfg.Tables allCfg = new cfg.Tables(LoadByteBuf);
 		cfg.RewardCfg rewardCfg = allCfg.Reward.Get(1001);
-		Log.LogInfo(rewardCfg.Name);
+		Log.Info(rewardCfg.Name);
 	}
 
 	private static ByteBuf LoadByteBuf(string file)

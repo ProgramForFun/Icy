@@ -50,10 +50,10 @@ namespace Icy.Protobuf
 						}
 					}
 					else
-						Log.LogError($"Load proto assembly {protoSetting.ProtoAssemblyName} failed");
+						Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed");
 				}
 				else
-					Log.LogInfo("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.");
+					Log.Info("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.");
 			}
 		}
 	}

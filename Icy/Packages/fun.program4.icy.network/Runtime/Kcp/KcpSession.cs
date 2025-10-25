@@ -118,14 +118,14 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 			{
-				Log.LogError("Duplicate Connect", nameof(KcpSession));
+				Log.Error("Duplicate Connect", nameof(KcpSession));
 				return;
 			}
 
 			if (syn == null || syn.Length < 4)
 			{
 				Exception e = new Exception($"Invalide syn argument");
-				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
+				Log.Error($"Connect exception : {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, e);
 				return;
 			}
@@ -162,7 +162,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Connect exception : {e}", nameof(KcpSession));
+				Log.Error($"Connect exception : {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, e);
 			}
 		}
@@ -196,7 +196,7 @@ namespace Icy.Network
 			if (!IsKcpValid())
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(KcpSession)} is disconnected");
-				Log.LogError(e.ToString(), nameof(KcpSession));
+				Log.Error(e.ToString(), nameof(KcpSession));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return;
 			}
@@ -220,7 +220,7 @@ namespace Icy.Network
 			if (sendRtn < 0)
 			{
 				Exception e = new Exception($"Kcp send error code {sendRtn}");
-				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				Log.Error($"Send failed, {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.SendFailed, e);
 			}	
 		}
@@ -255,7 +255,7 @@ namespace Icy.Network
 			{
 				if (len == 0)
 				{
-					Log.LogError($"Kcp output 0", nameof(KcpSession));
+					Log.Error($"Kcp output 0", nameof(KcpSession));
 					return 0;
 				}
 
@@ -265,7 +265,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				Log.Error($"Send failed, {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 			return len;
@@ -282,7 +282,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Recv failed, {e}", nameof(KcpSession));
+				Log.Error($"Recv failed, {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ReceiveFailed, e);
 			}
 		}
@@ -300,7 +300,7 @@ namespace Icy.Network
 				}
 				catch (Exception e)
 				{
-					Log.LogError($"Receive failed, {e}", nameof(KcpSession));
+					Log.Error($"Receive failed, {e}", nameof(KcpSession));
 					OnError?.Invoke(NetworkError.ReceiveFailed, e);
 				}
 				Recv();
@@ -367,7 +367,7 @@ namespace Icy.Network
 		{
 			if (!IsConnected)
 			{
-				Log.LogError("Disconnect when disconnected", nameof(KcpSession));
+				Log.Error("Disconnect when disconnected", nameof(KcpSession));
 				return;
 			}
 
@@ -405,7 +405,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError(e.ToString(), nameof(KcpSession));
+				Log.Error(e.ToString(), nameof(KcpSession));
 			}
 		}
 
@@ -426,7 +426,7 @@ namespace Icy.Network
 				// ignored
 			}
 
-			Log.LogInfo("Dispose", nameof(KcpSession));
+			Log.Info("Dispose", nameof(KcpSession));
 		}
 
 		protected bool IsDisconnectOperationFinished()

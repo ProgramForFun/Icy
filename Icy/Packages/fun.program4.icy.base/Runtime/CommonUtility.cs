@@ -204,7 +204,7 @@ namespace Icy.Base
 
 			if (!source.Exists)
 			{
-				Log.LogError(sourceDir + " does not exist", "CopyDir");
+				Log.Error(sourceDir + " does not exist", "CopyDir");
 				return false;
 			}
 
@@ -238,7 +238,7 @@ namespace Icy.Base
 		{
 			if (!Directory.Exists(sourceDir))
 			{
-				Log.LogError(sourceDir + " does not exist", "CopyFilesByNameList");
+				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
 				return;
 			}
 
@@ -268,7 +268,7 @@ namespace Icy.Base
 		{
 			if (!Directory.Exists(sourceDir))
 			{
-				Log.LogError(sourceDir + " does not exist", "CopyFilesByNameList");
+				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
 				return;
 			}
 
@@ -309,7 +309,7 @@ namespace Icy.Base
 		{
 			if (!genericBaseType.IsGenericType || !genericBaseType.IsGenericTypeDefinition)
 			{
-				Log.LogError($"{nameof(genericBaseType)} must be a generic type without argument");
+				Log.Error($"{nameof(genericBaseType)} must be a generic type without argument");
 				return false;
 			}
 
@@ -809,9 +809,9 @@ namespace Icy.Base
 		public static bool IsLowEndDevice()
 		{
 			string operatorSystem = SystemInfo.operatingSystem;
-			Log.LogInfo("[Device] OperatorSystem = " + operatorSystem);
+			Log.Info("[Device] OperatorSystem = " + operatorSystem);
 			int ramMB = SystemInfo.systemMemorySize;
-			Log.LogInfo("[Device] RAM in MB = " + ramMB);
+			Log.Info("[Device] RAM in MB = " + ramMB);
 #if UNITY_ANDROID
 			//string operatorSystem = "Android OS 13 / API-33 (TQ2A.230305.008.C1/9619669)";
 			bool succeed = int.TryParse(operatorSystem.Substring(11, 2), out int androidVersion);

@@ -92,7 +92,7 @@ namespace Icy.Asset
 				decryptionServices = _BuildSetting.EncryptAssetBundle ? new DecryptionOffset() : null;
 			}
 			else
-				Log.LogError("Can not find " + Path.Combine(SettingsHelper.GetSettingDir(), SettingsHelper.GetBuildSettingName()));
+				Log.Error("Can not find " + Path.Combine(SettingsHelper.GetSettingDir(), SettingsHelper.GetBuildSettingName()));
 
 			// 编辑器下的模拟模式
 			InitializationOperation initializationOperation = null;
@@ -146,7 +146,7 @@ namespace Icy.Asset
 
 			_Cached = new Dictionary<string, AssetRef>();
 
-			Log.LogInfo($"{nameof(AssetManager)} init end, {initializationOperation.Status}", nameof(AssetManager));
+			Log.Info($"{nameof(AssetManager)} init end, {initializationOperation.Status}", nameof(AssetManager));
 			bool initSucceed = initializationOperation.Status == EOperationStatus.Succeed;
 
 			return initSucceed;
@@ -161,7 +161,7 @@ namespace Icy.Asset
 			string hostServerAddress = isMain ? _AssetSetting.AssetHostServerAddressMain : _AssetSetting.AssetHostServerAddressStandby;
 			if (string.IsNullOrEmpty(hostServerAddress))
 			{
-				Log.LogError("Asset host server address is empty, open Icy/Asset/Setting to set it");
+				Log.Error("Asset host server address is empty, open Icy/Asset/Setting to set it");
 				return null;
 			}
 			string appVersion = "v1.0";
@@ -423,9 +423,9 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Package.ClearCacheFilesAsync(clearMode);
 			await operation.ToUniTask();
 			if (operation.Status == EOperationStatus.Succeed)
-				Log.LogInfo($"ClearCachedFiles succeed, mode = {clearMode}", nameof(AssetManager));
+				Log.Info($"ClearCachedFiles succeed, mode = {clearMode}", nameof(AssetManager));
 			else
-				Log.LogError($"ClearCachedFiles failed, mode = {clearMode}", nameof(AssetManager));
+				Log.Error($"ClearCachedFiles failed, mode = {clearMode}", nameof(AssetManager));
 			return operation.Status == EOperationStatus.Succeed;
 		}
 		#endregion

@@ -68,14 +68,14 @@ public class UIRedDotTest : UIBase
 		if (Input.GetKeyUp(KeyCode.Alpha3))
 		{
 			red3 = red3 == 0 ? 2 : 0;
-			Log.LogInfo(red3.ToString());
+			Log.Info(red3.ToString());
 			_RedDot_3.Refresh();
 		}
 
 		if (Input.GetKeyUp(KeyCode.Alpha4))
 		{
 			red4 = red4 == 0 ? 2 : 0;
-			Log.LogInfo(red4.ToString());
+			Log.Info(red4.ToString());
 			_RedDot_4.Refresh();
 		}
 
@@ -92,7 +92,7 @@ public class UIRedDotTest : UIBase
 
 		if (Input.GetKeyUp(KeyCode.A))
 		{
-			Log.LogInfo(RedDotManager.Instance.Dump());
+			Log.Info(RedDotManager.Instance.Dump());
 		}
 	}
 

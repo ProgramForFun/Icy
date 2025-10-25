@@ -77,7 +77,7 @@ namespace Icy.Asset
 
 		public DecryptResult LoadAssetBundleFallback(DecryptFileInfo fileInfo)
 		{
-			Log.LogError("Decrypt failed, fallback");
+			Log.Error("Decrypt failed, fallback");
 			return default;
 		}
 	}

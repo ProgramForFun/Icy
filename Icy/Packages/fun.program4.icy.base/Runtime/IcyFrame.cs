@@ -84,12 +84,12 @@ namespace Icy.Base
 		/// </summary>
 		public static void OnUniTaskForgetException(Exception ex)
 		{
-			Log.LogError(ex.ToString(), "UniTask Forget Exception");
+			Log.Error(ex.ToString(), "UniTask Forget Exception");
 		}
 
 		private void OnUniTaskUnobservedTaskException(Exception ex)
 		{
-			Log.LogError(ex.ToString(), "UniTask Unobserved Exception");
+			Log.Error(ex.ToString(), "UniTask Unobserved Exception");
 		}
 
 		#region Update

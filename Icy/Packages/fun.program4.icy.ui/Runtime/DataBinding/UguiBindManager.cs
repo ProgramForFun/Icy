@@ -97,7 +97,7 @@ namespace Icy.UI
 				return true;
 			}
 
-			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "UguiBindManager");
+			Log.Error($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "UguiBindManager");
 			return false;
 		}
 

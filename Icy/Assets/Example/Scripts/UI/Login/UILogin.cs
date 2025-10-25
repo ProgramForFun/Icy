@@ -65,7 +65,7 @@ public class UILogin : UIBase
 
 	private void OnClickBtn()
 	{
-		Log.LogInfo("Click Btn");
+		Log.Info("Click Btn");
 	}
 
 	public override void Destroy()

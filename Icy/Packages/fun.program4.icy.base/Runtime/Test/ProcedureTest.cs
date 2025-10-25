@@ -38,13 +38,13 @@ namespace Icy.Base
 			public override async UniTask Activate()
 			{
 				await UniTask.WaitForSeconds(2);
-				Log.LogInfo("Step A wait for 2");
+				Log.Info("Step A wait for 2");
 				FinishAndGoto<StepC>();
 			}
 
 			public override async UniTask Deactivate()
 			{
-				Log.LogInfo("Step A Deactivate");
+				Log.Info("Step A Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -54,13 +54,13 @@ namespace Icy.Base
 			public override async UniTask Activate()
 			{
 				await UniTask.WaitForSeconds(2);
-				Log.LogInfo("Step B wait for 2");
+				Log.Info("Step B wait for 2");
 				Finish();
 			}
 
 			public override async UniTask Deactivate()
 			{
-				Log.LogInfo("Step B Deactivate");
+				Log.Info("Step B Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -70,13 +70,13 @@ namespace Icy.Base
 			public override async UniTask Activate()
 			{
 				await UniTask.WaitForSeconds(3);
-				Log.LogInfo("Step C wait for 3");
+				Log.Info("Step C wait for 3");
 				Finish();
 			}
 
 			public override async UniTask Deactivate()
 			{
-				Log.LogInfo("Step C Deactivate");
+				Log.Info("Step C Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -86,14 +86,14 @@ namespace Icy.Base
 			public override async UniTask Activate()
 			{
 				await UniTask.WaitForSeconds(2);
-				Log.LogInfo("Step D wait for 2");
+				Log.Info("Step D wait for 2");
 				OwnerProcedure.Abort();
 			}
 
 			public override async UniTask Deactivate()
 			{
 				//注意：Abort后，Deactivate不会执行
-				Log.LogInfo("Step D Deactivate");
+				Log.Info("Step D Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}
@@ -103,13 +103,13 @@ namespace Icy.Base
 			public override async UniTask Activate()
 			{
 				await UniTask.WaitForSeconds(2);
-				Log.LogInfo("Step E wait for 2");
+				Log.Info("Step E wait for 2");
 				Finish();
 			}
 
 			public override async UniTask Deactivate()
 			{
-				Log.LogInfo("Step E Deactivate");
+				Log.Info("Step E Deactivate");
 				await UniTask.CompletedTask;
 			}
 		}

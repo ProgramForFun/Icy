@@ -302,7 +302,7 @@ namespace Icy.Network
 			if (!IsConnected || _CancellationTokenSource == null || _CancellationTokenSource.IsCancellationRequested)
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(NetworkChannel<T>)} is disconnected");
-				Log.LogError(e.ToString(), nameof(NetworkChannel<T>));
+				Log.Error(e.ToString(), nameof(NetworkChannel<T>));
 				OnError?.Invoke(NetworkError.SendWhenDisconnected, e);
 				return false;
 			}
@@ -320,7 +320,7 @@ namespace Icy.Network
 			{
 				string content = ZString.Format("To send msg is backlogging, {0} - {1} - {2} - {3}", _SendQueue1.Count, _SendQueue2.Count, _SendQueue3.Count, _SendQueue4.Count);
 				Exception e = new Exception(content);
-				Log.LogError(content, nameof(NetworkChannel<T>));
+				Log.Error(content, nameof(NetworkChannel<T>));
 				OnError?.Invoke(NetworkError.SendQueueBacklog, e);
 				return false;
 			}

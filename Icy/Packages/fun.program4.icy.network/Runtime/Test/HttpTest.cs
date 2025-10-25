@@ -33,23 +33,23 @@ namespace Icy.Network
 			//Get成功
 			_HttpRequester.Get("https://www.baidu.com", (HttpRequester.HttpResponse response) =>
 			{
-				Log.LogInfo("GET responseCode = " + response.Code);
-				Log.LogInfo("GET content = " + response.Content);
+				Log.Info("GET responseCode = " + response.Code);
+				Log.Info("GET content = " + response.Content);
 			});
 
 			//Get重试几次后失败
 			_HttpRequester.Get("https://program4.fun", (HttpRequester.HttpResponse response) =>
 			{
-				Log.LogInfo("GET responseCode = " + response.Code);
-				Log.LogInfo("GET content = " + response.Content);
+				Log.Info("GET responseCode = " + response.Code);
+				Log.Info("GET content = " + response.Content);
 			});
 
 			//Post成功
 			string json = @"{""TestKey1"":""TestValue2""}";
 			_HttpRequester.Post("https://jsonplaceholder.typicode.com/posts", json, (HttpRequester.HttpResponse response) =>
 			{
-				Log.LogInfo("POST responseCode = " + response.Code);
-				Log.LogInfo("POST content = " + response.Content);
+				Log.Info("POST responseCode = " + response.Code);
+				Log.Info("POST content = " + response.Content);
 			});
 
 			TestAsync().Forget();
@@ -59,8 +59,8 @@ namespace Icy.Network
 		{
 			//async风格Get
 			HttpRequester.HttpResponse response = await _HttpRequester.GetAsync("https://www.baidu.com");
-			Log.LogInfo("async GET responseCode = " + response.Code);
-			Log.LogInfo("async GET content = " + response.Content);
+			Log.Info("async GET responseCode = " + response.Code);
+			Log.Info("async GET content = " + response.Content);
 		}
 
 		public static void Update()

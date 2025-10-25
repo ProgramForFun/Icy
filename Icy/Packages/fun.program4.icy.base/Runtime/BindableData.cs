@@ -79,7 +79,7 @@ namespace Icy.Base
 				return true;
 			}
 
-			Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
+			Log.Error($"Duplicate binding, BindableData T = {typeof(T).Name}, listener = {listener.Target.GetType().Name}.{listener.Method.Name}", "BindableData");
 			return false;
 		}
 
@@ -91,20 +91,20 @@ namespace Icy.Base
 			//不能Bind自己
 			if (other == this)
 			{
-				Log.LogError($"Invalid binding to this, BindableData T = {typeof(T).Name}", "BindableData");
+				Log.Error($"Invalid binding to this, BindableData T = {typeof(T).Name}", "BindableData");
 				return false;
 			}
 
 			//避免死循环
 			if (_Others.Contains(other))
 			{
-				Log.LogError($"Binding lead to endless loop, BindableData T = {typeof(T).Name}", "BindableData");
+				Log.Error($"Binding lead to endless loop, BindableData T = {typeof(T).Name}", "BindableData");
 				return false;
 			}
 
 			if (other._Others.Contains(this))
 			{
-				Log.LogError($"Duplicate binding, BindableData T = {typeof(T).Name}", "BindableData");
+				Log.Error($"Duplicate binding, BindableData T = {typeof(T).Name}", "BindableData");
 				return false;
 			}
 
@@ -127,7 +127,7 @@ namespace Icy.Base
 		{
 			if (other == null)
 			{
-				Log.LogError("UnbindTo a null", "BindableData");
+				Log.Error("UnbindTo a null", "BindableData");
 				return;
 			}
 			other._Others.Remove(this);

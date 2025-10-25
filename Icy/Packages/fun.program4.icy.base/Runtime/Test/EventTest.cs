@@ -31,23 +31,23 @@ namespace Icy.Base
 			EventParam_String eventParam = EventManager.GetParam<EventParam_String>();
 			eventParam.Value = "100";
 			EventManager.Trigger(0, eventParam);
-			Log.LogInfo("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
+			Log.Info("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
 
 			//不应该输出
 			EventManager.RemoveListener(0, EventCallback);
 			EventManager.Trigger(0, eventParam);
-			Log.LogInfo("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
+			Log.Info("EventCallback is added = " + EventManager.HasAlreadyListened(0, EventCallback));
 
 			//应该延迟1秒输出
 			EventManager.AddListener(0, EventCallback);
 			eventParam.Value = "This is a delay msg";
 			float delay = 1;
-			Log.LogInfo($"FireEventDelay, delay = {delay}");
+			Log.Info($"FireEventDelay, delay = {delay}");
 			EventManager.TriggerDelay(0, eventParam, delay);
 
 			//应该下一帧输出
 			EventManager.AddListener(1, FrameCountEventCallback);
-			Log.LogInfo($"FireEventNextFrame, frameCount = {Time.frameCount}");
+			Log.Info($"FireEventNextFrame, frameCount = {Time.frameCount}");
 			EventManager.TriggerNextFrame(1, eventParam);
 
 			//editor下支持重复注册的检查
@@ -60,7 +60,7 @@ namespace Icy.Base
 				for (int i = 0; i < 10; i++)
 				{
 					//Log.LogInfo("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
-					Log.LogInfo("Trigger event = " + i);
+					Log.Info("Trigger event = " + i);
 					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
 					eventParam.Value = i;
 					EventManager.Trigger(2, eventParam);
@@ -73,7 +73,7 @@ namespace Icy.Base
 				for (int i = 100; i < 110; i++)
 				{
 					//Log.LogWarning("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
-					Log.LogWarning("Trigger event = " + i);
+					Log.Warn("Trigger event = " + i);
 					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
 					eventParam.Value = i;
 					EventManager.Trigger(2, eventParam);
@@ -82,24 +82,24 @@ namespace Icy.Base
 			}).Forget();
 
 			//输出当前EventManager里所有注册的监听，方便调试
-			Log.LogInfo(EventManager.Dump());
+			Log.Info(EventManager.Dump());
 		}
 
 		static void EventCallback(int eventID, IEventParam param)
 		{
 			if (param is EventParam_String param_String)
-				Log.LogInfo(param_String.Value, "game");
+				Log.Info(param_String.Value, "game");
 		}
 
 		static void FrameCountEventCallback(int eventID, IEventParam param)
 		{
-			Log.LogInfo($"This is a NextFrame msg, frameCount = {Time.frameCount}", "game");
+			Log.Info($"This is a NextFrame msg, frameCount = {Time.frameCount}", "game");
 		}
 
 		static void WorkerThreadEventCallback(int eventID, IEventParam param)
 		{
 			if (param is EventParam_Int param_Int)
-				Log.LogInfo($"This is a msg from worker thread, value = {param_Int.Value}", "game");
+				Log.Info($"This is a msg from worker thread, value = {param_Int.Value}", "game");
 		}
 	}
 }

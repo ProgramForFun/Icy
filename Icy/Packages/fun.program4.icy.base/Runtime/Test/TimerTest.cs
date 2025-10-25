@@ -32,17 +32,17 @@ namespace Icy.Base
 		#region Dealy
 		private static void TestDealy()
 		{
-			Log.LogInfo("Timer.DelayByTime(DelayByTimeAction, 1);   This will be cancelled");
+			Log.Info("Timer.DelayByTime(DelayByTimeAction, 1);   This will be cancelled");
 			CancellationTokenSource cancel = Timer.DelayByTime(NeverReached, 1);
 			cancel.Cancel();
 
-			Log.LogInfo("Timer.DelayByTime(DelayByTimeAction, 1);");
+			Log.Info("Timer.DelayByTime(DelayByTimeAction, 1);");
 			Timer.DelayByTime(DelayByTimeAction, 1);
 
-			Log.LogInfo("Timer.NextFrame(NextFrameAction); Current frame = " + Time.frameCount);
+			Log.Info("Timer.NextFrame(NextFrameAction); Current frame = " + Time.frameCount);
 			Timer.NextFrame(NextFrameAction);
 
-			Log.LogInfo("Timer.DelayByFrame(DelayByTimeAction, 3); Current frame = " + Time.frameCount);
+			Log.Info("Timer.DelayByFrame(DelayByTimeAction, 3); Current frame = " + Time.frameCount);
 			Timer.DelayByFrame(DelayByFrameAction, 3);
 		}
 
@@ -53,39 +53,39 @@ namespace Icy.Base
 
 		private static void DelayByTimeAction()
 		{
-			Log.LogInfo("DelayByTimeAction, delay 1 second");
+			Log.Info("DelayByTimeAction, delay 1 second");
 		}
 
 		private static void NextFrameAction()
 		{
-			Log.LogInfo("NextFrameAction,  Current frame = " + Time.frameCount);
+			Log.Info("NextFrameAction,  Current frame = " + Time.frameCount);
 		}
 
 		private static void DelayByFrameAction()
 		{
-			Log.LogInfo("DelayByFrameAction,  Current frame = " + Time.frameCount);
+			Log.Info("DelayByFrameAction,  Current frame = " + Time.frameCount);
 		}
 		#endregion
 
 		#region Repeat
 		private static void TestRepeat()
 		{
-			Log.LogInfo("Timer.RepeatByTime(RepeatByTimeAction, 1, 5);");
+			Log.Info("Timer.RepeatByTime(RepeatByTimeAction, 1, 5);");
 			CancellationTokenSource token = Timer.RepeatByTime(RepeatByTimeAction, 1, 5);
 			token.CancelAfter(3000);
 
-			Log.LogInfo("Timer.RepeatByFrame(RepeatByFrameAction, 2, 5);  Current frame = " + Time.frameCount);
+			Log.Info("Timer.RepeatByFrame(RepeatByFrameAction, 2, 5);  Current frame = " + Time.frameCount);
 			Timer.RepeatByFrame(RepeatByFrameAction, 2, 5);
 		}
 
 		private static void RepeatByTimeAction()
 		{
-			Log.LogInfo("RepeatByTimeAction");
+			Log.Info("RepeatByTimeAction");
 		}
 
 		private static void RepeatByFrameAction()
 		{
-			Log.LogInfo("RepeatByFrameAction;  Current frame = " + Time.frameCount);
+			Log.Info("RepeatByFrameAction;  Current frame = " + Time.frameCount);
 		}
 		#endregion
 	}

@@ -53,7 +53,7 @@ namespace Icy.Base
 		public override void Dispose()
 		{
 			if (_OutPool.Count > 0)
-				Log.LogWarning($"Dispose {nameof(GameObjectPool)} when there are GameObjects outside, first outside GameObject = " + _OutPool[0].name);
+				Log.Warn($"Dispose {nameof(GameObjectPool)} when there are GameObjects outside, first outside GameObject = " + _OutPool[0].name);
 
 			for (int i = 0; i < _InPool.Count; i++)
 				UnityEngine.Object.Destroy(_InPool[i]);

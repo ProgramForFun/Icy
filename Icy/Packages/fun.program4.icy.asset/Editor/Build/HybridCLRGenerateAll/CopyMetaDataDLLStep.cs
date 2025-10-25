@@ -43,21 +43,21 @@ namespace Icy.Asset.Editor
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
 			if (_MetaDataDLLs == null)
 			{
-				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在", nameof(CopyMetaDataDLLStep));
+				Log.Error($"解析HybridCLR补充元数据DLL列表失败，请检查路径 {metaDataDllListPath}是否存在", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
 
 			if (_MetaDataDLLs.Count == 0)
 			{
-				Log.LogError($"解析HybridCLR补充元数据DLL列表失败，请检查其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLLStep));
+				Log.Error($"解析HybridCLR补充元数据DLL列表失败，请检查其中的PatchedAOTAssemblyList这个字段是否有内容", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
 
 			if (!CopyMetaDataDLLs())
 			{
-				Log.LogError($"复制补充元数据DLL失败", nameof(CopyMetaDataDLLStep));
+				Log.Error($"复制补充元数据DLL失败", nameof(CopyMetaDataDLLStep));
 				OwnerProcedure.Abort();
 				return;
 			}
@@ -100,7 +100,7 @@ namespace Icy.Asset.Editor
 
 			if (string.IsNullOrEmpty(copy2Dir))
 			{
-				Log.LogError($"CopyMetaDataDLL 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.MetaDataDLLCopyToDir)}", nameof(CopyMetaDataDLLStep));
+				Log.Error($"CopyMetaDataDLL 失败，请先去Icy/Asset/Setting设置{nameof(AssetSetting.MetaDataDLLCopyToDir)}", nameof(CopyMetaDataDLLStep));
 				return false;
 			}
 
@@ -111,11 +111,11 @@ namespace Icy.Asset.Editor
 				{
 					string copy2Path = Path.Combine(copy2Dir, _MetaDataDLLs[i]);
 					File.Copy(dllPath, copy2Path, true);
-					Log.LogInfo($"Copy {dllPath}  to  {copy2Path}", nameof(CopyMetaDataDLLStep));
+					Log.Info($"Copy {dllPath}  to  {copy2Path}", nameof(CopyMetaDataDLLStep));
 				}
 				else
 				{
-					Log.LogError($"CopyMetaDataDLL 失败，没有找到{dllPath}", nameof(CopyMetaDataDLLStep));
+					Log.Error($"CopyMetaDataDLL 失败，没有找到{dllPath}", nameof(CopyMetaDataDLLStep));
 					return false;
 				}
 			}

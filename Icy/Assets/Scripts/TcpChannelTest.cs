@@ -19,7 +19,7 @@ namespace Icy.Network
 
 		public override async UniTask Encode(int msgID, IMessage proto)
 		{
-			Log.LogInfo("[ProtoSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.Info("[ProtoSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//一个int类型消息ID + protobuf消息
 			int msgIDSize = sizeof(int);
 			BitConverter.TryWriteBytes(_Buffer, msgID);
@@ -45,7 +45,7 @@ namespace Icy.Network
 
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
-			Log.LogInfo("[ProtoReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.Info("[ProtoReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
 			//解析int类型的消息ID
 			int msgID = BitConverter.ToInt32(data, startIdx);
 			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
@@ -102,27 +102,27 @@ namespace Icy.Network
 
 		private static void OnConnect()
 		{
-			Log.LogInfo("TcpChannel Connected");
+			Log.Info("TcpChannel Connected");
 			EventManager.AddListener(123, Handle);
 		}
 
 		private static void OnDisconnect()
 		{
-			Log.LogInfo("TcpChannel Disconnected");
+			Log.Info("TcpChannel Disconnected");
 			EventManager.RemoveListener(123, Handle);
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"TcpChannel error = {error}, exception = {ex}");
+			Log.Error($"TcpChannel error = {error}, exception = {ex}");
 		}
 
 		private static void Handle(int eventID, IEventParam param)
 		{
 			if (param is EventParam<IMessage> msg)
 			{
-				Log.LogInfo("[TcpChannelTest.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
-				Log.LogInfo((msg.Value as TestMessageResult).ErrorMsg);
+				Log.Info("[TcpChannelTest.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.Info((msg.Value as TestMessageResult).ErrorMsg);
 			}
 		}
 

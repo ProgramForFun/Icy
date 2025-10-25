@@ -30,19 +30,19 @@ namespace Icy.Base
 				for (int i = 0; i < 3; i++)
 				{
 					rb.Put(src, 0, 3);
-					Log.LogInfo(rb.ToString());
+					Log.Info(rb.ToString());
 				}
 
-				Log.LogInfo("-----------------------");
+				Log.Info("-----------------------");
 
 				byte[] dst = new byte[3];
 				for (int i = 0; i < 3; i++)
 				{
 					rb.Get(dst, 0, 3);
-					Log.LogInfo(rb.ToString());
+					Log.Info(rb.ToString());
 				}
 
-				Log.LogInfo("=====================");
+				Log.Info("=====================");
 			}
 		}
 	}

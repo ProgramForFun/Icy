@@ -41,7 +41,7 @@ namespace Icy.Base
 		{
 			//IcyFrame是框架入口，应该是最先初始化的，单例实例化中的Unity API跑不到，所以是安全的
 			if (IcyFrame.Instance.IsMainThread())
-				Log.LogWarning("Call MainThreadDispatcher from main thread is unnecessary", nameof(MainThreadDispatcher));
+				Log.Warn("Call MainThreadDispatcher from main thread is unnecessary", nameof(MainThreadDispatcher));
 
 			lock (_ExecuteQueue)
 			{

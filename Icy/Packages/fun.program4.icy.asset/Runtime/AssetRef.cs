@@ -112,7 +112,7 @@ namespace Icy.Asset
 				if (_AssetHandle is AssetHandle assetHandle)
 					return assetHandle.AssetObject;
 
-				Log.LogError($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
+				Log.Error($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
 				return null;
 			}
 		}
@@ -129,7 +129,7 @@ namespace Icy.Asset
 				else if (_AssetHandle is SubAssetsHandle subAssetHandle)
 					return subAssetHandle.SubAssetObjects;
 
-				Log.LogError($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
+				Log.Error($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
 				return null;
 			}
 		}
@@ -144,7 +144,7 @@ namespace Icy.Asset
 				if (_AssetHandle is SceneHandle sceneHandle)
 					return sceneHandle.SceneObject;
 
-				Log.LogError($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
+				Log.Error($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
 				return default;
 			}
 		}
@@ -159,7 +159,7 @@ namespace Icy.Asset
 				if (_AssetHandle is RawFileHandle rawFileHandle)
 					return rawFileHandle.GetRawFileData();
 
-				Log.LogError($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
+				Log.Error($"Unexpected method to get asset, handle = {_AssetHandle.GetType().Name}", nameof(AssetRef));
 				return null;
 			}
 		}
@@ -182,7 +182,7 @@ namespace Icy.Asset
 			{
 #if AssetRef_Log
 				Log.SetColorOnce(Color.yellow);
-				Log.LogInfo($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", nameof(AssetRef));
+				Log.Info($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", nameof(AssetRef));
 #endif
 				AssetManager.Instance.ReleaseAsset(_AssetHandle);
 			}
@@ -201,7 +201,7 @@ namespace Icy.Asset
 			_OnFinish?.Invoke(this);
 #if AssetRef_Log
 			Log.SetColorOnce(Color.yellow);
-			Log.LogInfo($"Asset {handle.GetAssetInfo().Address} loaded", nameof(AssetRef));
+			Log.Info($"Asset {handle.GetAssetInfo().Address} loaded", nameof(AssetRef));
 #endif
 		}
 	}

@@ -53,7 +53,7 @@ public class ExampleRoot : MonoBehaviour
 
 		//œ‘ æUI
 		UILogin uiLogin = await UIManager.Instance.ShowAsync<UILogin>();
-		Log.LogInfo($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
+		Log.Info($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
 
 		await UniTask.WaitForSeconds(1);
 		UIManager.Instance.Hide<UILogin>();

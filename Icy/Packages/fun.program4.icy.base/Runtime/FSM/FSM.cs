@@ -88,7 +88,7 @@ namespace Icy.Base
 		{
 			if (_AllStates.Contains(state))
 			{
-				Log.LogError($"{state.GetType().Name} has already been add to FSM {Name}");
+				Log.Error($"{state.GetType().Name} has already been add to FSM {Name}");
 				return;
 			}
 			_AllStates.Add(state);
@@ -98,7 +98,7 @@ namespace Icy.Base
 			{
 				if (_DefaultState != null)
 				{
-					Log.LogError($"{state.GetType().Name} added as default FSMState, but FSM {Name} already got one, it's {_DefaultState.GetType().Name}");
+					Log.Error($"{state.GetType().Name} added as default FSMState, but FSM {Name} already got one, it's {_DefaultState.GetType().Name}");
 					return;
 				}
 				_DefaultState = state;
@@ -122,14 +122,14 @@ namespace Icy.Base
 			Log.Assert(!IsChangingState, $"Attempt to change to {newState.GetType().Name} when FSM {Name} is changing");
 			if (newState == CurrState)
 			{
-				Log.LogError("New state is same as current state, ignore state changing");
+				Log.Error("New state is same as current state, ignore state changing");
 				return;
 			}
 
 			string logMsg = string.Format("Change FSMState from {0} to {1}"
 							, CurrState == null ? "Null" : CurrState.GetType().Name
 							, newState == null ? "Null" : newState.GetType().Name);
-			Log.LogInfo(logMsg);
+			Log.Info(logMsg);
 
 			IsChangingState = true;
 			PrevState = CurrState;

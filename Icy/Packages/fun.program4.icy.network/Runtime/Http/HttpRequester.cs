@@ -239,7 +239,7 @@ namespace Icy.Network
 					else
 					{
 						string error = $"{nameof(HttpRequester)} does NOT support method {method} yet";
-						Log.LogError(error, nameof(HttpRequester));
+						Log.Error(error, nameof(HttpRequester));
 						return new HttpResponse() { Code = -1, Content = error };
 					}
 					request.timeout = _Timeout;
@@ -261,7 +261,7 @@ namespace Icy.Network
 					else
 					{
 						lastError = request.error;
-						Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+						Log.Warn($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
 										$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 					}
 				}
@@ -272,12 +272,12 @@ namespace Icy.Network
 				}
 
 				retry++;
-				Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
+				Log.Info($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
 			} while (retry < _RetryTimes && !_Disposed);
 
 			if (!_Disposed)
 			{
-				Log.LogError($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
+				Log.Error($"{nameof(HttpRequester)} failed, url = {url}, result = {request.result}" +
 								$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 			}
 
@@ -316,7 +316,7 @@ namespace Icy.Network
 			foreach (UnityWebRequest item in _CurRequests)
 				item?.Dispose();
 #endif
-			Log.LogInfo($"{nameof(HttpRequester)} disposed");
+			Log.Info($"{nameof(HttpRequester)} disposed");
 		}
 	}
 }

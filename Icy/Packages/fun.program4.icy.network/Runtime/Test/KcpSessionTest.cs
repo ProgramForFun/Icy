@@ -39,23 +39,23 @@ namespace Icy.Network
 
 		private static void OnConnect()
 		{
-			Log.LogInfo("Kcp Connected");
+			Log.Info("Kcp Connected");
 		}
 
 		private static void OnDisconnect()
 		{
-			Log.LogInfo("Kcp Disconnected");
+			Log.Info("Kcp Disconnected");
 		}
 
 		private static void OnReceiveData(byte[] buffer, int start, int length)
 		{
 			string msg = Encoding.UTF8.GetString(buffer, start, length);
-			Log.LogInfo($"HandleReceived, len = {length}, msg = {msg}");
+			Log.Info($"HandleReceived, len = {length}, msg = {msg}");
 		}
 
 		private static void OnError(NetworkError error, Exception ex)
 		{
-			Log.LogError($"Kcp error = {error}, exception = {ex}");
+			Log.Error($"Kcp error = {error}, exception = {ex}");
 		}
 
 		public static async void Update()
