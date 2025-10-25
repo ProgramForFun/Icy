@@ -38,8 +38,6 @@ namespace Icy.Asset
 		{
 			Package = package;
 			IsFinished = false;
-
-			Log.Info($"Start asset patch procedure", nameof(AssetPatcher));
 		}
 
 		internal async UniTask Start()
@@ -50,8 +48,9 @@ namespace Icy.Asset
 			patchProcedure.AddStep(new AssetPatchFinishStep());
 			patchProcedure.Blackboard.WriteObject(nameof(AssetPatcher), this);
 			patchProcedure.Start();
+			Log.Info($"Start asset patch procedure", nameof(AssetPatcher));
 
-			while(!patchProcedure.IsFinished)
+			while (!patchProcedure.IsFinished)
 				await UniTask.NextFrame();
 
 			IsFinished = true;
