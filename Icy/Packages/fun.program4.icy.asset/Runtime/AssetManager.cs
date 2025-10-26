@@ -42,7 +42,7 @@ namespace Icy.Asset
 		/// <summary>
 		/// HybridCLR运行时加载
 		/// </summary>
-		private HybridCLRPatcher _HybridCLR;
+		private HybridCLRRunner _HybridCLR;
 		/// <summary>
 		/// 当前正在加载或已加载的资源
 		/// </summary>
@@ -253,12 +253,16 @@ namespace Icy.Asset
 		}
 
 		/// <summary>
-		/// HybridCLR运行时加载
+		/// 加载运行热更代码
 		/// </summary>
 		public async UniTask RunPatchedCSharpCode()
 		{
-			_HybridCLR = new HybridCLRPatcher();
-			await _HybridCLR.Start();
+#if UNITY_EDITOR
+			Log.Warn("Run HybridCLR at runtime in editor is not expected");
+#endif
+
+			_HybridCLR = new HybridCLRRunner();
+			await _HybridCLR.Run();
 
 			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);
 		}

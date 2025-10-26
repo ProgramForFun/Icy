@@ -22,26 +22,26 @@ namespace Icy.Asset
 	/// <summary>
 	/// 负责HybridCLR相关的运行时处理
 	/// </summary>
-	internal sealed class HybridCLRPatcher
+	internal sealed class HybridCLRRunner
 	{
 		/// <summary>
 		/// 是否完成
 		/// </summary>
 		public bool IsFinished { get; internal set; }
 
-		internal HybridCLRPatcher()
+		internal HybridCLRRunner()
 		{
 			IsFinished = false;
 
 		}
 
-		internal async UniTask Start()
+		internal async UniTask Run()
 		{
-			Procedure patchProcedure = new Procedure(nameof(HybridCLRPatcher));
+			Procedure patchProcedure = new Procedure(nameof(HybridCLRRunner));
 			patchProcedure.AddStep(new LoadPatchDLLStep());
 			patchProcedure.AddStep(new LoadMetaDataDLLStep());
 			patchProcedure.Start();
-			Log.Info($"Start HybridCLR patch procedure", nameof(HybridCLRPatcher));
+			Log.Info($"Start HybridCLR patch procedure", nameof(HybridCLRRunner));
 
 			while(!patchProcedure.IsFinished)
 				await UniTask.NextFrame();
