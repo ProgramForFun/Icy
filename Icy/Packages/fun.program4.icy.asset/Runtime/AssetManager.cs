@@ -38,7 +38,11 @@ namespace Icy.Asset
 		/// <summary>
 		/// 资源更新脚本
 		/// </summary>
-		private AssetPatcher _Patcher;
+		private AssetPatcher _AssetPatcher;
+		/// <summary>
+		/// HybridCLR运行时加载
+		/// </summary>
+		private HybridCLRPatcher _HybridCLR;
 		/// <summary>
 		/// 当前正在加载或已加载的资源
 		/// </summary>
@@ -240,13 +244,23 @@ namespace Icy.Asset
 		/// <summary>
 		/// 开始热更新资源
 		/// </summary>
-		public async UniTask StartPatch()
+		public async UniTask StartAssetPatch()
 		{
-			_Patcher = new AssetPatcher(_Package);
-			await _Patcher.Start();
+			_AssetPatcher = new AssetPatcher(_Package);
+			await _AssetPatcher.Start();
 
-			await UniTask.Delay(1000);
-			UnloadUnusedAssetsWrap();
+			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);
+		}
+
+		/// <summary>
+		/// HybridCLR运行时加载
+		/// </summary>
+		public async UniTask RunPatchedCSharpCode()
+		{
+			_HybridCLR = new HybridCLRPatcher();
+			await _HybridCLR.Start();
+
+			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);
 		}
 		#endregion
 

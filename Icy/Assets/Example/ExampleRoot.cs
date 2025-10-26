@@ -47,7 +47,13 @@ public class ExampleRoot : MonoBehaviour
 			Log.Assert(false, "AssetManager init failed!");
 			return;
 		}
-		await AssetManager.Instance.StartPatch();
+
+		//先更新资源
+		await AssetManager.Instance.StartAssetPatch();
+#if !UNITY_EDITOR
+		//再加载热更代码
+		await AssetManager.Instance.RunPatchedCSharpCode();
+#endif
 
 		//=================开始业务逻辑=================
 
