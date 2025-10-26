@@ -74,7 +74,7 @@ namespace Icy.Base
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
-		/// <param name="repeatCount">执行的次数；如果<=0，则次数为无限</param>
+		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		/// <returns>取消令牌</returns>
 		public static CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
@@ -104,7 +104,7 @@ namespace Icy.Base
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
-		/// <param name="repeatCount">执行的次数；如果<=0，则次数为无限</param>
+		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
 		/// <returns>取消令牌</returns>
 		public static CancellationTokenSource RepeatByFrame(Action action, int perFrames, int repeatCount)
 		{
@@ -152,7 +152,7 @@ namespace Icy.Base
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
-			while ((repeatCount <= 0 || count < repeatCount) && !cts.IsCancellationRequested)
+			while ((repeatCount < 0 || count < repeatCount) && !cts.IsCancellationRequested)
 			{
 				action?.Invoke();
 				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
@@ -179,7 +179,7 @@ namespace Icy.Base
 			perFrames = ValidateRepeatFrameInterval(perFrames);
 
 			int count = 0;
-			while ((repeatCount <= 0 || count < repeatCount) && !cts.IsCancellationRequested)
+			while ((repeatCount < 0 || count < repeatCount) && !cts.IsCancellationRequested)
 			{
 				action?.Invoke();
 				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);

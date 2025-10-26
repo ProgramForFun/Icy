@@ -249,7 +249,8 @@ namespace Icy.Asset
 			_AssetPatcher = new AssetPatcher(_Package);
 			await _AssetPatcher.Start();
 
-			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);
+			//启动无限次的间隔执行UnloadUnusedAssets
+			Timer.RepeatByTime(UnloadUnusedAssetsWrap, _AutoUnloadUnusedAssetsInterval, -1);
 		}
 
 		/// <summary>
