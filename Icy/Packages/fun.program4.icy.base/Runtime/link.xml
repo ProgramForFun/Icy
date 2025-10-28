@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<linker>
+  <!-- 保留所有 Unity 内置类 -->
+  <!-- 基本类型 -->
+  <type fullname="UnityEngine.Object" preserve="all"/>
+  <type fullname="UnityEngine.GameObject" preserve="all"/>
+  <type fullname="UnityEngine.Component" preserve="all"/>
+  <type fullname="UnityEngine.Behaviour" preserve="all"/>
+  <type fullname="UnityEngine.MonoBehaviour" preserve="all"/>
+  <type fullname="UnityEngine.ScriptableObject" preserve="all"/>
+  
+  <!-- 变换和层次结构 -->
+  <type fullname="UnityEngine.Transform" preserve="all"/>
+  <type fullname="UnityEngine.RectTransform" preserve="all"/>
+  
+  <!-- 渲染相关 -->
+  <type fullname="UnityEngine.Camera" preserve="all"/>
+  <type fullname="UnityEngine.Renderer" preserve="all"/>
+  <type fullname="UnityEngine.MeshRenderer" preserve="all"/>
+  <type fullname="UnityEngine.SkinnedMeshRenderer" preserve="all"/>
+  <type fullname="UnityEngine.SpriteRenderer" preserve="all"/>
+  <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all"/>
+  <type fullname="UnityEngine.LineRenderer" preserve="all"/>
+  <type fullname="UnityEngine.TrailRenderer" preserve="all"/>
+  <type fullname="UnityEngine.BillboardRenderer" preserve="all"/>
+  
+  <!-- 网格和过滤器 -->
+  <type fullname="UnityEngine.MeshFilter" preserve="all"/>
+  <type fullname="UnityEngine.Mesh" preserve="all"/>
+  
+  <!-- 物理系统 -->
+  <type fullname="UnityEngine.Rigidbody" preserve="all"/>
+  <type fullname="UnityEngine.Rigidbody2D" preserve="all"/>
+  <type fullname="UnityEngine.Collider" preserve="all"/>
+  <type fullname="UnityEngine.BoxCollider" preserve="all"/>
+  <type fullname="UnityEngine.SphereCollider" preserve="all"/>
+  <type fullname="UnityEngine.CapsuleCollider" preserve="all"/>
+  <type fullname="UnityEngine.MeshCollider" preserve="all"/>
+  <type fullname="UnityEngine.WheelCollider" preserve="all"/>
+  <type fullname="UnityEngine.TerrainCollider" preserve="all"/>
+  <type fullname="UnityEngine.CharacterController" preserve="all"/>
+  <!-- <type fullname="UnityEngine.PhysicsMaterial" preserve="all"/> -->
+  <type fullname="UnityEngine.PhysicsMaterial2D" preserve="all"/>
+  <type fullname="UnityEngine.Physics" preserve="all"/>
+  <type fullname="UnityEngine.Physics2D" preserve="all"/>
+  <type fullname="UnityEngine.Joint" preserve="all"/>
+  <type fullname="UnityEngine.HingeJoint" preserve="all"/>
+  <type fullname="UnityEngine.SpringJoint" preserve="all"/>
+  <type fullname="UnityEngine.FixedJoint" preserve="all"/>
+  <type fullname="UnityEngine.CharacterJoint" preserve="all"/>
+  <type fullname="UnityEngine.ConfigurableJoint" preserve="all"/>
+  
+  <!-- 动画系统 -->
+  <type fullname="UnityEngine.Animator" preserve="all"/>
+  <type fullname="UnityEngine.Animation" preserve="all"/>
+  <type fullname="UnityEngine.AnimationClip" preserve="all"/>
+  <type fullname="UnityEngine.AnimatorOverrideController" preserve="all"/>
+  <type fullname="UnityEngine.Avatar" preserve="all"/>
+  <type fullname="UnityEngine.HumanDescription" preserve="all"/>
+  <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all"/>
+  
+  <!-- 音频系统 -->
+  <type fullname="UnityEngine.AudioSource" preserve="all"/>
+  <type fullname="UnityEngine.AudioListener" preserve="all"/>
+  <type fullname="UnityEngine.AudioClip" preserve="all"/>
+  <type fullname="UnityEngine.AudioReverbZone" preserve="all"/>
+  <type fullname="UnityEngine.AudioLowPassFilter" preserve="all"/>
+  <type fullname="UnityEngine.AudioHighPassFilter" preserve="all"/>
+  <type fullname="UnityEngine.AudioEchoFilter" preserve="all"/>
+  <type fullname="UnityEngine.AudioDistortionFilter" preserve="all"/>
+  <type fullname="UnityEngine.AudioReverbFilter" preserve="all"/>
+  <type fullname="UnityEngine.AudioChorusFilter" preserve="all"/>
+  
+  <!-- 光照系统 -->
+  <type fullname="UnityEngine.Light" preserve="all"/>
+  <type fullname="UnityEngine.ReflectionProbe" preserve="all"/>
+  <type fullname="UnityEngine.LightProbeGroup" preserve="all"/>
+  <type fullname="UnityEngine.LightProbes" preserve="all"/>
+  
+  <!-- 材质和着色器 -->
+  <type fullname="UnityEngine.Material" preserve="all"/>
+  <type fullname="UnityEngine.Shader" preserve="all"/>
+  <type fullname="UnityEngine.Texture" preserve="all"/>
+  <type fullname="UnityEngine.Texture2D" preserve="all"/>
+  <type fullname="UnityEngine.Texture3D" preserve="all"/>
+  <type fullname="UnityEngine.Cubemap" preserve="all"/>
+  <type fullname="UnityEngine.RenderTexture" preserve="all"/>
+  <type fullname="UnityEngine.Sprite" preserve="all"/>
+  
+  <!-- 粒子系统 -->
+  <type fullname="UnityEngine.ParticleSystem" preserve="all"/>
+  
+  <!-- UI 系统 -->
+  <type fullname="UnityEngine.Canvas" preserve="all"/>
+  <type fullname="UnityEngine.CanvasRenderer" preserve="all"/>
+  <type fullname="UnityEngine.UI.Graphic" preserve="all"/>
+  <type fullname="UnityEngine.UI.Image" preserve="all"/>
+  <type fullname="UnityEngine.UI.Text" preserve="all"/>
+  <type fullname="UnityEngine.UI.RawImage" preserve="all"/>
+  <type fullname="UnityEngine.UI.Mask" preserve="all"/>
+  <type fullname="UnityEngine.UI.RectMask2D" preserve="all"/>
+  <type fullname="UnityEngine.UI.Button" preserve="all"/>
+  <type fullname="UnityEngine.UI.Toggle" preserve="all"/>
+  <type fullname="UnityEngine.UI.Slider" preserve="all"/>
+  <type fullname="UnityEngine.UI.Scrollbar" preserve="all"/>
+  <type fullname="UnityEngine.UI.Dropdown" preserve="all"/>
+  <type fullname="UnityEngine.UI.InputField" preserve="all"/>
+  <type fullname="UnityEngine.UI.ScrollRect" preserve="all"/>
+  <type fullname="UnityEngine.UI.Selectable" preserve="all"/>
+  <type fullname="UnityEngine.UI.CanvasScaler" preserve="all"/>
+  <type fullname="UnityEngine.UI.ContentSizeFitter" preserve="all"/>
+  <type fullname="UnityEngine.UI.AspectRatioFitter" preserve="all"/>
+  <type fullname="UnityEngine.UI.HorizontalLayoutGroup" preserve="all"/>
+  <type fullname="UnityEngine.UI.VerticalLayoutGroup" preserve="all"/>
+  <type fullname="UnityEngine.UI.GridLayoutGroup" preserve="all"/>
+  
+  <!-- 2D 相关 -->
+  <type fullname="UnityEngine.Sprite" preserve="all"/>
+  <type fullname="UnityEngine.Tilemaps.Tilemap" preserve="all"/>
+  <type fullname="UnityEngine.Tilemaps.TilemapRenderer" preserve="all"/>
+  <type fullname="UnityEngine.Tilemaps.Tile" preserve="all"/>
+  <type fullname="UnityEngine.Tilemaps.TileBase" preserve="all"/>
+  <type fullname="UnityEngine.Physics2D" preserve="all"/>
+  <type fullname="UnityEngine.Collider2D" preserve="all"/>
+  <type fullname="UnityEngine.BoxCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.CircleCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.CapsuleCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.PolygonCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.EdgeCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.CompositeCollider2D" preserve="all"/>
+  <type fullname="UnityEngine.Joint2D" preserve="all"/>
+  <type fullname="UnityEngine.SpringJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.DistanceJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.HingeJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.SliderJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.WheelJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.FixedJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.RelativeJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.FrictionJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.TargetJoint2D" preserve="all"/>
+  <type fullname="UnityEngine.AreaEffector2D" preserve="all"/>
+  <type fullname="UnityEngine.BuoyancyEffector2D" preserve="all"/>
+  <type fullname="UnityEngine.PointEffector2D" preserve="all"/>
+  <type fullname="UnityEngine.PlatformEffector2D" preserve="all"/>
+  <type fullname="UnityEngine.SurfaceEffector2D" preserve="all"/>
+  
+  <!-- 地形系统 -->
+  <type fullname="UnityEngine.Terrain" preserve="all"/>
+  <type fullname="UnityEngine.TerrainData" preserve="all"/>
+  <type fullname="UnityEngine.TerrainCollider" preserve="all"/>
+  <type fullname="UnityEngine.Tree" preserve="all"/>
+  <type fullname="UnityEngine.DetailPrototype" preserve="all"/>
+  
+  <!-- 视频和电影 -->
+  <type fullname="UnityEngine.Video.VideoPlayer" preserve="all"/>
+  <type fullname="UnityEngine.Video.VideoClip" preserve="all"/>
+  
+  <!-- 导航和寻路 -->
+  <type fullname="UnityEngine.AI.NavMeshAgent" preserve="all"/>
+  <type fullname="UnityEngine.AI.NavMeshObstacle" preserve="all"/>
+  <type fullname="UnityEngine.AI.NavMesh" preserve="all"/>
+  <type fullname="UnityEngine.AI.NavMeshData" preserve="all"/>
+  
+  <!-- VR/AR 相关 -->
+  <!-- <type fullname="UnityEngine.XR.XRDevice" preserve="all"/> -->
+  <!-- <type fullname="UnityEngine.XR.InputTracking" preserve="all"/> -->
+  <!-- <type fullname="UnityEngine.XR.XRInputSubsystem" preserve="all"/> -->
+  <!-- <type fullname="UnityEngine.XR.WSA.WorldManager" preserve="all"/> -->
+  
+  <!-- 输入系统 -->
+  <type fullname="UnityEngine.Input" preserve="all"/>
+  <type fullname="UnityEngine.KeyCode" preserve="all"/>
+  <type fullname="UnityEngine.Touch" preserve="all"/>
+  <type fullname="UnityEngine.AccelerationEvent" preserve="all"/>
+  <type fullname="UnityEngine.Gyroscope" preserve="all"/>
+  
+  <!-- 数学和几何 -->
+  <type fullname="UnityEngine.Vector2" preserve="all"/>
+  <type fullname="UnityEngine.Vector3" preserve="all"/>
+  <type fullname="UnityEngine.Vector4" preserve="all"/>
+  <type fullname="UnityEngine.Quaternion" preserve="all"/>
+  <type fullname="UnityEngine.Matrix4x4" preserve="all"/>
+  <type fullname="UnityEngine.Color" preserve="all"/>
+  <type fullname="UnityEngine.Rect" preserve="all"/>
+  <type fullname="UnityEngine.Ray" preserve="all"/>
+  <type fullname="UnityEngine.RaycastHit" preserve="all"/>
+  <type fullname="UnityEngine.RaycastHit2D" preserve="all"/>
+  <type fullname="UnityEngine.Bounds" preserve="all"/>
+  <type fullname="UnityEngine.Plane" preserve="all"/>
+  <type fullname="UnityEngine.Mathf" preserve="all"/>
+  <type fullname="UnityEngine.Random" preserve="all"/>
+  
+  <!-- 系统和工具 -->
+  <type fullname="UnityEngine.Time" preserve="all"/>
+  <type fullname="UnityEngine.SystemInfo" preserve="all"/>
+  <type fullname="UnityEngine.Screen" preserve="all"/>
+  <type fullname="UnityEngine.Application" preserve="all"/>
+  <type fullname="UnityEngine.Resources" preserve="all"/>
+  <type fullname="UnityEngine.SceneManagement.SceneManager" preserve="all"/>
+  <type fullname="UnityEngine.Debug" preserve="all"/>
+  <type fullname="UnityEngine.Profiler" preserve="all"/>
+  <type fullname="UnityEngine.QualitySettings" preserve="all"/>
+  <type fullname="UnityEngine.RenderSettings" preserve="all"/>
+  <type fullname="UnityEngine.GL" preserve="all"/>
+  <type fullname="UnityEngine.Graphics" preserve="all"/>
+  <type fullname="UnityEngine.PlayerPrefs" preserve="all"/>
+  
+  <!-- 网络 -->
+  <type fullname="UnityEngine.Networking.UnityWebRequest" preserve="all"/>
+  <type fullname="UnityEngine.Networking.DownloadHandler" preserve="all"/>
+  <type fullname="UnityEngine.Networking.UploadHandler" preserve="all"/>
+</linker>
