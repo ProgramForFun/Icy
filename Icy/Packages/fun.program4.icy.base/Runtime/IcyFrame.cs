@@ -52,10 +52,12 @@ namespace Icy.Base
 
 			InitProto();
 
+#if ICY_PRESERVE_UNITY_CLASS
 			int dummy = UnityEngine.Random.Range(1, 2);
 			//只保证代码有引用、不被裁剪，不会执行
 			if (dummy == 0)
 				UnityClassReferencer.Preserve();
+#endif
 		}
 
 		/// <summary>

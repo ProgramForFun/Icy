@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#if ICY_PRESERVE_UNITY_CLASS
 
 using UnityEngine.Scripting;
 
@@ -234,3 +235,4 @@ public class UnityClassReferencer
 		typeof(UnityEngine.Networking.UploadHandler).ToString();
 	}
 }
+#endif
