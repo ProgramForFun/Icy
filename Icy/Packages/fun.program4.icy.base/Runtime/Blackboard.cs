@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Text;
 using System.Collections.Generic;
 
 namespace Icy.Base
@@ -126,6 +127,34 @@ namespace Icy.Base
 			{
 				if (_Object == null)
 					_Object = new Dictionary<string, object>();
+			}
+		}
+
+		/// <summary>
+		/// 序列化输出当前所有存储的数据，方便调试；
+		/// 内部实现有反射，注意在性能敏感的场景使用
+		/// </summary>
+		public string Dump()
+		{
+			Utf16ValueStringBuilder stringBuilder = ZString.CreateStringBuilder();
+			DoDump(ref stringBuilder, _Int, "---Int : ");
+			DoDump(ref stringBuilder, _Float, "---Float : ");
+			DoDump(ref stringBuilder, _String, "---String : ");
+			DoDump(ref stringBuilder, _Object, "---Object : ");
+
+			return stringBuilder.ToString();
+		}
+
+		private void DoDump<T1, T2>(ref Utf16ValueStringBuilder stringBuilder, Dictionary<T1, T2> dict, string name)
+		{
+			if (dict != null && dict.Count > 0)
+			{
+				stringBuilder.AppendLine(name);
+				foreach (var item in dict)
+				{
+					stringBuilder.AppendFormat("{0} : {1}", item.Key, item.Value);
+					stringBuilder.AppendLine();
+				}
 			}
 		}
 	}
