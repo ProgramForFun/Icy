@@ -222,7 +222,7 @@ namespace Icy.Base
 
 		/// <summary>
 		/// 序列化输出当前EventManager里所有注册的监听，方便调试；
-		/// 内部实现有反射，注意谨慎在性能敏感的场景使用
+		/// 内部实现有反射，在性能敏感的场景慎用
 		/// </summary>
 		public static string Dump()
 		{

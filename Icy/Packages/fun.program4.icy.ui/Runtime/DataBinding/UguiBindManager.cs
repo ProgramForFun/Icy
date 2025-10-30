@@ -121,7 +121,7 @@ namespace Icy.UI
 
 		/// <summary>
 		/// 序列化输出当前所有Bind，方便调试；
-		/// 内部实现有反射，注意谨慎在性能敏感的场景使用
+		/// 有大量文本操作，在性能敏感的场景慎用
 		/// </summary>
 		internal string Dump()
 		{

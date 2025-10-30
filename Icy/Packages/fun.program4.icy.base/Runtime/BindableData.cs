@@ -135,7 +135,7 @@ namespace Icy.Base
 
 		/// <summary>
 		/// 序列化输出当前所有Bind上来的监听，方便调试；
-		/// 内部实现有反射，注意在性能敏感的场景使用
+		/// 内部实现有反射，在性能敏感的场景慎用
 		/// </summary>
 		public string Dump()
 		{
