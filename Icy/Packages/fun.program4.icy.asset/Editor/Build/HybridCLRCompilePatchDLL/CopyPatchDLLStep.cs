@@ -101,7 +101,7 @@ namespace Icy.Asset.Editor
 				string dllPath = Path.Combine(srcDir, _PatchDLLs[i]);
 				if (File.Exists(dllPath))
 				{
-					string copy2Path = Path.Combine(copy2Dir, _PatchDLLs[i]);
+					string copy2Path = Path.Combine(copy2Dir, _PatchDLLs[i] + ".bytes");
 					File.Copy(dllPath, copy2Path, true);
 					Log.Info($"Copy {dllPath}  to  {copy2Path}", nameof(CopyPatchDLLStep));
 				}
