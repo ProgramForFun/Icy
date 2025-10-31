@@ -32,7 +32,7 @@ namespace Icy.Asset.Editor
 		/// <summary>
 		/// 当前选中平台的BuildTarget
 		/// </summary>
-		protected BuildTarget _CurrBuildTarget;
+		protected BuildTarget _CurrBuildTarget = BuildTarget.Android;
 		/// <summary>
 		/// Odin Tab组件
 		/// </summary>
