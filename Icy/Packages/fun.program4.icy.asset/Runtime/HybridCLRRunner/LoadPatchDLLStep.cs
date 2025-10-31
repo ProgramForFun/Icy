@@ -17,6 +17,10 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using UnityEngine;
 
 namespace Icy.Asset
 {
@@ -25,10 +29,42 @@ namespace Icy.Asset
 	/// </summary>
 	public class LoadPatchDLLStep : ProcedureStep
 	{
-
 		public override async UniTask Activate()
 		{
-			await UniTask.CompletedTask;
+			AssetSetting assetSetting = AssetManager.Instance.AssetSetting;
+			string patchDLLDir = assetSetting.PatchDLLCopyToDir;
+
+			List<AssetRef> allPatchDLLRefs = new List<AssetRef>();
+			List<UniTask> allPatchDLLRefUniTasks = new List<UniTask>();
+			for (int i = 0; i < assetSetting.PatchDLLs.Count; i++)
+			{
+				string patchDLLPath;
+				if (AssetManager.Instance.IsAddressable)
+					patchDLLPath = assetSetting.PatchDLLs[i];
+				else
+					patchDLLPath = Path.Combine(patchDLLDir, assetSetting.PatchDLLs[i]);
+
+				AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(patchDLLPath);
+				assetRef.Retain();
+				allPatchDLLRefs.Add(assetRef);
+				allPatchDLLRefUniTasks.Add(assetRef.ToUniTask());
+			}
+
+			await UniTask.WhenAll(allPatchDLLRefUniTasks);
+
+			//按顺序加载，由用户在Icy/Asset/Setting中根据热更DLL的依赖关系，编辑的顺序
+			//https://www.hybridclr.cn/docs/basic/runhotupdatecodes
+			for (int i = 0; i < allPatchDLLRefs.Count; i++)
+			{
+				//TextAsset bytes = allPatchDLLRefs[i].AssetObject as TextAsset;
+				////HybirdCLR支持在worker线程加载，避免卡顿
+				//await UniTask.RunOnThreadPool(() => { Assembly.Load(bytes.bytes); });
+			}
+
+			//HybridCLR内部会复制一份，外部的可以直接释放掉了
+			for (int i = 0; i < allPatchDLLRefs.Count; i++)
+				allPatchDLLRefs[i].Release();
+
 			Finish();
 		}
 
