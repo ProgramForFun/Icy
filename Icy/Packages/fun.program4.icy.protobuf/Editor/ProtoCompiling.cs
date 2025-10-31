@@ -190,7 +190,7 @@ namespace Icy.Protobuf.Editor
 			EditorApplication.delayCall += () =>
 			{
 				//有编译错误时，关闭ProgressBar，避免卡死edtior
-				if (EditorUtility.scriptCompilationFailed && _IsProgressBarDisplaying)
+				if (CommonUtility.HasCompileErrors() && _IsProgressBarDisplaying)
 					Clear();
 			};
 		}
