@@ -32,6 +32,14 @@ namespace Icy.Asset
 	public sealed class AssetManager : Singleton<AssetManager>
 	{
 		/// <summary>
+		/// 当前Package是否开启了Addressable
+		/// </summary>
+		public bool IsAddressable => _Package.GetPackageDetails().EnableAddressable;
+		/// <summary>
+		/// 资源相关设置
+		/// </summary>
+		public AssetSetting AssetSetting { get; private set; }
+		/// <summary>
 		/// YooAsset Package
 		/// </summary>
 		private ResourcePackage _Package;
@@ -51,10 +59,6 @@ namespace Icy.Asset
 		/// 默认Package名字
 		/// </summary>
 		private string _DefaultPackageName;
-		/// <summary>
-		/// 资源相关设置
-		/// </summary>
-		private AssetSetting _AssetSetting;
 		/// <summary>
 		/// Build相关设置
 		/// </summary>
@@ -86,7 +90,7 @@ namespace Icy.Asset
 			}
 
 			byte[] assetSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.AssetSetting);
-			_AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
+			AssetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
 
 			IDecryptionServices decryptionServices = null;
 			byte[] buildSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.GetBuildSettingName());
@@ -162,7 +166,7 @@ namespace Icy.Asset
 		/// <param name="isMain">是主地址还是备地址</param>
 		private string GetHostServerURL(bool isMain)
 		{
-			string hostServerAddress = isMain ? _AssetSetting.AssetHostServerAddressMain : _AssetSetting.AssetHostServerAddressStandby;
+			string hostServerAddress = isMain ? AssetSetting.AssetHostServerAddressMain : AssetSetting.AssetHostServerAddressStandby;
 			if (string.IsNullOrEmpty(hostServerAddress))
 			{
 				Log.Error("Asset host server address is empty, open Icy/Asset/Setting to set it");
