@@ -56,9 +56,9 @@ namespace Icy.Asset
 			//https://www.hybridclr.cn/docs/basic/runhotupdatecodes
 			for (int i = 0; i < allPatchDLLRefs.Count; i++)
 			{
-				//TextAsset bytes = allPatchDLLRefs[i].AssetObject as TextAsset;
-				////HybirdCLR支持在worker线程加载，避免卡顿
-				//await UniTask.RunOnThreadPool(() => { Assembly.Load(bytes.bytes); });
+				TextAsset bytes = allPatchDLLRefs[i].AssetObject as TextAsset;
+				//HybirdCLR支持在worker线程加载，避免卡顿
+				await UniTask.RunOnThreadPool(() => { Assembly.Load(bytes.bytes); });
 			}
 
 			//HybridCLR内部会复制一份，外部的可以直接释放掉了
