@@ -131,12 +131,35 @@ namespace Icy.Asset.Editor
 		{
 			if (_PatchDLLs != null)
 			{
+				var oldPatchDLLs = _Setting.PatchDLLs.Clone();
 				_Setting.PatchDLLs.Clear();
+
+				//先加之前就有的，尽量保持现有的顺序
+				for (int i = 0; i < oldPatchDLLs.Count; i++)
+				{
+					if (_PatchDLLs.Contains(oldPatchDLLs[i]))
+						_Setting.PatchDLLs.Add(oldPatchDLLs[i]);
+				}
+
+				bool changed = _Setting.PatchDLLs.Count != oldPatchDLLs.Count;
+				//本次编译如果有新增，新增的放在最后
 				for (int i = 0; i < _PatchDLLs.Count; i++)
-					_Setting.PatchDLLs.Add(_PatchDLLs[i]);
+				{
+					if (!_Setting.PatchDLLs.Contains(_PatchDLLs[i]))
+						_Setting.PatchDLLs.Add(oldPatchDLLs[i]);
+				}
 
 				string targetDir = SettingsHelper.GetSettingDir();
 				SettingsHelper.SaveSetting(targetDir, SettingsHelper.AssetSetting, _Setting.ToByteArray());
+
+				if (changed)
+				{
+					string content = "热更DLL列表有变化，在当前的打包/编译操作结束后，请记得前往Icy/Asset/Setting，重新调整热更DLL列表的顺序";
+					if (Application.isBatchMode)
+						Log.Error(content);
+					else
+						EditorUtility.DisplayDialog("", content, "OK");
+				}
 			}
 
 			await UniTask.CompletedTask;
