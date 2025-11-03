@@ -122,25 +122,25 @@ namespace Icy.Editor
 		{
 			if (!IsGenerateBatPathValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {GenerateBatPath} 文件，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {GenerateBatPath} 文件，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 
 			if (!IsCodeOutputDirValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {CodeOutputDir} 目录，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {CodeOutputDir} 目录，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 
 			if (!IsBinOutputDirValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {BinOutputDir} 目录，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {BinOutputDir} 目录，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 
 			if (!IsJsonOutputDirValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {JsonOutputDir} 目录，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {JsonOutputDir} 目录，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 

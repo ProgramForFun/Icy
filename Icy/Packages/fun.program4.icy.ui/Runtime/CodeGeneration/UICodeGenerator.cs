@@ -69,7 +69,7 @@ namespace Icy.UI
 			}
 			else
 			{
-				EditorUtility.DisplayDialog("Error", "UI prefab的命名应该以UI作为前缀", "这就改");
+				CommonUtility.SafeDisplayDialog("Error", "UI prefab的命名应该以UI作为前缀", "这就改", LogLevel.Error);
 				UIName = "UI prefab的命名应该以UI作为前缀";
 			}
 

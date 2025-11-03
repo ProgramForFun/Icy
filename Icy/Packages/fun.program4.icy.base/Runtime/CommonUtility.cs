@@ -359,6 +359,41 @@ namespace Icy.Base
 
 #if UNITY_EDITOR
 		/// <summary>
+		/// 判断了是否是BatchMode的DisplayDialog
+		/// </summary>
+		public static bool SafeDisplayDialog(string title, string message, string ok, LogLevel logLevelInBatchMode)
+		{
+			if (Application.isBatchMode)
+			{
+				Log.ForceLogOnce();
+				string tag = nameof(SafeDisplayDialog);
+				switch (logLevelInBatchMode)
+				{
+					case LogLevel.Info:
+						Log.Info(message, tag);
+						break;
+					case LogLevel.Warning:
+						Log.Warn(message, tag);
+						break;
+					case LogLevel.Error:
+						Log.Error(message, tag);
+						break;
+					case LogLevel.Assert:
+						Log.Assert(false, message, tag);
+						break;
+					default:
+						Log.Error(message, tag);
+						break;
+				}
+				return false;
+			}
+			else
+				return UnityEditor.EditorUtility.DisplayDialog(title, message, ok);
+		}
+#endif
+
+#if UNITY_EDITOR
+		/// <summary>
 		/// 获取调用此函数的C#类，所在的目录
 		/// </summary>
 		public static string GetCurrentScriptDirectory()

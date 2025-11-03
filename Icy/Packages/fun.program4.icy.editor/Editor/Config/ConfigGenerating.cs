@@ -44,7 +44,8 @@ namespace Icy.Editor
 				byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetEditorOnlySettingDir(), SettingsHelper.ConfigSetting);
 				if (bytes == null)
 				{
-					EditorUtility.DisplayDialog("", $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/{SettingsHelper.ConfigSetting}", "OK");
+					string msg = $"打表未执行，未找到{SettingsHelper.GetEditorOnlySettingDir()}/{SettingsHelper.ConfigSetting}";
+					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
 					Clear();
 				}
 				else
@@ -56,7 +57,7 @@ namespace Icy.Editor
 					if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(setting.CodeOutputDir) 
 						|| string.IsNullOrEmpty(setting.BinOutputDir) || string.IsNullOrEmpty(setting.JsonOutputDir))
 					{
-						EditorUtility.DisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，完成所有的设置", "OK");
+						CommonUtility.SafeDisplayDialog("", $"打表未执行，请先去Icy/Config/Setting菜单中，完成所有的设置", "OK", LogLevel.Error);
 						Clear();
 						return;
 					}

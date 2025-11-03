@@ -80,7 +80,7 @@ namespace Icy.Protobuf.Editor
 				}
 				if (string.IsNullOrEmpty(batFilePath) || string.IsNullOrEmpty(outputDirFullPath))
 				{
-					EditorUtility.DisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK");
+					CommonUtility.SafeDisplayDialog("", $"编译未执行，请先去Icy/Proto/Setting菜单中，设置 编译Proto的Bat脚本路径", "OK", LogLevel.Error);
 					Clear();
 					return;
 				}
@@ -350,7 +350,7 @@ namespace Icy.Protobuf.Editor
 				targetDir = setting.ProtoOutputDir;
 			if (string.IsNullOrEmpty(targetDir))
 			{
-				EditorUtility.DisplayDialog("", $"输出失败，请先去Icy/Proto/Setting菜单中，设置 Proto编译后的代码的输出目录", "OK");
+				CommonUtility.SafeDisplayDialog("", $"输出失败，请先去Icy/Proto/Setting菜单中，设置 Proto编译后的代码的输出目录", "OK", LogLevel.Error);
 				return;
 			}
 

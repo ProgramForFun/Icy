@@ -61,7 +61,7 @@ namespace Icy.UI.Editor
 				if (!EditorApplication.isPlaying && stage != null)
 				{
 					CopySerializeField("UI" + generatingUIName);
-					EditorUtility.DisplayDialog("Generate UI Code", "生成UI代码完成", "OK");
+					CommonUtility.SafeDisplayDialog("Generate UI Code", "生成UI代码完成", "OK", LogLevel.Info);
 					BiProgress.Hide();
 				}
 
@@ -75,7 +75,7 @@ namespace Icy.UI.Editor
 			string generatingLogicUIName = EditorLocalPrefs.GetString(GENERATING_UI_LOGIC_NAME_KEY, "");
 			if (!string.IsNullOrEmpty(generatingLogicUIName))
 			{
-				EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码完成", "OK");
+				CommonUtility.SafeDisplayDialog("Generate UI Code", "生成UI Logic代码完成", "OK", LogLevel.Info);
 				BiProgress.Hide();
 
 				EditorApplication.delayCall += () =>
@@ -95,7 +95,8 @@ namespace Icy.UI.Editor
 				//有编译错误时，关闭ProgressBar，避免卡死edtior
 				if (CommonUtility.HasCompileErrors() && (!string.IsNullOrEmpty(generatingUIName) || !string.IsNullOrEmpty(generatingLogicUIName)))
 				{
-					EditorUtility.DisplayDialog("", $"已生成代码，但有编译错误，如果是删除、改名、改类型了{nameof(UICodeGenerator)}中的字段，这个报错是正常的", "OK");
+					string msg = $"已生成代码，但有编译错误，如果是删除、改名、改类型了{nameof(UICodeGenerator)}中的字段，这个报错是正常的";
+					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
 					BiProgress.Hide();
 					EditorLocalPrefs.RemoveKey(GENERATING_UI_NAME_KEY);
 					EditorLocalPrefs.RemoveKey(GENERATING_UI_LOGIC_NAME_KEY);
@@ -217,7 +218,7 @@ namespace Icy.UI.Editor
 			}
 			else
 			{
-				EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK");
+				CommonUtility.SafeDisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK", LogLevel.Error);
 				BiProgress.Hide();
 			}
 
@@ -255,7 +256,7 @@ namespace Icy.UI.Editor
 				EditorLocalPrefs.Save();
 			}
 			else
-				EditorUtility.DisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK");
+				CommonUtility.SafeDisplayDialog("Generate UI Code", "生成UI Logic代码失败，文件已存在", "OK", LogLevel.Error);
 
 			AssetDatabase.Refresh();
 		}

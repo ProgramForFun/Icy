@@ -132,19 +132,19 @@ namespace Icy.Protobuf.Editor
 		{
 			if (!IsCompileBatPathValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {CompileBatPath} 文件，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {CompileBatPath} 文件，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 
 			if (!IsProtoOutputDirValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到 {ProtoOutputDir} 目录，请检查路径", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到 {ProtoOutputDir} 目录，请检查路径", "OK", LogLevel.Error);
 				return;
 			}
 
 			if (!IsProtoAssemblyNameValid())
 			{
-				EditorUtility.DisplayDialog("", $"找不到{ProtoAssemblyName}程序集，或程序集没有和ProtoOutputDir在一个目录", "OK");
+				CommonUtility.SafeDisplayDialog("", $"找不到{ProtoAssemblyName}程序集，或程序集没有和ProtoOutputDir在一个目录", "OK", LogLevel.Error);
 				return;
 			}
 

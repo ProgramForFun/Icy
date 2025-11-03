@@ -154,11 +154,8 @@ namespace Icy.Asset.Editor
 
 				if (changed)
 				{
-					string content = "热更DLL列表有变化，在当前的打包/编译操作结束后，请记得前往Icy/Asset/Setting，重新调整热更DLL列表的顺序";
-					if (Application.isBatchMode)
-						Log.Error(content);
-					else
-						EditorUtility.DisplayDialog("", content, "OK");
+					string msg = "热更DLL列表有变化，在当前的打包/编译操作结束后，请记得前往Icy/Asset/Setting，重新调整热更DLL列表的顺序";
+					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
 				}
 			}
 
