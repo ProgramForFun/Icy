@@ -365,24 +365,23 @@ namespace Icy.Base
 		{
 			if (Application.isBatchMode)
 			{
-				Log.ForceLogOnce();
 				string tag = nameof(SafeDisplayDialog);
 				switch (logLevelInBatchMode)
 				{
 					case LogLevel.Info:
-						Log.Info(message, tag);
+						Log.Info(message, tag, true);
 						break;
 					case LogLevel.Warning:
-						Log.Warn(message, tag);
+						Log.Warn(message, tag, true);
 						break;
 					case LogLevel.Error:
-						Log.Error(message, tag);
+						Log.Error(message, tag, true);
 						break;
 					case LogLevel.Assert:
 						Log.Assert(false, message, tag);
 						break;
 					default:
-						Log.Error(message, tag);
+						Log.Error(message, tag, true);
 						break;
 				}
 				return false;

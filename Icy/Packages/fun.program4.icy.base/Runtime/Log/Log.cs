@@ -61,11 +61,6 @@ namespace Icy.Base
 		/// </summary>
 		private static string _ColorOnce = null;
 #endif
-		/// <summary>
-		/// 是否忽略Log等级，强制Log一条日志，单次生效；
-		/// 对某些情况下要在release下log一条info日志时有用；
-		/// </summary>
-		private static bool _ForceOnce = false;
 
 		#region WriteLog2File
 		/// <summary>
@@ -123,7 +118,6 @@ namespace Icy.Base
 			lock (_LevelLock)
 			{
 				_OverrideMinLogLevelForTag.Clear();
-				_ForceOnce = false;
 			}
 
 #if UNITY_EDITOR
@@ -131,28 +125,52 @@ namespace Icy.Base
 #endif
 		}
 
-		public static void Info(object msg, string tag = null)
+		/// <summary>
+		/// 打印级别为Info的Log
+		/// </summary>
+		/// <param name="msg">Log内容本体</param>
+		/// <param name="tag">显示在Log最前面的tag，可选</param>
+		/// <param name="force">是否忽略LogLevel控制，强行Log；适用于想在发布后的某些个别场景，保留低于LogLevel的比如普通Info Log的场景，要避免滥用</param>
+		public static void Info(object msg, string tag = null, bool force = false)
 		{
-			if (!IsMatchLogLevel(tag, LogLevel.Info))
+			if (!force && !IsMatchLogLevel(tag, LogLevel.Info))
 				return;
 
 			Debug.Log(FormatByTag(tag, msg));
 		}
 
-		public static void Warn(object msg, string tag = null)
+		/// <summary>
+		/// 打印级别为Warning的Log
+		/// </summary>
+		/// <param name="msg">Log内容本体</param>
+		/// <param name="tag">显示在Log最前面的tag，可选</param>
+		/// <param name="force">是否忽略LogLevel控制，强行Log；适用于想在发布后的某些个别场景，保留低于LogLevel的比如普通Info Log的场景，要避免滥用</param>
+		public static void Warn(object msg, string tag = null, bool force = false)
 		{
-			if (!IsMatchLogLevel(tag, LogLevel.Warning))
+			if (!force && !IsMatchLogLevel(tag, LogLevel.Warning))
 				return;
 			Debug.LogWarning(FormatByTag(tag, msg));
 		}
 
-		public static void Error(object msg, string tag = null)
+		/// <summary>
+		/// 打印级别为Error的Log
+		/// </summary>
+		/// <param name="msg">Log内容本体</param>
+		/// <param name="tag">显示在Log最前面的tag，可选</param>
+		/// <param name="force">是否忽略LogLevel控制，强行Log；适用于想在发布后的某些个别场景，保留低于LogLevel的比如普通Info Log的场景，要避免滥用</param>
+		public static void Error(object msg, string tag = null, bool force = false)
 		{
-			if (!IsMatchLogLevel(tag, LogLevel.Error))
+			if (!force && !IsMatchLogLevel(tag, LogLevel.Error))
 				return;
 			Debug.LogError(FormatByTag(tag, msg));
 		}
 
+		/// <summary>
+		/// Assert，editor下会弹出提示窗口，并暂停游戏
+		/// </summary>
+		/// <param name="condition">为false则触发Assert</param>
+		/// <param name="msg">Log内容本体</param>
+		/// <param name="tag">显示在Log最前面的tag，可选</param>
 		public static void Assert(bool condition, object msg, string tag = null)
 		{
 			if (!IsMatchLogLevel(tag, LogLevel.Assert))
@@ -182,26 +200,11 @@ namespace Icy.Base
 #endif
 		}
 
-		/// <summary>
-		/// 忽略Log等级，强制Log一条日志，单次生效；
-		/// 比如在某些情况下要在release下保留一条info日志时有用；
-		/// </summary>
-		public static void ForceLogOnce()
-		{
-			lock (_LevelLock)
-				_ForceOnce = true;
-		}
-
 		private static bool IsMatchLogLevel(string tag, LogLevel logLevel)
 		{
 			lock (_LevelLock)
 			{
-				if (_ForceOnce)
-				{
-					_ForceOnce = false;
-					return true;
-				}
-				else if (tag != null && _OverrideMinLogLevelForTag.ContainsKey(tag))
+				if (tag != null && _OverrideMinLogLevelForTag.ContainsKey(tag))
 				{
 					if (logLevel < _OverrideMinLogLevelForTag[tag])
 						return false;

@@ -212,8 +212,7 @@ namespace Icy.Base
 		/// </summary>
 		public static void ClearAll()
 		{
-			Log.ForceLogOnce();
-			Log.Info("Clear EventManager");
+			Log.Info("Clear EventManager", nameof(EventManager), true);
 			lock (_EventLock)
 				_EventListenerMap.Clear();
 			lock (_ParamLock)
