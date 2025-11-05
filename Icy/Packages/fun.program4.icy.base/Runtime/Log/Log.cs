@@ -196,6 +196,12 @@ namespace Icy.Base
 		public static void SetColorOnce(Color color)
 		{
 #if UNITY_EDITOR
+			if (!IcyFrame.Instance.IsMainThread())
+			{
+				Error("Call Log.SetColorOnce from worker thread is not supported now", nameof(SetColorOnce));
+				return;
+			}
+
 			_ColorOnce = ColorUtility.ToHtmlStringRGB(color);
 #endif
 		}
