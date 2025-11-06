@@ -31,6 +31,12 @@ namespace Icy.Asset
 	{
 		public override async UniTask Activate()
 		{
+			await Load();
+			Finish();
+		}
+
+		protected async UniTask Load()
+		{
 			AssetSetting assetSetting = AssetManager.Instance.AssetSetting;
 			string patchDLLDir = assetSetting.PatchDLLCopyToDir;
 
@@ -64,8 +70,6 @@ namespace Icy.Asset
 			//HybridCLR内部会复制一份，外部的可以直接释放掉了
 			for (int i = 0; i < allPatchDLLRefs.Count; i++)
 				allPatchDLLRefs[i].Release();
-
-			Finish();
 		}
 
 		public override async UniTask Deactivate()
