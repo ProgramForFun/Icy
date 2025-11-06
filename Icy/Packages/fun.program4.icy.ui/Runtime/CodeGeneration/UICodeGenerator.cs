@@ -40,9 +40,9 @@ namespace Icy.UI
 	public sealed class UICodeGenerator : MonoBehaviour
 	{
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
-		[OnInspectorInit("OnInspectorInit")]
-		[OnInspectorDispose("OnInspectorDispose")]
-		[OnCollectionChanged("OnTableListChanged")]
+		[OnInspectorInit(nameof(OnInspectorInit))]
+		[OnInspectorDispose(nameof(OnInspectorDispose))]
+		[OnCollectionChanged(nameof(OnTableListChanged))]
 		public List<UICodeGeneratorItem> Components = new List<UICodeGeneratorItem>();
 
 		private Dictionary<string, UICodeGeneratorItem> _ForDuplicateName = new Dictionary<string, UICodeGeneratorItem>();

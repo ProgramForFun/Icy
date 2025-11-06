@@ -40,7 +40,7 @@ namespace Icy.Asset.Editor
 		[Title("包名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string ApplicationIdentifier;
 
 		[TabGroup("", "Android")]
@@ -49,7 +49,7 @@ namespace Icy.Asset.Editor
 		[Title("展示给玩家的游戏名称")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string ProductName;
 
 		[TabGroup("", "Android")]
@@ -58,7 +58,7 @@ namespace Icy.Asset.Editor
 		[Title("公司名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string CompanyName;
 
 		[TabGroup("", "Android")]
@@ -67,7 +67,7 @@ namespace Icy.Asset.Editor
 		[Title("string版本号（PlayerSettings.bundleVersion）")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string BundleVersion;
 
 		[TabGroup("", "Android")]
@@ -75,21 +75,21 @@ namespace Icy.Asset.Editor
 		[Title("数字版本号（PlayerSettings.Android.bundleVersionCode、PlayerSettings.iOS.buildNumber）")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public int BundleNumber;
 
 		[TabGroup("", "Android")]
 		[Title("KeyStore密码")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string KeyStorePassword;
 
 		[TabGroup("", "iOS")]
 		[Title("自动签名")]
 		[ShowInInspector]
 		[Delayed]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public bool AutoSigning;
 
 		[TabGroup("", "Android")]
@@ -97,7 +97,7 @@ namespace Icy.Asset.Editor
 		[TabGroup("", "Win64")]
 		[Title("Build输出目录")]
 		[FolderPath]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string OutputDir;
 
 		[FoldoutGroup("打包步骤", Expanded = false)]
@@ -106,16 +106,16 @@ namespace Icy.Asset.Editor
 
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
-		[InlineButton("SwitchAssetBundleOptionsTips", "?")]
+		[InlineButton(nameof(SwitchAssetBundleOptionsTips), "?")]
 		[EnumToggleButtons]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionAssetBundle AssetBundleOptions;
 
 		[BoxGroup("调试选项")]
 		[InfoBox("是否打Dev版本  ┃  是否允许调试代码  ┃  是否启动时自动连接Profiler  ┃  是否开启Deep Profiling", "_ShowDevOptionsTips")]
-		[InlineButton("SwitchDevOptionsTips", "?")]
+		[InlineButton(nameof(SwitchDevOptionsTips), "?")]
 		[EnumToggleButtons]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionDev DevOptions;
 
 		[PropertySpace(5)]

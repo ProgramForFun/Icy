@@ -51,29 +51,29 @@ namespace Icy.UI
 		/// </summary>
 		//[TableColumnWidth(33, Resizable = false)]
 		//[PreviewField(33, Alignment = ObjectFieldAlignment.Center)]
-		[GUIColor("GetCompColor")]
-		[OnValueChanged("OnObjectChanged")]
+		[GUIColor(nameof(GetCompColor))]
+		[OnValueChanged(nameof(OnObjectChanged))]
 		public GameObject Object;
 
 		/// <summary>
 		/// 生成到C#代码的变量名
 		/// </summary>
 		[Delayed]
-		[GUIColor("GetNameColor")]
-		[OnValueChanged("OnNameChanged")]
+		[GUIColor(nameof(GetNameColor))]
+		[OnValueChanged(nameof(OnNameChanged))]
 		public string Name;
 
 		/// <summary>
 		/// 生成到C#代码的变量类型
 		/// </summary>
-		[ValueDropdown("_AllComponents", IsUniqueList = true, DropdownWidth = 200)]
+		[ValueDropdown(nameof(_AllComponents), IsUniqueList = true, DropdownWidth = 200)]
 		[TableColumnWidth(100)]
 		public UnityEngine.Object Component;
 
 		/// <summary>
 		/// 拖上来的物体上面所有的组件，不包括忽略的
 		/// </summary>
-		[OnInspectorInit("OnInspectorInit")]
+		[OnInspectorInit(nameof(OnInspectorInit))]
 		private ValueDropdownList<UnityEngine.Object> _AllComponents;
 
 		/// <summary>

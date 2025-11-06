@@ -36,29 +36,29 @@ namespace Icy.Editor
 		[Title("生成Config的Bat脚本路径")]
 		[Delayed]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsGenerateBatPathValid", "Invalid path", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsGenerateBatPathValid), "Invalid path", InfoMessageType.Error)]
 		public string GenerateBatPath;
 
 		[Title("Config代码的导出输出目录")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsCodeOutputDirValid", "Invalid dir", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsCodeOutputDirValid), "Invalid dir", InfoMessageType.Error)]
 		public string CodeOutputDir;
 
 		[Title("Bin格式的Config的导出输出目录")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsBinOutputDirValid", "Invalid dir", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsBinOutputDirValid), "Invalid dir", InfoMessageType.Error)]
 		public string BinOutputDir;
 
 		[Title("Json格式的Config的导出输出目录")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsJsonOutputDirValid", "Invalid dir", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsJsonOutputDirValid), "Invalid dir", InfoMessageType.Error)]
 		public string JsonOutputDir;
 
 

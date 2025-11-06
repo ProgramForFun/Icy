@@ -33,7 +33,7 @@ namespace Icy.Editor
 
 		[TableList(AlwaysExpanded = true, MinScrollViewHeight = 1000)]
 		[ListDrawerSettings(DraggableItems = true)]
-		[OnCollectionChanged("OnTableListChanged")]
+		[OnCollectionChanged(nameof(OnTableListChanged))]
 		public List<AssetTrayWindowItem> _Assets;
 
 		/// <summary>

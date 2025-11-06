@@ -37,7 +37,7 @@ namespace Icy.Asset.Editor
 		[Title("AssetBundle补丁包列表")]
 		[HideLabel]
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
-		[OnCollectionChanged("OnTableListChanged")]
+		[OnCollectionChanged(nameof(OnTableListChanged))]
 		public List<AssetBundleWindowItem> _BundleVersionList;
 
 		[FoldoutGroup("打包步骤", Expanded = false)]
@@ -46,9 +46,9 @@ namespace Icy.Asset.Editor
 
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
-		[InlineButton("SwitchAssetBundleOptionsTips", "?")]
+		[InlineButton(nameof(SwitchAssetBundleOptionsTips), "?")]
 		[EnumToggleButtons]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionAssetBundle AssetBundleOptions;
 
 		protected bool _ShowAssetBundleOptionsTips = false;

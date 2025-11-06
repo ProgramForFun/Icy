@@ -36,22 +36,22 @@ namespace Icy.Protobuf.Editor
 		[Title("编译Proto的Bat脚本路径")]
 		[Delayed]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsCompileBatPathValid", "Invalid compile bat path", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsCompileBatPathValid), "Invalid compile bat path", InfoMessageType.Error)]
 		public string CompileBatPath;
 
 		[Title("Proto编译后的代码的输出目录")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsProtoOutputDirValid", "Invalid proto output dir", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsProtoOutputDirValid), "Invalid proto output dir", InfoMessageType.Error)]
 		public string ProtoOutputDir;
 
 		[Title("Proto的程序集名称，不 包括扩展名")]
 		[Delayed]
 		[Required]
-		[OnValueChanged("OnDataChanged")]
-		[ValidateInput("IsProtoAssemblyNameValid", "Invalid asmdef name", InfoMessageType.Error)]
+		[OnValueChanged(nameof(OnDataChanged))]
+		[ValidateInput(nameof(IsProtoAssemblyNameValid), "Invalid asmdef name", InfoMessageType.Error)]
 		public string ProtoAssemblyName;
 
 

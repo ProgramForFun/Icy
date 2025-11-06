@@ -36,27 +36,27 @@ namespace Icy.Asset.Editor
 		[Title("热更新资源Host地址（主）")]
 		[DelayedProperty]
 		[Required]
-		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
-		[OnValueChanged("SaveSetting")]
+		[ValidateInput(nameof(IsValidHttpOrHttpsUrl), "Invalid Http(s) address", InfoMessageType.Error)]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string AssetHostServerAddressMain;
 
 		[Title("热更新资源Host地址（备）")]
 		[DelayedProperty]
 		[Required]
-		[ValidateInput("IsValidHttpOrHttpsUrl", "Invalid Http(s) address", InfoMessageType.Error)]
-		[OnValueChanged("SaveSetting")]
+		[ValidateInput(nameof(IsValidHttpOrHttpsUrl), "Invalid Http(s) address", InfoMessageType.Error)]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string AssetHostServerAddressStandby;
 
 		[Title("打包过程中，会将HybridCLR编译出的热更DLL，Copy到此目录，方便业务侧将其打包成AB")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string PatchDLLCopyToDir;
 
 		[Title("在BuildWindow执行HybridCLR Generate All时，会将生成的补充元数据DLL，Copy到此目录，方便业务侧将其打包成AB")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("SaveSetting")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public string MetaDataDLLCopyToDir;
 
 		[FoldoutGroup("热更DLL列表", Expanded = false)]

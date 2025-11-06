@@ -34,7 +34,7 @@ namespace Icy.UI.Editor
 		[Title("UI类文件的根目录")]
 		[FolderPath]
 		[Required]
-		[OnValueChanged("OnUIRootPathChanged")]
+		[OnValueChanged(nameof(OnUIRootPathChanged))]
 		public string UIRootPath;
 
 
