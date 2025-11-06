@@ -61,7 +61,8 @@ namespace Icy.Asset.Editor
 
 		[FoldoutGroup("热更DLL列表", Expanded = false)]
 		[HorizontalGroup("热更DLL列表/PatchDLLs")]
-		[ReadOnly]
+		[InfoBox("可拖动调整顺序，被依赖的在上，依赖的在下，HybridCLR运行时根据从上到下的顺序加载DLL")]
+		[OnValueChanged(nameof(SaveSetting))]
 		public List<string> PatchDLLs;
 
 		[Button("Clear", ButtonSizes.Medium)]
