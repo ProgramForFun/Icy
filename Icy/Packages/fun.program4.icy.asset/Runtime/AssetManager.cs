@@ -17,6 +17,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -258,15 +259,17 @@ namespace Icy.Asset
 		}
 
 		/// <summary>
-		/// 加载运行热更代码
+		/// 加载运行热更代码，AssetManager负责热更DLL和补充元数据DLL的加载，以及相关的解密之类的操作；
+		/// 注意，最后的AOT调用热更代码入口这个操作，需要业务侧在回调参数里具体执行；
+		/// 具体参考：https://www.hybridclr.cn/docs/basic/runhotupdatecodes
 		/// </summary>
-		public async UniTask RunPatchedCSharpCode()
+		public async UniTask RunPatchedCSharpCode(Action runCode)
 		{
 #if UNITY_EDITOR
 			Log.Warn("Run HybridCLR at runtime in editor is not expected");
 #endif
 
-			_HybridCLR = new HybridCLRRunner();
+			_HybridCLR = new HybridCLRRunner(runCode);
 			await _HybridCLR.Run();
 
 			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);

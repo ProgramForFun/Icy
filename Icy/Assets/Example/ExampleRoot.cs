@@ -19,7 +19,7 @@ public class ExampleRoot : MonoBehaviour
 	[SerializeField] private EPlayMode _AssetMode;
 	[SerializeField] private Camera _Camera3D;
 
-	// Start is called before the first frame update
+
 	async void Start()
 	{
 		//基础功能的开关
@@ -52,7 +52,9 @@ public class ExampleRoot : MonoBehaviour
 		await AssetManager.Instance.StartAssetPatch();
 #if !UNITY_EDITOR
 		//再加载热更代码
-		await AssetManager.Instance.RunPatchedCSharpCode();
+		await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
+#else
+		//Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
 #endif
 
 		//=================开始业务逻辑=================
@@ -70,7 +72,14 @@ public class ExampleRoot : MonoBehaviour
 		UIManager.Instance.DestroyToPrev();
 	}
 
-	// Update is called once per frame
+	/// <summary>
+	/// 业务侧在这里具体执行 AOT调用热更代码入口 这个操作
+	/// </summary>
+	void RunPatchedCode()
+	{
+
+	}
+
 	void Update()
     {
 #if UNITY_EDITOR

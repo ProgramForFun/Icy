@@ -16,6 +16,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System;
 
 namespace Icy.Asset
 {
@@ -28,11 +29,16 @@ namespace Icy.Asset
 		/// 是否完成
 		/// </summary>
 		public bool IsFinished { get; internal set; }
+		/// <summary>
+		/// 强制加载、解密等完成，调用业务侧传入的热更代码入口的执行
+		/// </summary>
+		private Action _RunCode;
 
-		internal HybridCLRRunner()
+		internal HybridCLRRunner(Action runCode)
 		{
+			if (runCode == null)
+				Log.Assert(false, "Argument of the constructor is null", nameof(HybridCLRRunner));
 			IsFinished = false;
-
 		}
 
 		internal async UniTask Run()
@@ -46,6 +52,7 @@ namespace Icy.Asset
 			while(!patchProcedure.IsFinished)
 				await UniTask.NextFrame();
 
+			_RunCode();
 			IsFinished = true;
 		}
 	}
