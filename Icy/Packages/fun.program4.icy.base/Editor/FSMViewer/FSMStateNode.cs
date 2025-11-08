@@ -31,7 +31,7 @@ namespace Icy.Base.Editor
 
 			AddInput(Orientation.Horizontal);
 			AddOutput(Orientation.Horizontal);
-			SetColor(Color.cyan);
+			//SetColor(Color.cyan);
 		}
 
 		public void AddInput(Orientation orientation)

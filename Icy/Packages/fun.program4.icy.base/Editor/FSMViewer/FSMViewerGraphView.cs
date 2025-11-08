@@ -15,6 +15,7 @@
  */
 
 
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -29,6 +30,7 @@ namespace Icy.Base.Editor
 	public class FSMViewerGraphView : GraphView
 	{
 		private EditorWindow _EditorWindow;
+		private List<FSMStateNode> _CurrNodes;
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
 		{
@@ -37,6 +39,8 @@ namespace Icy.Base.Editor
 			//缩放范围
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
+			//创建背景网格
+			//TODO：暂时有未知问题，无法创建
 			GridBackground gridBackground = new GridBackground();
 			gridBackground.name = nameof(GridBackground);
 			Insert(0, gridBackground); // 插入到最底层
@@ -48,10 +52,34 @@ namespace Icy.Base.Editor
 			//允许框选
 			this.AddManipulator(new RectangleSelector());
 
+			//监听节点创建事件
 			nodeCreationRequest += OnNodeCreationRequest;
 
-			//AddNode("TestNode 1");
-			//AddNode("TestNode 2");
+			//创建FSM列表
+			_CurrNodes = new List<FSMStateNode>();
+			FSMListView flw = new FSMListView(this, OnClickFSM);
+			List<string> items = new List<string>
+			{
+				"项目1", "项目2", "项目3", "项目4", "项目5", "项目6", "项目7", "项目8", "项目9", "项目10", "项目11", "项目12", "项目13", "项目14", "项目15", "项目16", "项目17", "项目18", "项目19", "项目20"
+			};
+			flw.Update(items);
+		}
+
+		private void OnClickFSM(string obj)
+		{
+			Log.Info(obj);
+
+			for (int i = 0; i < _CurrNodes.Count; i++)
+				RemoveElement(_CurrNodes[i]);
+			_CurrNodes.Clear();
+
+			FSMStateNode node1 = AddNode("TestNode 1");
+			node1.SetPosition(new Rect(300, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
+			_CurrNodes.Add(node1);
+
+			FSMStateNode node2 = AddNode("TestNode 2");
+			node2.SetPosition(new Rect(800, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
+			_CurrNodes.Add(node2);
 		}
 
 		public FSMStateNode AddNode(string nodeName)
@@ -79,7 +107,7 @@ namespace Icy.Base.Editor
 
 		/// <summary>
 		/// 把屏幕坐标转换到GraphView坐标下；
-		/// TODO：缩放状态的转换有问题
+		/// TODO：缩放状态下的转换有问题
 		/// </summary>
 		private Vector2 ScreenToGraphView(Vector2 screenPosition)
 		{
