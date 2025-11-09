@@ -29,34 +29,43 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class FSMListView : VisualElement
 	{
+		private const float BORDER_WIDTH = 2.0f;
+		private const float BORDER_RADIUS = 5.0f;
+		private const float PADDING = 5.0f;
+		private readonly Color BORDER_COLOR = new Color(0.4f, 0.4f, 0.4f);
+
 		private ListView _ListView;
 		private GraphView _Parent;
-		private Action<string> _OnClickFSM;
+		private Action<FSM> _OnClickFSM;
 
-		public FSMListView(GraphView parent, Action<string> onClickFSM)
+		public FSMListView(GraphView parent)
 		{
 			_Parent = parent;
+		}
+
+		public void AddClickListener(Action<FSM> onClickFSM)
+		{
 			_OnClickFSM = onClickFSM;
 		}
 
-		public void Update(List<string> fsms)
+		public void SetData(List<FSM> fsms)
 		{
 			// 创建外边框容器
 			name = "ListContainer";
 
 			// 设置边框样式
-			style.borderLeftWidth = 2f;
-			style.borderRightWidth = 2f;
-			style.borderTopWidth = 2f;
-			style.borderBottomWidth = 2f;
-			style.borderLeftColor = new Color(0.4f, 0.4f, 0.4f);
-			style.borderRightColor = new Color(0.4f, 0.4f, 0.4f);
-			style.borderTopColor = new Color(0.4f, 0.4f, 0.4f);
-			style.borderBottomColor = new Color(0.4f, 0.4f, 0.4f);
-			style.borderTopLeftRadius = 5f;
-			style.borderTopRightRadius = 5f;
-			style.borderBottomLeftRadius = 5f;
-			style.borderBottomRightRadius = 5f;
+			style.borderLeftWidth = BORDER_WIDTH;
+			style.borderRightWidth = BORDER_WIDTH;
+			style.borderTopWidth = BORDER_WIDTH;
+			style.borderBottomWidth = BORDER_WIDTH;
+			style.borderLeftColor = BORDER_COLOR;
+			style.borderRightColor = BORDER_COLOR;
+			style.borderTopColor = BORDER_COLOR;
+			style.borderBottomColor = BORDER_COLOR;
+			style.borderTopLeftRadius = BORDER_RADIUS;
+			style.borderTopRightRadius = BORDER_RADIUS;
+			style.borderBottomLeftRadius = BORDER_RADIUS;
+			style.borderBottomRightRadius = BORDER_RADIUS;
 			style.backgroundColor = new Color(0.15f, 0.15f, 0.15f, 0.95f);
 
 			// 设置容器尺寸和位置
@@ -65,10 +74,10 @@ namespace Icy.Base.Editor
 			style.position = Position.Absolute;
 			style.left = 10;
 			style.top = 10;
-			style.paddingLeft = 5;
-			style.paddingRight = 5;
-			style.paddingTop = 5;
-			style.paddingBottom = 5;
+			style.paddingLeft = PADDING;
+			style.paddingRight = PADDING;
+			style.paddingTop = PADDING;
+			style.paddingBottom = PADDING;
 
 			// 创建标题栏
 			Label header = new Label("FSM列表");
@@ -131,11 +140,11 @@ namespace Icy.Base.Editor
 			if (element is VisualElement container &&
 				container.childCount >= 2 &&
 				container[1] is Label label &&
-				_ListView.itemsSource is List<string> items)
+				_ListView.itemsSource is List<FSM> items)
 			{
-				label.text = items[index];
+				label.text = items[index].Name;
 
-				// 可以根据索引设置不同的图标颜色
+				// 根据索引设置不同的图标颜色
 				if (container[0] is Label icon)
 				{
 					Color[] colors = new Color[]
@@ -152,14 +161,14 @@ namespace Icy.Base.Editor
 
 		private void OnSelectionChanged(System.Collections.IEnumerable selectedItems)
 		{
-			foreach (object item in selectedItems)
-				_OnClickFSM(item.ToString());
+			foreach (FSM item in selectedItems)
+				_OnClickFSM(item);
 		}
 
 		// 添加方法来动态更新列表
-		public void AddListItem(string newItem)
+		public void AddListItem(FSM newItem)
 		{
-			if (_ListView.itemsSource is List<string> items)
+			if (_ListView.itemsSource is List<FSM> items)
 			{
 				items.Add(newItem);
 				_ListView.Rebuild();
@@ -168,7 +177,7 @@ namespace Icy.Base.Editor
 
 		public void RemoveSelectedItem()
 		{
-			if (_ListView.selectedIndex >= 0 && _ListView.itemsSource is List<string> items)
+			if (_ListView.selectedIndex >= 0 && _ListView.itemsSource is List<FSM> items)
 			{
 				items.RemoveAt(_ListView.selectedIndex);
 				_ListView.Rebuild();

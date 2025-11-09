@@ -30,6 +30,7 @@ namespace Icy.Base.Editor
 	public class FSMViewerGraphView : GraphView
 	{
 		private EditorWindow _EditorWindow;
+		private FSMListView _ListView;
 		private List<FSMStateNode> _CurrNodes;
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
@@ -55,31 +56,45 @@ namespace Icy.Base.Editor
 			//监听节点创建事件
 			nodeCreationRequest += OnNodeCreationRequest;
 
-			//创建FSM列表
 			_CurrNodes = new List<FSMStateNode>();
-			FSMListView flw = new FSMListView(this, OnClickFSM);
-			List<string> items = new List<string>
-			{
-				"项目1", "项目2", "项目3", "项目4", "项目5", "项目6", "项目7", "项目8", "项目9", "项目10", "项目11", "项目12", "项目13", "项目14", "项目15", "项目16", "项目17", "项目18", "项目19", "项目20"
-			};
-			flw.Update(items);
 		}
 
-		private void OnClickFSM(string obj)
+		public void SetFSMData(List<FSM> fsmList)
 		{
-			Log.Info(obj);
-
+			//清除已有Node
 			for (int i = 0; i < _CurrNodes.Count; i++)
 				RemoveElement(_CurrNodes[i]);
 			_CurrNodes.Clear();
 
-			FSMStateNode node1 = AddNode("TestNode 1");
-			node1.SetPosition(new Rect(300, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
-			_CurrNodes.Add(node1);
+			//初始化左侧的列表
+			_ListView = new FSMListView(this);
+			_ListView.SetData(fsmList);
 
-			FSMStateNode node2 = AddNode("TestNode 2");
-			node2.SetPosition(new Rect(800, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
-			_CurrNodes.Add(node2);
+			//默认创建列表第一个FSM的Node
+			if (fsmList.Count > 0)
+				AddNodesOfFSM(fsmList[0]);
+		}
+
+		public void AddClickFSMListener(Action<FSM> onClickFSM)
+		{
+			_ListView.AddClickListener(onClickFSM);
+		}
+
+		public void AddNodesOfFSM(FSM fsm)
+		{
+			for (int i = 0; i < fsm.AllStates.Count; i++)
+			{
+				FSMStateNode newNode = AddNode(fsm.AllStates[i].GetType().Name);
+				newNode.SetPosition(new Rect(300, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
+				_CurrNodes.Add(newNode);
+			}
+		}
+
+		public void ClearNodes()
+		{
+			for (int i = 0; i < _CurrNodes.Count; i++)
+				RemoveElement(_CurrNodes[i]);
+			_CurrNodes.Clear();
 		}
 
 		public FSMStateNode AddNode(string nodeName)

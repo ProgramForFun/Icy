@@ -15,6 +15,8 @@
  */
 
 
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -26,7 +28,8 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class FSMViewerWindow : EditorWindow
 	{
-		FSMViewerGraphView graphView;
+		FSMViewerGraphView _GraphView;
+		FSM _CurrSelectedFSM;
 
 		[MenuItem("Icy/FSM")]
 		public static void Open()
@@ -38,12 +41,28 @@ namespace Icy.Base.Editor
 		{
 			rootVisualElement.Clear();
 
-			graphView = new FSMViewerGraphView(this);
-			graphView.style.flexGrow = 1;
-			graphView.StretchToParentSize();
+			_GraphView = new FSMViewerGraphView(this);
+			_GraphView.style.flexGrow = 1;
+			_GraphView.StretchToParentSize();
 
-			rootVisualElement.Add(graphView);
+			List<FSM> allFSMs = FSMManager.Instance.GetAllFSMs();
+			_GraphView.SetFSMData(allFSMs);
+			_GraphView.AddClickFSMListener(OnClickFSM);
+
+			if (allFSMs.Count > 0)
+				_CurrSelectedFSM = allFSMs[0];
+
+			rootVisualElement.Add(_GraphView);
 			rootVisualElement.MarkDirtyRepaint();
+		}
+
+		private void OnClickFSM(FSM obj)
+		{
+			if (_CurrSelectedFSM != null && _CurrSelectedFSM == obj)
+				return;
+
+			Log.Info(obj.Name);
+			_GraphView.ClearNodes();
 		}
 	}
 }
