@@ -13,7 +13,7 @@ public static class TestPlayground
 	public static void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
-			WebSocketChannelTest.Test();
+			Test();
 
 		//TcpSessionTest.Update();
 		//KcpSessionTest.Update();
@@ -21,7 +21,7 @@ public static class TestPlayground
 
 		//TcpChannelTest.Update();
 		//KcpChannelTest.Update();
-		WebSocketChannelTest.Update();
+		//WebSocketChannelTest.Update();
 	}
 
 
@@ -31,7 +31,8 @@ public static class TestPlayground
 	{
 		//LogTest.Test();
 		//ProcedureTest.Test();
-		EventTest.Test();
+		//EventTest.Test();
+		FSMTest.Test();
 		//ProtobufTest.Test();
 		//PoolTest.Test();
 		//HttpTest.Test();
