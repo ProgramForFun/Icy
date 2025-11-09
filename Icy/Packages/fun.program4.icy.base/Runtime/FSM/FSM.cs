@@ -65,6 +65,9 @@ namespace Icy.Base
 		protected FSMState _DefaultState;
 
 
+		/// <summary>
+		/// 建议每个状态机都有一个自己独有的名字
+		/// </summary>
 		public FSM(string name)
 		{
 			Name = name;
@@ -77,6 +80,8 @@ namespace Icy.Base
 			IcyFrame.Instance.AddUpdate(this);
 			IcyFrame.Instance.AddFixedUpdate(this);
 			IcyFrame.Instance.AddLateUpdate(this);
+
+			FSMManager.Instance.AddFSM(this);
 		}
 
 		/// <summary>
@@ -220,6 +225,8 @@ namespace Icy.Base
 			IcyFrame.Instance.RemoveFixedUpdate(this);
 			IcyFrame.Instance.RemoveLateUpdate(this);
 			IsDisposed = true;
+
+			FSMManager.Instance.RemoveFSM(this);
 		}
 	}
 }
