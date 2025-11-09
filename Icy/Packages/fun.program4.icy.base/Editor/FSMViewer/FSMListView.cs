@@ -35,13 +35,7 @@ namespace Icy.Base.Editor
 		private readonly Color BORDER_COLOR = new Color(0.4f, 0.4f, 0.4f);
 
 		private ListView _ListView;
-		private GraphView _Parent;
 		private Action<FSM> _OnClickFSM;
-
-		public FSMListView(GraphView parent)
-		{
-			_Parent = parent;
-		}
 
 		public void AddClickListener(Action<FSM> onClickFSM)
 		{
@@ -50,6 +44,9 @@ namespace Icy.Base.Editor
 
 		public void SetData(List<FSM> fsms)
 		{
+			if (fsms == null)
+				fsms = new List<FSM>();
+
 			// 创建外边框容器
 			name = "ListContainer";
 
@@ -89,6 +86,10 @@ namespace Icy.Base.Editor
 			header.style.borderBottomColor = new Color(0.5f, 0.5f, 0.5f);
 
 			// 创建ListView
+
+			if (_ListView != null)
+				_ListView.RemoveFromHierarchy();
+
 			_ListView = new ListView(fsms, 25, MakeItem, BindItem);
 			_ListView.style.width = 200;
 			_ListView.style.height = 250;
@@ -99,14 +100,12 @@ namespace Icy.Base.Editor
 			_ListView.selectionType = SelectionType.Single;
 
 			// 注册选择事件
+			_ListView.selectionChanged -= OnSelectionChanged;
 			_ListView.selectionChanged += OnSelectionChanged;
 
 			// 将标题和列表添加到容器
 			Add(header);
 			Add(_ListView);
-
-			// 将容器添加到GraphView
-			_Parent.Add(this);
 		}
 
 		private VisualElement MakeItem()
@@ -165,12 +164,13 @@ namespace Icy.Base.Editor
 				_OnClickFSM(item);
 		}
 
-		// 添加方法来动态更新列表
 		public void AddListItem(FSM newItem)
 		{
 			if (_ListView.itemsSource is List<FSM> items)
 			{
-				items.Add(newItem);
+				//TODO：未知原因会导致重复的FSM，这里先临时过滤处理
+				if (!items.Contains(newItem))
+					items.Add(newItem);
 				_ListView.Rebuild();
 			}
 		}

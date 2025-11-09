@@ -67,11 +67,15 @@ namespace Icy.Base.Editor
 			_CurrNodes.Clear();
 
 			//初始化左侧的列表
-			_ListView = new FSMListView(this);
+			if (_ListView != null)
+				_ListView.RemoveFromHierarchy();
+
+			_ListView = new FSMListView();
 			_ListView.SetData(fsmList);
+			Add(_ListView);
 
 			//默认创建列表第一个FSM的Node
-			if (fsmList.Count > 0)
+			if (fsmList != null && fsmList.Count > 0)
 				AddNodesOfFSM(fsmList[0]);
 		}
 

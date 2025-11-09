@@ -39,6 +39,17 @@ namespace Icy.Base.Editor
 
 		private void OnEnable()
 		{
+			Init();
+		}
+
+		private void OnDisable()
+		{
+			FSMManager.Instance.OnAddFSM -= OnAddFSM;
+			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
+		}
+
+		private void Init()
+		{
 			rootVisualElement.Clear();
 
 			_GraphView = new FSMViewerGraphView(this);
@@ -55,14 +66,12 @@ namespace Icy.Base.Editor
 			rootVisualElement.Add(_GraphView);
 			rootVisualElement.MarkDirtyRepaint();
 
-			FSMManager.Instance.OnAddFSM += OnAddFSM;
-			FSMManager.Instance.OnRemoveFSM += OnRemoveFSM;
-		}
-
-		private void OnDisable()
-		{
 			FSMManager.Instance.OnAddFSM -= OnAddFSM;
+			FSMManager.Instance.OnAddFSM += OnAddFSM;
 			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
+			FSMManager.Instance.OnRemoveFSM += OnRemoveFSM;
+			EditorApplication.playModeStateChanged -= OnPlayModeChanged;
+			EditorApplication.playModeStateChanged += OnPlayModeChanged;
 		}
 
 		private void OnAddFSM(FSM fsm)
@@ -93,6 +102,18 @@ namespace Icy.Base.Editor
 			Log.Info(fsm.Name);
 			_GraphView.ClearNodes();
 			_GraphView.AddNodesOfFSM(fsm);
+		}
+
+		private void OnPlayModeChanged(PlayModeStateChange state)
+		{
+			if (state == PlayModeStateChange.EnteredPlayMode)
+				Init();
+
+			if (state == PlayModeStateChange.ExitingPlayMode)
+			{
+				_CurrSelectedFSM = null;
+				_GraphView.SetFSMData(null);
+			}
 		}
 	}
 }
