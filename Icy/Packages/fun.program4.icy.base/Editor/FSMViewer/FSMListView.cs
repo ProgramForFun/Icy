@@ -175,6 +175,15 @@ namespace Icy.Base.Editor
 			}
 		}
 
+		public void RemoveListItem(FSM newItem)
+		{
+			if (_ListView.itemsSource is List<FSM> items)
+			{
+				items.Remove(newItem);
+				_ListView.Rebuild();
+			}
+		}
+
 		public void RemoveSelectedItem()
 		{
 			if (_ListView.selectedIndex >= 0 && _ListView.itemsSource is List<FSM> items)

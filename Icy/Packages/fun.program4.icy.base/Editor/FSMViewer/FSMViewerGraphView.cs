@@ -75,6 +75,16 @@ namespace Icy.Base.Editor
 				AddNodesOfFSM(fsmList[0]);
 		}
 
+		public void AddSingleFSM(FSM fsm)
+		{
+			_ListView.AddListItem(fsm);
+		}
+
+		public void RemoveSingleFSM(FSM fsm)
+		{
+			_ListView.RemoveListItem(fsm);
+		}
+
 		public void AddClickFSMListener(Action<FSM> onClickFSM)
 		{
 			_ListView.AddClickListener(onClickFSM);

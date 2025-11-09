@@ -16,6 +16,7 @@
 
 
 using Cysharp.Text;
+using System;
 using System.Collections.Generic;
 
 namespace Icy.Base
@@ -25,6 +26,9 @@ namespace Icy.Base
 	/// </summary>
 	public class FSMManager : Singleton<FSMManager>
 	{
+		public event Action<FSM> OnAddFSM;
+		public event Action<FSM> OnRemoveFSM;
+
 		private List<FSM> _AllFSMs;
 
 		protected override void OnInitialized()
@@ -42,11 +46,13 @@ namespace Icy.Base
 			}
 
 			_AllFSMs.Add(fsm);
+			OnAddFSM?.Invoke(fsm);
 		}
 
 		public void RemoveFSM(FSM fsm)
 		{
-			_AllFSMs.Remove(fsm);
+			if (_AllFSMs.Remove(fsm))
+				OnRemoveFSM?.Invoke(fsm);
 		}
 
 		public List<FSM> GetAllFSMs()

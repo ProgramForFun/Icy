@@ -54,15 +54,45 @@ namespace Icy.Base.Editor
 
 			rootVisualElement.Add(_GraphView);
 			rootVisualElement.MarkDirtyRepaint();
+
+			FSMManager.Instance.OnAddFSM += OnAddFSM;
+			FSMManager.Instance.OnRemoveFSM += OnRemoveFSM;
 		}
 
-		private void OnClickFSM(FSM obj)
+		private void OnDisable()
 		{
-			if (_CurrSelectedFSM != null && _CurrSelectedFSM == obj)
+			FSMManager.Instance.OnAddFSM -= OnAddFSM;
+			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
+		}
+
+		private void OnAddFSM(FSM fsm)
+		{
+			_GraphView.AddSingleFSM(fsm);
+		}
+
+		private void OnRemoveFSM(FSM fsm)
+		{
+			_GraphView.RemoveSingleFSM(fsm);
+
+			if (fsm == _CurrSelectedFSM)
+			{
+				List<FSM> allFSMs = FSMManager.Instance.GetAllFSMs();
+				if (allFSMs.Count > 0)
+				{
+					_CurrSelectedFSM = null;
+					OnClickFSM(allFSMs[0]);
+				}
+			}
+		}
+
+		private void OnClickFSM(FSM fsm)
+		{
+			if (_CurrSelectedFSM != null && _CurrSelectedFSM == fsm)
 				return;
 
-			Log.Info(obj.Name);
+			Log.Info(fsm.Name);
 			_GraphView.ClearNodes();
+			_GraphView.AddNodesOfFSM(fsm);
 		}
 	}
 }
