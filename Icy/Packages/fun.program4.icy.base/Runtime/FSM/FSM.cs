@@ -56,9 +56,9 @@ namespace Icy.Base
 		public Blackboard Blackboard { get; protected set; }
 
 		/// <summary>
-		/// 属于此状态机的所有状态，组织形式是这些状态的GameObject都是此状态机的子节点
+		/// 属于此状态机的所有状态
 		/// </summary>
-		protected List<FSMState> _AllStates;
+		public List<FSMState> AllStates { get; }
 		/// <summary>
 		/// 默认状态
 		/// </summary>
@@ -75,7 +75,7 @@ namespace Icy.Base
 			IsDisposed = false;
 
 			Blackboard = new Blackboard();
-			_AllStates = new List<FSMState>();
+			AllStates = new List<FSMState>();
 
 			IcyFrame.Instance.AddUpdate(this);
 			IcyFrame.Instance.AddFixedUpdate(this);
@@ -91,12 +91,12 @@ namespace Icy.Base
 		/// <param name="isDefaultState">是否是默认状态；FSM已启动会自动切到DefaultState；DefaultState只能有一个</param>
 		public void AddState(FSMState state, bool isDefaultState = false)
 		{
-			if (_AllStates.Contains(state))
+			if (AllStates.Contains(state))
 			{
 				Log.Error($"{state.GetType().Name} has already been add to FSM {Name}");
 				return;
 			}
-			_AllStates.Add(state);
+			AllStates.Add(state);
 
 
 			if (isDefaultState)
@@ -112,8 +112,8 @@ namespace Icy.Base
 
 		public void Start()
 		{
-			for (int i = 0; i < _AllStates.Count; ++i)
-				_AllStates[i].Init(this);
+			for (int i = 0; i < AllStates.Count; ++i)
+				AllStates[i].Init(this);
 
 			if (_DefaultState != null)
 				ChangeState(_DefaultState);
@@ -148,7 +148,7 @@ namespace Icy.Base
 		/// </summary>
 		public bool ContainsState(FSMState state)
 		{
-			return _AllStates.Contains(state);
+			return AllStates.Contains(state);
 		}
 
 		/// <summary>
@@ -156,9 +156,9 @@ namespace Icy.Base
 		/// </summary>
 		public bool ContainsState<T>() where T : FSMState
 		{
-			for (int i = 0; i < _AllStates.Count; i++)
+			for (int i = 0; i < AllStates.Count; i++)
 			{
-				if (_AllStates[i] is T)
+				if (AllStates[i] is T)
 					return true;
 			}
 			return false;
@@ -203,20 +203,20 @@ namespace Icy.Base
 
 		public virtual void Update(float delta)
 		{
-			for (int i = 0; i < _AllStates.Count; i++)
-				_AllStates[i]?.Update(delta);
+			for (int i = 0; i < AllStates.Count; i++)
+				AllStates[i]?.Update(delta);
 		}
 
 		public virtual void FixedUpdate(float delta)
 		{
-			for (int i = 0; i < _AllStates.Count; i++)
-				_AllStates[i]?.FixedUpdate(delta);
+			for (int i = 0; i < AllStates.Count; i++)
+				AllStates[i]?.FixedUpdate(delta);
 		}
 
 		public virtual void LateUpdate(float delta)
 		{
-			for (int i = 0; i < _AllStates.Count; i++)
-				_AllStates[i]?.LateUpdate(delta);
+			for (int i = 0; i < AllStates.Count; i++)
+				AllStates[i]?.LateUpdate(delta);
 		}
 
 		public void Dispose()
