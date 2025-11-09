@@ -83,8 +83,8 @@ namespace Icy.Base
 		{
 			Name = name;
 			State = StateType.NotStart;
-			_FSM = new FSM(name);
-			_FSM.Blackboard.WriteObject("Procedure", this);
+			_FSM = new FSM(name + $" ({nameof(Procedure)})");
+			_FSM.Blackboard.WriteObject(nameof(Procedure), this);
 			_Steps = new List<ProcedureStep>();
 		}
 
