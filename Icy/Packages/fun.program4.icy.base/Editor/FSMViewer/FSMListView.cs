@@ -168,9 +168,7 @@ namespace Icy.Base.Editor
 		{
 			if (_ListView.itemsSource is List<FSM> items)
 			{
-				//TODO：未知原因会导致重复的FSM，这里先临时过滤处理
-				if (!items.Contains(newItem))
-					items.Add(newItem);
+				items.Add(newItem);
 				_ListView.Rebuild();
 			}
 		}

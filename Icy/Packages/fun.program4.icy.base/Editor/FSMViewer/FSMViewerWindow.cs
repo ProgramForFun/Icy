@@ -57,6 +57,8 @@ namespace Icy.Base.Editor
 			_GraphView.StretchToParentSize();
 
 			List<FSM> allFSMs = FSMManager.Instance.GetAllFSMs();
+			//复制一下，避免后续FSMManager的变化，继续影响FSMViewer，出现重复FSM的情况
+			allFSMs = new List<FSM>(allFSMs);
 			_GraphView.SetFSMData(allFSMs);
 			_GraphView.AddClickFSMListener(OnClickFSM);
 
