@@ -15,10 +15,8 @@
  */
 
 
-using System;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Icy.Base.Editor
@@ -31,7 +29,7 @@ namespace Icy.Base.Editor
 		FSMViewerGraphView _GraphView;
 		FSM _CurrSelectedFSM;
 
-		[MenuItem("Icy/FSM")]
+		[MenuItem("Icy/Tools/FSM Viewer")]
 		public static void Open()
 		{
 			GetWindow<FSMViewerWindow>(nameof(FSMViewerWindow));
