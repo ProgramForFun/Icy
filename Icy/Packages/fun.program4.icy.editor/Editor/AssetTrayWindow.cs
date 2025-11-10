@@ -42,7 +42,7 @@ namespace Icy.Editor
 		private List<string> _AssetPaths;
 
 
-		[MenuItem("Icy/Asset/AssetTray", false)]
+		[MenuItem("Icy/Tools/AssetTray", false)]
 		public static void Open()
 		{
 			if (_AssetTrayWindow != null)
