@@ -99,7 +99,6 @@ namespace Icy.Base.Editor
 			if (_CurrSelectedFSM != null && _CurrSelectedFSM == fsm)
 				return;
 
-			Log.Info(fsm.Name);
 			_GraphView.ClearNodes();
 			_GraphView.AddNodesOfFSM(fsm);
 		}

@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -104,18 +105,37 @@ namespace Icy.Base.Editor
 			}
 		}
 
-		public void ClearNodes()
-		{
-			for (int i = 0; i < _CurrNodes.Count; i++)
-				RemoveElement(_CurrNodes[i]);
-			_CurrNodes.Clear();
-		}
-
 		public FSMStateNode AddNode(string nodeName)
 		{
 			FSMStateNode node = new FSMStateNode(nodeName);
 			AddElement(node);
 			return node;
+		}
+
+		public void ClearNodes()
+		{
+			List<Edge> edgesToRemove = new List<Edge>();
+			for (int i = 0; i < _CurrNodes.Count; i++)
+			{
+				// 删除所有节点的连线
+				edgesToRemove.Clear();
+				foreach (Port inputPort in _CurrNodes[i].inputContainer.Children().OfType<Port>())
+					edgesToRemove.AddRange(inputPort.connections);
+				foreach (Port output in _CurrNodes[i].outputContainer.Children().OfType<Port>())
+					edgesToRemove.AddRange(output.connections);
+
+
+				foreach (Edge edge in edgesToRemove)
+				{
+					edge.input.Disconnect(edge);
+					edge.output.Disconnect(edge);
+					RemoveElement(edge);
+				}
+
+				//删除节点本身
+				RemoveElement(_CurrNodes[i]);
+			}
+			_CurrNodes.Clear();
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
