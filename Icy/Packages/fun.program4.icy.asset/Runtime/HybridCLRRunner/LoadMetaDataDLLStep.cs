@@ -17,6 +17,8 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Icy.Asset
 {
@@ -28,8 +30,32 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			await UniTask.CompletedTask;
+			await Load();
 			Finish();
+		}
+
+		protected async UniTask Load()
+		{
+			AssetSetting assetSetting = AssetManager.Instance.AssetSetting;
+			string metaDataDLLDir = assetSetting.MetaDataDLLCopyToDir;
+
+			List<AssetRef> allMetaDataDLLRefs = new List<AssetRef>();
+			List<UniTask> allMetaDataDLLRefUniTasks = new List<UniTask>();
+			LoadPatchDLLStep.LoadDLLs(metaDataDLLDir, assetSetting.MetaDataDLLs, allMetaDataDLLRefs, allMetaDataDLLRefUniTasks);
+
+			await UniTask.WhenAll(allMetaDataDLLRefUniTasks);
+
+			//https://www.hybridclr.cn/docs/basic/aotgeneric
+			for (int i = 0; i < allMetaDataDLLRefs.Count; i++)
+			{
+				TextAsset bytes = allMetaDataDLLRefs[i].AssetObject as TextAsset;
+				//HybirdCLR支持在worker线程加载，避免卡顿
+				await UniTask.RunOnThreadPool(() => { HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(bytes.bytes, HybridCLR.HomologousImageMode.SuperSet); });
+			}
+
+			//HybridCLR内部会复制一份，外部的可以直接释放掉了
+			for (int i = 0; i < allMetaDataDLLRefs.Count; i++)
+				allMetaDataDLLRefs[i].Release();
 		}
 
 		public override async UniTask Deactivate()

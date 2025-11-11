@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
+using Google.Protobuf.Collections;
 
 namespace Icy.Asset
 {
@@ -42,20 +43,7 @@ namespace Icy.Asset
 
 			List<AssetRef> allPatchDLLRefs = new List<AssetRef>();
 			List<UniTask> allPatchDLLRefUniTasks = new List<UniTask>();
-			for (int i = 0; i < assetSetting.PatchDLLs.Count; i++)
-			{
-				string patchDLLPath;
-				if (AssetManager.Instance.IsAddressable)
-					patchDLLPath = assetSetting.PatchDLLs[i];
-				else
-					patchDLLPath = Path.Combine(patchDLLDir, assetSetting.PatchDLLs[i]);
-
-				AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(patchDLLPath);
-				assetRef.Retain();
-				allPatchDLLRefs.Add(assetRef);
-				allPatchDLLRefUniTasks.Add(assetRef.ToUniTask());
-			}
-
+			LoadDLLs(patchDLLDir, assetSetting.PatchDLLs, allPatchDLLRefs, allPatchDLLRefUniTasks);
 			await UniTask.WhenAll(allPatchDLLRefUniTasks);
 
 			//按顺序加载，由用户在Icy/Asset/Setting中根据热更DLL的依赖关系，编辑的顺序
@@ -70,6 +58,23 @@ namespace Icy.Asset
 			//HybridCLR内部会复制一份，外部的可以直接释放掉了
 			for (int i = 0; i < allPatchDLLRefs.Count; i++)
 				allPatchDLLRefs[i].Release();
+		}
+
+		public static void LoadDLLs(string dir, RepeatedField<string> dlls, List<AssetRef> assetRefs, List<UniTask> uniTasks)
+		{
+			for (int i = 0; i < dlls.Count; i++)
+			{
+				string patchDLLPath;
+				if (AssetManager.Instance.IsAddressable)
+					patchDLLPath = dlls[i];
+				else
+					patchDLLPath = Path.Combine(dir, dlls[i]);
+
+				AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(patchDLLPath);
+				assetRef.Retain();
+				assetRefs.Add(assetRef);
+				uniTasks.Add(assetRef.ToUniTask());
+			}
 		}
 
 		public override async UniTask Deactivate()
