@@ -455,6 +455,41 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// 旋转一个Vector2指定角度，注意这个扩展函数会修改调用者自身
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <param name="angle">正数顺时针，反之逆时针</param>
+		/// <returns></returns>
+		public static Vector2 Rotate(ref this Vector2 vector, float angle)
+		{
+			float rad = angle * Mathf.Deg2Rad;
+			float cos = Mathf.Cos(rad);
+			float sin = Mathf.Sin(rad);
+
+			float x = vector.x * cos - vector.y * sin;
+			float y = vector.x * sin + vector.y * cos;
+			vector.x = x;
+			vector.y = y;
+			return vector;
+		}
+
+		/// <summary>
+		/// 旋转一个Vector2指定角度，不会修改参数vector，而是返回一个新的
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <param name="angle">正数顺时针，反之逆时针</param>
+		/// <returns></returns>
+		public static Vector2 RotateVector2(Vector2 vector, float angle)
+		{
+			float rad = angle * Mathf.Deg2Rad;
+			float cos = Mathf.Cos(rad);
+			float sin = Mathf.Sin(rad);
+
+			return new Vector2(vector.x * cos - vector.y * sin
+							, vector.x * sin + vector.y * cos);
+		}
+
+		/// <summary>
 		/// Vector3扩展，方便转换成xz平面的Vector2
 		/// </summary>
 		/// <param name="vec3"></param>
