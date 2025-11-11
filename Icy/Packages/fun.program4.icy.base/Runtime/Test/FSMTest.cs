@@ -25,56 +25,30 @@ namespace Icy.Base
 {
 	public static class FSMTest
 	{
-		private class Idle : FSMState
+		private class FSMTestState : FSMState
 		{
 			public override async UniTask Activate()
 			{
 				int rand = Random.Range(1000, 3000);
-				Log.Info($"Activate {nameof(Idle)} for {rand}", nameof(Idle));
+				string className = GetType().Name;
+				Log.Info($"Activate {className} for {rand}", className);
 				await UniTask.Delay(rand);
 			}
 
 			public override async UniTask Deactivate()
 			{
 				int rand = Random.Range(1000, 3000);
-				Log.Info($"Deactivate {nameof(Idle)} for {rand}", nameof(Idle));
+				string className = GetType().Name;
+				Log.Info($"Deactivate {className} for {rand}", className);
 				await UniTask.Delay(rand);
 			}
 		}
 
-		private class Fight : FSMState
-		{
-			public override async UniTask Activate()
-			{
-				int rand = Random.Range(1000, 3000);
-				Log.Info($"Activate {nameof(Fight)} for {rand}", nameof(Fight));
-				await UniTask.Delay(rand);
-			}
-
-			public override async UniTask Deactivate()
-			{
-				int rand = Random.Range(1000, 3000);
-				Log.Info($"Deactivate {nameof(Fight)} for {rand}", nameof(Fight));
-				await UniTask.Delay(rand);
-			}
-		}
-
-		private class Sleep : FSMState
-		{
-			public override async UniTask Activate()
-			{
-				int rand = Random.Range(1000, 3000);
-				Log.Info($"Activate {nameof(Sleep)} for {rand}", nameof(Sleep));
-				await UniTask.Delay(rand);
-			}
-
-			public override async UniTask Deactivate()
-			{
-				int rand = Random.Range(1000, 3000);
-				Log.Info($"Deactivate {nameof(Sleep)} for {rand}", nameof(Sleep));
-				await UniTask.Delay(rand);
-			}
-		}
+		private class Idle : FSMTestState { }
+		private class Fight : FSMTestState { }
+		private class Patrol : FSMTestState { }
+		private class Escape : FSMTestState { }
+		private class Pursue : FSMTestState { }
 
 		private static FSM _FSM;
 		private static Dictionary<int, FSMState> _FSMStatesMap;
@@ -85,14 +59,15 @@ namespace Icy.Base
 			_FSMStatesMap = new Dictionary<int, FSMState>
 			{
 				{ 0, new Idle() },
-				{ 1, new Fight() },
-				{ 2, new Sleep() }
+				{ 1, new Patrol() },
+				{ 2, new Fight() },
+				{ 3, new Escape() },
+				{ 4, new Pursue() },
 			};
 
 			_FSM = new FSM(nameof(FSMTest));
-			_FSM.AddState(_FSMStatesMap[0]);
-			_FSM.AddState(_FSMStatesMap[1]);
-			_FSM.AddState(_FSMStatesMap[2]);
+			for (int i = 0; i < 5; i++)
+				_FSM.AddState(_FSMStatesMap[i]);
 			_FSM.Start();
 
 			Timer.RepeatByTime(RandomChangeState, 6.1f, 100);
