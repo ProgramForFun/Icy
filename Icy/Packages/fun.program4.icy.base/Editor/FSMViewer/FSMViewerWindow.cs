@@ -32,7 +32,7 @@ namespace Icy.Base.Editor
 		[MenuItem("Icy/Tools/FSM Viewer")]
 		public static void Open()
 		{
-			GetWindow<FSMViewerWindow>(nameof(FSMViewerWindow));
+			GetWindow<FSMViewerWindow>("FSM Viewer");
 		}
 
 		private void OnEnable()

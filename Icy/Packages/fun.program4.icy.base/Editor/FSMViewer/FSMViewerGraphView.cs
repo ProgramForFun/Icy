@@ -33,6 +33,8 @@ namespace Icy.Base.Editor
 		private EditorWindow _EditorWindow;
 		private FSMListView _ListView;
 		private List<FSMStateNode> _CurrNodes;
+		private readonly Vector2 _NodesCenter = new Vector2(600, 300);
+		private readonly float _NodesCircleRadius = 200.0f;
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
 		{
@@ -95,12 +97,18 @@ namespace Icy.Base.Editor
 			_ListView.AddClickListener(onClickFSM);
 		}
 
+		/// <summary>
+		/// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
+		/// </summary>
 		public void AddNodesOfFSM(FSM fsm)
 		{
-			for (int i = 0; i < fsm.AllStates.Count; i++)
+			Vector2 startDir = new Vector2(_NodesCircleRadius, 0);
+			int count = fsm.AllStates.Count;
+			for (int i = 0; i < count; i++)
 			{
 				FSMStateNode newNode = AddNode(fsm.AllStates[i].GetType().Name);
-				newNode.SetPosition(new Rect(300, 200 + UnityEngine.Random.Range(0, 50), 0, 0));
+				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + _NodesCenter;
+				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
 				_CurrNodes.Add(newNode);
 			}
 		}
