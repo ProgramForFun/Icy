@@ -47,6 +47,10 @@ namespace Icy.Base
 		/// </summary>
 		public bool IsChangingState { get; protected set; }
 		/// <summary>
+		/// 开始切换状态的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnStateChangingStarted;
+		/// <summary>
 		/// 是否已被销毁
 		/// </summary>
 		public bool IsDisposed { get; protected set; }
@@ -141,6 +145,7 @@ namespace Icy.Base
 			NextState = newState;
 
 			DoChangeState(newState).Forget();
+			OnStateChangingStarted?.Invoke(this, PrevState, newState);
 		}
 
 		/// <summary>
@@ -221,12 +226,12 @@ namespace Icy.Base
 
 		public void Dispose()
 		{
+			FSMManager.Instance.RemoveFSM(this);
+
 			IcyFrame.Instance.RemoveUpdate(this);
 			IcyFrame.Instance.RemoveFixedUpdate(this);
 			IcyFrame.Instance.RemoveLateUpdate(this);
 			IsDisposed = true;
-
-			FSMManager.Instance.RemoveFSM(this);
 		}
 	}
 }

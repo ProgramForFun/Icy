@@ -26,10 +26,23 @@ namespace Icy.Base
 	/// </summary>
 	public class FSMManager : Singleton<FSMManager>
 	{
+		/// <summary>
+		/// 一个FSM被创建出来的事件
+		/// </summary>
 		public event Action<FSM> OnAddFSM;
+		/// <summary>
+		/// 一个FSM被Dispose的事件
+		/// </summary>
 		public event Action<FSM> OnRemoveFSM;
-
+		/// <summary>
+		/// 开始切换状态的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnFSMStateChangingStarted;
+		/// <summary>
+		/// 所有的FSM
+		/// </summary>
 		private List<FSM> _AllFSMs;
+
 
 		protected override void OnInitialized()
 		{
@@ -37,7 +50,7 @@ namespace Icy.Base
 			_AllFSMs = new List<FSM>();
 		}
 
-		public void AddFSM(FSM fsm)
+		internal void AddFSM(FSM fsm)
 		{
 			if (_AllFSMs.Contains(fsm))
 			{
@@ -46,13 +59,17 @@ namespace Icy.Base
 			}
 
 			_AllFSMs.Add(fsm);
+			fsm.OnStateChangingStarted += OnFSMStateChangingStarted;
 			OnAddFSM?.Invoke(fsm);
 		}
 
-		public void RemoveFSM(FSM fsm)
+		internal void RemoveFSM(FSM fsm)
 		{
 			if (_AllFSMs.Remove(fsm))
+			{
+				fsm.OnStateChangingStarted -= OnFSMStateChangingStarted;
 				OnRemoveFSM?.Invoke(fsm);
+			}
 		}
 
 		public List<FSM> GetAllFSMs()
