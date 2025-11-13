@@ -15,6 +15,7 @@
  */
 
 
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -44,6 +45,8 @@ namespace Icy.Base.Editor
 		{
 			FSMManager.Instance.OnAddFSM -= OnAddFSM;
 			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
+			FSMManager.Instance.OnFSMStateChangingStarted -= OnFSMStateChangingStarted;
+			EditorApplication.playModeStateChanged -= OnPlayModeChanged;
 		}
 
 		private void Init()
@@ -70,6 +73,8 @@ namespace Icy.Base.Editor
 			FSMManager.Instance.OnAddFSM += OnAddFSM;
 			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
 			FSMManager.Instance.OnRemoveFSM += OnRemoveFSM;
+			FSMManager.Instance.OnFSMStateChangingStarted -= OnFSMStateChangingStarted;
+			FSMManager.Instance.OnFSMStateChangingStarted += OnFSMStateChangingStarted;
 			EditorApplication.playModeStateChanged -= OnPlayModeChanged;
 			EditorApplication.playModeStateChanged += OnPlayModeChanged;
 		}
@@ -92,6 +97,21 @@ namespace Icy.Base.Editor
 					OnClickFSM(allFSMs[0]);
 				}
 			}
+		}
+
+		private void OnFSMStateChangingStarted(FSM fSM, FSMState prevState, FSMState nextState)
+		{
+			string prevStateName = "Null";
+			if (prevState != null)
+				prevStateName = prevState.GetType().Name;
+			string nextStateName = nextState.GetType().Name;
+
+			//Log.Error($"{prevStateName} --> {nextStateName}");
+
+			_GraphView.RemovePrevConnnectLine();
+			_GraphView.UnhighlightNode(prevStateName);
+			_GraphView.ConnectNodes(prevStateName, nextStateName);
+			_GraphView.HighlightNode(nextStateName);
 		}
 
 		private void OnClickFSM(FSM fsm)

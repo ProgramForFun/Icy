@@ -17,6 +17,7 @@
 
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Icy.Base.Editor
 {
@@ -25,13 +26,15 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class FSMStateNode : Node
 	{
+		private StyleColor _OriginalColor;
+
 		public FSMStateNode(string title)
 		{
 			this.title = title;
+			_OriginalColor = style.backgroundColor;
 
 			AddInput(Orientation.Horizontal);
 			AddOutput(Orientation.Horizontal);
-			//SetColor(Color.cyan);
 		}
 
 		public void AddInput(Orientation orientation)
@@ -50,7 +53,12 @@ namespace Icy.Base.Editor
 
 		public void SetColor(Color color)
 		{
-			style.backgroundColor = new UnityEngine.UIElements.StyleColor(color);
+			style.backgroundColor = new StyleColor(color);
+		}
+
+		public void ResetColor()
+		{
+			style.backgroundColor = _OriginalColor;
 		}
 	}
 }

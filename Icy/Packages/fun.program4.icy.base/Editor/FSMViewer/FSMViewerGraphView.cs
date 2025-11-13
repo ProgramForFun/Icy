@@ -32,7 +32,8 @@ namespace Icy.Base.Editor
 	{
 		private EditorWindow _EditorWindow;
 		private FSMListView _ListView;
-		private List<FSMStateNode> _CurrNodes;
+		private Dictionary<string, FSMStateNode> _CurrNodes;
+		private Edge _PrevConnectLine;
 		private readonly Vector2 _NodesCenter = new Vector2(600, 300);
 		private readonly float _NodesCircleRadius = 200.0f;
 
@@ -59,14 +60,14 @@ namespace Icy.Base.Editor
 			//监听节点创建事件
 			nodeCreationRequest += OnNodeCreationRequest;
 
-			_CurrNodes = new List<FSMStateNode>();
+			_CurrNodes = new Dictionary<string, FSMStateNode>();
 		}
 
 		public void SetFSMData(List<FSM> fsmList)
 		{
 			//清除已有Node
-			for (int i = 0; i < _CurrNodes.Count; i++)
-				RemoveElement(_CurrNodes[i]);
+			foreach (KeyValuePair<string, FSMStateNode> node in _CurrNodes)
+				RemoveElement(node.Value);
 			_CurrNodes.Clear();
 
 			//初始化左侧的列表
@@ -106,10 +107,11 @@ namespace Icy.Base.Editor
 			int count = fsm.AllStates.Count;
 			for (int i = 0; i < count; i++)
 			{
-				FSMStateNode newNode = AddNode(fsm.AllStates[i].GetType().Name);
+				string stateName = fsm.AllStates[i].GetType().Name;
+				FSMStateNode newNode = AddNode(stateName);
 				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + _NodesCenter;
 				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
-				_CurrNodes.Add(newNode);
+				_CurrNodes.Add(stateName, newNode);
 			}
 		}
 
@@ -123,13 +125,13 @@ namespace Icy.Base.Editor
 		public void ClearNodes()
 		{
 			List<Edge> edgesToRemove = new List<Edge>();
-			for (int i = 0; i < _CurrNodes.Count; i++)
+			foreach (KeyValuePair<string, FSMStateNode> node in _CurrNodes)
 			{
 				// 删除所有节点的连线
 				edgesToRemove.Clear();
-				foreach (Port inputPort in _CurrNodes[i].inputContainer.Children().OfType<Port>())
+				foreach (Port inputPort in node.Value.inputContainer.Children().OfType<Port>())
 					edgesToRemove.AddRange(inputPort.connections);
-				foreach (Port output in _CurrNodes[i].outputContainer.Children().OfType<Port>())
+				foreach (Port output in node.Value.outputContainer.Children().OfType<Port>())
 					edgesToRemove.AddRange(output.connections);
 
 
@@ -141,9 +143,58 @@ namespace Icy.Base.Editor
 				}
 
 				//删除节点本身
-				RemoveElement(_CurrNodes[i]);
+				RemoveElement(node.Value);
 			}
+			_PrevConnectLine = null;
+
 			_CurrNodes.Clear();
+		}
+
+		/// <summary>
+		/// 连接两个节点
+		/// </summary>
+		public void ConnectNodes(string fromStateName, string toStateName)
+		{
+			if (fromStateName != "Null" && _CurrNodes.ContainsKey(fromStateName) && _CurrNodes.ContainsKey(toStateName))
+			{
+				FSMStateNode fromNode = _CurrNodes[fromStateName];
+				Port fromNodeOutput = fromNode.outputContainer[0] as Port;
+				FSMStateNode toNode = _CurrNodes[toStateName];
+				Port toNodeInput = toNode.inputContainer[0] as Port;
+
+				_PrevConnectLine = fromNodeOutput.ConnectTo(toNodeInput);
+				AddElement(_PrevConnectLine);
+			}
+		}
+
+		/// <summary>
+		/// 删除前一个状态切换的连线
+		/// </summary>
+		public void RemovePrevConnnectLine()
+		{
+			if (_PrevConnectLine != null)
+			{
+				RemoveElement(_PrevConnectLine);
+				_PrevConnectLine = null;
+			}
+		}
+
+		/// <summary>
+		/// 高亮一个节点，以示当前状态在此节点
+		/// </summary>
+		public void HighlightNode(string stateName)
+		{
+			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
+				node.SetColor(Color.cyan);
+		}
+
+		/// <summary>
+		/// 把高亮的节点恢复为默认状态
+		/// </summary>
+		public void UnhighlightNode(string stateName)
+		{
+			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
+				node.ResetColor();
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
