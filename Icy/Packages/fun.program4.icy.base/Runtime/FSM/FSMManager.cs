@@ -59,7 +59,7 @@ namespace Icy.Base
 			}
 
 			_AllFSMs.Add(fsm);
-			fsm.OnStateChangingStarted += OnFSMStateChangingStarted;
+			fsm.OnStateChangingStarted += OnStartChangingState;
 			OnAddFSM?.Invoke(fsm);
 		}
 
@@ -67,9 +67,14 @@ namespace Icy.Base
 		{
 			if (_AllFSMs.Remove(fsm))
 			{
-				fsm.OnStateChangingStarted -= OnFSMStateChangingStarted;
+				fsm.OnStateChangingStarted -= OnStartChangingState;
 				OnRemoveFSM?.Invoke(fsm);
 			}
+		}
+
+		protected void OnStartChangingState(FSM fsm, FSMState prevState, FSMState nextState)
+		{
+			OnFSMStateChangingStarted?.Invoke(fsm, prevState, nextState);
 		}
 
 		public List<FSM> GetAllFSMs()
