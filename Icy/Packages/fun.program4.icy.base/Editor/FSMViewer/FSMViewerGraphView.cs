@@ -65,10 +65,7 @@ namespace Icy.Base.Editor
 
 		public void SetFSMData(List<FSM> fsmList)
 		{
-			//清除已有Node
-			foreach (KeyValuePair<string, FSMStateNode> node in _CurrNodes)
-				RemoveElement(node.Value);
-			_CurrNodes.Clear();
+			ClearNodes();
 
 			//初始化左侧的列表
 			if (_ListView != null)
@@ -77,10 +74,6 @@ namespace Icy.Base.Editor
 			_ListView = new FSMListView();
 			_ListView.SetData(fsmList);
 			Add(_ListView);
-
-			//默认创建列表第一个FSM的Node
-			if (fsmList != null && fsmList.Count > 0)
-				AddNodesOfFSM(fsmList[0]);
 		}
 
 		public void AddSingleFSM(FSM fsm)

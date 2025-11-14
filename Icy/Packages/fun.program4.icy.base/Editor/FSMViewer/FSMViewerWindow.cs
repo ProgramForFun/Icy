@@ -63,9 +63,6 @@ namespace Icy.Base.Editor
 			_GraphView.SetFSMData(allFSMs);
 			_GraphView.AddClickFSMListener(OnClickFSM);
 
-			if (allFSMs.Count > 0)
-				_CurrSelectedFSM = allFSMs[0];
-
 			rootVisualElement.Add(_GraphView);
 			rootVisualElement.MarkDirtyRepaint();
 
