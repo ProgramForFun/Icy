@@ -41,15 +41,12 @@ namespace Icy.Base.Editor
 		{
 			_EditorWindow = editorWindow;
 
-			//StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/fun.program4.icy.base/Editor/FSMViewer/FSMViewerStyles.uss");
-			//if (styleSheet != null)
-			//{
-			//	styleSheets.Clear();
-			//	styleSheets.Add(styleSheet);
-			//}
-
-			//Clear styleSheets 会让背景网格显示出来，原因未知，暂时如此
-			styleSheets.Clear();
+			StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/fun.program4.icy.base/Editor/FSMViewer/FSMViewerStyles.uss");
+			if (styleSheet != null)
+			{
+				styleSheets.Clear();
+				styleSheets.Add(styleSheet);
+			}
 
 			//缩放范围
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
@@ -210,7 +207,7 @@ namespace Icy.Base.Editor
 		/// </summary>
 		private void OnNodeCreationRequest(NodeCreationContext context)
 		{
-			FSMStateNode node = AddNode("Request add Node");
+			FSMStateNode node = AddNode("New Node");
 			Vector2 localPos = ScreenToGraphView(context.screenMousePosition);
 			node.SetPosition(new Rect(localPos, Vector2.zero));
 		}
