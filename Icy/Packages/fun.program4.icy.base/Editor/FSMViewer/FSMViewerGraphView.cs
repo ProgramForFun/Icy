@@ -41,11 +41,20 @@ namespace Icy.Base.Editor
 		{
 			_EditorWindow = editorWindow;
 
+			//StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/fun.program4.icy.base/Editor/FSMViewer/FSMViewerStyles.uss");
+			//if (styleSheet != null)
+			//{
+			//	styleSheets.Clear();
+			//	styleSheets.Add(styleSheet);
+			//}
+
+			//Clear styleSheets 会让背景网格显示出来，原因未知，暂时如此
+			styleSheets.Clear();
+
 			//缩放范围
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
 			//创建背景网格
-			//TODO：暂时有未知问题，无法创建
 			GridBackground gridBackground = new GridBackground();
 			gridBackground.name = nameof(GridBackground);
 			Insert(0, gridBackground); // 插入到最底层
