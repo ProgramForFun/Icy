@@ -202,7 +202,6 @@ namespace Icy.Base
 		private void ChangeStateEnd()
 		{
 			IsChangingState = false;
-			PrevState = null;
 			NextState = null;
 		}
 
