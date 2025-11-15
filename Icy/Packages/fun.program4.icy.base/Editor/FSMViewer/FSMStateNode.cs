@@ -56,7 +56,11 @@ namespace Icy.Base.Editor
 		public FSMStateNode(string title)
 		{
 			this.title = title;
-			_OriginalColor = style.backgroundColor;
+			_OriginalColor = style.borderTopColor;
+			style.borderLeftWidth = 2;
+			style.borderRightWidth = 2;
+			style.borderTopWidth = 2;
+			style.borderBottomWidth = 2;
 
 			//两个Label，显示描述和时间
 			_DurationTitle = new Label();
@@ -122,12 +126,18 @@ namespace Icy.Base.Editor
 
 		public void SetColor(Color color)
 		{
-			style.backgroundColor = new StyleColor(color);
+			style.borderTopColor = new StyleColor(color);
+			style.borderBottomColor = new StyleColor(color);
+			style.borderLeftColor = new StyleColor(color);
+			style.borderRightColor = new StyleColor(color);
 		}
 
 		public void ResetColor()
 		{
-			style.backgroundColor = _OriginalColor;
+			style.borderTopColor = _OriginalColor;
+			style.borderBottomColor = _OriginalColor;
+			style.borderLeftColor = _OriginalColor;
+			style.borderRightColor = _OriginalColor;
 		}
 
 		private void OnScheduledUpdate()
@@ -137,7 +147,7 @@ namespace Icy.Base.Editor
 			_Duration.text = span.ToString(@"mm\:ss");
 		}
 
-		public void OnRemoved(DetachFromPanelEvent evt)
+		private void OnRemoved(DetachFromPanelEvent evt)
 		{
 			ClearStartTime();
 			UnregisterCallback<DetachFromPanelEvent>(OnRemoved);
