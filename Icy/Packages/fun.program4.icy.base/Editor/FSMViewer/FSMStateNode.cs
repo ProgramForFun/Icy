@@ -112,7 +112,8 @@ namespace Icy.Base.Editor
 
 		public void ClearStartTime()
 		{
-			mainContainer.Remove(_HorizontalContainer);
+			if (mainContainer.Contains(_HorizontalContainer))
+				mainContainer.Remove(_HorizontalContainer);
 			scheduledUpdate?.Pause();
 		}
 
