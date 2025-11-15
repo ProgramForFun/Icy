@@ -3,6 +3,6 @@
     /* border-color: rgb(80, 80, 80); */
     /* border-width: 1px; */
     /* border-radius: 4px; */
-    min-width: 100px;
+    min-width: 120px;
     /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); */
 }
