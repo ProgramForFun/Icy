@@ -56,18 +56,24 @@ namespace Icy.Base.Editor
 		public FSMStateNode(string title)
 		{
 			this.title = title;
+
+			//高亮边框相关
 			_OriginalColor = style.borderTopColor;
 			style.borderLeftWidth = 2;
 			style.borderRightWidth = 2;
 			style.borderTopWidth = 2;
 			style.borderBottomWidth = 2;
+			style.borderTopLeftRadius = 5;
+			style.borderTopRightRadius = 5;
+			style.borderBottomLeftRadius = 5;
+			style.borderBottomRightRadius = 5;
 
 			//两个Label，显示描述和时间
 			_DurationTitle = new Label();
-			_Duration = new Label();
 			_DurationTitle.style.fontSize = 13;
-			_Duration.style.fontSize = 13;
 			_DurationTitle.text = "持续时间：";
+			_Duration = new Label();
+			_Duration.style.fontSize = 13;
 
 			//横向布局，带边框
 			_HorizontalContainer = new VisualElement();
@@ -126,10 +132,11 @@ namespace Icy.Base.Editor
 
 		public void SetColor(Color color)
 		{
-			style.borderTopColor = new StyleColor(color);
-			style.borderBottomColor = new StyleColor(color);
-			style.borderLeftColor = new StyleColor(color);
-			style.borderRightColor = new StyleColor(color);
+			StyleColor newColor = new StyleColor(color);
+			style.borderTopColor = newColor;
+			style.borderBottomColor = newColor;
+			style.borderLeftColor = newColor;
+			style.borderRightColor = newColor;
 		}
 
 		public void ResetColor()
