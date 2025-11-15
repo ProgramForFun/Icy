@@ -184,7 +184,10 @@ namespace Icy.Base.Editor
 		public void HighlightNode(string stateName)
 		{
 			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
+			{
+				node.SetStartTime(DateTime.Now.TotalSeconds());
 				node.SetColor(Color.cyan);
+			}
 		}
 
 		/// <summary>
@@ -193,7 +196,10 @@ namespace Icy.Base.Editor
 		public void UnhighlightNode(string stateName)
 		{
 			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
+			{
+				node.ClearStartTime();
 				node.ResetColor();
+			}
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
