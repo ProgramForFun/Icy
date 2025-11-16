@@ -179,6 +179,9 @@ namespace Icy.Base.Editor
 				_PrevConnectLine.input.portColor = _DefaultPortColor;
 				_PrevConnectLine.output.portColor = _DefaultPortColor;
 
+				_PrevConnectLine.input.Disconnect(_PrevConnectLine);
+				_PrevConnectLine.output.Disconnect(_PrevConnectLine);
+
 				RemoveElement(_PrevConnectLine);
 				_PrevConnectLine = null;
 			}
