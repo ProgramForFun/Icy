@@ -30,13 +30,35 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class FSMViewerGraphView : GraphView
 	{
+		/// <summary>
+		/// 外部的EditorWindow
+		/// </summary>
 		private EditorWindow _EditorWindow;
+		/// <summary>
+		/// 显示所有FSM的GraphView层面的列表组件
+		/// </summary>
 		private FSMListView _ListView;
+		/// <summary>
+		/// 当前点选的FSM所属的所有状态节点
+		/// </summary>
 		private Dictionary<string, FSMStateNode> _CurrNodes;
+		/// <summary>
+		/// 前一个FSM状态转换的连线
+		/// </summary>
 		private Edge _PrevConnectLine;
-		private readonly Vector2 _NodesCenter = new Vector2(600, 300);
-		private readonly float _NodesCircleRadius = 200.0f;
-		private readonly Color _DefaultPortColor = new Color(0.784f, 0.784f, 0.784f, 1.0f);
+		/// <summary>
+		/// 创建状态节点时，创建位置的中心点坐标
+		/// </summary>
+		private readonly Vector2 NODES_CENTER = new Vector2(600, 300);
+		/// <summary>
+		/// 创建状态节点时，圆的半径
+		/// </summary>
+		private readonly float NODES_CIRCLE_RADIUS = 200.0f;
+		/// <summary>
+		/// Port默认的颜色
+		/// </summary>
+		private readonly Color DEFAULT_PORT_COLOR = new Color(0.784f, 0.784f, 0.784f, 1.0f);
+
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
 		{
@@ -70,6 +92,9 @@ namespace Icy.Base.Editor
 			_CurrNodes = new Dictionary<string, FSMStateNode>();
 		}
 
+		/// <summary>
+		/// 给FSM列表设置数据，同时清除View上现有的节点
+		/// </summary>
 		public void SetFSMData(List<FSM> fsmList)
 		{
 			ClearNodes();
@@ -103,13 +128,13 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void AddNodesOfFSM(FSM fsm)
 		{
-			Vector2 startDir = new Vector2(_NodesCircleRadius, 0);
+			Vector2 startDir = new Vector2(NODES_CIRCLE_RADIUS, 0);
 			int count = fsm.AllStates.Count;
 			for (int i = 0; i < count; i++)
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
 				FSMStateNode newNode = AddNode(stateName);
-				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + _NodesCenter;
+				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + NODES_CENTER;
 				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
 				_CurrNodes.Add(stateName, newNode);
 			}
@@ -122,6 +147,9 @@ namespace Icy.Base.Editor
 			return node;
 		}
 
+		/// <summary>
+		/// 清除所有节点及其连线
+		/// </summary>
 		public void ClearNodes()
 		{
 			List<Edge> edgesToRemove = new List<Edge>();
@@ -133,7 +161,6 @@ namespace Icy.Base.Editor
 					edgesToRemove.AddRange(inputPort.connections);
 				foreach (Port output in node.Value.outputContainer.Children().OfType<Port>())
 					edgesToRemove.AddRange(output.connections);
-
 
 				foreach (Edge edge in edgesToRemove)
 				{
@@ -176,8 +203,8 @@ namespace Icy.Base.Editor
 		{
 			if (_PrevConnectLine != null)
 			{
-				_PrevConnectLine.input.portColor = _DefaultPortColor;
-				_PrevConnectLine.output.portColor = _DefaultPortColor;
+				_PrevConnectLine.input.portColor = DEFAULT_PORT_COLOR;
+				_PrevConnectLine.output.portColor = DEFAULT_PORT_COLOR;
 
 				_PrevConnectLine.input.Disconnect(_PrevConnectLine);
 				_PrevConnectLine.output.Disconnect(_PrevConnectLine);
@@ -202,7 +229,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 把高亮的节点恢复为默认状态
 		/// </summary>
-		public void UnhighlightNode(string stateName)
+		public void UnHighlightNode(string stateName)
 		{
 			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
 			{

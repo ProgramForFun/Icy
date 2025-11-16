@@ -15,7 +15,6 @@
  */
 
 
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -27,8 +26,15 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class FSMViewerWindow : EditorWindow
 	{
+		/// <summary>
+		/// 持有的GraphView
+		/// </summary>
 		FSMViewerGraphView _GraphView;
+		/// <summary>
+		/// 当前界面上点选的FSM
+		/// </summary>
 		FSM _CurrSelectedFSM;
+
 
 		[MenuItem("Icy/Tools/FSM Viewer")]
 		public static void Open()
@@ -106,7 +112,7 @@ namespace Icy.Base.Editor
 			//Log.Error($"{prevStateName} --> {nextStateName}");
 
 			_GraphView.RemovePrevConnectLine();
-			_GraphView.UnhighlightNode(prevStateName);
+			_GraphView.UnHighlightNode(prevStateName);
 			_GraphView.ConnectNodes(prevStateName, nextStateName);
 			_GraphView.HighlightNode(nextStateName);
 		}
