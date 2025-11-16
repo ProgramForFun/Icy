@@ -36,6 +36,7 @@ namespace Icy.Base.Editor
 		private Edge _PrevConnectLine;
 		private readonly Vector2 _NodesCenter = new Vector2(600, 300);
 		private readonly float _NodesCircleRadius = 200.0f;
+		private readonly Color _DefaultPortColor = new Color(0.784f, 0.784f, 0.784f, 1.0f);
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
 		{
@@ -162,6 +163,8 @@ namespace Icy.Base.Editor
 				Port toNodeInput = toNode.inputContainer[0] as Port;
 
 				_PrevConnectLine = fromNodeOutput.ConnectTo(toNodeInput);
+				_PrevConnectLine.input.portColor = Color.red;
+				_PrevConnectLine.output.portColor = Color.blue;
 				AddElement(_PrevConnectLine);
 			}
 		}
@@ -173,6 +176,9 @@ namespace Icy.Base.Editor
 		{
 			if (_PrevConnectLine != null)
 			{
+				_PrevConnectLine.input.portColor = _DefaultPortColor;
+				_PrevConnectLine.output.portColor = _DefaultPortColor;
+
 				RemoveElement(_PrevConnectLine);
 				_PrevConnectLine = null;
 			}
