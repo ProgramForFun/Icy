@@ -105,7 +105,7 @@ namespace Icy.Base.Editor
 
 			//Log.Error($"{prevStateName} --> {nextStateName}");
 
-			_GraphView.RemovePrevConnnectLine();
+			_GraphView.RemovePrevConnectLine();
 			_GraphView.UnhighlightNode(prevStateName);
 			_GraphView.ConnectNodes(prevStateName, nextStateName);
 			_GraphView.HighlightNode(nextStateName);

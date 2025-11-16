@@ -172,7 +172,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 删除前一个状态切换的连线
 		/// </summary>
-		public void RemovePrevConnnectLine()
+		public void RemovePrevConnectLine()
 		{
 			if (_PrevConnectLine != null)
 			{
