@@ -39,6 +39,14 @@ namespace Icy.Base
 		/// </summary>
 		public event Action<FSM, FSMState, FSMState> OnFSMStateChangingStarted;
 		/// <summary>
+		/// 前一个状态Deactivate完成的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnFSMPrevStateDeactivated;
+		/// <summary>
+		/// 整个状态切换完成的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnFSMChangingStateEnd;
+		/// <summary>
 		/// 所有的FSM
 		/// </summary>
 		private List<FSM> _AllFSMs;
@@ -59,7 +67,9 @@ namespace Icy.Base
 			}
 
 			_AllFSMs.Add(fsm);
-			fsm.OnStateChangingStarted += OnStartChangingState;
+			fsm.OnStateChangingStarted += OnStateChangingStarted;
+			fsm.OnPrevStateDeactivated += OnPrevStateDeactivated;
+			fsm.OnChangingStateEnd += OnChangingStateEnd;
 			OnAddFSM?.Invoke(fsm);
 		}
 
@@ -67,14 +77,26 @@ namespace Icy.Base
 		{
 			if (_AllFSMs.Remove(fsm))
 			{
-				fsm.OnStateChangingStarted -= OnStartChangingState;
+				fsm.OnStateChangingStarted -= OnStateChangingStarted;
+				fsm.OnPrevStateDeactivated -= OnPrevStateDeactivated;
+				fsm.OnChangingStateEnd -= OnChangingStateEnd;
 				OnRemoveFSM?.Invoke(fsm);
 			}
 		}
 
-		protected void OnStartChangingState(FSM fsm, FSMState prevState, FSMState nextState)
+		protected void OnStateChangingStarted(FSM fsm, FSMState prevState, FSMState nextState)
 		{
 			OnFSMStateChangingStarted?.Invoke(fsm, prevState, nextState);
+		}
+
+		protected void OnPrevStateDeactivated(FSM fsm, FSMState prevState, FSMState nextState)
+		{
+			OnFSMPrevStateDeactivated?.Invoke(fsm, prevState, nextState);
+		}
+
+		protected void OnChangingStateEnd(FSM fsm, FSMState prevState, FSMState nextState)
+		{
+			OnFSMChangingStateEnd?.Invoke(fsm, prevState, nextState);
 		}
 
 		public List<FSM> GetAllFSMs()

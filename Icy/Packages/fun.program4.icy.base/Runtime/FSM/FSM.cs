@@ -51,6 +51,14 @@ namespace Icy.Base
 		/// </summary>
 		public event Action<FSM, FSMState, FSMState> OnStateChangingStarted;
 		/// <summary>
+		/// 前一个状态Deactivate完成的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnPrevStateDeactivated;
+		/// <summary>
+		/// 整个状态切换完成的事件，<所属FSM，旧State，新State>
+		/// </summary>
+		public event Action<FSM, FSMState, FSMState> OnChangingStateEnd;
+		/// <summary>
 		/// 是否已被销毁
 		/// </summary>
 		public bool IsDisposed { get; protected set; }
@@ -177,6 +185,7 @@ namespace Icy.Base
 			if (CurrState != null)
 			{
 				await CurrState.Deactivate();
+				OnPrevStateDeactivated?.Invoke(this, CurrState, newState);
 				CurrState = null;
 			}
 
@@ -201,6 +210,7 @@ namespace Icy.Base
 		/// </summary>
 		private void ChangeStateEnd()
 		{
+			OnChangingStateEnd?.Invoke(this, PrevState, CurrState);
 			IsChangingState = false;
 			NextState = null;
 		}
