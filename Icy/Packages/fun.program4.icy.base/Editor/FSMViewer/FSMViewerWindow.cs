@@ -52,6 +52,8 @@ namespace Icy.Base.Editor
 			FSMManager.Instance.OnAddFSM -= OnAddFSM;
 			FSMManager.Instance.OnRemoveFSM -= OnRemoveFSM;
 			FSMManager.Instance.OnFSMStateChangingStarted -= OnFSMStateChangingStarted;
+			FSMManager.Instance.OnFSMPrevStateDeactivated -= OnFSMPrevStateDeactivated;
+			FSMManager.Instance.OnFSMChangingStateEnd -= OnFSMChangingStateEnd;
 			EditorApplication.playModeStateChanged -= OnPlayModeChanged;
 		}
 
@@ -78,6 +80,10 @@ namespace Icy.Base.Editor
 			FSMManager.Instance.OnRemoveFSM += OnRemoveFSM;
 			FSMManager.Instance.OnFSMStateChangingStarted -= OnFSMStateChangingStarted;
 			FSMManager.Instance.OnFSMStateChangingStarted += OnFSMStateChangingStarted;
+			FSMManager.Instance.OnFSMPrevStateDeactivated -= OnFSMPrevStateDeactivated;
+			FSMManager.Instance.OnFSMPrevStateDeactivated += OnFSMPrevStateDeactivated;
+			FSMManager.Instance.OnFSMChangingStateEnd -= OnFSMChangingStateEnd;
+			FSMManager.Instance.OnFSMChangingStateEnd += OnFSMChangingStateEnd;
 			EditorApplication.playModeStateChanged -= OnPlayModeChanged;
 			EditorApplication.playModeStateChanged += OnPlayModeChanged;
 		}
@@ -111,10 +117,23 @@ namespace Icy.Base.Editor
 
 			//Log.Error($"{prevStateName} --> {nextStateName}");
 
+			_GraphView.SetLineStateChangingFinished();
 			_GraphView.RemovePrevConnectLine();
 			_GraphView.UnHighlightNode(prevStateName);
 			_GraphView.ConnectNodes(prevStateName, nextStateName);
 			_GraphView.HighlightNode(nextStateName);
+
+			_GraphView.SetLineWaitPrevStateDeactivate();
+		}
+
+		private void OnFSMPrevStateDeactivated(FSM fSM, FSMState prevState, FSMState nextState)
+		{
+			_GraphView.SetLineWaitNextStateActivate();
+		}
+
+		private void OnFSMChangingStateEnd(FSM fSM, FSMState prevState, FSMState nextState)
+		{
+			_GraphView.SetLineStateChangingFinished();
 		}
 
 		private void OnClickFSM(FSM fsm)

@@ -45,7 +45,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 前一个FSM状态转换的连线
 		/// </summary>
-		private Edge _PrevConnectLine;
+		private Edge _ConnectLine;
 		/// <summary>
 		/// 创建状态节点时，创建位置的中心点坐标
 		/// </summary>
@@ -58,6 +58,14 @@ namespace Icy.Base.Editor
 		/// Port默认的颜色
 		/// </summary>
 		private readonly Color DEFAULT_PORT_COLOR = new Color(0.784f, 0.784f, 0.784f, 1.0f);
+		/// <summary>
+		/// 前一个状态的名字
+		/// </summary>
+		private string _FromStateName;
+		/// <summary>
+		/// 下一个状态的名字
+		/// </summary>
+		private string _ToStateName;
 
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
@@ -172,7 +180,7 @@ namespace Icy.Base.Editor
 				//删除节点本身
 				RemoveElement(node.Value);
 			}
-			_PrevConnectLine = null;
+			_ConnectLine = null;
 
 			_CurrNodes.Clear();
 		}
@@ -182,6 +190,9 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void ConnectNodes(string fromStateName, string toStateName)
 		{
+			_FromStateName = fromStateName;
+			_ToStateName = toStateName;
+
 			if (fromStateName != "Null" && _CurrNodes.ContainsKey(fromStateName) && _CurrNodes.ContainsKey(toStateName))
 			{
 				FSMStateNode fromNode = _CurrNodes[fromStateName];
@@ -189,10 +200,8 @@ namespace Icy.Base.Editor
 				FSMStateNode toNode = _CurrNodes[toStateName];
 				Port toNodeInput = toNode.inputContainer[0] as Port;
 
-				_PrevConnectLine = fromNodeOutput.ConnectTo(toNodeInput);
-				_PrevConnectLine.input.portColor = Color.red;
-				_PrevConnectLine.output.portColor = Color.blue;
-				AddElement(_PrevConnectLine);
+				_ConnectLine = fromNodeOutput.ConnectTo(toNodeInput);
+				AddElement(_ConnectLine);
 			}
 		}
 
@@ -201,16 +210,13 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void RemovePrevConnectLine()
 		{
-			if (_PrevConnectLine != null)
+			if (_ConnectLine != null)
 			{
-				_PrevConnectLine.input.portColor = DEFAULT_PORT_COLOR;
-				_PrevConnectLine.output.portColor = DEFAULT_PORT_COLOR;
+				_ConnectLine.input.Disconnect(_ConnectLine);
+				_ConnectLine.output.Disconnect(_ConnectLine);
 
-				_PrevConnectLine.input.Disconnect(_PrevConnectLine);
-				_PrevConnectLine.output.Disconnect(_PrevConnectLine);
-
-				RemoveElement(_PrevConnectLine);
-				_PrevConnectLine = null;
+				RemoveElement(_ConnectLine);
+				_ConnectLine = null;
 			}
 		}
 
@@ -235,6 +241,44 @@ namespace Icy.Base.Editor
 			{
 				node.ClearStartTime();
 				node.ResetColor();
+			}
+		}
+
+		/// <summary>
+		/// 等待前一个状态Deactivate完成的连线颜色
+		/// </summary>
+		public void SetLineWaitPrevStateDeactivate()
+		{
+			if (_ConnectLine != null)
+			{
+				_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
+				_ConnectLine.output.portColor = Color.cyan;
+			}
+		}
+
+		/// <summary>
+		/// 等待下一个状态Activate完成的连线颜色
+		/// </summary>
+		public void SetLineWaitNextStateActivate()
+		{
+			if (_ConnectLine != null)
+			{
+				_ConnectLine.input.portColor = Color.cyan;
+				_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
+				RemovePrevConnectLine();
+				ConnectNodes(_FromStateName, _ToStateName);
+			}
+		}
+
+		/// <summary>
+		/// 整个状态切换完成的连线颜色
+		/// </summary>
+		public void SetLineStateChangingFinished()
+		{
+			if (_ConnectLine != null)
+			{
+				_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
+				_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
 			}
 		}
 
