@@ -279,6 +279,8 @@ namespace Icy.Base.Editor
 			{
 				_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
 				_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
+				RemovePrevConnectLine();
+				ConnectNodes(_FromStateName, _ToStateName);
 			}
 		}
 
