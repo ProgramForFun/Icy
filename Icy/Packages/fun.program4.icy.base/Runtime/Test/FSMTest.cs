@@ -19,6 +19,7 @@
 
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Icy.Base
@@ -29,7 +30,7 @@ namespace Icy.Base
 		{
 			public override async UniTask Activate()
 			{
-				int rand = Random.Range(1000, 3000);
+				int rand = Random.Range(1000, 2000);
 				string className = GetType().Name;
 				Log.Info($"Activate {className} for {rand}", className);
 				await UniTask.Delay(rand);
@@ -37,7 +38,7 @@ namespace Icy.Base
 
 			public override async UniTask Deactivate()
 			{
-				int rand = Random.Range(1000, 3000);
+				int rand = Random.Range(1000, 2000);
 				string className = GetType().Name;
 				Log.Info($"Deactivate {className} for {rand}", className);
 				await UniTask.Delay(rand);
@@ -73,13 +74,14 @@ namespace Icy.Base
 			Timer.RepeatByTime(RandomChangeState, 6.1f, 100);
 		}
 
-		private static void RandomChangeState()
+		private static async void RandomChangeState()
 		{
 			int randIdx = Random.Range(0, _FSMStatesMap.Count);
 			while(randIdx == _PrevRandomIdx)
 				randIdx = Random.Range(0, _FSMStatesMap.Count);
 
 			_FSM.ChangeState(_FSMStatesMap[randIdx]);
+			await Task.Delay(1000);
 
 			_PrevRandomIdx = randIdx;
 		}
