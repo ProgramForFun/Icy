@@ -121,6 +121,11 @@ public class GradientEdge : Edge
 
 		// 监听样式解析完成事件
 		RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
+
+		// 尝试彻底禁用原生EdgeControl
+		schedule.Execute(() => {
+			DisableNativeEdgeCompletely();
+		}).StartingIn(1); // 延迟执行确保EdgeControl已创建
 	}
 
 	private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
@@ -185,6 +190,26 @@ public class GradientEdge : Edge
 	{
 		// 恢复原始渐变
 		SetGradient(EdgeGradient);
+	}
+
+	/// <summary>
+	/// 彻底禁用原生EdgeControl
+	/// </summary>
+	private void DisableNativeEdgeCompletely()
+	{
+		// 通过反射获取EdgeControl并彻底禁用
+		var edgeControlField = typeof(Edge).GetField("m_EdgeControl",
+			System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+		if (edgeControlField != null)
+		{
+			var edgeControl = edgeControlField.GetValue(this) as EdgeControl;
+			if (edgeControl != null)
+			{
+				// 彻底从视觉树中移除
+				edgeControl.RemoveFromHierarchy();
+			}
+		}
 	}
 }
 
