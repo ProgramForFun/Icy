@@ -18,18 +18,22 @@
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 namespace Icy.Base.Editor
 {
+	/// <summary>
+	/// 自绘的两色分割连线本体
+	/// </summary>
 	public class GradientEdgeOverlay : VisualElement
 	{
-		private Edge edge;
-		private float lineWidth;
+		private Edge _Edge;
+		private float _LineWidth;
 
-		public GradientEdgeOverlay(Edge targetEdge, float width = 4f)
+		public GradientEdgeOverlay(Edge targetEdge, float width)
 		{
-			edge = targetEdge;
-			lineWidth = width;
+			_Edge = targetEdge;
+			_LineWidth = width;
 
 			// 设置为绝对定位，覆盖在原始边上
 			style.position = Position.Absolute;
@@ -41,7 +45,7 @@ namespace Icy.Base.Editor
 			generateVisualContent += OnGenerateVisualContent;
 
 			// 监听边的变化
-			edge.RegisterCallback<GeometryChangedEvent>(OnEdgeGeometryChanged);
+			_Edge.RegisterCallback<GeometryChangedEvent>(OnEdgeGeometryChanged);
 		}
 
 		private void OnEdgeGeometryChanged(GeometryChangedEvent evt)
@@ -51,19 +55,36 @@ namespace Icy.Base.Editor
 
 		private void OnGenerateVisualContent(MeshGenerationContext context)
 		{
-			if (edge?.edgeControl == null) return;
+			if (_Edge?.edgeControl == null)
+				return;
 
-			var edgePoints = CalculateEdgePoints();
-			if (edgePoints.Count < 2) return;
+			List<Vector2> edgePoints = CalculateEdgePoints();
+			if (edgePoints.Count < 2)
+				return;
 
-			var painter = context.painter2D;
+			Painter2D painter = context.painter2D;
 
 			painter.BeginPath();
-			painter.lineWidth = lineWidth;
+			painter.lineWidth = _LineWidth;
 			painter.lineJoin = LineJoin.Round;
 			painter.lineCap = LineCap.Round;
 
-			int midPointIndex = edgePoints.Count / 2;
+			//分割点取所有点中，距离两个Port距离最平均的
+			Vector2 startPos = _Edge.output.GetGlobalCenter();
+			Vector2 endPos = _Edge.input.GetGlobalCenter();
+			int midPointIndex = 0;
+			float minDistDiff = float.MaxValue;
+			for (int i = 0; i < edgePoints.Count; i++)
+			{
+				float a = Vector2.Distance(startPos, edgePoints[i]);
+				float b = Vector2.Distance(endPos, edgePoints[i]);
+				float diff = Mathf.Abs(a - b);
+				if (diff < minDistDiff)
+				{
+					minDistDiff = diff;
+					midPointIndex = i;
+				}
+			}
 
 			// 绘制前半段（第一种颜色）
 			painter.strokeColor = Color.red;
@@ -87,16 +108,16 @@ namespace Icy.Base.Editor
 			painter.Stroke();
 		}
 
-		private System.Collections.Generic.List<Vector2> CalculateEdgePoints()
+		private List<Vector2> CalculateEdgePoints()
 		{
-			var points = new System.Collections.Generic.List<Vector2>();
+			List<Vector2> points = new List<Vector2>();
 
-			if (edge.input == null || edge.output == null)
+			if (_Edge.input == null || _Edge.output == null)
 				return points;
 
 			// 计算贝塞尔曲线点
-			Vector2 startPos = edge.output.GetGlobalCenter();
-			Vector2 endPos = edge.input.GetGlobalCenter();
+			Vector2 startPos = _Edge.output.GetGlobalCenter();
+			Vector2 endPos = _Edge.input.GetGlobalCenter();
 
 			// 简单的线性插值（可以根据需要实现贝塞尔曲线）
 			int segments = 20;
@@ -119,9 +140,12 @@ namespace Icy.Base.Editor
 		}
 	}
 
+	/// <summary>
+	/// 两色分割的连线
+	/// </summary>
 	public class GradientEdge : Edge
 	{
-		private GradientEdgeOverlay gradientOverlay;
+		private GradientEdgeOverlay _GradientOverlay;
 
 		public GradientEdge()
 		{
@@ -135,17 +159,17 @@ namespace Icy.Base.Editor
 		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
 		{
 			// 确保EdgeControl已创建后添加渐变覆盖
-			if (gradientOverlay == null && edgeControl != null)
+			if (_GradientOverlay == null && edgeControl != null)
 				AddGradientOverlay();
 		}
 
 		private void AddGradientOverlay()
 		{
-			gradientOverlay = new GradientEdgeOverlay(this, 3f);
-			Add(gradientOverlay);
+			_GradientOverlay = new GradientEdgeOverlay(this, 3f);
+			Add(_GradientOverlay);
 
 			// 将覆盖层置于EdgeControl之上
-			gradientOverlay.BringToFront();
+			_GradientOverlay.BringToFront();
 		}
 
 		/// <summary>
@@ -154,17 +178,15 @@ namespace Icy.Base.Editor
 		private void DisableNativeEdgeCompletely()
 		{
 			// 通过反射获取EdgeControl并彻底禁用
-			var edgeControlField = typeof(Edge).GetField("m_EdgeControl",
+			System.Reflection.FieldInfo edgeControlField = typeof(Edge).GetField("m_EdgeControl",
 				System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
 			if (edgeControlField != null)
 			{
-				var edgeControl = edgeControlField.GetValue(this) as EdgeControl;
+				EdgeControl edgeControl = edgeControlField.GetValue(this) as EdgeControl;
+				// 彻底从视觉树中移除
 				if (edgeControl != null)
-				{
-					// 彻底从视觉树中移除
 					edgeControl.RemoveFromHierarchy();
-				}
 			}
 		}
 	}
