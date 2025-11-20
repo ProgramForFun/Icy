@@ -45,7 +45,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 前一个FSM状态转换的连线
 		/// </summary>
-		private Edge _ConnectLine;
+		private SplitColorEdge _ConnectLine;
 		/// <summary>
 		/// 创建状态节点时，创建位置的中心点坐标
 		/// </summary>
@@ -57,15 +57,15 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// Port默认的颜色
 		/// </summary>
-		private readonly Color DEFAULT_PORT_COLOR = new Color(0.784f, 0.784f, 0.784f, 1.0f);
-		/// <summary>
-		/// 前一个状态的名字
-		/// </summary>
-		private string _FromStateName;
-		/// <summary>
-		/// 下一个状态的名字
-		/// </summary>
-		private string _ToStateName;
+		private readonly Color DEFAULT_PORT_COLOR = new Color(0.384f, 0.384f, 0.384f, 1.0f);
+		///// <summary>
+		///// 前一个状态的名字
+		///// </summary>
+		//private string _FromStateName;
+		///// <summary>
+		///// 下一个状态的名字
+		///// </summary>
+		//private string _ToStateName;
 
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
@@ -190,8 +190,8 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void ConnectNodes(string fromStateName, string toStateName)
 		{
-			_FromStateName = fromStateName;
-			_ToStateName = toStateName;
+			//_FromStateName = fromStateName;
+			//_ToStateName = toStateName;
 
 			if (fromStateName != "Null" && _CurrNodes.ContainsKey(fromStateName) && _CurrNodes.ContainsKey(toStateName))
 			{
@@ -200,7 +200,7 @@ namespace Icy.Base.Editor
 				FSMStateNode toNode = _CurrNodes[toStateName];
 				Port toNodeInput = toNode.inputContainer[0] as Port;
 
-				_ConnectLine = fromNodeOutput.ConnectTo(toNodeInput);
+				_ConnectLine = fromNodeOutput.ConnectTo<SplitColorEdge>(toNodeInput);
 				AddElement(_ConnectLine);
 			}
 		}
@@ -251,8 +251,9 @@ namespace Icy.Base.Editor
 		{
 			if (_ConnectLine != null)
 			{
-				_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
-				_ConnectLine.output.portColor = Color.cyan;
+				//_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
+				//_ConnectLine.output.portColor = Color.cyan;
+				_ConnectLine.SetSplitColor(Color.cyan, DEFAULT_PORT_COLOR);
 			}
 		}
 
@@ -263,10 +264,11 @@ namespace Icy.Base.Editor
 		{
 			if (_ConnectLine != null)
 			{
-				_ConnectLine.input.portColor = Color.cyan;
-				_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
-				RemovePrevConnectLine();
-				ConnectNodes(_FromStateName, _ToStateName);
+				//_ConnectLine.input.portColor = Color.cyan;
+				//_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
+				//RemovePrevConnectLine();
+				//ConnectNodes(_FromStateName, _ToStateName);
+				_ConnectLine.SetSplitColor(DEFAULT_PORT_COLOR, Color.cyan);
 			}
 		}
 
@@ -277,10 +279,11 @@ namespace Icy.Base.Editor
 		{
 			if (_ConnectLine != null)
 			{
-				_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
-				_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
-				RemovePrevConnectLine();
-				ConnectNodes(_FromStateName, _ToStateName);
+				//_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
+				//_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
+				//RemovePrevConnectLine();
+				//ConnectNodes(_FromStateName, _ToStateName);
+				_ConnectLine.SetSplitColor(DEFAULT_PORT_COLOR, DEFAULT_PORT_COLOR);
 			}
 		}
 

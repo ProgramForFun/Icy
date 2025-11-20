@@ -25,15 +25,19 @@ namespace Icy.Base.Editor
 	/// <summary>
 	/// 自绘的两色分割连线本体
 	/// </summary>
-	public class GradientEdgeOverlay : VisualElement
+	public class SplitColorEdgeOverlay : VisualElement
 	{
 		private Edge _Edge;
 		private float _LineWidth;
+		private Color _FirstColor;
+		private Color _SecondColor;
 
-		public GradientEdgeOverlay(Edge targetEdge, float width)
+		public SplitColorEdgeOverlay(Edge targetEdge, Color first, Color second)
 		{
 			_Edge = targetEdge;
-			_LineWidth = width;
+			_LineWidth = 3.0f;
+			_FirstColor = first;
+			_SecondColor = second;
 
 			// 设置为绝对定位，覆盖在原始边上
 			style.position = Position.Absolute;
@@ -42,18 +46,13 @@ namespace Icy.Base.Editor
 			style.right = 0;
 			style.bottom = 0;
 
-			generateVisualContent += OnGenerateVisualContent;
+			generateVisualContent += DrawOverlay;
 
 			// 监听边的变化
 			_Edge.RegisterCallback<GeometryChangedEvent>(OnEdgeGeometryChanged);
 		}
 
-		private void OnEdgeGeometryChanged(GeometryChangedEvent evt)
-		{
-			MarkDirtyRepaint();
-		}
-
-		private void OnGenerateVisualContent(MeshGenerationContext context)
+		public void DrawOverlay(MeshGenerationContext context)
 		{
 			if (_Edge?.edgeControl == null)
 				return;
@@ -69,7 +68,7 @@ namespace Icy.Base.Editor
 			painter.lineJoin = LineJoin.Round;
 			painter.lineCap = LineCap.Round;
 
-			//分割点取所有点中，距离两个Port距离最平均的
+			// 分割点取所有点中，距离两个Port距离最平均的
 			Vector2 startPos = _Edge.output.GetGlobalCenter();
 			Vector2 endPos = _Edge.input.GetGlobalCenter();
 			int midPointIndex = 0;
@@ -86,8 +85,8 @@ namespace Icy.Base.Editor
 				}
 			}
 
-			// 绘制前半段（第一种颜色）
-			painter.strokeColor = Color.red;
+			// 绘制前半段
+			painter.strokeColor = _FirstColor;
 			painter.MoveTo(edgePoints[0]);
 
 			for (int i = 1; i <= midPointIndex; i++)
@@ -96,9 +95,9 @@ namespace Icy.Base.Editor
 			}
 			painter.Stroke();
 
-			// 绘制后半段（第二种颜色）
+			// 绘制后半段
 			painter.BeginPath();
-			painter.strokeColor = Color.blue;
+			painter.strokeColor = _SecondColor;
 			painter.MoveTo(edgePoints[midPointIndex]);
 
 			for (int i = midPointIndex + 1; i < edgePoints.Count; i++)
@@ -138,16 +137,23 @@ namespace Icy.Base.Editor
 
 			return points;
 		}
+
+		private void OnEdgeGeometryChanged(GeometryChangedEvent evt)
+		{
+			MarkDirtyRepaint();
+		}
 	}
 
 	/// <summary>
 	/// 两色分割的连线
 	/// </summary>
-	public class GradientEdge : Edge
+	public class SplitColorEdge : Edge
 	{
-		private GradientEdgeOverlay _GradientOverlay;
+		private SplitColorEdgeOverlay _SplitColorEdgeOverlay;
+		private Color _FirstColor;
+		private Color _SecondColor;
 
-		public GradientEdge()
+		public SplitColorEdge()
 		{
 			// 监听样式解析完成事件
 			RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
@@ -156,20 +162,32 @@ namespace Icy.Base.Editor
 			DisableNativeEdgeCompletely();
 		}
 
-		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
+		/// <summary>
+		/// 设置两段的颜色
+		/// </summary>
+		public void SetSplitColor(Color first, Color second)
 		{
-			// 确保EdgeControl已创建后添加渐变覆盖
-			if (_GradientOverlay == null && edgeControl != null)
-				AddGradientOverlay();
+			_FirstColor = first;
+			_SecondColor = second;
+			if (_SplitColorEdgeOverlay != null)
+				Remove(_SplitColorEdgeOverlay);
+			AddSplitColorEdgeOverlay();
 		}
 
-		private void AddGradientOverlay()
+		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
 		{
-			_GradientOverlay = new GradientEdgeOverlay(this, 3f);
-			Add(_GradientOverlay);
+			// 确保EdgeControl已创建后添加覆盖
+			if (_SplitColorEdgeOverlay == null && edgeControl != null)
+				AddSplitColorEdgeOverlay();
+		}
+
+		private void AddSplitColorEdgeOverlay()
+		{
+			_SplitColorEdgeOverlay = new SplitColorEdgeOverlay(this, _FirstColor, _SecondColor);
+			Add(_SplitColorEdgeOverlay);
 
 			// 将覆盖层置于EdgeControl之上
-			_GradientOverlay.BringToFront();
+			_SplitColorEdgeOverlay.BringToFront();
 		}
 
 		/// <summary>
