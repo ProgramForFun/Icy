@@ -128,20 +128,15 @@ namespace Icy.Base.Editor
 			// 监听样式解析完成事件
 			RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
 
-			// 尝试彻底禁用原生EdgeControl
-			schedule.Execute(() =>
-			{
-				DisableNativeEdgeCompletely();
-			}).StartingIn(1); // 延迟执行确保EdgeControl已创建
+			// 彻底禁用原生EdgeControl
+			DisableNativeEdgeCompletely();
 		}
 
 		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
 		{
 			// 确保EdgeControl已创建后添加渐变覆盖
 			if (gradientOverlay == null && edgeControl != null)
-			{
 				AddGradientOverlay();
-			}
 		}
 
 		private void AddGradientOverlay()
@@ -151,43 +146,6 @@ namespace Icy.Base.Editor
 
 			// 将覆盖层置于EdgeControl之上
 			gradientOverlay.BringToFront();
-		}
-
-		public void SetGradient()
-		{
-			if (gradientOverlay != null)
-			{
-				// 需要重新创建或更新覆盖层
-				gradientOverlay.RemoveFromHierarchy();
-				gradientOverlay = null;
-				AddGradientOverlay();
-			}
-			MarkDirtyRepaint();
-		}
-
-		public override void OnSelected()
-		{
-			base.OnSelected();
-			// 选中时改变渐变
-			SetSelectionGradient();
-		}
-
-		public override void OnUnselected()
-		{
-			base.OnUnselected();
-			// 恢复原渐变
-			RestoreOriginalGradient();
-		}
-
-		private void SetSelectionGradient()
-		{
-			SetGradient();
-		}
-
-		private void RestoreOriginalGradient()
-		{
-			// 恢复原始渐变
-			SetGradient();
 		}
 
 		/// <summary>
@@ -208,39 +166,6 @@ namespace Icy.Base.Editor
 					edgeControl.RemoveFromHierarchy();
 				}
 			}
-		}
-	}
-
-	public class GradientEdgeControl : EdgeControl
-	{
-		public float CustomEdgeWidth { get; set; } = 4f;
-
-		public GradientEdgeControl()
-		{
-
-		}
-
-		// 重写边的宽度属性
-		//public override float edgeWidth
-		//{
-		//	get => CustomEdgeWidth;
-		//	set => CustomEdgeWidth = value;
-		//}
-
-		// 通过修改控制点来影响绘制
-		public override void UpdateLayout()
-		{
-			base.UpdateLayout();
-
-			// 强制重绘
-			MarkDirtyRepaint();
-		}
-
-		// 使用Shader或Material来实现渐变效果
-		public void ApplyGradientToMesh()
-		{
-			// 这里需要通过修改顶点颜色或使用自定义Shader
-			// 由于EdgeControl的绘制是内部的，我们需要采用其他方法
 		}
 	}
 }
