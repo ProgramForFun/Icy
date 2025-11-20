@@ -1,262 +1,246 @@
+/*
+ * Copyright 2025 @ProgramForFun. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-public class GradientEdgeOverlay : VisualElement
+namespace Icy.Base.Editor
 {
-	private Edge edge;
-	private Gradient gradient;
-	private float lineWidth;
-
-	public GradientEdgeOverlay(Edge targetEdge, Gradient edgeGradient, float width = 4f)
+	public class GradientEdgeOverlay : VisualElement
 	{
-		edge = targetEdge;
-		gradient = edgeGradient;
-		lineWidth = width;
+		private Edge edge;
+		private float lineWidth;
 
-		// 设置为绝对定位，覆盖在原始边上
-		style.position = Position.Absolute;
-		style.left = 0;
-		style.top = 0;
-		style.right = 0;
-		style.bottom = 0;
-
-		generateVisualContent += OnGenerateVisualContent;
-
-		// 监听边的变化
-		edge.RegisterCallback<GeometryChangedEvent>(OnEdgeGeometryChanged);
-	}
-
-	private void OnEdgeGeometryChanged(GeometryChangedEvent evt)
-	{
-		MarkDirtyRepaint();
-	}
-
-	private void OnGenerateVisualContent(MeshGenerationContext context)
-	{
-		if (edge?.edgeControl == null) return;
-
-		var edgePoints = CalculateEdgePoints();
-		if (edgePoints.Count < 2) return;
-
-		var painter = context.painter2D;
-
-		painter.BeginPath();
-		painter.lineWidth = lineWidth;
-		painter.lineJoin = LineJoin.Round;
-		painter.lineCap = LineCap.Round;
-
-		int midPointIndex = edgePoints.Count / 2;
-
-		// 绘制前半段（第一种颜色）
-		painter.strokeColor = gradient.Evaluate(0f);
-		painter.MoveTo(edgePoints[0]);
-
-		for (int i = 1; i <= midPointIndex; i++)
+		public GradientEdgeOverlay(Edge targetEdge, float width = 4f)
 		{
-			painter.LineTo(edgePoints[i]);
+			edge = targetEdge;
+			lineWidth = width;
+
+			// 设置为绝对定位，覆盖在原始边上
+			style.position = Position.Absolute;
+			style.left = 0;
+			style.top = 0;
+			style.right = 0;
+			style.bottom = 0;
+
+			generateVisualContent += OnGenerateVisualContent;
+
+			// 监听边的变化
+			edge.RegisterCallback<GeometryChangedEvent>(OnEdgeGeometryChanged);
 		}
-		painter.Stroke();
 
-		// 绘制后半段（第二种颜色）
-		painter.BeginPath();
-		painter.strokeColor = gradient.Evaluate(1f);
-		painter.MoveTo(edgePoints[midPointIndex]);
-
-		for (int i = midPointIndex + 1; i < edgePoints.Count; i++)
+		private void OnEdgeGeometryChanged(GeometryChangedEvent evt)
 		{
-			painter.LineTo(edgePoints[i]);
+			MarkDirtyRepaint();
 		}
-		painter.Stroke();
-	}
 
-	private System.Collections.Generic.List<Vector2> CalculateEdgePoints()
-	{
-		var points = new System.Collections.Generic.List<Vector2>();
+		private void OnGenerateVisualContent(MeshGenerationContext context)
+		{
+			if (edge?.edgeControl == null) return;
 
-		if (edge.input == null || edge.output == null)
+			var edgePoints = CalculateEdgePoints();
+			if (edgePoints.Count < 2) return;
+
+			var painter = context.painter2D;
+
+			painter.BeginPath();
+			painter.lineWidth = lineWidth;
+			painter.lineJoin = LineJoin.Round;
+			painter.lineCap = LineCap.Round;
+
+			int midPointIndex = edgePoints.Count / 2;
+
+			// 绘制前半段（第一种颜色）
+			painter.strokeColor = Color.red;
+			painter.MoveTo(edgePoints[0]);
+
+			for (int i = 1; i <= midPointIndex; i++)
+			{
+				painter.LineTo(edgePoints[i]);
+			}
+			painter.Stroke();
+
+			// 绘制后半段（第二种颜色）
+			painter.BeginPath();
+			painter.strokeColor = Color.blue;
+			painter.MoveTo(edgePoints[midPointIndex]);
+
+			for (int i = midPointIndex + 1; i < edgePoints.Count; i++)
+			{
+				painter.LineTo(edgePoints[i]);
+			}
+			painter.Stroke();
+		}
+
+		private System.Collections.Generic.List<Vector2> CalculateEdgePoints()
+		{
+			var points = new System.Collections.Generic.List<Vector2>();
+
+			if (edge.input == null || edge.output == null)
+				return points;
+
+			// 计算贝塞尔曲线点
+			Vector2 startPos = edge.output.GetGlobalCenter();
+			Vector2 endPos = edge.input.GetGlobalCenter();
+
+			// 简单的线性插值（可以根据需要实现贝塞尔曲线）
+			int segments = 20;
+			for (int i = 0; i <= segments; i++)
+			{
+				float t = (float)i / segments;
+				Vector2 point = Vector2.Lerp(startPos, endPos, t);
+
+				// 添加一些曲线效果
+				if (i > 0 && i < segments)
+				{
+					float curveStrength = 50f;
+					point.y += Mathf.Sin(t * Mathf.PI) * curveStrength;
+				}
+
+				points.Add(point - parent.worldBound.position);
+			}
+
 			return points;
-
-		// 计算贝塞尔曲线点
-		Vector2 startPos = edge.output.GetGlobalCenter();
-		Vector2 endPos = edge.input.GetGlobalCenter();
-
-		// 简单的线性插值（可以根据需要实现贝塞尔曲线）
-		int segments = 20;
-		for (int i = 0; i <= segments; i++)
-		{
-			float t = (float)i / segments;
-			Vector2 point = Vector2.Lerp(startPos, endPos, t);
-
-			// 添加一些曲线效果
-			if (i > 0 && i < segments)
-			{
-				float curveStrength = 50f;
-				point.y += Mathf.Sin(t * Mathf.PI) * curveStrength;
-			}
-
-			points.Add(point - parent.worldBound.position);
-		}
-
-		return points;
-	}
-}
-
-public class GradientEdge : Edge
-{
-	public Gradient EdgeGradient { get; private set; }
-	private GradientEdgeOverlay gradientOverlay;
-
-	public GradientEdge()
-	{
-		// 创建默认渐变
-		EdgeGradient = new Gradient()
-		{
-			colorKeys = new GradientColorKey[]
-			{
-				new GradientColorKey(Color.cyan, 0f),
-				new GradientColorKey(Color.magenta, 1f)
-			}
-		};
-
-		// 监听样式解析完成事件
-		RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
-
-		// 尝试彻底禁用原生EdgeControl
-		schedule.Execute(() => {
-			DisableNativeEdgeCompletely();
-		}).StartingIn(1); // 延迟执行确保EdgeControl已创建
-	}
-
-	private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
-	{
-		// 确保EdgeControl已创建后添加渐变覆盖
-		if (gradientOverlay == null && edgeControl != null)
-		{
-			AddGradientOverlay();
 		}
 	}
 
-	private void AddGradientOverlay()
+	public class GradientEdge : Edge
 	{
-		gradientOverlay = new GradientEdgeOverlay(this, EdgeGradient, 3f);
-		Add(gradientOverlay);
+		private GradientEdgeOverlay gradientOverlay;
 
-		// 将覆盖层置于EdgeControl之上
-		gradientOverlay.BringToFront();
-	}
-
-	public void SetGradient(Gradient newGradient)
-	{
-		EdgeGradient = newGradient;
-		if (gradientOverlay != null)
+		public GradientEdge()
 		{
-			// 需要重新创建或更新覆盖层
-			gradientOverlay.RemoveFromHierarchy();
-			gradientOverlay = null;
-			AddGradientOverlay();
+			// 监听样式解析完成事件
+			RegisterCallback<CustomStyleResolvedEvent>(OnCustomStyleResolved);
+
+			// 尝试彻底禁用原生EdgeControl
+			schedule.Execute(() =>
+			{
+				DisableNativeEdgeCompletely();
+			}).StartingIn(1); // 延迟执行确保EdgeControl已创建
 		}
-		MarkDirtyRepaint();
-	}
 
-	public override void OnSelected()
-	{
-		base.OnSelected();
-		// 选中时改变渐变
-		SetSelectionGradient();
-	}
-
-	public override void OnUnselected()
-	{
-		base.OnUnselected();
-		// 恢复原渐变
-		RestoreOriginalGradient();
-	}
-
-	private void SetSelectionGradient()
-	{
-		var selectedGradient = new Gradient()
+		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
 		{
-			colorKeys = new GradientColorKey[]
+			// 确保EdgeControl已创建后添加渐变覆盖
+			if (gradientOverlay == null && edgeControl != null)
 			{
-				new GradientColorKey(Color.yellow, 0f),
-				new GradientColorKey(Color.red, 1f)
-			}
-		};
-		SetGradient(selectedGradient);
-	}
-
-	private void RestoreOriginalGradient()
-	{
-		// 恢复原始渐变
-		SetGradient(EdgeGradient);
-	}
-
-	/// <summary>
-	/// 彻底禁用原生EdgeControl
-	/// </summary>
-	private void DisableNativeEdgeCompletely()
-	{
-		// 通过反射获取EdgeControl并彻底禁用
-		var edgeControlField = typeof(Edge).GetField("m_EdgeControl",
-			System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-		if (edgeControlField != null)
-		{
-			var edgeControl = edgeControlField.GetValue(this) as EdgeControl;
-			if (edgeControl != null)
-			{
-				// 彻底从视觉树中移除
-				edgeControl.RemoveFromHierarchy();
+				AddGradientOverlay();
 			}
 		}
-	}
-}
 
-public class GradientEdgeControl : EdgeControl
-{
-	public Gradient ColorGradient { get; set; }
-	public float CustomEdgeWidth { get; set; } = 4f;
-
-	public GradientEdgeControl()
-	{
-		// 设置默认渐变
-		ColorGradient = new Gradient()
+		private void AddGradientOverlay()
 		{
-			colorKeys = new GradientColorKey[]
+			gradientOverlay = new GradientEdgeOverlay(this, 3f);
+			Add(gradientOverlay);
+
+			// 将覆盖层置于EdgeControl之上
+			gradientOverlay.BringToFront();
+		}
+
+		public void SetGradient()
+		{
+			if (gradientOverlay != null)
 			{
-				new GradientColorKey(Color.blue, 0f),
-				new GradientColorKey(Color.green, 0.5f),
-				new GradientColorKey(Color.red, 1f)
-			},
-			alphaKeys = new GradientAlphaKey[]
-			{
-				new GradientAlphaKey(1f, 0f),
-				new GradientAlphaKey(1f, 1f)
+				// 需要重新创建或更新覆盖层
+				gradientOverlay.RemoveFromHierarchy();
+				gradientOverlay = null;
+				AddGradientOverlay();
 			}
-		};
+			MarkDirtyRepaint();
+		}
+
+		public override void OnSelected()
+		{
+			base.OnSelected();
+			// 选中时改变渐变
+			SetSelectionGradient();
+		}
+
+		public override void OnUnselected()
+		{
+			base.OnUnselected();
+			// 恢复原渐变
+			RestoreOriginalGradient();
+		}
+
+		private void SetSelectionGradient()
+		{
+			SetGradient();
+		}
+
+		private void RestoreOriginalGradient()
+		{
+			// 恢复原始渐变
+			SetGradient();
+		}
+
+		/// <summary>
+		/// 彻底禁用原生EdgeControl
+		/// </summary>
+		private void DisableNativeEdgeCompletely()
+		{
+			// 通过反射获取EdgeControl并彻底禁用
+			var edgeControlField = typeof(Edge).GetField("m_EdgeControl",
+				System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+			if (edgeControlField != null)
+			{
+				var edgeControl = edgeControlField.GetValue(this) as EdgeControl;
+				if (edgeControl != null)
+				{
+					// 彻底从视觉树中移除
+					edgeControl.RemoveFromHierarchy();
+				}
+			}
+		}
 	}
 
-	// 重写边的宽度属性
-	//public override float edgeWidth
-	//{
-	//	get => CustomEdgeWidth;
-	//	set => CustomEdgeWidth = value;
-	//}
-
-	// 通过修改控制点来影响绘制
-	public override void UpdateLayout()
+	public class GradientEdgeControl : EdgeControl
 	{
-		base.UpdateLayout();
+		public float CustomEdgeWidth { get; set; } = 4f;
 
-		// 强制重绘
-		MarkDirtyRepaint();
-	}
+		public GradientEdgeControl()
+		{
 
-	// 使用Shader或Material来实现渐变效果
-	public void ApplyGradientToMesh()
-	{
-		// 这里需要通过修改顶点颜色或使用自定义Shader
-		// 由于EdgeControl的绘制是内部的，我们需要采用其他方法
+		}
+
+		// 重写边的宽度属性
+		//public override float edgeWidth
+		//{
+		//	get => CustomEdgeWidth;
+		//	set => CustomEdgeWidth = value;
+		//}
+
+		// 通过修改控制点来影响绘制
+		public override void UpdateLayout()
+		{
+			base.UpdateLayout();
+
+			// 强制重绘
+			MarkDirtyRepaint();
+		}
+
+		// 使用Shader或Material来实现渐变效果
+		public void ApplyGradientToMesh()
+		{
+			// 这里需要通过修改顶点颜色或使用自定义Shader
+			// 由于EdgeControl的绘制是内部的，我们需要采用其他方法
+		}
 	}
 }
