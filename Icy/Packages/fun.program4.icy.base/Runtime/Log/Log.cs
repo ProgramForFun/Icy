@@ -48,6 +48,10 @@ namespace Icy.Base
 		/// </summary>
 		public static LogLevel MinLogLevel { get; set; } = LogLevel.Info;
 		/// <summary>
+		/// 任意Log都会触发这个event，方便业务侧做后续的其他处理
+		/// </summary>
+		public static event Action<LogLevel, string> OnLog;
+		/// <summary>
 		/// 指定Tag独立的最小LogLevel，优先级高于MinLogLevel
 		/// </summary>
 		private static Dictionary<string, LogLevel> _OverrideMinLogLevelForTag = new Dictionary<string, LogLevel>();
@@ -87,6 +91,7 @@ namespace Icy.Base
 
 		public static void Init(bool writeLog2File = false)
 		{
+			OnLog = null;
 			#region WriteLog2File
 			if (writeLog2File)
 			{
@@ -95,7 +100,7 @@ namespace Icy.Base
 				_CancellationTokenSource = new CancellationTokenSource();
 				_Write2FileThread = new Thread(ConsumeLog);
 				_Write2FileThread.Start();
-				Application.logMessageReceivedThreaded += OnLog;
+				Application.logMessageReceivedThreaded += OnUnityLog;
 			}
 			#endregion
 		}
@@ -136,7 +141,9 @@ namespace Icy.Base
 			if (!force && !IsMatchLogLevel(tag, LogLevel.Info))
 				return;
 
-			Debug.Log(FormatByTag(tag, msg));
+			string log = FormatByTag(tag, msg);
+			Debug.Log(log);
+			OnLog?.Invoke(LogLevel.Info, log);
 		}
 
 		/// <summary>
@@ -149,7 +156,10 @@ namespace Icy.Base
 		{
 			if (!force && !IsMatchLogLevel(tag, LogLevel.Warning))
 				return;
-			Debug.LogWarning(FormatByTag(tag, msg));
+
+			string log = FormatByTag(tag, msg);
+			Debug.LogWarning(log);
+			OnLog?.Invoke(LogLevel.Warning, log);
 		}
 
 		/// <summary>
@@ -162,7 +172,10 @@ namespace Icy.Base
 		{
 			if (!force && !IsMatchLogLevel(tag, LogLevel.Error))
 				return;
-			Debug.LogError(FormatByTag(tag, msg));
+
+			string log = FormatByTag(tag, msg);
+			Debug.LogError(log);
+			OnLog?.Invoke(LogLevel.Error, log);
 		}
 
 		/// <summary>
@@ -178,7 +191,9 @@ namespace Icy.Base
 
 			if (!condition)
 			{
-				Error("[ASSERT] " + msg, tag);
+				string log = FormatByTag(tag, "[ASSERT] " + msg);
+				Debug.LogError(log);
+				OnLog?.Invoke(LogLevel.Assert, log);
 #if UNITY_EDITOR
 				if (!Application.isBatchMode)
 				{
@@ -274,7 +289,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 监听Unity的log
 		/// </summary>
-		private static void OnLog(string condition, string stackTrace, LogType type)
+		private static void OnUnityLog(string condition, string stackTrace, LogType type)
 		{
 			lock (_QueueLock)
 			{
