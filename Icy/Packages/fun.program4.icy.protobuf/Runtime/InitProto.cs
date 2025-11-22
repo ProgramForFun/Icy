@@ -47,13 +47,16 @@ namespace Icy.Protobuf
 						{
 							MethodInfo method = type.GetMethod("RegisterAll");
 							method?.Invoke(null, null);
+							Log.Info("ProtoMsgIDRegistry inited", nameof(InitProto), true);
 						}
+						else
+							Log.Error($"Load ProtoMsgIDRegistry type failed", nameof(InitProto));
 					}
 					else
-						Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed");
+						Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
 				}
 				else
-					Log.Info("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.");
+					Log.Info("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.", nameof(InitProto), true);
 			}
 		}
 	}

@@ -70,15 +70,23 @@ namespace Icy.Base
 
 		/// <summary>
 		/// 反射调用初始化Proto，牺牲一点点性能，换取用户不需要关心这个调用了
-		/// TODO：接入HybridCLR后，这里的调用时机要改
 		/// </summary>
 		private void InitProto()
 		{
-			Assembly assembly = Assembly.Load("Icy.Protobuf");
-			Type type = assembly.GetType("Icy.Protobuf.InitProto");
-			MethodInfo method = type.GetMethod("InitProtoMsgIDRegistry", BindingFlags.Public | BindingFlags.Instance);
-			object instance = Activator.CreateInstance(type);
-			method.Invoke(instance, null);
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			foreach (Assembly assembly in assemblies)
+			{
+				//TODO：Icy.Protobuf可能因为没有引用，被裁剪掉了
+				if (assembly.GetName().Name == "Icy.Protobuf")
+				{
+					Type type = assembly.GetType("Icy.Protobuf.InitProto");
+					MethodInfo method = type.GetMethod("InitProtoMsgIDRegistry", BindingFlags.Public | BindingFlags.Instance);
+					object instance = Activator.CreateInstance(type);
+					method.Invoke(instance, null);
+					return;
+				}
+			}
+			Log.Error("InitProto failed, could not find Icy.Protobuf assembly", nameof(IcyFrame));
 		}
 
 		/// <summary>
