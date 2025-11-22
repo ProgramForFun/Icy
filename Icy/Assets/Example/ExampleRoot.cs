@@ -1,65 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Icy.Base;
 using Cysharp.Threading.Tasks;
 using Icy.UI;
-using Icy.Asset;
-using YooAsset;
-using System.Globalization;
 using System.ComponentModel;
 #if ICY_USE_SRDEBUGGER
 using Icy.GM;
 using SRDebugger;
 #endif
 
-
+/// <summary>
+/// HybridCLR姒傚康涓嬬殑鐑洿浠ｇ爜鍏ュ彛
+/// </summary>
 public class ExampleRoot : MonoBehaviour
 {
-	[SerializeField] private EPlayMode _AssetMode;
-	[SerializeField] private Camera _Camera3D;
-
-
 	async void Start()
 	{
-		//基础功能的开关
-		UnityEngine.Rendering.DebugManager.instance.enableRuntimeUI = false;
-		Application.runInBackground = true;
-		Screen.sleepTimeout = SleepTimeout.NeverSleep;
-		//避免某些地区比如南非，1.23ToString成1,23的问题
-		CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+		Log.Info("Hello from patch code", "Patch", true);
 
-
-		//框架相关初始化
-		GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
-		IcyFrame.Instance.Init();
-		Log.Init(true);
-		UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
 #if ICY_USE_SRDEBUGGER
-		GM.Init(new TestGM());//可以根据服务器，决定是否要开启GM
+		GM.Init(new TestGM());//鍙互鏍规嵁鏈嶅姟鍣紝鍐冲畾鏄惁瑕佸紑鍚疓M
 #endif
+		//=================寮�濮嬩笟鍔￠�昏緫=================
 
-
-		//资源热更
-		bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage", 30);
-		if (!assetMgrInitSucceed)
-		{
-			Log.Assert(false, "AssetManager init failed!");
-			return;
-		}
-
-		//先更新资源
-		await AssetManager.Instance.StartAssetPatch();
-#if !UNITY_EDITOR
-		//再加载热更代码
-		await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
-#else
-		//Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
-#endif
-
-		//=================开始业务逻辑=================
-
-		//显示UI
+		//鏄剧ずUI
 		UILogin uiLogin = await UIManager.Instance.ShowAsync<UILogin>();
 		Log.Info($"UILogin is showing = {UIManager.Instance.IsShowing<UILogin>()}");
 
@@ -70,14 +33,6 @@ public class ExampleRoot : MonoBehaviour
 
 		await UniTask.WaitForSeconds(1);
 		UIManager.Instance.DestroyToPrev();
-	}
-
-	/// <summary>
-	/// 业务侧在这里具体执行 AOT调用热更代码入口 这个操作
-	/// </summary>
-	void RunPatchedCode()
-	{
-
 	}
 
 	void Update()

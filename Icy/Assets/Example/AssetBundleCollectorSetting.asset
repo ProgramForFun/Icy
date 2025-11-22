@@ -19,6 +19,7 @@ MonoBehaviour:
   - PackageName: DefaultPackage
     PackageDesc: 
     EnableAddressable: 1
+    SupportExtensionless: 1
     LocationToLower: 0
     IncludeAssetGUID: 0
     AutoCollectShaders: 1
@@ -39,6 +40,14 @@ MonoBehaviour:
         UserData: 
       - CollectPath: Assets/Example/UISprites
         CollectorGUID: 4d13bc6a51ee12a45a2adfec9cce0168
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/Example/ExampleRoot.prefab
+        CollectorGUID: 687cf658c4303ba48ac2254a1dd6e7f8
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
