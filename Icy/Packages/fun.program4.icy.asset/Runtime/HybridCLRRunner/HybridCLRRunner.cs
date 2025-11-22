@@ -38,6 +38,7 @@ namespace Icy.Asset
 		{
 			if (runCode == null)
 				Log.Assert(false, "Argument of the constructor is null", nameof(HybridCLRRunner));
+			_RunCode = runCode;
 			IsFinished = false;
 		}
 
