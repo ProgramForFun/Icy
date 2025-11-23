@@ -17,6 +17,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using Icy.Asset;
 using System;
 using System.Threading;
 using UnityEngine;
@@ -35,6 +36,7 @@ namespace Icy.Frame
 			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
+			HybridCLRRunner.GetHybridCLREnabled();
 
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
