@@ -131,7 +131,7 @@ namespace Icy.Asset.Editor
 		{
 			if (_PatchDLLs != null)
 			{
-				var oldPatchDLLs = _Setting.PatchDLLs.Clone();
+				Google.Protobuf.Collections.RepeatedField<string> oldPatchDLLs = _Setting.PatchDLLs.Clone();
 				_Setting.PatchDLLs.Clear();
 
 				//先加之前就有的，尽量保持现有的顺序
@@ -146,7 +146,7 @@ namespace Icy.Asset.Editor
 				for (int i = 0; i < _PatchDLLs.Count; i++)
 				{
 					if (!_Setting.PatchDLLs.Contains(_PatchDLLs[i]))
-						_Setting.PatchDLLs.Add(oldPatchDLLs[i]);
+						_Setting.PatchDLLs.Add(_PatchDLLs[i]);
 				}
 
 				string targetDir = SettingsHelper.GetSettingDir();
