@@ -64,8 +64,6 @@ namespace Icy.Base
 		{
 			for (int i = 0; i < _Updateables.Count; i++)
 				_Updateables[i]?.Update(deltaTime);
-
-			EventManager.Update();
 		}
 
 		internal void FixedUpdate(float deltaTime)
