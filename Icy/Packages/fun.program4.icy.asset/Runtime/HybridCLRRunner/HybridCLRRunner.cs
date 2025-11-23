@@ -48,11 +48,13 @@ namespace Icy.Asset
 			patchProcedure.AddStep(new LoadPatchDLLStep());
 			patchProcedure.AddStep(new LoadMetaDataDLLStep());
 			patchProcedure.Start();
-			Log.Info($"Start HybridCLR patch procedure", nameof(HybridCLRRunner));
+			Log.Info($"Start HybridCLR patch procedure", nameof(HybridCLRRunner), true);
 
 			while(!patchProcedure.IsFinished)
 				await UniTask.NextFrame();
 
+			Log.Info($"HybridCLR patch procedure finished", nameof(HybridCLRRunner), true);
+			EventManager.Trigger(EventDefine.HybridCLRRunnerFinish);
 			_RunCode();
 			IsFinished = true;
 		}

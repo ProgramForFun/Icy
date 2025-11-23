@@ -18,7 +18,6 @@
 using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
-using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
@@ -40,7 +39,11 @@ namespace Icy.Frame
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
 
-			InitProto();
+#if !UNITY_EDITOR
+			EventManager.AddListener(EventDefine.HybridCLRRunnerFinish, OnHybridCLRRunnerFinish);
+#else
+			OnHybridCLRRunnerFinish(0, null);
+#endif
 
 #if ICY_PRESERVE_UNITY_CLASS
 			int dummy = UnityEngine.Random.Range(1, 2);
@@ -50,25 +53,9 @@ namespace Icy.Frame
 #endif
 		}
 
-		/// <summary>
-		/// 反射调用初始化Proto，牺牲一点点性能，换取用户不需要关心这个调用了
-		/// </summary>
-		private void InitProto()
+		private void OnHybridCLRRunnerFinish(int arg1, IEventParam param)
 		{
-			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-			foreach (Assembly assembly in assemblies)
-			{
-				//TODO：Icy.Protobuf可能因为没有引用，被裁剪掉了
-				if (assembly.GetName().Name == "Icy.Protobuf")
-				{
-					Type type = assembly.GetType("Icy.Protobuf.InitProto");
-					MethodInfo method = type.GetMethod("InitProtoMsgIDRegistry", BindingFlags.Public | BindingFlags.Instance);
-					object instance = Activator.CreateInstance(type);
-					method.Invoke(instance, null);
-					return;
-				}
-			}
-			Log.Error("InitProto failed, could not find Icy.Protobuf assembly", nameof(IcyFrame));
+			Protobuf.InitProto.InitProtoMsgIDRegistry().Forget();
 		}
 
 		private void OnUniTaskUnobservedTaskException(Exception ex)

@@ -25,13 +25,13 @@ namespace Icy.Protobuf
 	/// <summary>
 	/// 初始化Protobuf
 	/// </summary>
-	public class InitProto
+	public static class InitProto
 	{
 		/// <summary>
 		/// 反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
 		/// TODO：接入HybridCLR后，这里的调用时机要改
 		/// </summary>
-		public async UniTaskVoid InitProtoMsgIDRegistry()
+		public static async UniTaskVoid InitProtoMsgIDRegistry()
 		{
 			byte[] settingBytes = await SettingsHelper.LoadSetting(SettingsHelper.ProtoSetting);
 			if (settingBytes != null)
@@ -58,6 +58,8 @@ namespace Icy.Protobuf
 				else
 					Log.Info("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.", nameof(InitProto), true);
 			}
+			else
+				Log.Error($"Load ProtoSetting failed", nameof(InitProto));
 		}
 	}
 }

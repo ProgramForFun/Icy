@@ -47,6 +47,10 @@ namespace Icy.Base
 		/// 资源更新完成
 		/// </summary>
 		public static readonly int AssetPatchFinish = -1105;
+		/// <summary>
+		/// HybridCLRRunner运行完成
+		/// </summary>
+		public static readonly int HybridCLRRunnerFinish = -1106;
 		#endregion
 
 		#region UI
