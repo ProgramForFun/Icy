@@ -10,7 +10,7 @@ namespace Bootstrap
 	/// <summary>
 	/// HybridCLR概念下的AOT启动入口，负责资源初始化和热更代码加载
 	/// </summary>
-	public class AOTBootstrap : MonoBehaviour
+	public class Bootstrap : MonoBehaviour
 	{
 		[SerializeField] private EPlayMode _AssetMode;
 		[SerializeField] private Camera _Camera3D;
