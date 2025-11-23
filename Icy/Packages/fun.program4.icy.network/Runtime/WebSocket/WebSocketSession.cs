@@ -45,7 +45,7 @@ namespace Icy.Network
 		{
 #if !UNITY_WEBGL || UNITY_EDITOR
 			if (_UseDispatchQueue)
-				IcyFrame.Instance.AddUpdate(this);
+				Updater.Instance.AddUpdate(this);
 #endif
 		}
 
@@ -175,7 +175,7 @@ namespace Icy.Network
 		{
 #if !UNITY_WEBGL || UNITY_EDITOR
 			if (_UseDispatchQueue)
-				IcyFrame.Instance.RemoveUpdate(this);
+				Updater.Instance.RemoveUpdate(this);
 #endif
 			if (IsConnected)
 				Disconnect().Forget();

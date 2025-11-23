@@ -17,7 +17,6 @@
 
 using Cysharp.Threading.Tasks;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using UnityEngine;
@@ -33,10 +32,6 @@ namespace Icy.Base
 		/// 主线程ID
 		/// </summary>
 		public int MainThreadID { get; private set; }
-
-		private List<IUpdateable> _Updateables = new List<IUpdateable>();
-		private List<IFixedUpdateable> _FixedUpdateables = new List<IFixedUpdateable>();
-		private List<ILateUpdateable> _LateUpdateables = new List<ILateUpdateable>();
 
 
 		public void Init()
@@ -102,60 +97,21 @@ namespace Icy.Base
 			Log.Error(ex.ToString(), "UniTask Unobserved Exception");
 		}
 
-		#region Update
-		public void AddUpdate(IUpdateable updateable)
-		{
-			_Updateables.Add(updateable);
-		}
-
-		public void RemoveUpdate(IUpdateable updateable)
-		{
-			_Updateables.Remove(updateable);
-		}
-
-		public void AddFixedUpdate(IFixedUpdateable updateable)
-		{
-			_FixedUpdateables.Add(updateable);
-		}
-
-		public void RemoveFixedUpdate(IFixedUpdateable updateable)
-		{
-			_FixedUpdateables.Remove(updateable);
-		}
-
-		public void AddLateUpdate(ILateUpdateable updateable)
-		{
-			_LateUpdateables.Add(updateable);
-		}
-
-		public void RemoveLateUpdate(ILateUpdateable updateable)
-		{
-			_LateUpdateables.Remove(updateable);
-		}
-
 		private void Update()
 		{
-			float delta = Time.deltaTime;
-			for (int i = 0; i < _Updateables.Count; i++)
-				_Updateables[i]?.Update(delta);
-
+			Updater.Instance.Update(Time.deltaTime);
 			EventManager.Update();
 		}
 
 		private void FixedUpdate()
 		{
-			float delta = Time.fixedDeltaTime;
-			for (int i = 0; i < _FixedUpdateables.Count; i++)
-				_FixedUpdateables[i]?.FixedUpdate(delta);
+			Updater.Instance.Update(Time.fixedDeltaTime);
 		}
 
 		private void LateUpdate()
 		{
-			float delta = Time.deltaTime;
-			for (int i = 0; i < _LateUpdateables.Count; i++)
-				_LateUpdateables[i]?.LateUpdate(delta);
+			Updater.Instance.LateUpdate(Time.deltaTime);
 		}
-		#endregion
 
 		private void OnApplicationQuit()
 		{

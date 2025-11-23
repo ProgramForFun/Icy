@@ -31,7 +31,7 @@ namespace Icy.Base
 		{
 			base.OnInitialized();
 			_ExecuteQueue = new Queue<Action>();
-			IcyFrame.Instance.AddUpdate(this);
+			Updater.Instance.AddUpdate(this);
 		}
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace Icy.Base
 		{
 			base.ClearSingleton();
 			_ExecuteQueue.Clear();
-			IcyFrame.Instance.RemoveUpdate(this);
+			Updater.Instance.RemoveUpdate(this);
 		}
 	}
 }

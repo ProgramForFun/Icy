@@ -107,7 +107,7 @@ namespace Icy.Network
 			_TimeElapsed = 0;
 			_RemoteEndPoint = new IPEndPoint(IPAddress.Parse(host), port);
 
-			IcyFrame.Instance.AddUpdate(this);
+			Updater.Instance.AddUpdate(this);
 		}
 
 		/// <summary>
@@ -411,7 +411,7 @@ namespace Icy.Network
 
 		public override void Dispose()
 		{
-			IcyFrame.Instance.RemoveUpdate(this);
+			Updater.Instance.RemoveUpdate(this);
 
 			try
 			{

@@ -17,18 +17,27 @@
 
 namespace Icy.Base
 {
+	/// <summary>
+	/// 实现此接口，再注册到Icy.Base.Updater，可以在Unity的 Update 时机被调用
+	/// </summary>
 	public interface IUpdateable
 	{
-		void Update(float delta);
+		void Update(float deltaTime);
 	}
 
+	/// <summary>
+	/// 实现此接口，再注册到Icy.Base.Updater，可以在Unity的 FixedUpdate 时机被调用
+	/// </summary>
 	public interface IFixedUpdateable
 	{
-		void FixedUpdate(float delta);
+		void FixedUpdate(float deltaTime);
 	}
 
+	/// <summary>
+	/// 实现此接口，再注册到Icy.Base.Updater，可以在Unity的 LateUpdate 时机被调用
+	/// </summary>
 	public interface ILateUpdateable
 	{
-		void LateUpdate(float delta);
+		void LateUpdate(float deltaTime);
 	}
 }

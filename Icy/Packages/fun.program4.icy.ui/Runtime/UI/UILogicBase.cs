@@ -34,7 +34,7 @@ namespace Icy.UI
 		/// </summary>
 		public void EnableUpdate()
 		{
-			IcyFrame.Instance.AddUpdate(this);
+			Updater.Instance.AddUpdate(this);
 		}
 
 		/// <summary>
@@ -47,7 +47,7 @@ namespace Icy.UI
 
 		public virtual void Destroy()
 		{
-			IcyFrame.Instance.RemoveUpdate(this);
+			Updater.Instance.RemoveUpdate(this);
 		}
 	}
 }
