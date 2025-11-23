@@ -219,6 +219,12 @@
         "com.marijnzwemmer.unity-toolbar-extender": "1.4.3"
       }
     },
+    "fun.program4.icy.frame": {
+      "version": "file:fun.program4.icy.frame",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "fun.program4.icy.gm": {
       "version": "file:fun.program4.icy.gm",
       "depth": 0,
