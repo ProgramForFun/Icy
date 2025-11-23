@@ -28,15 +28,9 @@ namespace Icy.Base
 	/// </summary>
 	public sealed class IcyFrame : PersistentMonoSingleton<IcyFrame>
 	{
-		/// <summary>
-		/// 主线程ID
-		/// </summary>
-		public int MainThreadID { get; private set; }
-
-
 		public void Init()
 		{
-			MainThreadID = Thread.CurrentThread.ManagedThreadId;
+			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
 
 			Log.Reset();
 			EventManager.ClearAll();
@@ -53,14 +47,6 @@ namespace Icy.Base
 			if (dummy == 0)
 				UnityClassReferencer.Preserve();
 #endif
-		}
-
-		/// <summary>
-		/// 当前是否是主线程？
-		/// </summary>
-		public bool IsMainThread()
-		{
-			return Thread.CurrentThread.ManagedThreadId == MainThreadID;
 		}
 
 		/// <summary>

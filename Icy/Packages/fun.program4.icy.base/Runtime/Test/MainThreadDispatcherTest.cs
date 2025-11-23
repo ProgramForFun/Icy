@@ -26,7 +26,7 @@ namespace Icy.Base
 	{
 		public static void Test()
 		{
-			Debug.Log($"Main Thread ID = {IcyFrame.Instance.MainThreadID}");
+			Debug.Log($"Main Thread ID = {CommonUtility.MainThreadID}");
 
 			//使用MainThreadDispatcher
 			UniTask.RunOnThreadPool(() =>

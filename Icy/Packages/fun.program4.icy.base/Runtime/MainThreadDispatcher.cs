@@ -40,7 +40,7 @@ namespace Icy.Base
 		public void Enqueue(Action action)
 		{
 			//IcyFrame是框架入口，应该是最先初始化的，单例实例化中的Unity API跑不到，所以是安全的
-			if (IcyFrame.Instance.IsMainThread())
+			if (CommonUtility.IsMainThread())
 				Log.Warn("Call MainThreadDispatcher from main thread is unnecessary", nameof(MainThreadDispatcher));
 
 			lock (_ExecuteQueue)

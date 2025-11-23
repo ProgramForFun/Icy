@@ -23,6 +23,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 using Random = UnityEngine.Random;
@@ -31,7 +32,21 @@ namespace Icy.Base
 {
 	public static class CommonUtility
 	{
+		/// <summary>
+		/// 主线程ID
+		/// </summary>
+		public static int MainThreadID { get; internal set; }
+
 		private static System.Random _randomEngine = new System.Random();
+
+
+		/// <summary>
+		/// 当前调用此函数的上下文，是否是在主线程？
+		/// </summary>
+		public static bool IsMainThread()
+		{
+			return Thread.CurrentThread.ManagedThreadId == MainThreadID;
+		}
 
 		/// <summary>
 		/// 尝试一个概率事件是否发生

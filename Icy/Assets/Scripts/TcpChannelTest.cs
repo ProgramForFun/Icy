@@ -19,7 +19,7 @@ namespace Icy.Network
 
 		public override async UniTask Encode(int msgID, IMessage proto)
 		{
-			Log.Info("[ProtoSender] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.Info("[ProtoSender] Is MainThread =  " + CommonUtility.IsMainThread());
 			//一个int类型消息ID + protobuf消息
 			int msgIDSize = sizeof(int);
 			BitConverter.TryWriteBytes(_Buffer, msgID);
@@ -45,7 +45,7 @@ namespace Icy.Network
 
 		public override void Decode(byte[] data, int startIdx, int length)
 		{
-			Log.Info("[ProtoReceiver] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+			Log.Info("[ProtoReceiver] Is MainThread =  " + CommonUtility.IsMainThread());
 			//解析int类型的消息ID
 			int msgID = BitConverter.ToInt32(data, startIdx);
 			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
@@ -121,7 +121,7 @@ namespace Icy.Network
 		{
 			if (param is EventParam<IMessage> msg)
 			{
-				Log.Info("[TcpChannelTest.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.Info("[TcpChannelTest.Handle] Is MainThread =  " + CommonUtility.IsMainThread());
 				Log.Info((msg.Value as TestMessageResult).ErrorMsg);
 			}
 		}

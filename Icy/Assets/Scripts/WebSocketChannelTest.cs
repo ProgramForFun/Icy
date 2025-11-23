@@ -50,7 +50,7 @@ namespace Icy.Network
 		{
 			if (param is EventParam<IMessage> msg)
 			{
-				Log.Info("[WebSocketChannel.Handle] Is MainThread =  " + IcyFrame.Instance.IsMainThread());
+				Log.Info("[WebSocketChannel.Handle] Is MainThread =  " + CommonUtility.IsMainThread());
 				Log.Info((msg.Value as TestMessageResult).ErrorMsg);
 			}
 		}
