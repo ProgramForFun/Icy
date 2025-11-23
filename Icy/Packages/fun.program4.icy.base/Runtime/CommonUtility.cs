@@ -36,8 +36,10 @@ namespace Icy.Base
 		/// 主线程ID
 		/// </summary>
 		public static int MainThreadID { get; internal set; }
-
-		private static System.Random _randomEngine = new System.Random();
+		/// <summary>
+		/// List的扩展Shuffle算法用到的随机数引擎
+		/// </summary>
+		private static System.Random _RandomEngine;
 
 
 		/// <summary>
@@ -166,11 +168,14 @@ namespace Icy.Base
 		/// <param name="list"></param>
 		public static void Shuffle<T>(this IList<T> list)
 		{
+			if (_RandomEngine == null)
+				_RandomEngine = new System.Random();
+
 			int n = list.Count;
 			while (n > 1)
 			{
 				n--;
-				int k = _randomEngine.Next(n + 1);
+				int k = _RandomEngine.Next(n + 1);
 				T tmp = list[k];
 				list[k] = list[n];
 				list[n] = tmp;
