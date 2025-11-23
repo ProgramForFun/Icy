@@ -158,8 +158,8 @@ namespace Icy.Network
 			_ToSendCount = 0;
 			_SendLock = new object();
 			_CancellationTokenSource = new CancellationTokenSource();
-			UniTask.RunOnThreadPool(ReceiveLoop).Forget(IcyFrame.OnUniTaskForgetException);
-			UniTask.RunOnThreadPool(SendLoop).Forget(IcyFrame.OnUniTaskForgetException);
+			UniTask.RunOnThreadPool(ReceiveLoop).Forget(CommonUtility.OnUniTaskForgetException);
+			UniTask.RunOnThreadPool(SendLoop).Forget(CommonUtility.OnUniTaskForgetException);
 
 			await UniTask.CompletedTask;
 		}

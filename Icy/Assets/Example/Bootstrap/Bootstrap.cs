@@ -1,4 +1,5 @@
 using UnityEngine;
+using Icy.Frame;
 using Icy.Base;
 using Icy.UI;
 using Icy.Asset;
@@ -8,7 +9,7 @@ using System.Globalization;
 namespace Bootstrap
 {
 	/// <summary>
-	/// HybridCLR概念下的AOT启动入口，负责资源初始化和热更代码加载
+	/// HybridCLR概念下的AOT启动入口，是整个游戏的逻辑起点，也负责资源初始化和热更代码加载
 	/// </summary>
 	public class Bootstrap : MonoBehaviour
 	{
@@ -50,7 +51,7 @@ namespace Bootstrap
 		}
 
 		/// <summary>
-		/// 业务侧在这里具体执行 AOT调用热更代码入口 这个操作
+		/// 调用热更代码，从此处热更代码开始执行
 		/// </summary>
 		void RunPatchedCode()
 		{

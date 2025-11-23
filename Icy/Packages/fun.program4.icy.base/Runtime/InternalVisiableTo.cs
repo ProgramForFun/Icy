@@ -17,6 +17,7 @@
 
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Icy.Frame")]
 [assembly: InternalsVisibleTo("Icy.Asset")]
 [assembly: InternalsVisibleTo("Icy.Asset.Editor")]
 [assembly: InternalsVisibleTo("Icy.Editor")]

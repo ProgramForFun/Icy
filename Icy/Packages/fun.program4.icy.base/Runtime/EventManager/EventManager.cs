@@ -257,7 +257,7 @@ namespace Icy.Base
 				return true;
 			}
 #endif
-			return IcyFrame.Instance != null && !CommonUtility.IsMainThread();
+			return !CommonUtility.IsMainThread();
 		}
 
 		internal static void Update()

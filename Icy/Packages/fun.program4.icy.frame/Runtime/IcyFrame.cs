@@ -16,12 +16,13 @@
 
 
 using Cysharp.Threading.Tasks;
+using Icy.Base;
 using System;
 using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
-namespace Icy.Base
+namespace Icy.Frame
 {
 	/// <summary>
 	/// 框架入口
@@ -68,14 +69,6 @@ namespace Icy.Base
 				}
 			}
 			Log.Error("InitProto failed, could not find Icy.Protobuf assembly", nameof(IcyFrame));
-		}
-
-		/// <summary>
-		/// 所有不等待的UniTask方法，都应该把这个方法传入Forget函数中，或者业务侧自己定义一个类似方法也可以
-		/// </summary>
-		public static void OnUniTaskForgetException(Exception ex)
-		{
-			Log.Error(ex.ToString(), "UniTask Forget Exception");
 		}
 
 		private void OnUniTaskUnobservedTaskException(Exception ex)
