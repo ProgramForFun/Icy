@@ -42,8 +42,13 @@ namespace Bootstrap
 			//先更新资源
 			await AssetManager.Instance.StartAssetPatch();
 #if !UNITY_EDITOR
-			//再加载热更代码
-			await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
+			if (HybridCLRRunner.IsHybridCLREnabled)
+			{
+				//再加载热更代码
+				await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
+			}
+			else
+				RunPatchedCode();
 #else
 			//Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
 			RunPatchedCode();

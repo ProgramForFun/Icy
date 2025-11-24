@@ -42,7 +42,10 @@ namespace Icy.Frame
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
 
 #if !UNITY_EDITOR
-			EventManager.AddListener(EventDefine.HybridCLRRunnerFinish, OnHybridCLRRunnerFinish);
+			if (HybridCLRRunner.IsHybridCLREnabled)
+				EventManager.AddListener(EventDefine.HybridCLRRunnerFinish, OnHybridCLRRunnerFinish);
+			else
+				OnHybridCLRRunnerFinish(0, null);
 #else
 			OnHybridCLRRunnerFinish(0, null);
 #endif
