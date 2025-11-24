@@ -1,7 +1,9 @@
 [
+  "Icy.Asset.Editor.RecordHybridCLREnableStep",
   "Icy.Asset.Editor.CopySettingsStep",
   "Icy.Asset.Editor.ApplyPlayerSettingsStep",
   "Icy.Asset.Editor.SubProcedureCompilePatchDLLStep",
   "Icy.Asset.Editor.SubProcedureBuildAssetBundleStep",
-  "Icy.Asset.Editor.BuildPlayerStep"
+  "Icy.Asset.Editor.BuildPlayerStep",
+  "Icy.Asset.Editor.ClearHybridCLRRecordStep"
 ]

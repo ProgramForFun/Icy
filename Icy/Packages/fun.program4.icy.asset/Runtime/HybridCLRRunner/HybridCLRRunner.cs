@@ -18,6 +18,7 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace Icy.Asset
 {
@@ -77,26 +78,8 @@ namespace Icy.Asset
 					break;
 				}
 #else
-				// TODO：这样无法判断是否启用了，都是返回true，需要换一种方式
-				// 反射检查HybridCLR特有的运行时API是否存在
-				if (assembly.GetName().Name == "HybridCLR.Runtime")
-				{
-					Log.Info(11, nameof(HybridCLR), true);
-					try
-					{
-						string runtimeTypeName = $"{nameof(HybridCLR)}.{nameof(HybridCLR.RuntimeApi)}";
-						string runtimeMethodName = nameof(HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly);
-						MethodInfo runtimeMethod = assembly.GetType(runtimeTypeName)?.GetMethod(runtimeMethodName);
-						Log.Info(22 + (runtimeMethod == null).ToString(), nameof(HybridCLR), true);
-						IsHybridCLREnabled = runtimeMethod != null;
-					}
-					catch
-					{
-						Log.Info(33, nameof(HybridCLR), true);
-						IsHybridCLREnabled = false;
-					}
-					break;
-				}
+				TextAsset record = Resources.Load<TextAsset>("HybridCLR_Enable");
+				IsHybridCLREnabled = record != null;
 #endif
 			}
 			Log.Info(IsHybridCLREnabled ? "enabled" : "disabled", nameof(HybridCLR), true);

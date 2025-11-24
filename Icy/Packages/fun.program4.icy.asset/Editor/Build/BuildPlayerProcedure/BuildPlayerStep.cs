@@ -33,8 +33,8 @@ namespace Icy.Asset.Editor
 			BuildTarget buildTarget = (BuildTarget)OwnerProcedure.Blackboard.ReadInt("BuildTarget", true);
 			BuildSetting buildSetting = OwnerProcedure.Blackboard.ReadObject("BuildSetting", true) as BuildSetting;
 			Build(buildTarget, buildSetting);
+			await UniTask.Yield();
 			Finish();
-			await UniTask.CompletedTask;
 		}
 
 		public static void Build(BuildTarget buildTarget, BuildSetting buildSetting)
