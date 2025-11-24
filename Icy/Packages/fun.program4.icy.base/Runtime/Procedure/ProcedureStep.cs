@@ -17,6 +17,7 @@
 
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Icy.Base
@@ -69,15 +70,10 @@ namespace Icy.Base
 				await UniTask.WaitUntil(IsChangingStepFinish);
 			else
 			{
-				//在editor下使用时，比如打包完成时，WaitUntil里的predicate可能会为null导致报错，这里改成Warning
-				try
-				{
-					await UniTask.WaitUntil(IsChangingStepFinish);
-				}
-				catch (Exception e)
-				{
-					Log.Warn($"{GetType().Name} step UniTask.WaitUntil exception, {e}");
-				}
+				//在editor下非Play状态下使用时，比如打包完成时，使用UniTask总会有问题，原因未深究
+				//这里改为使用原生Task
+				while (OwnerProcedure.IsChangingStep)
+					await Task.Yield();
 			}
 #else
 			await UniTask.WaitUntil(IsChangingStepFinish);
