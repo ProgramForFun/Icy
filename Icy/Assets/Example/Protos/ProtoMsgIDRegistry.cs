@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System;
 
 /// <summary>
-/// Proto MsgID到Descriptor、Proto类型到MsgID 的映射
+/// Proto MsgID到Descriptor、Proto类型到MsgID 的映射；
+/// 业务侧可以在这里根据Proto的ID，获取其MessageDescriptor，或者反之
 /// </summary>
 public static class ProtoMsgIDRegistry
 {
@@ -33,7 +34,10 @@ public static class ProtoMsgIDRegistry
 
 	}
 
-	private static void Register<T>() where T : pb.IMessage, new()
+	/// <summary>
+	/// 注册一个Proto Msg
+	/// </summary>
+	public static void Register<T>() where T : pb.IMessage, new()
 	{
 		pbr.MessageDescriptor descriptor = new T().Descriptor;
 		pbr.MessageOptions options = descriptor.GetOptions();
