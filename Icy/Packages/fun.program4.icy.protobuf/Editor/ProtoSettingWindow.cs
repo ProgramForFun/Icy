@@ -47,9 +47,8 @@ namespace Icy.Protobuf.Editor
 		[ValidateInput(nameof(IsProtoOutputDirValid), "Invalid proto output dir", InfoMessageType.Error)]
 		public string ProtoOutputDir;
 
-		[Title("Proto的程序集名称，不 包括扩展名")]
+		[Title("Proto编译后代码所在的程序集名称，不 包括扩展名（如果完全不使用Proto，请把这个字段清空）")]
 		[Delayed]
-		[Required]
 		[OnValueChanged(nameof(OnDataChanged))]
 		[ValidateInput(nameof(IsProtoAssemblyNameValid), "Invalid asmdef name", InfoMessageType.Error)]
 		public string ProtoAssemblyName;
