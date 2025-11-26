@@ -19,6 +19,8 @@ using UnityEngine;
 using Icy.Base;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 namespace Icy.UI
 {
@@ -84,6 +86,10 @@ namespace Icy.UI
 		/// </summary>
 		protected static readonly Vector3 MOVE_OUT_POS = new Vector3(0.0f, 10240.0f, 0.0f);
 		/// <summary>
+		/// UI销毁时触发的CancellationToken
+		/// </summary>
+		protected CancellationToken _CancelTokenOnDestroy;
+		/// <summary>
 		/// 是否正在退出editor的play模式
 		/// </summary>
 		private bool _IsExitingPlayMode;
@@ -114,6 +120,8 @@ namespace Icy.UI
 			IsDestroyed = false;
 			_OriginalAlpha = _CanvasGroup.alpha;
 			_IsExitingPlayMode = false;
+
+			_CancelTokenOnDestroy = gameObject.GetCancellationTokenOnDestroy();
 
 			_Inited = true;
 		}
