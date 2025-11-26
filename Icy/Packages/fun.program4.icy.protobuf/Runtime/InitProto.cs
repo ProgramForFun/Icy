@@ -17,6 +17,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using Icy.Asset;
 using System;
 using System.Reflection;
 
@@ -29,7 +30,6 @@ namespace Icy.Protobuf
 	{
 		/// <summary>
 		/// 反射调用注册所有proto id，牺牲一点点性能，换取用户不需要关心这个调用了
-		/// TODO：接入HybridCLR后，这里的调用时机要改
 		/// </summary>
 		public static async UniTaskVoid InitProtoMsgIDRegistry()
 		{
@@ -37,29 +37,68 @@ namespace Icy.Protobuf
 			if (settingBytes != null)
 			{
 				ProtoSetting protoSetting = ProtoSetting.Parser.ParseFrom(settingBytes);
-				if (protoSetting != null && !string.IsNullOrEmpty(protoSetting.ProtoAssemblyName))
+				if (protoSetting == null || string.IsNullOrEmpty(protoSetting.ProtoAssemblyName))
 				{
-					Assembly assembly = Assembly.Load(protoSetting.ProtoAssemblyName);
-					if (assembly != null)
-					{
-						Type type = assembly.GetType("ProtoMsgIDRegistry");
-						if (type != null)
-						{
-							MethodInfo method = type.GetMethod("RegisterAll");
-							method?.Invoke(null, null);
-							Log.Info("ProtoMsgIDRegistry inited", nameof(InitProto), true);
-						}
-						else
-							Log.Error($"Load ProtoMsgIDRegistry type failed", nameof(InitProto));
-					}
-					else
-						Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
-				}
-				else
 					Log.Info("ProtoMsgIDRegistry not inited, if you do not use Protobuf, just ignore it.", nameof(InitProto), true);
+					return;
+				}
+
+				bool isProtoAssemblyAOT = await IsProtoAssemblyAOT(protoSetting);
+				Log.Info("ProtoMsgIDRegistry in " + (isProtoAssemblyAOT ? "AOT" : "Patch"), nameof(InitProto), true);
+				if (isProtoAssemblyAOT)
+					CallFromAOT(protoSetting);
+				else
+					CallFromPatch(protoSetting);
 			}
 			else
 				Log.Error($"Load ProtoSetting failed", nameof(InitProto));
+		}
+
+		/// <summary>
+		/// 调用AOT中的ProtoMsgIDRegistry
+		/// </summary>
+		private static void CallFromAOT(ProtoSetting protoSetting)
+		{
+			Assembly assembly = Assembly.Load(protoSetting.ProtoAssemblyName);
+			if (assembly != null)
+			{
+				Type type = assembly.GetType("ProtoMsgIDRegistry");
+				if (type != null)
+				{
+					MethodInfo method = type.GetMethod("RegisterAll");
+					method?.Invoke(null, null);
+					Log.Info("ProtoMsgIDRegistry inited", nameof(InitProto), true);
+				}
+				else
+					Log.Error($"Load ProtoMsgIDRegistry type failed", nameof(InitProto));
+			}
+			else
+				Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
+		}
+
+		/// <summary>
+		/// 调用热更中的ProtoMsgIDRegistry
+		/// </summary>
+		private static void CallFromPatch(ProtoSetting protoSetting)
+		{
+			//TODO
+		}
+
+		/// <summary>
+		/// Proto程序集是不是AOT程序集
+		/// </summary>
+		private static async UniTask<bool> IsProtoAssemblyAOT(ProtoSetting protoSetting)
+		{
+			string assemblyName = protoSetting.ProtoAssemblyName;
+			byte[] assetSettingBytes = await SettingsHelper.LoadSetting(SettingsHelper.AssetSetting);
+			if (assetSettingBytes != null)
+			{
+				AssetSetting assetSetting = AssetSetting.Parser.ParseFrom(assetSettingBytes);
+				bool isPatchAssembly = assetSetting.PatchDLLs.Contains(assemblyName + ".dll");
+				return !isPatchAssembly;
+			}
+
+			return true;
 		}
 	}
 }
