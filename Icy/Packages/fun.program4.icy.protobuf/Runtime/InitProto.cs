@@ -59,21 +59,24 @@ namespace Icy.Protobuf
 		/// </summary>
 		private static void CallFromAOT(ProtoSetting protoSetting)
 		{
-			Assembly assembly = Assembly.Load(protoSetting.ProtoAssemblyName);
-			if (assembly != null)
+			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			foreach (Assembly assembly in assemblies)
 			{
-				Type type = assembly.GetType("ProtoMsgIDRegistry");
-				if (type != null)
+				if (assembly.GetName().Name == protoSetting.ProtoAssemblyName)
 				{
-					MethodInfo method = type.GetMethod("RegisterAll");
-					method?.Invoke(null, null);
-					Log.Info("ProtoMsgIDRegistry inited", nameof(InitProto), true);
+					Type type = assembly.GetType("ProtoMsgIDRegistry");
+					if (type != null)
+					{
+						MethodInfo method = type.GetMethod("RegisterAll");
+						method?.Invoke(null, null);
+						Log.Info("ProtoMsgIDRegistry inited", nameof(InitProto), true);
+					}
+					else
+						Log.Error($"Load ProtoMsgIDRegistry type failed", nameof(InitProto));
+					return;
 				}
-				else
-					Log.Error($"Load ProtoMsgIDRegistry type failed", nameof(InitProto));
 			}
-			else
-				Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
+			Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
 		}
 
 		/// <summary>
