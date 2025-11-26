@@ -40,7 +40,7 @@ namespace Icy.Base
 		public static CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignoreTimeScale = false)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoDelayByTime(action, delaySeconds, cts, ignoreTimeScale).Forget();
+			DoDelayByTime(action, delaySeconds, cts.Token, ignoreTimeScale).Forget();
 			return cts;
 		}
 
@@ -53,7 +53,7 @@ namespace Icy.Base
 		public static CancellationTokenSource DelayByFrame(Action action, int frameCount)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoDelayByFrame(action, frameCount, cts).Forget();
+			DoDelayByFrame(action, frameCount, cts.Token).Forget();
 			return cts;
 		}
 
@@ -65,7 +65,7 @@ namespace Icy.Base
 		public static CancellationTokenSource NextFrame(Action action)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoNextFrame(action, cts).Forget();
+			DoNextFrame(action, cts.Token).Forget();
 			return cts;
 		}
 
@@ -80,7 +80,7 @@ namespace Icy.Base
 		public static CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoRepeatByTime(action, perSeconds, repeatCount, cts, ignoreTimeScale).Forget();
+			DoRepeatByTime(action, perSeconds, repeatCount, cts.Token, ignoreTimeScale).Forget();
 			return cts;
 		}
 
@@ -95,7 +95,7 @@ namespace Icy.Base
 		public static CancellationTokenSource RepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, bool ignoreTimeScale = false)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoRepeatByTimeUntil(action, perSeconds, predicate, cts, ignoreTimeScale).Forget();
+			DoRepeatByTimeUntil(action, perSeconds, predicate, cts.Token, ignoreTimeScale).Forget();
 			return cts;
 		}
 
@@ -109,7 +109,7 @@ namespace Icy.Base
 		public static CancellationTokenSource RepeatByFrame(Action action, int perFrames, int repeatCount)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoRepeatByFrame(action, perFrames, repeatCount, cts).Forget();
+			DoRepeatByFrame(action, perFrames, repeatCount, cts.Token).Forget();
 			return cts;
 		}
 
@@ -123,79 +123,79 @@ namespace Icy.Base
 		public static CancellationTokenSource RepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate)
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			DoRepeatByFrameUntil(action, perFrames, predicate, cts).Forget();
+			DoRepeatByFrameUntil(action, perFrames, predicate, cts.Token).Forget();
 			return cts;
 		}
 
 		#region Implementation
-		private static async UniTaskVoid DoDelayByTime(Action action, float delaySeconds, CancellationTokenSource cts, bool ignoreTimeScale = false)
+		internal static async UniTaskVoid DoDelayByTime(Action action, float delaySeconds, CancellationToken token, bool ignoreTimeScale = false)
 		{
-			await UniTask.Delay(Mathf.RoundToInt(delaySeconds * 1000), ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
+			await UniTask.Delay(Mathf.RoundToInt(delaySeconds * 1000), ignoreTimeScale, PlayerLoopTiming.Update, token);
 			action?.Invoke();
 		}
 
-		private static async UniTaskVoid DoDelayByFrame(Action action, int frameCount, CancellationTokenSource cts)
+		internal static async UniTaskVoid DoDelayByFrame(Action action, int frameCount, CancellationToken token)
 		{
-			await UniTask.DelayFrame(frameCount, PlayerLoopTiming.Update, cts.Token);
+			await UniTask.DelayFrame(frameCount, PlayerLoopTiming.Update, token);
 			action?.Invoke();
 		}
 
-		private static async UniTaskVoid DoNextFrame(Action action, CancellationTokenSource cts)
+		internal static async UniTaskVoid DoNextFrame(Action action, CancellationToken token)
 		{
-			await UniTask.NextFrame(cts.Token);
+			await UniTask.NextFrame(token);
 			action?.Invoke();
 		}
 
-		private static async UniTaskVoid DoRepeatByTime(Action action, float perSeconds, int repeatCount, CancellationTokenSource cts, bool ignoreTimeScale = false)
+		internal static async UniTaskVoid DoRepeatByTime(Action action, float perSeconds, int repeatCount, CancellationToken token, bool ignoreTimeScale = false)
 		{
 			perSeconds = ValidateRepeatTimeInterval(perSeconds);
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
-			while ((repeatCount < 0 || count < repeatCount) && !cts.IsCancellationRequested)
+			while ((repeatCount < 0 || count < repeatCount) && !token.IsCancellationRequested)
 			{
 				action?.Invoke();
-				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
+				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, token);
 				count++;
 			}
 		}
 
-		private static async UniTaskVoid DoRepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, CancellationTokenSource cts, bool ignoreTimeScale = false)
+		internal static async UniTaskVoid DoRepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, CancellationToken token, bool ignoreTimeScale = false)
 		{
 			perSeconds = ValidateRepeatTimeInterval(perSeconds);
 
 			int intervalMs = Mathf.RoundToInt(perSeconds * 1000);
 			int count = 0;
-			while (!predicate() && !cts.IsCancellationRequested)
+			while (!predicate() && !token.IsCancellationRequested)
 			{
 				action?.Invoke();
-				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, cts.Token);
+				await UniTask.Delay(intervalMs, ignoreTimeScale, PlayerLoopTiming.Update, token);
 				count++;
 			}
 		}
 
-		private static async UniTaskVoid DoRepeatByFrame(Action action, int perFrames, int repeatCount, CancellationTokenSource cts)
+		internal static async UniTaskVoid DoRepeatByFrame(Action action, int perFrames, int repeatCount, CancellationToken token)
 		{
 			perFrames = ValidateRepeatFrameInterval(perFrames);
 
 			int count = 0;
-			while ((repeatCount < 0 || count < repeatCount) && !cts.IsCancellationRequested)
+			while ((repeatCount < 0 || count < repeatCount) && !token.IsCancellationRequested)
 			{
 				action?.Invoke();
-				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);
+				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, token);
 				count++;
 			}
 		}
 
-		private static async UniTaskVoid DoRepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate, CancellationTokenSource cts)
+		internal static async UniTaskVoid DoRepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate, CancellationToken token)
 		{
 			perFrames = ValidateRepeatFrameInterval(perFrames);
 
 			int count = 0;
-			while (!predicate() && !cts.IsCancellationRequested)
+			while (!predicate() && !token.IsCancellationRequested)
 			{
 				action?.Invoke();
-				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, cts.Token);
+				await UniTask.DelayFrame(perFrames, PlayerLoopTiming.Update, token);
 				count++;
 			}
 		}
