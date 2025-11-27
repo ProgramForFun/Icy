@@ -34,6 +34,7 @@ public class UILogin : UIBase
 	{
 		base.Show(param);
 		TestBindAsync().Forget();
+		//DelayByTime(() => { throw new System.Exception("ee"); }, 5);
 	}
 
 	public override void Hide()
@@ -51,15 +52,18 @@ public class UILogin : UIBase
 
 		_Bg.BindTo(BgName);
 		_Title.BindTo(BgName);
-		await UniTask.WaitForSeconds(1);
+		await UniTask.WaitForSeconds(1, cancellationToken : destroyCancellationToken);
+		Log.Info(1, nameof(UILogin));
 		BgName.Data = "icon_loading";
 
 		_Slider.BindTo(SliderValue, (BindableData<float> a) => { return a * 8; });
-		await UniTask.WaitForSeconds(1);
+		await UniTask.WaitForSeconds(1, cancellationToken : destroyCancellationToken);
+		Log.Info(2, nameof(UILogin));
 		SliderValue2.Data = 0.1f;
 
 		_Slider.UnbindTo(SliderValue);
-		await UniTask.WaitForSeconds(1);
+		await UniTask.WaitForSeconds(1, cancellationToken: destroyCancellationToken);
+		Log.Info(3, nameof(UILogin));
 		SliderValue.Data = 0.0f;
 	}
 
