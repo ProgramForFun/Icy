@@ -31,7 +31,8 @@ namespace Icy.Base
 		private const int MIN_REPEAT_FRAME_INTERVAL = 1;
 
 		/// <summary>
-		/// 延迟指定时间后，执行 action
+		/// 延迟指定时间后，执行 action；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <param name="delaySeconds">要延迟的时间，单位秒</param>
@@ -45,7 +46,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 延迟指定帧数后，执行 action
+		/// 延迟指定帧数后，执行 action；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <param name="frameCount">要延迟的帧数</param>
@@ -58,7 +60,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 延迟到下一帧，执行 action
+		/// 延迟到下一帧，执行 action；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要延迟执行的回调</param>
 		/// <returns>取消令牌</returns>
@@ -70,7 +73,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的时间间隔，执行一次 action
+		/// 每隔指定的时间间隔，执行一次 action；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
@@ -85,7 +89,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的时间间隔，执行一次 action，直到predicate返回true
+		/// 每隔指定的时间间隔，执行一次 action，直到predicate返回true；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
@@ -100,7 +105,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的帧数，执行一次 action
+		/// 每隔指定的帧数，执行一次 action；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
@@ -114,7 +120,8 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的帧数，执行一次 action，直到predicate返回true
+		/// 每隔指定的帧数，执行一次 action，直到predicate返回true；
+		/// 使用结束后记得调用CancellationTokenSource.Dispose();
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>

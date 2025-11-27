@@ -346,6 +346,7 @@ namespace Icy.Base
 			if (_Write2FileThread != null && _CancellationTokenSource != null)
 			{
 				_CancellationTokenSource.Cancel();
+				_CancellationTokenSource.Dispose();
 				lock (_QueueLock)
 				{
 					//令牌取消后，线程函数实际还Wait在锁上，这里要写入一行log、调用Pulse，以唤起线程函数来继续向下执行，才能停止

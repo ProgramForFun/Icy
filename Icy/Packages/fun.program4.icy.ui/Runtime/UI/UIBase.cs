@@ -22,6 +22,7 @@ using UnityEngine.UI;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 namespace Icy.UI
 {
@@ -90,6 +91,10 @@ namespace Icy.UI
 		/// UI隐藏时触发的CancellationTokenSource
 		/// </summary>
 		protected CancellationTokenSource _CancelTokenSourceOnHide;
+		/// <summary>
+		/// 此UI创建的所有CancelToken
+		/// </summary>
+		private List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
 		/// <summary>
 		/// 是否正在退出editor的play模式
 		/// </summary>
@@ -199,6 +204,9 @@ namespace Icy.UI
 		{
 			if (!IsDestroyed && !_IsExitingPlayMode)
 				Log.Error($"UI GameObject of {GetType().Name} is unexpected destroyed", nameof(UIBase));
+
+			for (int i = 0; i < _AllCancelTokens.Count; i++)
+				_AllCancelTokens[i].Dispose();
 		}
 
 #if UNITY_EDITOR
@@ -318,6 +326,7 @@ namespace Icy.UI
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
 			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenSourceOnHide.Token, destroyCancellationToken);
+			_AllCancelTokens.Add(linkedTokenSource);
 			return linkedTokenSource;
 		}
 

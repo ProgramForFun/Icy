@@ -334,6 +334,7 @@ namespace Icy.Network
 		public virtual async UniTask Dispose(byte[] fin = null)
 		{
 			_CancellationTokenSource.Cancel();
+			_CancellationTokenSource.Dispose();
 			await UniTask.Delay(1000);
 			if (Session.IsConnected)
 				await Session.Disconnect(fin);
