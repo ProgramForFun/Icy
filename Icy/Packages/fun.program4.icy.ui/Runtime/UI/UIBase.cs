@@ -122,8 +122,6 @@ namespace Icy.UI
 			_OriginalAlpha = _CanvasGroup.alpha;
 			_IsExitingPlayMode = false;
 
-			_CancelTokenSourceOnHide = new CancellationTokenSource();
-
 			_Inited = true;
 		}
 
@@ -148,6 +146,7 @@ namespace Icy.UI
 					break;
 			}
 
+			_CancelTokenSourceOnHide = new CancellationTokenSource();
 			UIManager.Instance.Show(this, param);
 		}
 
@@ -158,6 +157,8 @@ namespace Icy.UI
 			IsShowing = false;
 
 			_CancelTokenSourceOnHide.Cancel();
+			_CancelTokenSourceOnHide.Dispose();
+
 			DoHide();
 			UIManager.Instance.Hide(this);
 		}
