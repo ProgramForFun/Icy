@@ -91,10 +91,6 @@ namespace Icy.UI
 		/// </summary>
 		protected CancellationTokenSource _CancelTokenSourceOnHide;
 		/// <summary>
-		/// UI销毁时触发的CancellationToken
-		/// </summary>
-		protected CancellationToken _CancelTokenOnDestroy;
-		/// <summary>
 		/// 是否正在退出editor的play模式
 		/// </summary>
 		private bool _IsExitingPlayMode;
@@ -127,7 +123,6 @@ namespace Icy.UI
 			_IsExitingPlayMode = false;
 
 			_CancelTokenSourceOnHide = new CancellationTokenSource();
-			_CancelTokenOnDestroy = gameObject.GetCancellationTokenOnDestroy();
 
 			_Inited = true;
 		}
@@ -321,7 +316,7 @@ namespace Icy.UI
 		private CancellationTokenSource GetLinkedCancellationTokenSource()
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenSourceOnHide.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenSourceOnHide.Token, destroyCancellationToken);
 			return linkedTokenSource;
 		}
 
