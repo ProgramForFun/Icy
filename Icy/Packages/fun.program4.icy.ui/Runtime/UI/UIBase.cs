@@ -87,6 +87,10 @@ namespace Icy.UI
 		/// </summary>
 		protected static readonly Vector3 MOVE_OUT_POS = new Vector3(0.0f, 10240.0f, 0.0f);
 		/// <summary>
+		/// UI隐藏时触发的CancellationTokenSource
+		/// </summary>
+		protected CancellationTokenSource _CancelTokenSourceOnHide;
+		/// <summary>
 		/// UI销毁时触发的CancellationToken
 		/// </summary>
 		protected CancellationToken _CancelTokenOnDestroy;
@@ -122,6 +126,7 @@ namespace Icy.UI
 			_OriginalAlpha = _CanvasGroup.alpha;
 			_IsExitingPlayMode = false;
 
+			_CancelTokenSourceOnHide = new CancellationTokenSource();
 			_CancelTokenOnDestroy = gameObject.GetCancellationTokenOnDestroy();
 
 			_Inited = true;
@@ -157,6 +162,7 @@ namespace Icy.UI
 				return;
 			IsShowing = false;
 
+			_CancelTokenSourceOnHide.Cancel();
 			DoHide();
 			UIManager.Instance.Hide(this);
 		}
@@ -217,7 +223,7 @@ namespace Icy.UI
 		}
 #endif
 
-		#region Delay
+		#region Safe Delay
 		/* 封装了Timer的延迟函数，使用UI销毁时触发的CancelToken控制，以保证UI销毁时延迟函数可以自动被中止
 		 * UI应该优先使用这里的封装好的，而不是直接使用Timer里的
 		*/
@@ -230,8 +236,7 @@ namespace Icy.UI
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoDelayByTime(action, delaySeconds, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -243,8 +248,7 @@ namespace Icy.UI
 		/// <param name="frameCount">要延迟的帧数</param>
 		protected CancellationTokenSource DelayByFrame(Action action, int frameCount)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoDelayByFrame(action, frameCount, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -255,8 +259,7 @@ namespace Icy.UI
 		/// <param name="action">要延迟执行的回调</param>
 		protected CancellationTokenSource NextFrame(Action action)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoNextFrame(action, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -270,8 +273,7 @@ namespace Icy.UI
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoRepeatByTime(action, perSeconds, repeatCount, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -285,8 +287,7 @@ namespace Icy.UI
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource RepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoRepeatByTimeUntil(action, perSeconds, predicate, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -299,8 +300,7 @@ namespace Icy.UI
 		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
 		protected CancellationTokenSource RepeatByFrame(Action action, int perFrames, int repeatCount)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoRepeatByFrame(action, perFrames, repeatCount, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -313,9 +313,15 @@ namespace Icy.UI
 		/// <param name="predicate">返回 true时，repeat停止</param>
 		protected CancellationTokenSource RepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenOnDestroy);
+			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
 			Base.Timer.DoRepeatByFrameUntil(action, perFrames, predicate, linkedTokenSource.Token).Forget();
+			return linkedTokenSource;
+		}
+
+		private CancellationTokenSource GetLinkedCancellationTokenSource()
+		{
+			CancellationTokenSource cts = new CancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenSourceOnHide.Token, _CancelTokenOnDestroy);
 			return linkedTokenSource;
 		}
 
