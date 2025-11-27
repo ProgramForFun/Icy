@@ -85,7 +85,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的时间间隔，执行一次 action
+		/// 每隔指定的时间间隔，执行一次 action，直到predicate返回true
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
@@ -114,7 +114,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 每隔指定的帧数，执行一次 action
+		/// 每隔指定的帧数，执行一次 action，直到predicate返回true
 		/// </summary>
 		/// <param name="action">要间隔执行的 action</param>
 		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
