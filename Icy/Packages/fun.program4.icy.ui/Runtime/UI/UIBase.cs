@@ -21,6 +21,7 @@ using Sirenix.OdinInspector;
 using UnityEngine.UI;
 using System.Threading;
 using System.Collections.Generic;
+using System;
 
 namespace Icy.UI
 {
@@ -225,5 +226,13 @@ namespace Icy.UI
 				_IsExitingPlayMode = true;
 		}
 #endif
+
+		protected override CancellationTokenSource GenerateLinkedCancellationTokenSource()
+		{
+			CancellationTokenSource baseLinked = base.GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(baseLinked.Token, _CancelTokenSourceOnHide.Token);
+			_AllCancelTokens.Add(linkedTokenSource);
+			return linkedTokenSource;
+		}
 	}
 }

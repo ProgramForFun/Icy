@@ -32,7 +32,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 此UniTaskMonoBehaviour创建的所有CancelToken
 		/// </summary>
-		private List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
+		protected List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
 
 
 		#region 基础等待方法
@@ -293,7 +293,7 @@ namespace Icy.Base
 		}
 		#endregion
 
-		private CancellationTokenSource GenerateLinkedCancellationTokenSource()
+		protected virtual CancellationTokenSource GenerateLinkedCancellationTokenSource()
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
 			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, destroyCancellationToken);
