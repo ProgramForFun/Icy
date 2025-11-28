@@ -20,18 +20,17 @@ using Icy.Base;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
 using System.Threading;
-using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 
 namespace Icy.UI
 {
 	/// <summary>
-	/// UI基类
+	/// UI基类；
+	/// 派生自UniTaskMonoBehaviour，因此Timer和UniTask相关接口应该优先使用UniTaskMonoBehaviour中封装好的
 	/// </summary>
 	[InfoBox("Modifying component directly is disabled, re-generate ui code to achieve it")]
 	[RequireComponent(typeof(UICodeGenerator))]
-	public abstract class UIBase : MonoBehaviour
+	public abstract class UIBase : UniTaskMonoBehaviour
 	{
 		/// <summary>
 		/// UI的名字
@@ -226,110 +225,5 @@ namespace Icy.UI
 				_IsExitingPlayMode = true;
 		}
 #endif
-
-		#region Safe Delay
-		/* 封装了Timer的延迟函数，使用UI销毁时触发的CancelToken控制，以保证UI销毁时延迟函数可以自动被中止
-		 * UI应该优先使用这里的封装好的，而不是直接使用Timer里的
-		*/
-
-		/// <summary>
-		/// 延迟指定时间后，执行 action
-		/// </summary>
-		/// <param name="action">要延迟执行的回调</param>
-		/// <param name="delaySeconds">要延迟的时间，单位秒</param>
-		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
-		protected CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignoreTimeScale = false)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoDelayByTime(action, delaySeconds, linkedTokenSource.Token, ignoreTimeScale).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 延迟指定帧数后，执行 action
-		/// </summary>
-		/// <param name="action">要延迟执行的回调</param>
-		/// <param name="frameCount">要延迟的帧数</param>
-		protected CancellationTokenSource DelayByFrame(Action action, int frameCount)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoDelayByFrame(action, frameCount, linkedTokenSource.Token).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 延迟到下一帧，执行 action
-		/// </summary>
-		/// <param name="action">要延迟执行的回调</param>
-		protected CancellationTokenSource NextFrame(Action action)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoNextFrame(action, linkedTokenSource.Token).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 每隔指定的时间间隔，执行一次 action
-		/// </summary>
-		/// <param name="action">要间隔执行的 action</param>
-		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
-		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
-		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
-		protected CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoRepeatByTime(action, perSeconds, repeatCount, linkedTokenSource.Token, ignoreTimeScale).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 每隔指定的时间间隔，执行一次 action，直到predicate返回true
-		/// </summary>
-		/// <param name="action">要间隔执行的 action</param>
-		/// <param name="perSeconds">每几秒执行一次；下限保底为0.005秒</param>
-		/// <param name="predicate">返回 true时，repeat停止</param>
-		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
-		protected CancellationTokenSource RepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, bool ignoreTimeScale = false)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoRepeatByTimeUntil(action, perSeconds, predicate, linkedTokenSource.Token, ignoreTimeScale).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 每隔指定的帧数，执行一次 action
-		/// </summary>
-		/// <param name="action">要间隔执行的 action</param>
-		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
-		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
-		protected CancellationTokenSource RepeatByFrame(Action action, int perFrames, int repeatCount)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoRepeatByFrame(action, perFrames, repeatCount, linkedTokenSource.Token).Forget();
-			return linkedTokenSource;
-		}
-
-		/// <summary>
-		/// 每隔指定的帧数，执行一次 action，直到predicate返回true
-		/// </summary>
-		/// <param name="action">要间隔执行的 action</param>
-		/// <param name="perFrames">每几帧执行一次，下限保底为1</param>
-		/// <param name="predicate">返回 true时，repeat停止</param>
-		protected CancellationTokenSource RepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate)
-		{
-			CancellationTokenSource linkedTokenSource = GetLinkedCancellationTokenSource();
-			Base.Timer.DoRepeatByFrameUntil(action, perFrames, predicate, linkedTokenSource.Token).Forget();
-			return linkedTokenSource;
-		}
-
-		private CancellationTokenSource GetLinkedCancellationTokenSource()
-		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _CancelTokenSourceOnHide.Token, destroyCancellationToken);
-			_AllCancelTokens.Add(linkedTokenSource);
-			return linkedTokenSource;
-		}
-
-		#endregion
 	}
 }

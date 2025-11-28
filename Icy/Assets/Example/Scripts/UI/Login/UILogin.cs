@@ -52,17 +52,17 @@ public class UILogin : UIBase
 
 		_Bg.BindTo(BgName);
 		_Title.BindTo(BgName);
-		await UniTask.WaitForSeconds(1, cancellationToken : destroyCancellationToken);
+		await WaitForSeconds(1);
 		Log.Info(1, nameof(UILogin));
 		BgName.Data = "icon_loading";
 
 		_Slider.BindTo(SliderValue, (BindableData<float> a) => { return a * 8; });
-		await UniTask.WaitForSeconds(1, cancellationToken : destroyCancellationToken);
+		await WaitForSeconds(1);
 		Log.Info(2, nameof(UILogin));
 		SliderValue2.Data = 0.1f;
 
 		_Slider.UnbindTo(SliderValue);
-		await UniTask.WaitForSeconds(1, cancellationToken: destroyCancellationToken);
+		await WaitForSeconds(1);
 		Log.Info(3, nameof(UILogin));
 		SliderValue.Data = 0.0f;
 	}
