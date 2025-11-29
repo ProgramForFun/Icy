@@ -32,7 +32,12 @@ namespace Icy.Base
 		/// <summary>
 		/// 此UniTaskMonoBehaviour创建的所有CancellationTokenSource
 		/// </summary>
-		protected List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
+		protected List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>(4);
+		/// <summary>
+		/// 聚合了destroyCancellationToken和disableCancellationToken，
+		/// 以及外部传入Token，的总Token
+		/// </summary>
+		protected CancellationToken _LinkedCancelToken;
 		/// <summary>
 		/// OnDisable时候触发的CancellationToken；
 		/// 命名风格和MonoBehaviour.destroyCancellationToken保持一致
@@ -44,6 +49,14 @@ namespace Icy.Base
 		private CancellationTokenSource _DisableCancellationTokenSource;
 
 
+		protected virtual CancellationTokenSource GenerateTokenSource4Timer()
+		{
+			CancellationTokenSource cts = new CancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, disableCancellationToken, destroyCancellationToken);
+			_AllCancelTokens.Add(linkedTokenSource);
+			return linkedTokenSource;
+		}
+
 		/// <summary>
 		/// 派生类override的话，必须调用基类实现
 		/// </summary>
@@ -52,6 +65,10 @@ namespace Icy.Base
 			CancellationTokenSource cts = new CancellationTokenSource();
 			_AllCancelTokens.Add(cts);
 			_DisableCancellationTokenSource = cts;
+
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken);
+			_AllCancelTokens.Add(linkedTokenSource);
+			_LinkedCancelToken = linkedTokenSource.Token;
 		}
 
 		/// <summary>
@@ -69,7 +86,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask Delay(int millisecondsDelay, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.Delay(millisecondsDelay, ignoreTimeScale, delayTiming, destroyCancellationToken);
+			return UniTask.Delay(millisecondsDelay, ignoreTimeScale, delayTiming, _LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -77,7 +94,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask Delay(TimeSpan timeSpan, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.Delay(timeSpan, ignoreTimeScale, delayTiming, destroyCancellationToken);
+			return UniTask.Delay(timeSpan, ignoreTimeScale, delayTiming, _LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -85,7 +102,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask DelayFrame(int delayFrameCount, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.DelayFrame(delayFrameCount, delayTiming, destroyCancellationToken, cancelImmediately);
+			return UniTask.DelayFrame(delayFrameCount, delayTiming, _LinkedCancelToken, cancelImmediately);
 		}
 
 		/// <summary>
@@ -93,7 +110,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForSeconds(float duration, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.WaitForSeconds(duration, ignoreTimeScale, delayTiming, destroyCancellationToken, cancelImmediately);
+			return UniTask.WaitForSeconds(duration, ignoreTimeScale, delayTiming, _LinkedCancelToken, cancelImmediately);
 		}
 
 		/// <summary>
@@ -101,7 +118,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask NextFrame(PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.NextFrame(timing, destroyCancellationToken);
+			return UniTask.NextFrame(timing, _LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -109,7 +126,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForFixedUpdate()
 		{
-			return UniTask.WaitForFixedUpdate(destroyCancellationToken);
+			return UniTask.WaitForFixedUpdate(_LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -117,7 +134,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForEndOfFrame()
 		{
-			return UniTask.WaitForEndOfFrame(this, destroyCancellationToken);
+			return UniTask.WaitForEndOfFrame(this, _LinkedCancelToken);
 		}
 
 		#endregion
@@ -129,7 +146,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitUntil(Func<bool> predicate, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.WaitUntil(predicate, timing, destroyCancellationToken);
+			return UniTask.WaitUntil(predicate, timing, _LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -137,7 +154,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitWhile(Func<bool> predicate, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.WaitWhile(predicate, timing, destroyCancellationToken);
+			return UniTask.WaitWhile(predicate, timing, _LinkedCancelToken);
 		}
 
 		/// <summary>
@@ -145,7 +162,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitUntilValueChanged<T, U>(T target, Func<T, U> valueCheck, PlayerLoopTiming timing = PlayerLoopTiming.Update, IEqualityComparer<U> equalityComparer = null) where T : class
 		{
-			return UniTask.WaitUntilValueChanged(target, valueCheck, timing, equalityComparer, destroyCancellationToken);
+			return UniTask.WaitUntilValueChanged(target, valueCheck, timing, equalityComparer, _LinkedCancelToken);
 		}
 		#endregion
 
@@ -219,7 +236,7 @@ namespace Icy.Base
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource DelayByTime(Action action, float delaySeconds, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoDelayByTime(action, delaySeconds, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -231,7 +248,7 @@ namespace Icy.Base
 		/// <param name="frameCount">要延迟的帧数</param>
 		protected CancellationTokenSource DelayByFrame(Action action, int frameCount)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoDelayByFrame(action, frameCount, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -242,7 +259,7 @@ namespace Icy.Base
 		/// <param name="action">要延迟执行的回调</param>
 		protected CancellationTokenSource NextFrame(Action action)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoNextFrame(action, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -256,7 +273,7 @@ namespace Icy.Base
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource RepeatByTime(Action action, float perSeconds, int repeatCount, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoRepeatByTime(action, perSeconds, repeatCount, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -270,7 +287,7 @@ namespace Icy.Base
 		/// <param name="ignoreTimeScale">是否忽略TimeScale</param>
 		protected CancellationTokenSource RepeatByTimeUntil(Action action, float perSeconds, Func<bool> predicate, bool ignoreTimeScale = false)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoRepeatByTimeUntil(action, perSeconds, predicate, linkedTokenSource.Token, ignoreTimeScale).Forget();
 			return linkedTokenSource;
 		}
@@ -283,7 +300,7 @@ namespace Icy.Base
 		/// <param name="repeatCount">执行的次数；如果<0，则次数为无限</param>
 		protected CancellationTokenSource RepeatByFrame(Action action, int perFrames, int repeatCount)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoRepeatByFrame(action, perFrames, repeatCount, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
@@ -296,19 +313,11 @@ namespace Icy.Base
 		/// <param name="predicate">返回 true时，repeat停止</param>
 		protected CancellationTokenSource RepeatByFrameUntil(Action action, int perFrames, Func<bool> predicate)
 		{
-			CancellationTokenSource linkedTokenSource = GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = GenerateTokenSource4Timer();
 			Base.Timer.DoRepeatByFrameUntil(action, perFrames, predicate, linkedTokenSource.Token).Forget();
 			return linkedTokenSource;
 		}
 		#endregion
-
-		protected virtual CancellationTokenSource GenerateLinkedCancellationTokenSource()
-		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, destroyCancellationToken);
-			_AllCancelTokens.Add(linkedTokenSource);
-			return linkedTokenSource;
-		}
 
 		private void OnDestroy()
 		{

@@ -229,9 +229,9 @@ namespace Icy.UI
 		}
 #endif
 
-		protected override CancellationTokenSource GenerateLinkedCancellationTokenSource()
+		protected override CancellationTokenSource GenerateTokenSource4Timer()
 		{
-			CancellationTokenSource baseLinked = base.GenerateLinkedCancellationTokenSource();
+			CancellationTokenSource baseLinked = base.GenerateTokenSource4Timer();
 			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(baseLinked.Token, _CancelTokenSourceOnHide.Token);
 			_AllCancelTokens.Add(linkedTokenSource);
 			return linkedTokenSource;
