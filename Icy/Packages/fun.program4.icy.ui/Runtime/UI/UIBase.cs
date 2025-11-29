@@ -152,6 +152,8 @@ namespace Icy.UI
 			}
 
 			_CancelTokenSourceOnHide = new CancellationTokenSource();
+			SetExternalToken(_CancelTokenSourceOnHide.Token);
+
 			UIManager.Instance.Show(this, param);
 		}
 
@@ -228,13 +230,5 @@ namespace Icy.UI
 				_IsExitingPlayMode = true;
 		}
 #endif
-
-		protected override CancellationTokenSource GenerateTokenSource4Timer()
-		{
-			CancellationTokenSource baseLinked = base.GenerateTokenSource4Timer();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(baseLinked.Token, _CancelTokenSourceOnHide.Token);
-			_AllCancelTokens.Add(linkedTokenSource);
-			return linkedTokenSource;
-		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Icy.Base
 		/// 聚合了destroyCancellationToken和disableCancellationToken，
 		/// 以及外部传入Token，的总Token
 		/// </summary>
-		protected CancellationToken _LinkedCancelToken;
+		protected CancellationToken _TotalCancellationToken;
 		/// <summary>
 		/// OnDisable时候触发的CancellationToken；
 		/// 命名风格和MonoBehaviour.destroyCancellationToken保持一致
@@ -47,14 +47,21 @@ namespace Icy.Base
 		/// OnDisable时候触发的CancellationTokenSource
 		/// </summary>
 		private CancellationTokenSource _DisableCancellationTokenSource;
+		/// <summary>
+		/// 外部传入的CancellationToken
+		/// </summary>
+		private CancellationToken _ExternalCancellationToken;
 
 
-		protected virtual CancellationTokenSource GenerateTokenSource4Timer()
+		/// <summary>
+		/// 可以外部设置一个额外的CancellationToken，来主动触发中断
+		/// </summary>
+		public void SetExternalToken(CancellationToken externalCancellationToken)
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, disableCancellationToken, destroyCancellationToken);
-			_AllCancelTokens.Add(linkedTokenSource);
-			return linkedTokenSource;
+			if (_ExternalCancellationToken != default && !_ExternalCancellationToken.IsCancellationRequested)
+				Log.Error("Set the external token duplicatly, this may cause the cancel operation which from external token failed", nameof(UniTaskMonoBehaviour));
+			_ExternalCancellationToken = externalCancellationToken;
+			RefreshTotalToken();
 		}
 
 		/// <summary>
@@ -62,13 +69,8 @@ namespace Icy.Base
 		/// </summary>
 		protected virtual void OnEnable()
 		{
-			CancellationTokenSource cts = new CancellationTokenSource();
-			_AllCancelTokens.Add(cts);
-			_DisableCancellationTokenSource = cts;
-
-			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken);
-			_AllCancelTokens.Add(linkedTokenSource);
-			_LinkedCancelToken = linkedTokenSource.Token;
+			_DisableCancellationTokenSource = new CancellationTokenSource();
+			RefreshTotalToken();
 		}
 
 		/// <summary>
@@ -79,6 +81,31 @@ namespace Icy.Base
 			_DisableCancellationTokenSource.Cancel();
 		}
 
+		/// <summary>
+		/// 为Timer生成一个CancellationTokenSource
+		/// </summary>
+		protected CancellationTokenSource GenerateTokenSource4Timer()
+		{
+			CancellationTokenSource cts = new CancellationTokenSource();
+			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _TotalCancellationToken);
+			_AllCancelTokens.Add(linkedTokenSource);
+			return linkedTokenSource;
+		}
+
+		/// <summary>
+		/// 刷新TotalToken
+		/// </summary>
+		private void RefreshTotalToken()
+		{
+			CancellationTokenSource linkedTokenSource;
+			if (_ExternalCancellationToken == default)
+				linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken);
+			else
+				linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken, _ExternalCancellationToken);
+			_AllCancelTokens.Add(linkedTokenSource);
+			_TotalCancellationToken = linkedTokenSource.Token;
+		}
+
 		#region 基础等待方法
 
 		/// <summary>
@@ -86,7 +113,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask Delay(int millisecondsDelay, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.Delay(millisecondsDelay, ignoreTimeScale, delayTiming, _LinkedCancelToken);
+			return UniTask.Delay(millisecondsDelay, ignoreTimeScale, delayTiming, _TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -94,7 +121,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask Delay(TimeSpan timeSpan, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.Delay(timeSpan, ignoreTimeScale, delayTiming, _LinkedCancelToken);
+			return UniTask.Delay(timeSpan, ignoreTimeScale, delayTiming, _TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -102,7 +129,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask DelayFrame(int delayFrameCount, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.DelayFrame(delayFrameCount, delayTiming, _LinkedCancelToken, cancelImmediately);
+			return UniTask.DelayFrame(delayFrameCount, delayTiming, _TotalCancellationToken, cancelImmediately);
 		}
 
 		/// <summary>
@@ -110,7 +137,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForSeconds(float duration, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, bool cancelImmediately = false)
 		{
-			return UniTask.WaitForSeconds(duration, ignoreTimeScale, delayTiming, _LinkedCancelToken, cancelImmediately);
+			return UniTask.WaitForSeconds(duration, ignoreTimeScale, delayTiming, _TotalCancellationToken, cancelImmediately);
 		}
 
 		/// <summary>
@@ -118,7 +145,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask NextFrame(PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.NextFrame(timing, _LinkedCancelToken);
+			return UniTask.NextFrame(timing, _TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -126,7 +153,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForFixedUpdate()
 		{
-			return UniTask.WaitForFixedUpdate(_LinkedCancelToken);
+			return UniTask.WaitForFixedUpdate(_TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -134,7 +161,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitForEndOfFrame()
 		{
-			return UniTask.WaitForEndOfFrame(this, _LinkedCancelToken);
+			return UniTask.WaitForEndOfFrame(this, _TotalCancellationToken);
 		}
 
 		#endregion
@@ -146,7 +173,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitUntil(Func<bool> predicate, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.WaitUntil(predicate, timing, _LinkedCancelToken);
+			return UniTask.WaitUntil(predicate, timing, _TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -154,7 +181,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitWhile(Func<bool> predicate, PlayerLoopTiming timing = PlayerLoopTiming.Update)
 		{
-			return UniTask.WaitWhile(predicate, timing, _LinkedCancelToken);
+			return UniTask.WaitWhile(predicate, timing, _TotalCancellationToken);
 		}
 
 		/// <summary>
@@ -162,7 +189,7 @@ namespace Icy.Base
 		/// </summary>
 		protected UniTask WaitUntilValueChanged<T, U>(T target, Func<T, U> valueCheck, PlayerLoopTiming timing = PlayerLoopTiming.Update, IEqualityComparer<U> equalityComparer = null) where T : class
 		{
-			return UniTask.WaitUntilValueChanged(target, valueCheck, timing, equalityComparer, _LinkedCancelToken);
+			return UniTask.WaitUntilValueChanged(target, valueCheck, timing, equalityComparer, _TotalCancellationToken);
 		}
 		#endregion
 
