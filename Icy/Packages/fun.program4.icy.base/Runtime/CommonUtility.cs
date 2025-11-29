@@ -368,6 +368,32 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// 将UniTask绑定到指定GameObject，GameObejct销毁时，UniTask会被中断
+		/// </summary>
+		public static UniTask AttachToGameObject(this UniTask uniTask, GameObject go)
+		{
+			if (go == null)
+			{
+				Log.Error("GameObject is null", "AttachToGameObject");
+				return uniTask;
+			}
+			return uniTask.AttachExternalCancellation(go.GetCancellationTokenOnDestroy());
+		}
+
+		/// <summary>
+		/// 将UniTask<T>绑定到指定GameObject，GameObejct销毁时，UniTask会被中断
+		/// </summary>
+		public static UniTask<T> AttachToGameObject<T>(this UniTask<T> uniTask, GameObject go)
+		{
+			if (go == null)
+			{
+				Log.Error("GameObject is null", "AttachToGameObject<T>");
+				return uniTask;
+			}
+			return uniTask.AttachExternalCancellation(go.GetCancellationTokenOnDestroy());
+		}
+
+		/// <summary>
 		/// 所有不等待的UniTask方法，都应该把这个方法传入Forget函数中，或者业务侧自己定义一个类似方法也可以
 		/// </summary>
 		public static void OnUniTaskForgetException(Exception ex)
