@@ -210,14 +210,16 @@ namespace Icy.UI
 		}
 
 #if UNITY_EDITOR
-		protected void OnEnable()
+		protected override void OnEnable()
 		{
+			base.OnEnable();
 			UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 		}
 
-		private void OnDisable()
+		protected override void OnDisable()
 		{
 			UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+			base.OnDisable();
 		}
 
 		private void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)

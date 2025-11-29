@@ -30,10 +30,37 @@ namespace Icy.Base
 	public class UniTaskMonoBehaviour : MonoBehaviour
 	{
 		/// <summary>
-		/// 此UniTaskMonoBehaviour创建的所有CancelToken
+		/// 此UniTaskMonoBehaviour创建的所有CancellationTokenSource
 		/// </summary>
 		protected List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
+		/// <summary>
+		/// OnDisable时候触发的CancellationToken；
+		/// 命名风格和MonoBehaviour.destroyCancellationToken保持一致
+		/// </summary>
+		protected CancellationToken disableCancellationToken => _DisableCancellationTokenSource.Token;
+		/// <summary>
+		/// OnDisable时候触发的CancellationTokenSource
+		/// </summary>
+		private CancellationTokenSource _DisableCancellationTokenSource;
 
+
+		/// <summary>
+		/// 派生类override的话，必须调用基类实现
+		/// </summary>
+		protected virtual void OnEnable()
+		{
+			CancellationTokenSource cts = new CancellationTokenSource();
+			_AllCancelTokens.Add(cts);
+			_DisableCancellationTokenSource = cts;
+		}
+
+		/// <summary>
+		/// 派生类override的话，必须调用基类实现
+		/// </summary>
+		protected virtual void OnDisable()
+		{
+			_DisableCancellationTokenSource.Cancel();
+		}
 
 		#region 基础等待方法
 
@@ -124,24 +151,6 @@ namespace Icy.Base
 
 
 		#region 实用扩展方法
-
-		/// <summary>
-		/// 链接取消令牌
-		/// </summary>
-		protected CancellationToken LinkToken(CancellationToken externalToken)
-		{
-			return CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken, externalToken).Token;
-		}
-
-		/// <summary>
-		/// 链接多个取消令牌
-		/// </summary>
-		protected CancellationToken LinkTokens(params CancellationToken[] tokens)
-		{
-			List<CancellationToken> allTokens = new List<CancellationToken> { destroyCancellationToken };
-			allTokens.AddRange(tokens);
-			return CancellationTokenSource.CreateLinkedTokenSource(allTokens.ToArray()).Token;
-		}
 
 		/// <summary>
 		/// 安全的异步方法执行（自动捕获异常）
