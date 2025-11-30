@@ -38,6 +38,16 @@ namespace Icy.Editor
 		}
 
 		/// <summary>
+		/// 项目根目录
+		/// </summary>
+		[MenuItem("Icy/Path/Project Root")]
+		static void OpenProjectRootPath()
+		{
+			string parentDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+			System.Diagnostics.Process.Start(parentDirectory);
+		}
+
+		/// <summary>
 		/// StreamingAssets目录
 		/// </summary>
 		[MenuItem("Icy/Path/StreamingAssets")]
