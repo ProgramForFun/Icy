@@ -48,6 +48,7 @@ namespace Icy.Editor
 			if (_AssetTrayWindow != null)
 				_AssetTrayWindow.Close();
 			_AssetTrayWindow = GetWindow<AssetTrayWindow>();
+			_AssetTrayWindow.titleContent = new GUIContent("Asset Tray");
 
 			Load();
 		}
