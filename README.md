@@ -47,13 +47,13 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |集成[Protobuf](https://github.com/ProgramForFun/protobuf_unity)|高效二进制序列化|✔️|
 |集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|✔️|
 |集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
-|集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|待开始|
+|集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|✔️|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
 |集成[SRDebugger](https://assetstore.unity.com/packages/tools/gui/srdebugger-console-tools-on-device-27688?srsltid=AfmBOopomW8bzQFHohdFJUhKFtu_gtCoFwMtWsb19arVXiJVZAnFVzU_)|GM工具、运行时Console|✔️|
 |集成[ZString](https://github.com/Cysharp/ZString)|Zero GC Alloc StringBuilder/Formatter|✔️|
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
-|Base-FSM|有限状态机|✔️|
+|Base-FSM|有限状态机，附带一个状态切换可视化工具|✔️|
 |Base-基于FSM的Procedure|基于FSM的顺序执行的流程|✔️|
 |Base-Log|提供Log到文件、多线程Log|✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
