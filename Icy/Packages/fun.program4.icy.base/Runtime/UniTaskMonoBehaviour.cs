@@ -24,8 +24,9 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 包装常用UniTask包含CancellationToken参数的API，将其中的CancellationToken参数设置为
-	/// MonoBehaviour.destroyCancellationToken，以达到GameObject销毁时，UniTask相关的操作可以自动中断；
+	/// 包装常用UniTask具有CancellationToken形参的API，将其中的CancellationToken参数设置为
+	/// 和MonoBehaviour声明周期相关的Token，以达到GameObject销毁、Disable时，UniTask相关的操作可以自动中断；
+	/// 同时也支持外部传入一个额外的Token；
 	/// </summary>
 	public class UniTaskMonoBehaviour : MonoBehaviour
 	{
@@ -48,19 +49,20 @@ namespace Icy.Base
 		/// </summary>
 		private CancellationTokenSource _DisableCancellationTokenSource;
 		/// <summary>
-		/// 外部传入的CancellationToken
+		/// 外部传入的CancellationToken；
+		/// 命名风格和MonoBehaviour.destroyCancellationToken保持一致
 		/// </summary>
-		private CancellationToken _ExternalCancellationToken;
+		private CancellationToken externalCancellationToken;
 
 
 		/// <summary>
 		/// 可以外部设置一个额外的CancellationToken，来主动触发中断
 		/// </summary>
-		public void SetExternalToken(CancellationToken externalCancellationToken)
+		public void SetExternalToken(CancellationToken externalToken)
 		{
-			if (_ExternalCancellationToken != default && !_ExternalCancellationToken.IsCancellationRequested)
-				Log.Error("Set the external token duplicatly, this may cause the cancel operation which from external token failed", nameof(UniTaskMonoBehaviour));
-			_ExternalCancellationToken = externalCancellationToken;
+			if (externalCancellationToken != default && !externalCancellationToken.IsCancellationRequested)
+				Log.Error("Set the external token duplicately, this may cause the cancel operation which from external token failed", nameof(UniTaskMonoBehaviour));
+			externalCancellationToken = externalToken;
 			RefreshTotalToken();
 		}
 
@@ -98,10 +100,10 @@ namespace Icy.Base
 		private void RefreshTotalToken()
 		{
 			CancellationTokenSource linkedTokenSource;
-			if (_ExternalCancellationToken == default)
+			if (externalCancellationToken == default)
 				linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken);
 			else
-				linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken, _ExternalCancellationToken);
+				linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(disableCancellationToken, destroyCancellationToken, externalCancellationToken);
 			_AllCancelTokens.Add(linkedTokenSource);
 			_TotalCancellationToken = linkedTokenSource.Token;
 		}
