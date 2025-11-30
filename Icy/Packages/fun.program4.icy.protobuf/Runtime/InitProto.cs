@@ -45,19 +45,17 @@ namespace Icy.Protobuf
 
 				bool isProtoAssemblyAOT = await IsProtoAssemblyAOT(protoSetting);
 				Log.Info("ProtoMsgIDRegistry in " + (isProtoAssemblyAOT ? "AOT" : "Patch"), nameof(InitProto), true);
-				if (isProtoAssemblyAOT)
-					CallFromAOT(protoSetting);
-				else
-					CallFromPatch(protoSetting);
+
+				DoInit(protoSetting);
 			}
 			else
 				Log.Error($"Load ProtoSetting failed", nameof(InitProto));
 		}
 
 		/// <summary>
-		/// 调用AOT中的ProtoMsgIDRegistry
+		/// 反射调用ProtoMsgIDRegistry
 		/// </summary>
-		private static void CallFromAOT(ProtoSetting protoSetting)
+		private static void DoInit(ProtoSetting protoSetting)
 		{
 			Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 			foreach (Assembly assembly in assemblies)
@@ -77,14 +75,6 @@ namespace Icy.Protobuf
 				}
 			}
 			Log.Error($"Load proto assembly {protoSetting.ProtoAssemblyName} failed", nameof(InitProto));
-		}
-
-		/// <summary>
-		/// 调用热更中的ProtoMsgIDRegistry
-		/// </summary>
-		private static void CallFromPatch(ProtoSetting protoSetting)
-		{
-			//TODO
 		}
 
 		/// <summary>
