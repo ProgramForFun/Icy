@@ -92,10 +92,6 @@ namespace Icy.UI
 		/// </summary>
 		protected CancellationTokenSource _CancelTokenSourceOnHide;
 		/// <summary>
-		/// 此UI创建的所有CancelToken
-		/// </summary>
-		private List<CancellationTokenSource> _AllCancelTokens = new List<CancellationTokenSource>();
-		/// <summary>
 		/// 是否正在退出editor的play模式
 		/// </summary>
 		private bool _IsExitingPlayMode;
