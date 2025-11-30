@@ -36,7 +36,7 @@ namespace Icy.Frame
 			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
-			HybridCLRRunner.GetHybridCLREnabled();
+			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
 
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;

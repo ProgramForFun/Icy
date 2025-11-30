@@ -53,7 +53,7 @@ namespace Icy.Asset
 		/// 获取HybridCLR是否已启用；
 		/// Editor下直接读取HybridCLR的设置，运行时根据编译时存储的文件来确定
 		/// </summary>
-		internal static void GetHybridCLREnabled()
+		internal static void DetermineWhetherHybridCLRIsEnabled()
 		{
 			IsHybridCLREnabled = false;
 
