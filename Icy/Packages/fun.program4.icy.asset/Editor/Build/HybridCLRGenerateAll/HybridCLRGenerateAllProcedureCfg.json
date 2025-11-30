@@ -1,4 +1,5 @@
 [
   "Icy.Asset.Editor.HybridCLRGenerateAllStep",
-  "Icy.Asset.Editor.CopyMetaDataDLLStep"
+  "Icy.Asset.Editor.CopyMetaDataDLLStep",
+  "Icy.Asset.Editor.StripMetaDataDLLStep"
 ]

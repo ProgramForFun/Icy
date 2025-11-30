@@ -38,6 +38,7 @@ namespace Icy.Asset.Editor
 			//确保HybridCLRGenerate/AOTGenericReferences.cs生成完成
 			await UniTask.WaitForSeconds(1);
 			GetAssetSetting();
+			OwnerProcedure.Blackboard.WriteObject(nameof(AssetSetting), _Setting);
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
