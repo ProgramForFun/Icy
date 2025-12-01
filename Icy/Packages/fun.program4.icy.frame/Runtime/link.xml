@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<linker>
+  <assembly fullname="Icy.Base" preserve="all"/>
+  <assembly fullname="Icy.Asset" preserve="all"/>
+  <assembly fullname="Icy.UI" preserve="all"/>
+  <assembly fullname="Icy.Frame" preserve="all"/>
+  <assembly fullname="Icy.Network" preserve="all"/>
+  <assembly fullname="Icy.Protobuf" preserve="all"/>
+  <assembly fullname="Icy.GM" preserve="all"/>
+</linker>

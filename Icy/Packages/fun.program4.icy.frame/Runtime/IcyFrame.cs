@@ -50,12 +50,15 @@ namespace Icy.Frame
 			OnHybridCLRRunnerFinish(0, null);
 #endif
 
-#if ICY_PRESERVE_UNITY_CLASS
 			int dummy = UnityEngine.Random.Range(1, 2);
 			//只保证代码有引用、不被裁剪，实际不会执行到
 			if (dummy == 0)
+			{
+				FrameClassReferencer.Preserve();
+#if ICY_PRESERVE_UNITY_CLASS
 				UnityClassReferencer.Preserve();
 #endif
+			}
 		}
 
 		private void OnHybridCLRRunnerFinish(int arg1, IEventParam param)
