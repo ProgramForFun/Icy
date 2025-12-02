@@ -29,11 +29,13 @@ namespace Icy.Frame
 	/// </summary>
 	public sealed class IcyFrame : PersistentMonoSingleton<IcyFrame>
 	{
-		public void Init()
+		public void Init(bool writeLog2File = true)
 		{
+			//尽可能早的初始化Log
+			Log.Init(writeLog2File);
+
 			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
 
-			Log.Reset();
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
 			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();

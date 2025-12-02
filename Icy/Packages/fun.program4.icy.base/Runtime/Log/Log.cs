@@ -89,9 +89,19 @@ namespace Icy.Base
 		private static Thread _Write2FileThread;
 		#endregion
 
-		public static void Init(bool writeLog2File = false)
+		public static void Init(bool writeLog2File = true)
 		{
 			OnLog = null;
+			MinLogLevel = LogLevel.Info;
+			lock (_LevelLock)
+			{
+				_OverrideMinLogLevelForTag.Clear();
+			}
+
+#if UNITY_EDITOR
+			_ColorOnce = null;
+#endif
+
 			#region WriteLog2File
 			if (writeLog2File)
 			{
@@ -111,23 +121,9 @@ namespace Icy.Base
 		public static void OverrideMinLogLevelForTag(string tag, LogLevel logLevel)
 		{
 			lock (_LevelLock)
-				_OverrideMinLogLevelForTag[tag] = logLevel;
-		}
-
-		/// <summary>
-		/// 清除所有的OverrideTagLogLevel
-		/// </summary>
-		public static void Reset()
-		{
-			MinLogLevel = LogLevel.Info;
-			lock (_LevelLock)
 			{
-				_OverrideMinLogLevelForTag.Clear();
+				_OverrideMinLogLevelForTag[tag] = logLevel;
 			}
-
-#if UNITY_EDITOR
-			_ColorOnce = null;
-#endif
 		}
 
 		/// <summary>

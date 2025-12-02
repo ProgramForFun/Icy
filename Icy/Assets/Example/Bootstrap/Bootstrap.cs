@@ -26,7 +26,6 @@ namespace Bootstrap
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
 			//框架相关初始化
-			Log.Init(true);
 			GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
 			IcyFrame.Instance.Init();
 			UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
