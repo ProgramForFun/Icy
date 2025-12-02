@@ -80,9 +80,13 @@ namespace Icy.Base
 		/// </summary>
 		private static object _QueueLock;
 		/// <summary>
-		/// 停止线程令牌
+		/// 停止线程令牌Source
 		/// </summary>
 		private static CancellationTokenSource _CancellationTokenSource;
+		/// <summary>
+		/// 停止线程令牌
+		/// </summary>
+		private static CancellationToken _CancellationToken;
 		/// <summary>
 		/// 写入文件的线程
 		/// </summary>
@@ -108,8 +112,9 @@ namespace Icy.Base
 				_QueueLock = new object();
 				_LogQueue = new Queue<string>();
 				_CancellationTokenSource = new CancellationTokenSource();
+				_CancellationToken = _CancellationTokenSource.Token;
 				_Write2FileThread = new Thread(ConsumeLog);
-				_Write2FileThread.Start();
+				_Write2FileThread.Start(_CancellationToken);
 				Application.logMessageReceivedThreaded += OnUnityLog;
 			}
 			#endregion
@@ -300,13 +305,14 @@ namespace Icy.Base
 		/// <summary>
 		/// 消费者函数，从队列里读取log，写入文件
 		/// </summary>
-		private static void ConsumeLog()
+		private static void ConsumeLog(object cancellationToken)
 		{
+			CancellationToken token = (CancellationToken)cancellationToken;
 			string newLogFilePath = DeleteAndNewLogFile();
 			StreamWriter sw = new StreamWriter(newLogFilePath, true, Encoding.UTF8);
 			try
 			{
-				while (!_CancellationTokenSource.IsCancellationRequested)
+				while (!token.IsCancellationRequested)
 				{
 					string log = null;
 					lock (_QueueLock)
@@ -322,7 +328,7 @@ namespace Icy.Base
 						sw.Flush();
 					}
 				}
-				Log.Info("Write to file thread stopped", nameof(Log));
+				Info("Write to file thread stopped", nameof(Log));
 			}
 			catch (Exception ex)
 			{
