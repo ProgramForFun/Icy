@@ -20,7 +20,7 @@ using UnityEngine.Scripting;
 namespace Icy.Frame
 {
 	/// <summary>
-	/// 显示引用框架的类，每个程序集里引用一个（已在link.xml里整个保留所有Icy程序集），避免被裁剪掉；
+	/// 显式引用框架的类，每个程序集里引用一个（已在link.xml里整个保留所有Icy程序集），避免被裁剪掉；
 	/// 以保证HybridCLR热更时使用了一个之前没用过的类时、都可以找得到
 	/// </summary>
 	[Preserve]
