@@ -35,7 +35,7 @@ namespace Icy.Network
 		/// <summary>
 		/// 是否已连接到服务器
 		/// </summary>
-		public bool IsConnected => Session.IsConnected && _CancellationTokenSource != null && !_CancellationTokenSource.IsCancellationRequested;
+		public bool IsConnected => Session.IsConnected && _CancellationToken != CancellationToken.None && !_CancellationToken.IsCancellationRequested;
 		/// <summary>
 		/// 和服务器建立连接、可以通信了的事件
 		/// </summary>
@@ -94,9 +94,13 @@ namespace Icy.Network
 		/// </summary>
 		protected object _SendLock;
 		/// <summary>
-		/// 发送线程取消令牌
+		/// 发送和接收的取消令牌Source
 		/// </summary>
 		protected CancellationTokenSource _CancellationTokenSource;
+		/// <summary>
+		/// 发送和接收的取消令牌
+		/// </summary>
+		protected CancellationToken _CancellationToken;
 		/// <summary>
 		/// 待发送的消息超过这个数量，会报错预警
 		/// </summary>
@@ -158,6 +162,7 @@ namespace Icy.Network
 			_ToSendCount = 0;
 			_SendLock = new object();
 			_CancellationTokenSource = new CancellationTokenSource();
+			_CancellationToken = _CancellationTokenSource.Token;
 			UniTask.RunOnThreadPool(ReceiveLoop).Forget(CommonUtility.OnUniTaskForgetException);
 			UniTask.RunOnThreadPool(SendLoop).Forget(CommonUtility.OnUniTaskForgetException);
 
@@ -226,13 +231,13 @@ namespace Icy.Network
 		/// </summary>
 		protected async UniTaskVoid SendLoop()
 		{
-			while (!IsConnected && !_CancellationTokenSource.IsCancellationRequested)
+			while (!IsConnected && !_CancellationToken.IsCancellationRequested)
 				await Task.Delay(16).ConfigureAwait(false);	//帧率60的每帧时间，这个等待总体不会太长
 
-			while (!_CancellationTokenSource.IsCancellationRequested)
+			while (!_CancellationToken.IsCancellationRequested)
 			{
 				//TODO：想办法避免Task.Delay的GC Alloc
-				while (_ToSendCount == 0 && !_CancellationTokenSource.IsCancellationRequested)
+				while (_ToSendCount == 0 && !_CancellationToken.IsCancellationRequested)
 					await Task.Delay(16).ConfigureAwait(false);
 
 				if (_SendQueue1.Count > 0)
@@ -293,13 +298,13 @@ namespace Icy.Network
 		{
 			await Session.Connect(_Syn);
 
-			if (!_CancellationTokenSource.IsCancellationRequested)
+			if (!_CancellationToken.IsCancellationRequested)
 				await Session.Listen();
 		}
 
 		protected bool CheckSendable()
 		{
-			if (!IsConnected || _CancellationTokenSource == null || _CancellationTokenSource.IsCancellationRequested)
+			if (!IsConnected || _CancellationToken == CancellationToken.None || _CancellationToken.IsCancellationRequested)
 			{
 				Exception e = new Exception($"Call {nameof(Send)} when {nameof(NetworkChannel<T>)} is disconnected");
 				Log.Error(e.ToString(), nameof(NetworkChannel<T>));
