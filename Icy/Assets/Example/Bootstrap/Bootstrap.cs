@@ -26,32 +26,30 @@ namespace Bootstrap
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 
 			//框架相关初始化
+			// 1、初始化框架
 			GameObject icyGo = new GameObject("Icy", typeof(IcyFrame));
-			IcyFrame.Instance.Init();
-			UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
+			await IcyFrame.Instance.Init(_AssetMode);
 
-			//资源热更
-			bool assetMgrInitSucceed = await AssetManager.Instance.Init(_AssetMode, "DefaultPackage", 30);
-			if (!assetMgrInitSucceed)
-			{
-				Log.Assert(false, "AssetManager init failed!");
-				return;
-			}
-
-			//先更新资源
+			// 2、热更新资源
 			await AssetManager.Instance.StartAssetPatch();
 #if !UNITY_EDITOR
 			if (HybridCLRRunner.IsHybridCLREnabled)
 			{
-				//再加载热更代码
+				// 3、加载热更代码
 				await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
 			}
 			else
+			{
+				// 4、运行热更代码
 				RunPatchedCode();
+			}
 #else
-			//Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
+			// Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
 			RunPatchedCode();
 #endif
+
+			// 在合适的时机调用此方法，把UI相机添加到业务侧的3D主相机上
+			UIRoot.Instance.AddUICameraToCameraStack(_Camera3D);
 		}
 
 		/// <summary>

@@ -21,6 +21,7 @@ using Icy.Asset;
 using System;
 using System.Threading;
 using UnityEngine;
+using YooAsset;
 
 namespace Icy.Frame
 {
@@ -29,19 +30,34 @@ namespace Icy.Frame
 	/// </summary>
 	public sealed class IcyFrame : PersistentMonoSingleton<IcyFrame>
 	{
-		public void Init(bool writeLog2File = true)
+		/// <summary>
+		/// 初始化框架
+		/// </summary>
+		/// <param name="assetMode">资源系统的运行模式</param>
+		/// <param name="writeLog2File">是否将Log写入文件</param>
+		public async UniTask Init(EPlayMode assetMode, bool writeLog2File = true)
 		{
+#if UNITY_EDITOR
+			EventManager.ClearAll();
+			LocalPrefs.ClearKeyPrefix();
+#endif
+
 			//尽可能早的初始化Log
 			Log.Init(writeLog2File);
 
 			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
 
-			EventManager.ClearAll();
-			LocalPrefs.ClearKeyPrefix();
-			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
-
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
+
+			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
+
+			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, "DefaultPackage", 30);
+			if (!assetMgrInitSucceed)
+			{
+				Log.Assert(false, "AssetManager init failed!");
+				return;
+			}
 
 #if !UNITY_EDITOR
 			if (HybridCLRRunner.IsHybridCLREnabled)
