@@ -23,7 +23,7 @@ namespace Icy.UI
 	public enum UIType
 	{
 		/// <summary>
-		/// 一般是比较大一点的窗口，参与回退栈
+		/// 一般是比较大的界面，参与回退栈
 		/// </summary>
 		Dialog,
 		/// <summary>
@@ -33,7 +33,7 @@ namespace Icy.UI
 	}
 
 	/// <summary>
-	/// 如何隐藏UI
+	/// 隐藏UI的方式
 	/// </summary>
 	public enum UIHideType
 	{
@@ -48,14 +48,16 @@ namespace Icy.UI
 	}
 
 	/// <summary>
-	/// UI的层级划分，取值是Canvas上的Order In Layer
+	/// UI的层级划分，从低到高，取值代表Canvas上的Order In Layer
 	/// </summary>
 	public enum UILayer
 	{
+		Abyss = 500,
 		Bottom = 1000,
 		Low = 1500,
 		Medium = 2000,
 		High = 2500,
 		Top = 3000,
+		Sky = 3500,
 	}
 }
