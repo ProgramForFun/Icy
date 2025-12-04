@@ -36,15 +36,16 @@ namespace Bootstrap
 			if (HybridCLRRunner.IsHybridCLREnabled)
 			{
 				// 3、加载热更代码
+				// 4、运行热更代码（等HybridCLR运行时加载完成，在RunPatchedCode回调中调用热更代码）
 				await AssetManager.Instance.RunPatchedCSharpCode(RunPatchedCode);
 			}
 			else
 			{
-				// 4、运行热更代码
+				// 4、运行热更代码（未启用HybridCLR，直接调用热更代码）
 				RunPatchedCode();
 			}
 #else
-			// Editor下跳过HybridCLR运行时加载代码，直接调用热更代码即可
+			// 4、运行热更代码（Editor下跳过HybridCLR运行时加载代码，直接调用热更代码）
 			RunPatchedCode();
 #endif
 
