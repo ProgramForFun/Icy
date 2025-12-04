@@ -482,15 +482,36 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 计算贝塞尔曲线上指定t的一点
+		/// 计算贝塞尔曲线上指定t的一点（一个控制点）
+		/// </summary>
+		/// <param name="start">曲线的起始位置</param>
+		/// <param name="ctrl">决定曲线形状的控制点</param>
+		/// <param name="end">曲线的终点</param>
+		/// <param name="t">0到1的值，0获取曲线的起点，1获得曲线的终点</param>
+		public static Vector3 CalculateBezierPoint1(Vector3 start, Vector3 ctrl, Vector3 end, float t)
+		{
+			return (1.0f - t) * (1.0f - t) * start + 2.0f * t * (1.0f - t) * ctrl + t * t * end;
+		}
+
+		/// <summary>
+		/// 计算贝塞尔曲线上指定t的一点（两个控制点）
 		/// </summary>
 		/// <param name="start">曲线的起始位置</param>
 		/// <param name="control">决定曲线形状的控制点</param>
 		/// <param name="end">曲线的终点</param>
 		/// <param name="t">0到1的值，0获取曲线的起点，1获得曲线的终点</param>
-		public static Vector3 CalculateBezierPoint(Vector3 start, Vector3 control, Vector3 end, float t)
+		public static Vector3 CalculateBezierPoint2(Vector3 start, Vector3 ctrl1, Vector3 ctrl2, Vector3 end, float t)
 		{
-			return (1.0f - t) * (1.0f - t) * start + 2.0f * t * (1.0f - t) * control + t * t * end;
+			float u = 1.0f - t;
+			float u2 = u * u;
+			float t2 = t * t;
+
+			// 三阶贝塞尔公式：B(t) = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
+			Vector3 point = u2 * u * start +
+						  3.0f * u2 * t * ctrl1 +
+						  3.0f * u * t2 * ctrl2 +
+						  t2 * t * end;
+			return point;
 		}
 
 		/// <summary>
