@@ -37,8 +37,7 @@ namespace Icy.Asset.Editor
 		{
 			//确保HybridCLRGenerate/AOTGenericReferences.cs生成完成
 			await UniTask.WaitForSeconds(1);
-			GetAssetSetting();
-			OwnerProcedure.Blackboard.WriteObject(nameof(AssetSetting), _Setting);
+			_Setting = OwnerProcedure.Blackboard.ReadObject(nameof(AssetSetting), true) as AssetSetting;
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
 			_MetaDataDLLs = ParseMetaDLLList(metaDataDllListPath);
@@ -124,16 +123,6 @@ namespace Icy.Asset.Editor
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 			return true;
-		}
-
-		protected AssetSetting GetAssetSetting()
-		{
-			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
-			if (bytes == null)
-				_Setting = new AssetSetting();
-			else
-				_Setting = AssetSetting.Parser.ParseFrom(bytes);
-			return _Setting;
 		}
 
 		public override async UniTask Deactivate()

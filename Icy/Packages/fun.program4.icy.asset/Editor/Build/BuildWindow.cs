@@ -138,9 +138,13 @@ namespace Icy.Asset.Editor
 
 
 		/// <summary>
-		/// 当前选中平台的Setting文件
+		/// 当前选中平台的Setting
 		/// </summary>
-		protected BuildSetting _Setting;
+		protected BuildSetting _BuildSetting;
+		/// <summary>
+		/// 资源Setting
+		/// </summary>
+		protected AssetSetting _AssetSetting;
 
 
 		[MenuItem("Icy/Build &B", false, 1000)]
@@ -152,51 +156,52 @@ namespace Icy.Asset.Editor
 		protected override void Update()
 		{
 			base.Update();
-			if (_Setting == null)
+			if (_BuildSetting == null)
 				LoadBuildSetting(_CurrPlatformName);
 		}
 
 		protected override void OnChangePlatformTab(string tabName, BuildTarget buildTarget)
 		{
 			LoadBuildSetting(tabName);
+			LoadAssetSetting();
 		}
 
 		protected virtual BuildSetting LoadBuildSetting(string tabName)
 		{
 			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), GetSettingFileName());
 			if (bytes == null)
-				_Setting = new BuildSetting();
+				_BuildSetting = new BuildSetting();
 			else
-				_Setting = BuildSetting.Parser.ParseFrom(bytes);
+				_BuildSetting = BuildSetting.Parser.ParseFrom(bytes);
 
 
-			if (_Setting != null)
+			if (_BuildSetting != null)
 			{
-				ApplicationIdentifier = _Setting.ApplicationIdentifier;
-				ProductName = _Setting.ProductName;
-				CompanyName = _Setting.CompanyName;
-				BundleVersion = _Setting.BundleVersion;
-				BundleNumber = _Setting.BundleNumber;
-				KeyStorePassword = _Setting.KeyStorePassword;
-				AutoSigning = _Setting.AutoSigning;
-				OutputDir = _Setting.OutputDir;
+				ApplicationIdentifier = _BuildSetting.ApplicationIdentifier;
+				ProductName = _BuildSetting.ProductName;
+				CompanyName = _BuildSetting.CompanyName;
+				BundleVersion = _BuildSetting.BundleVersion;
+				BundleNumber = _BuildSetting.BundleNumber;
+				KeyStorePassword = _BuildSetting.KeyStorePassword;
+				AutoSigning = _BuildSetting.AutoSigning;
+				OutputDir = _BuildSetting.OutputDir;
 
 				DevOptions = 0;
-				if (_Setting.DevelopmentBuild)
+				if (_BuildSetting.DevelopmentBuild)
 					DevOptions |= BuildOptionDev.DevelopmentBuild;
-				if (_Setting.ScriptDebugging)
+				if (_BuildSetting.ScriptDebugging)
 					DevOptions |= BuildOptionDev.ScriptDebugging;
-				if (_Setting.AutoConnectProfiler)
+				if (_BuildSetting.AutoConnectProfiler)
 					DevOptions |= BuildOptionDev.AutoConnectProfiler;
-				if (_Setting.DeepProfiling)
+				if (_BuildSetting.DeepProfiling)
 					DevOptions |= BuildOptionDev.DeepProfiling;
 
 				AssetBundleOptions = 0;
-				if (_Setting.BuildAssetBundle)
+				if (_BuildSetting.BuildAssetBundle)
 					AssetBundleOptions |= BuildOptionAssetBundle.BuildAssetBundle;
-				if (_Setting.ClearAssetBundleCache)
+				if (_BuildSetting.ClearAssetBundleCache)
 					AssetBundleOptions |= BuildOptionAssetBundle.ClearAssetBundleCache;
-				if (_Setting.EncryptAssetBundle)
+				if (_BuildSetting.EncryptAssetBundle)
 					AssetBundleOptions |= BuildOptionAssetBundle.EncryptAssetBundle;
 			}
 
@@ -204,7 +209,7 @@ namespace Icy.Asset.Editor
 			List<string> allSteps = GetBuildPlayerStepNames();
 			SetBuildSteps(BuildSteps, allSteps, 0);
 
-			return _Setting;
+			return _BuildSetting;
 		}
 
 		/// <summary>
@@ -241,26 +246,36 @@ namespace Icy.Asset.Editor
 
 		protected virtual void SaveSetting()
 		{
-			_Setting.ApplicationIdentifier = ApplicationIdentifier;
-			_Setting.ProductName = ProductName;
-			_Setting.CompanyName = CompanyName;
-			_Setting.BundleVersion = BundleVersion;
-			_Setting.BundleNumber = BundleNumber;
-			_Setting.KeyStorePassword = KeyStorePassword.ToString();
-			_Setting.AutoSigning = AutoSigning;
-			_Setting.OutputDir = OutputDir;
+			_BuildSetting.ApplicationIdentifier = ApplicationIdentifier;
+			_BuildSetting.ProductName = ProductName;
+			_BuildSetting.CompanyName = CompanyName;
+			_BuildSetting.BundleVersion = BundleVersion;
+			_BuildSetting.BundleNumber = BundleNumber;
+			_BuildSetting.KeyStorePassword = KeyStorePassword.ToString();
+			_BuildSetting.AutoSigning = AutoSigning;
+			_BuildSetting.OutputDir = OutputDir;
 
-			_Setting.DevelopmentBuild = (DevOptions & BuildOptionDev.DevelopmentBuild) == BuildOptionDev.DevelopmentBuild;
-			_Setting.ScriptDebugging = (DevOptions & BuildOptionDev.ScriptDebugging) == BuildOptionDev.ScriptDebugging;
-			_Setting.AutoConnectProfiler = (DevOptions & BuildOptionDev.AutoConnectProfiler) == BuildOptionDev.AutoConnectProfiler;
-			_Setting.DeepProfiling = (DevOptions & BuildOptionDev.DeepProfiling) == BuildOptionDev.DeepProfiling;
+			_BuildSetting.DevelopmentBuild = (DevOptions & BuildOptionDev.DevelopmentBuild) == BuildOptionDev.DevelopmentBuild;
+			_BuildSetting.ScriptDebugging = (DevOptions & BuildOptionDev.ScriptDebugging) == BuildOptionDev.ScriptDebugging;
+			_BuildSetting.AutoConnectProfiler = (DevOptions & BuildOptionDev.AutoConnectProfiler) == BuildOptionDev.AutoConnectProfiler;
+			_BuildSetting.DeepProfiling = (DevOptions & BuildOptionDev.DeepProfiling) == BuildOptionDev.DeepProfiling;
 
-			_Setting.BuildAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.BuildAssetBundle) == BuildOptionAssetBundle.BuildAssetBundle;
-			_Setting.ClearAssetBundleCache = (AssetBundleOptions & BuildOptionAssetBundle.ClearAssetBundleCache) == BuildOptionAssetBundle.ClearAssetBundleCache;
-			_Setting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
+			_BuildSetting.BuildAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.BuildAssetBundle) == BuildOptionAssetBundle.BuildAssetBundle;
+			_BuildSetting.ClearAssetBundleCache = (AssetBundleOptions & BuildOptionAssetBundle.ClearAssetBundleCache) == BuildOptionAssetBundle.ClearAssetBundleCache;
+			_BuildSetting.EncryptAssetBundle = (AssetBundleOptions & BuildOptionAssetBundle.EncryptAssetBundle) == BuildOptionAssetBundle.EncryptAssetBundle;
 
 			string targetDir = SettingsHelper.GetSettingDir();
-			SettingsHelper.SaveSetting(targetDir, GetSettingFileName(), _Setting.ToByteArray());
+			SettingsHelper.SaveSetting(targetDir, GetSettingFileName(), _BuildSetting.ToByteArray());
+		}
+
+		protected AssetSetting LoadAssetSetting()
+		{
+			byte[] bytes = SettingsHelper.LoadSettingEditor(SettingsHelper.GetSettingDir(), SettingsHelper.AssetSetting);
+			if (bytes == null)
+				_AssetSetting = new AssetSetting();
+			else
+				_AssetSetting = AssetSetting.Parser.ParseFrom(bytes);
+			return _AssetSetting;
 		}
 
 		protected virtual string GetSettingFileName()
@@ -295,6 +310,7 @@ namespace Icy.Asset.Editor
 				procedure.AddStep(step);
 			}
 
+			procedure.Blackboard.WriteObject(nameof(AssetSetting), _AssetSetting);
 			procedure.Start();
 		}
 
@@ -342,7 +358,7 @@ namespace Icy.Asset.Editor
 			}
 
 			procedure.Blackboard.WriteInt("BuildTarget", (int)_CurrBuildTarget);
-			procedure.Blackboard.WriteObject("BuildSetting", _Setting);
+			procedure.Blackboard.WriteObject("BuildSetting", _BuildSetting);
 			procedure.OnChangeStep += OnChangeBuildStep;
 			procedure.OnFinish += OnBuildPlayerProcedureFinish;
 			procedure.Start();
