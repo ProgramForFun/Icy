@@ -52,6 +52,7 @@ namespace Icy.Asset.Editor
 
 			AssetDatabase.Refresh();
 
+			await UniTask.CompletedTask;
 			Finish();
 		}
 
