@@ -199,5 +199,16 @@ namespace Icy.Base.Editor
 				}
 			}
 		}
+
+		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+		{
+			evt.menu.AppendAction("Force Change To", OnForceChangeTo, DropdownMenuAction.Status.Normal);
+			evt.menu.AppendSeparator();
+		}
+
+		private void OnForceChangeTo(DropdownMenuAction action)
+		{
+
+		}
 	}
 }
