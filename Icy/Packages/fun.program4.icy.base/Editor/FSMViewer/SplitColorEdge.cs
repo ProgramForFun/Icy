@@ -117,22 +117,16 @@ namespace Icy.Base.Editor
 			// 计算贝塞尔曲线点
 			Vector2 startPos = _Edge.output.GetGlobalCenter();
 			Vector2 endPos = _Edge.input.GetGlobalCenter();
+			float xDiff = Mathf.Abs(startPos.x - endPos.x) * 0.7f;
+			Vector2 startCtrl = startPos + new Vector2(xDiff, 0);
+			Vector2 endCtrl = endPos + new Vector2(-xDiff, 0);
 
-			// 简单的线性插值（可以根据需要实现贝塞尔曲线）
-			int segments = 20;
+			int segments = 100;
 			for (int i = 0; i <= segments; i++)
 			{
 				float t = (float)i / segments;
-				Vector2 point = Vector2.Lerp(startPos, endPos, t);
-
-				// 添加一些曲线效果
-				if (i > 0 && i < segments)
-				{
-					float curveStrength = 50f;
-					point.y += Mathf.Sin(t * Mathf.PI) * curveStrength;
-				}
-
-				points.Add(point - parent.worldBound.position);
+				Vector3 point = CommonUtility.CalculateBezierPoint2(startPos.x0y(), startCtrl.x0y(), endCtrl.x0y(), endPos.x0y(), t);
+				points.Add(point.xz() - parent.worldBound.position);
 			}
 
 			return points;
