@@ -16,6 +16,7 @@
 
 
 using System;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -97,6 +98,8 @@ namespace Icy.Base.Editor
 			AddOutput(Orientation.Horizontal);
 
 			RegisterCallback<DetachFromPanelEvent>(OnRemoved);
+			RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+			//RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
 		}
 
 		public void SetStartTime(long timestamp)
@@ -159,6 +162,42 @@ namespace Icy.Base.Editor
 		{
 			ClearStartTime();
 			UnregisterCallback<DetachFromPanelEvent>(OnRemoved);
+		}
+
+		//private void OnMouseMove(MouseMoveEvent evt)
+		//{
+		//	if (resolvedStyle != null)
+		//		NotifyConnectedEdges();
+		//}
+
+		private void OnGeometryChanged(GeometryChangedEvent evt)
+		{
+			if (resolvedStyle != null)
+				NotifyConnectedEdges();
+		}
+
+		/// <summary>
+		/// 节点发生变化时，通知连线重绘
+		/// </summary>
+		private void NotifyConnectedEdges()
+		{
+			foreach (Port port in inputContainer.Children().OfType<Port>())
+			{
+				foreach (Edge edge in port.connections)
+				{
+					if (edge is SplitColorEdge splitColorEdge)
+						splitColorEdge.UpdateEdge();
+				}
+			}
+
+			foreach (Port port in outputContainer.Children().OfType<Port>())
+			{
+				foreach (Edge edge in port.connections)
+				{
+					if (edge is SplitColorEdge splitColorEdge)
+						splitColorEdge.UpdateEdge();
+				}
+			}
 		}
 	}
 }

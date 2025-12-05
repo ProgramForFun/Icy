@@ -19,6 +19,7 @@ using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Icy.Base.Editor
 {
@@ -90,9 +91,7 @@ namespace Icy.Base.Editor
 			painter.MoveTo(edgePoints[0]);
 
 			for (int i = 1; i <= midPointIndex; i++)
-			{
 				painter.LineTo(edgePoints[i]);
-			}
 			painter.Stroke();
 
 			// 绘制后半段
@@ -101,9 +100,7 @@ namespace Icy.Base.Editor
 			painter.MoveTo(edgePoints[midPointIndex]);
 
 			for (int i = midPointIndex + 1; i < edgePoints.Count; i++)
-			{
 				painter.LineTo(edgePoints[i]);
-			}
 			painter.Stroke();
 		}
 
@@ -168,6 +165,11 @@ namespace Icy.Base.Editor
 			AddSplitColorEdgeOverlay();
 		}
 
+		public void UpdateEdge()
+		{
+			_SplitColorEdgeOverlay?.MarkDirtyRepaint();
+		}
+
 		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)
 		{
 			// 确保EdgeControl已创建后添加覆盖
@@ -190,8 +192,7 @@ namespace Icy.Base.Editor
 		private void DisableNativeEdgeCompletely()
 		{
 			// 通过反射获取EdgeControl并彻底禁用
-			System.Reflection.FieldInfo edgeControlField = typeof(Edge).GetField("m_EdgeControl",
-				System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+			FieldInfo edgeControlField = typeof(Edge).GetField("m_EdgeControl", BindingFlags.NonPublic | BindingFlags.Instance);
 
 			if (edgeControlField != null)
 			{
