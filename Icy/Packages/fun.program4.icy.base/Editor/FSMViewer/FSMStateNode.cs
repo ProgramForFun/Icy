@@ -29,6 +29,10 @@ namespace Icy.Base.Editor
 	public class FSMStateNode : Node
 	{
 		/// <summary>
+		/// 对应的FSM状态
+		/// </summary>
+		private FSMState _FSMState;
+		/// <summary>
 		/// 时间的横向布局
 		/// </summary>
 		private VisualElement _HorizontalContainer;
@@ -54,9 +58,10 @@ namespace Icy.Base.Editor
 		private long _StartTimestamp;
 
 
-		public FSMStateNode(string title)
+		public FSMStateNode(FSMState state)
 		{
-			this.title = title;
+			_FSMState = state;
+			title = state.GetType().Name; ;
 
 			//高亮边框相关
 			_OriginalColor = style.borderTopColor;
@@ -208,7 +213,10 @@ namespace Icy.Base.Editor
 
 		private void OnForceChangeTo(DropdownMenuAction action)
 		{
-
+			if (_FSMState.OwnerFSM.IsChangingState)
+				Log.Error($"Changing to FSMState {title} failed, previous state changing is still running", nameof(FSMStateNode));
+			else
+				_FSMState.OwnerFSM.ChangeState(_FSMState);
 		}
 	}
 }

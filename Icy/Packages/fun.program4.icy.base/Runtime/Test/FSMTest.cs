@@ -76,6 +76,9 @@ namespace Icy.Base
 
 		private static async void RandomChangeState()
 		{
+			if (_FSM.IsChangingState)
+				return;
+
 			int randIdx = Random.Range(0, _FSMStatesMap.Count);
 			while(randIdx == _PrevRandomIdx)
 				randIdx = Random.Range(0, _FSMStatesMap.Count);

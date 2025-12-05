@@ -141,16 +141,16 @@ namespace Icy.Base.Editor
 			for (int i = 0; i < count; i++)
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
-				FSMStateNode newNode = AddNode(stateName);
+				FSMStateNode newNode = AddNode(fsm.AllStates[i]);
 				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + NODES_CENTER;
 				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
 				_CurrNodes.Add(stateName, newNode);
 			}
 		}
 
-		public FSMStateNode AddNode(string nodeName)
+		public FSMStateNode AddNode(FSMState state)
 		{
-			FSMStateNode node = new FSMStateNode(nodeName);
+			FSMStateNode node = new FSMStateNode(state);
 			AddElement(node);
 			return node;
 		}
@@ -298,9 +298,9 @@ namespace Icy.Base.Editor
 		/// </summary>
 		private void OnNodeCreationRequest(NodeCreationContext context)
 		{
-			FSMStateNode node = AddNode("New Node");
-			Vector2 localPos = ScreenToGraphView(context.screenMousePosition);
-			node.SetPosition(new Rect(localPos, Vector2.zero));
+			//FSMStateNode node = AddNode("New Node");
+			//Vector2 localPos = ScreenToGraphView(context.screenMousePosition);
+			//node.SetPosition(new Rect(localPos, Vector2.zero));
 		}
 
 		/// <summary>
