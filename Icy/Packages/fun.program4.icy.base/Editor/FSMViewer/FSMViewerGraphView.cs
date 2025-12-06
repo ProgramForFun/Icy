@@ -112,6 +112,8 @@ namespace Icy.Base.Editor
 
 			//监听节点创建事件
 			nodeCreationRequest += OnNodeCreationRequest;
+			//监听右键菜单事件
+			RegisterCallback<ContextualMenuPopulateEvent>(OnGraphViewContextMenu);
 
 			_CurrNodes = new Dictionary<string, FSMStateNode>();
 		}
@@ -329,6 +331,26 @@ namespace Icy.Base.Editor
 			//FSMStateNode node = AddNode("New Node");
 			//Vector2 localPos = ScreenToGraphView(context.screenMousePosition);
 			//node.SetPosition(new Rect(localPos, Vector2.zero));
+		}
+
+		/// <summary>
+		/// 清除节点右键菜单里的默认选项
+		/// </summary>
+		private void OnGraphViewContextMenu(ContextualMenuPopulateEvent evt)
+		{
+			VisualElement target = evt.target as VisualElement;
+
+			if (target is Node || (target != null && target.GetFirstAncestorOfType<Node>() != null))
+			{
+				// 完全阻止 GraphView 添加默认菜单项
+				evt.StopPropagation();
+
+				// 清除所有已存在的菜单项
+				evt.menu.ClearItems();
+
+				if (target is Node node)
+					node.BuildContextualMenu(evt);
+			}
 		}
 
 		/// <summary>
