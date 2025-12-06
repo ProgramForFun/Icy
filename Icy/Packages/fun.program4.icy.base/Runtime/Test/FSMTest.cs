@@ -51,6 +51,31 @@ namespace Icy.Base
 		private class Escape : FSMTestState { }
 		private class Pursue : FSMTestState { }
 
+		private class FSMTestProcedureStep : ProcedureStep
+		{
+			public override async UniTask Activate()
+			{
+				int rand = Random.Range(1000, 2000);
+				string className = GetType().Name;
+				Log.Info($"Activate {className} for {rand}", className);
+				await UniTask.Delay(rand);
+				Finish();
+			}
+
+			public override async UniTask Deactivate()
+			{
+				int rand = Random.Range(1000, 2000);
+				string className = GetType().Name;
+				Log.Info($"Deactivate {className} for {rand}", className);
+				await UniTask.Delay(rand);
+			}
+		}
+
+		private class ProcedureStep_1 : FSMTestProcedureStep { }
+		private class ProcedureStep_2 : FSMTestProcedureStep { }
+		private class ProcedureStep_3 : FSMTestProcedureStep { }
+
+
 		private static FSM _FSM1;
 		private static FSM _FSM2;
 		private static Dictionary<int, FSMState> _FSMStatesMap1;
@@ -60,6 +85,7 @@ namespace Icy.Base
 
 		public static void Test()
 		{
+			//FSM 1
 			_FSMStatesMap1 = new Dictionary<int, FSMState>
 			{
 				{ 0, new Idle() },
@@ -77,7 +103,7 @@ namespace Icy.Base
 			Timer.RepeatByTime(RandomChangeState1, 6.1f, 100);
 
 
-
+			//FSM 2
 			_FSMStatesMap2 = new Dictionary<int, FSMState>
 			{
 				{ 0, new Idle() },
@@ -91,6 +117,14 @@ namespace Icy.Base
 			_FSM2.Start();
 
 			Timer.RepeatByTime(RandomChangeState2, 6.1f, 100);
+
+
+			//Procedure
+			Procedure procedure = new Procedure("FSMTest");
+			procedure.AddStep(new ProcedureStep_1());
+			procedure.AddStep(new ProcedureStep_2());
+			procedure.AddStep(new ProcedureStep_3());
+			procedure.Start();
 		}
 
 		private static async void RandomChangeState1()

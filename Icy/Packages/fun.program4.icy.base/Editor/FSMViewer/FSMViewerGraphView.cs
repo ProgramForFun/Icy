@@ -132,7 +132,7 @@ namespace Icy.Base.Editor
 		}
 
 		/// <summary>
-		/// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
+		/// 将一个FSM的所有状态，生成出Node
 		/// </summary>
 		public void AddNodesOfFSM(FSM fsm)
 		{
@@ -142,7 +142,17 @@ namespace Icy.Base.Editor
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
 				FSMStateNode newNode = AddNode(fsm.AllStates[i]);
-				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + NODES_CENTER;
+				Vector2 pos;
+				if (fsm.Name.EndsWith($"({nameof(Procedure)})"))
+				{
+					// 把Procedure内FSM的所有状态，按从左到右的顺序，生成Node
+					pos = new Vector2(300 + 260 * i, 300);
+				}
+				else
+				{
+					// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
+					pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + NODES_CENTER;
+				}
 				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
 				_CurrNodes.Add(stateName, newNode);
 			}
