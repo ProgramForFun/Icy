@@ -198,9 +198,13 @@ namespace Icy.Base
 #if UNITY_EDITOR
 				if (!Application.isBatchMode)
 				{
+					string btnName = "Oh  No";
 					if (UnityEditor.EditorApplication.isPlaying)
+					{
+						btnName = "Pause";
 						Debug.Break();
-					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg.ToString(), "Pause");
+					}
+					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg.ToString(), btnName);
 				}
 #endif
 			}
