@@ -200,7 +200,7 @@ namespace Icy.Base
 				{
 					if (UnityEditor.EditorApplication.isPlaying)
 						Debug.Break();
-					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg.ToString(), "Oh  No");
+					UnityEditor.EditorUtility.DisplayDialog("ASSERT FAILED!", msg.ToString(), "Pause");
 				}
 #endif
 			}
