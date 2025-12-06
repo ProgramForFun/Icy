@@ -41,7 +41,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 黑板数据
 		/// </summary>
-		public Blackboard Blackboard { get { return _FSM.Blackboard; } }
+		public Blackboard Blackboard => _FSM.Blackboard;
 		/// <summary>
 		/// Procedure的当前状态
 		/// </summary>
@@ -57,15 +57,19 @@ namespace Icy.Base
 		/// <summary>
 		/// Procedure是否已经执行完
 		/// </summary>
-		public bool IsFinished { get { return State == StateType.Finished; } }
+		public bool IsFinished => State == StateType.Finished;
 		/// <summary>
 		/// 获取归一化的执行进度，跳转Step也包括
 		/// </summary>
-		public float Progress { get { return (_CurrStepIdx + 1) / _Steps.Count; } }
+		public float Progress => (_CurrStepIdx + 1) / _Steps.Count;
+		/// <summary>
+		/// 当前Step
+		/// </summary>
+		public ProcedureStep CurrStep => _Steps[_CurrStepIdx];
 		/// <summary>
 		/// 是否正在切换Step
 		/// </summary>
-		public bool IsChangingStep { get { return _FSM.IsChangingState; } }
+		public bool IsChangingStep => _FSM.IsChangingState;
 		/// <summary>
 		/// 内嵌的状态机
 		/// </summary>

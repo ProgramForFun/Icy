@@ -46,9 +46,17 @@ namespace Icy.Base
 		/// <summary>
 		/// 结束当前、并跳转到指定Step
 		/// </summary>
-		protected void FinishAndGoto<T>() where T : ProcedureStep
+		internal void FinishAndGoto<T>() where T : ProcedureStep
 		{
 			DoFinishAndGoto<T>().Forget();
+		}
+
+		/// <summary>
+		/// 结束当前、并跳转到指定Step
+		/// </summary>
+		internal void FinishAndGoto(ProcedureStep step)
+		{
+			DoFinishAndGoto(step).Forget();
 		}
 
 		private async UniTaskVoid DoFinish()
@@ -61,6 +69,12 @@ namespace Icy.Base
 		{
 			await WaitChangeStepFinish();
 			OwnerProcedure.GotoStep<T>();
+		}
+
+		private async UniTaskVoid DoFinishAndGoto(ProcedureStep step)
+		{
+			await WaitChangeStepFinish();
+			OwnerProcedure.GotoStep(step);
 		}
 
 		private async UniTask WaitChangeStepFinish()
