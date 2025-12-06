@@ -147,10 +147,26 @@ namespace Icy.Base
 					break;
 				}
 			}
+			DoGotoStep(gotoIdx, typeof(T).Name);
+		}
 
+		/// <summary>
+		/// 跳转到指定Step
+		/// </summary>
+		public void GotoStep(ProcedureStep step)
+		{
+			if (State == StateType.Finishing || State == StateType.Finished)
+				return;
+
+			int gotoIdx = _Steps.IndexOf(step);
+			DoGotoStep(gotoIdx, step.GetType().Name);
+		}
+
+		private void DoGotoStep(int gotoIdx, string gotoName)
+		{
 			if (gotoIdx == -1)
 			{
-				Log.Error($"{typeof(T).Name} is not belonged to Procedure {Name}", nameof(Procedure));
+				Log.Error($"{gotoName} is not belonged to Procedure {Name}", nameof(Procedure));
 				return;
 			}
 
