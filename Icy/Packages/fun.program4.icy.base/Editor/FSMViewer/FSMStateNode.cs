@@ -215,6 +215,7 @@ namespace Icy.Base.Editor
 			if (_IsInProcedure)
 			{
 				evt.menu.AppendAction("Force Go To", OnForceGoToProcedureStep, DropdownMenuAction.Status.Normal);
+				evt.menu.AppendAction("Force Abort", OnForceAbortProcedure, DropdownMenuAction.Status.Normal);
 				evt.menu.AppendSeparator();
 			}
 			else
@@ -239,6 +240,12 @@ namespace Icy.Base.Editor
 				Log.Error($"Go to ProcedureStep {title} failed, previous step changing is still running", nameof(FSMStateNode));
 			else
 				step.OwnerProcedure.CurrStep.FinishAndGoto(step);
+		}
+
+		private void OnForceAbortProcedure(DropdownMenuAction action)
+		{
+			ProcedureStep step = _FSMState as ProcedureStep;
+			step.OwnerProcedure.Abort();
 		}
 	}
 }
