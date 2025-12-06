@@ -54,21 +54,22 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |集成[LocalPreferences](https://github.com/neon-age/LocalPreferences)|基于Json的本地存储，代替PlayerPrefs|✔️|
 |Base-事件系统|基础事件系统|✔️|
 |Base-FSM|有限状态机，附带一个状态切换可视化工具|✔️|
-|Base-基于FSM的Procedure|基于FSM的顺序执行的流程|✔️|
+|Base-Procedure|基于FSM的顺序执行的流程|✔️|
 |Base-Log|提供Log到文件、多线程Log|✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
 |Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|非常好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
 |Network-集成[NativeWebSocket](https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC)|支持WebGL平台的开源WebSocket库|✔️|
-|Network-HTTP|基于UnityWebRequest、HttpClient的封装|✔️|
-|Network-TCP|基于.Net TCP实现|✔️|
+|Network-HTTP|基于UnityWebRequest、HttpClient|✔️|
+|Network-TCP|基于.Net TCP|✔️|
 |Network-[KCP](https://github.com/passiony/kcp-unity)|以速度著称的Reliable UDP|✔️|
-|Network-WebSocket|基于NativeWebSocket实现，支持WebGL平台|✔️|
+|Network-WebSocket|基于NativeWebSocket，支持WebGL平台|✔️|
 |UI-基础结构||✔️|
 |UI-资源管理|基于YooAsset的UI Prefab、图集、Sprite管理|✔️|
 |UI-数据绑定|一个简单的数据绑定数据结构|✔️|
-|UI-UIText||待开始|
-|UI-UIButton||待开始|
+|UI-TextEx||待开始|
+|UI-ButtonEx||待开始|
+|UI-ImageEx||待开始|
 |UI-本地化||待开始|
 |UI-后退栈||✔️|
 |UI-红点||✔️|
@@ -81,8 +82,8 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Gameplay-基础数值系统||待开始|
 |Gameplay-技能系统||待开始|
 |Gameplay-换装系统||待开始|
-|Editor-显示当前分支|在Editor左上角显示当前Git / SVN分支，<br>便于多工程管理|✔️|
-|Editor-Quick Play|不重新Reload Domain，快速进入Play，<br>整个Icy框架支持DisableDomainReload|✔️|
+|Editor-显示当前分支|在Editor左上角显示当前Git / SVN分支，<br>便于多开Unity项目时的识别|✔️|
+|Editor-Quick Play|不 重新Reload Domain，快速进入Play，<br>整个Icy框架支持DisableDomainReload|✔️|
 |Editor-集成[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|✔️|
 |Editor-集成[ReferenceFinder](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
 |Editor-资源托盘|暂存任意工程内文件，便于快速定位|✔️|
