@@ -47,13 +47,25 @@ namespace Icy.Base.Editor
 		/// </summary>
 		private SplitColorEdge _ConnectLine;
 		/// <summary>
-		/// 创建状态节点时，创建位置的中心点坐标
+		/// 创建圆形排列的状态节点时，创建位置的圆中心点坐标
 		/// </summary>
 		private readonly Vector2 NODES_CENTER = new Vector2(600, 300);
 		/// <summary>
-		/// 创建状态节点时，圆的半径
+		/// 创建圆形排列的状态节点时，圆的半径
 		/// </summary>
-		private readonly float NODES_CIRCLE_RADIUS = 200.0f;
+		private const float NODES_CIRCLE_RADIUS = 200.0f;
+		/// <summary>
+		/// 创建直线排列的状态节点时，的左侧起点x坐标
+		/// </summary>
+		private const float NODES_LINE_START_POS_X = 300.0f;
+		/// <summary>
+		/// 创建直线排列的状态节点时，每个节点之间间隔
+		/// </summary>
+		private const float NODES_LINE_INTERVAL_X = 260.0f;
+		/// <summary>
+		/// 创建直线排列的状态节点时，y轴的位置
+		/// </summary>
+		private const float NODES_LINE_POS_Y = 300.0f;
 		/// <summary>
 		/// Port默认的颜色
 		/// </summary>
@@ -151,7 +163,8 @@ namespace Icy.Base.Editor
 				if (_IsInProcedure)
 				{
 					// 把Procedure内FSM的所有状态，按从左到右的顺序，生成Node
-					pos = new Vector2(300 + 260 * i, 300);
+					float x = NODES_LINE_START_POS_X + NODES_LINE_INTERVAL_X * i;
+					pos = new Vector2(x, NODES_LINE_POS_Y);
 				}
 				else
 				{
