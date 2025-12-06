@@ -33,6 +33,10 @@ namespace Icy.Base.Editor
 		/// </summary>
 		private FSMState _FSMState;
 		/// <summary>
+		/// 是不是Procedure内部的FSM的状态
+		/// </summary>
+		private bool _IsInProcedure;
+		/// <summary>
 		/// 时间的横向布局
 		/// </summary>
 		private VisualElement _HorizontalContainer;
@@ -58,10 +62,11 @@ namespace Icy.Base.Editor
 		private long _StartTimestamp;
 
 
-		public FSMStateNode(FSMState state)
+		public FSMStateNode(FSMState state, bool isInProcedure)
 		{
 			_FSMState = state;
-			title = state.GetType().Name; ;
+			_IsInProcedure = isInProcedure;
+			title = state.GetType().Name;
 
 			//高亮边框相关
 			_OriginalColor = style.borderTopColor;
@@ -207,16 +212,33 @@ namespace Icy.Base.Editor
 
 		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
 		{
-			evt.menu.AppendAction("Force Change To", OnForceChangeTo, DropdownMenuAction.Status.Normal);
-			evt.menu.AppendSeparator();
+			if (_IsInProcedure)
+			{
+				evt.menu.AppendAction("Force Go To", OnForceGoToProcedureStep, DropdownMenuAction.Status.Normal);
+				evt.menu.AppendSeparator();
+			}
+			else
+			{
+				evt.menu.AppendAction("Force Change To", OnForceChangeToFSMState, DropdownMenuAction.Status.Normal);
+				evt.menu.AppendSeparator();
+			}
 		}
 
-		private void OnForceChangeTo(DropdownMenuAction action)
+		private void OnForceChangeToFSMState(DropdownMenuAction action)
 		{
 			if (_FSMState.OwnerFSM.IsChangingState)
 				Log.Error($"Changing to FSMState {title} failed, previous state changing is still running", nameof(FSMStateNode));
 			else
 				_FSMState.OwnerFSM.ChangeState(_FSMState);
+		}
+
+		private void OnForceGoToProcedureStep(DropdownMenuAction action)
+		{
+			ProcedureStep step = _FSMState as ProcedureStep;
+			if (step.OwnerProcedure.IsChangingStep)
+				Log.Error($"Go to ProcedureStep {title} failed, previous step changing is still running", nameof(FSMStateNode));
+			else
+				step.OwnerProcedure.CurrStep.FinishAndGoto(step);
 		}
 	}
 }

@@ -59,7 +59,8 @@ namespace Icy.Base
 				string className = GetType().Name;
 				Log.Info($"Activate {className} for {rand}", className);
 				await UniTask.Delay(rand);
-				Finish();
+
+				Timer.DelayByTime(() => { Finish(); }, 5);
 			}
 
 			public override async UniTask Deactivate()

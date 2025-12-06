@@ -58,6 +58,10 @@ namespace Icy.Base.Editor
 		/// Port默认的颜色
 		/// </summary>
 		private readonly Color DEFAULT_PORT_COLOR = new Color(0.384f, 0.384f, 0.384f, 1.0f);
+		/// <summary>
+		/// 当前选中的FSM，是不是Procedure内部的FSM
+		/// </summary>
+		private bool _IsInProcedure = false;
 		///// <summary>
 		///// 前一个状态的名字
 		///// </summary>
@@ -138,12 +142,13 @@ namespace Icy.Base.Editor
 		{
 			Vector2 startDir = new Vector2(NODES_CIRCLE_RADIUS, 0);
 			int count = fsm.AllStates.Count;
+			_IsInProcedure = fsm.Name.EndsWith($"({nameof(Procedure)})");
 			for (int i = 0; i < count; i++)
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
-				FSMStateNode newNode = AddNode(fsm.AllStates[i]);
+				FSMStateNode newNode = AddNode(fsm.AllStates[i], _IsInProcedure);
 				Vector2 pos;
-				if (fsm.Name.EndsWith($"({nameof(Procedure)})"))
+				if (_IsInProcedure)
 				{
 					// 把Procedure内FSM的所有状态，按从左到右的顺序，生成Node
 					pos = new Vector2(300 + 260 * i, 300);
@@ -158,9 +163,9 @@ namespace Icy.Base.Editor
 			}
 		}
 
-		public FSMStateNode AddNode(FSMState state)
+		public FSMStateNode AddNode(FSMState state, bool isInProcedure)
 		{
-			FSMStateNode node = new FSMStateNode(state);
+			FSMStateNode node = new FSMStateNode(state, isInProcedure);
 			AddElement(node);
 			return node;
 		}
