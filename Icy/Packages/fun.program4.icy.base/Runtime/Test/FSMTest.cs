@@ -51,13 +51,16 @@ namespace Icy.Base
 		private class Escape : FSMTestState { }
 		private class Pursue : FSMTestState { }
 
-		private static FSM _FSM;
-		private static Dictionary<int, FSMState> _FSMStatesMap;
-		private static int _PrevRandomIdx = -1;
+		private static FSM _FSM1;
+		private static FSM _FSM2;
+		private static Dictionary<int, FSMState> _FSMStatesMap1;
+		private static Dictionary<int, FSMState> _FSMStatesMap2;
+		private static int _PrevRandomIdx1 = -1;
+		private static int _PrevRandomIdx2 = -1;
 
 		public static void Test()
 		{
-			_FSMStatesMap = new Dictionary<int, FSMState>
+			_FSMStatesMap1 = new Dictionary<int, FSMState>
 			{
 				{ 0, new Idle() },
 				{ 1, new Patrol() },
@@ -66,27 +69,58 @@ namespace Icy.Base
 				{ 4, new Pursue() },
 			};
 
-			_FSM = new FSM(nameof(FSMTest));
+			_FSM1 = new FSM(nameof(FSMTest) + "_1");
 			for (int i = 0; i < 5; i++)
-				_FSM.AddState(_FSMStatesMap[i]);
-			_FSM.Start();
+				_FSM1.AddState(_FSMStatesMap1[i]);
+			_FSM1.Start();
 
-			Timer.RepeatByTime(RandomChangeState, 6.1f, 100);
+			Timer.RepeatByTime(RandomChangeState1, 6.1f, 100);
+
+
+
+			_FSMStatesMap2 = new Dictionary<int, FSMState>
+			{
+				{ 0, new Idle() },
+				{ 1, new Patrol() },
+				{ 2, new Fight() },
+			};
+
+			_FSM2 = new FSM(nameof(FSMTest) + "_2");
+			for (int i = 0; i < 3; i++)
+				_FSM2.AddState(_FSMStatesMap2[i]);
+			_FSM2.Start();
+
+			Timer.RepeatByTime(RandomChangeState2, 6.1f, 100);
 		}
 
-		private static async void RandomChangeState()
+		private static async void RandomChangeState1()
 		{
-			if (_FSM.IsChangingState)
+			if (_FSM1.IsChangingState)
 				return;
 
-			int randIdx = Random.Range(0, _FSMStatesMap.Count);
-			while(randIdx == _PrevRandomIdx)
-				randIdx = Random.Range(0, _FSMStatesMap.Count);
+			int randIdx = Random.Range(0, _FSMStatesMap1.Count);
+			while(randIdx == _PrevRandomIdx1)
+				randIdx = Random.Range(0, _FSMStatesMap1.Count);
 
-			_FSM.ChangeState(_FSMStatesMap[randIdx]);
+			_FSM1.ChangeState(_FSMStatesMap1[randIdx]);
 			await Task.Delay(1000);
 
-			_PrevRandomIdx = randIdx;
+			_PrevRandomIdx1 = randIdx;
+		}
+
+		private static async void RandomChangeState2()
+		{
+			if (_FSM2.IsChangingState)
+				return;
+
+			int randIdx = Random.Range(0, _FSMStatesMap2.Count);
+			while (randIdx == _PrevRandomIdx2)
+				randIdx = Random.Range(0, _FSMStatesMap2.Count);
+
+			_FSM2.ChangeState(_FSMStatesMap2[randIdx]);
+			await Task.Delay(1000);
+
+			_PrevRandomIdx2 = randIdx;
 		}
 	}
 }

@@ -16,6 +16,7 @@
 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -158,7 +159,7 @@ namespace Icy.Base.Editor
 			}
 		}
 
-		private void OnSelectionChanged(System.Collections.IEnumerable selectedItems)
+		private void OnSelectionChanged(IEnumerable selectedItems)
 		{
 			foreach (FSM item in selectedItems)
 				_OnClickFSM(item);

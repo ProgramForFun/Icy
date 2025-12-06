@@ -108,8 +108,11 @@ namespace Icy.Base.Editor
 			}
 		}
 
-		private void OnFSMStateChangingStarted(FSM fSM, FSMState prevState, FSMState nextState)
+		private void OnFSMStateChangingStarted(FSM fsm, FSMState prevState, FSMState nextState)
 		{
+			if (fsm != _CurrSelectedFSM)
+				return;
+
 			string prevStateName = "Null";
 			if (prevState != null)
 				prevStateName = prevState.GetType().Name;
@@ -126,13 +129,17 @@ namespace Icy.Base.Editor
 			_GraphView.SetLineWaitPrevStateDeactivate();
 		}
 
-		private void OnFSMPrevStateDeactivated(FSM fSM, FSMState prevState, FSMState nextState)
+		private void OnFSMPrevStateDeactivated(FSM fsm, FSMState prevState, FSMState nextState)
 		{
+			if (fsm != _CurrSelectedFSM)
+				return;
 			_GraphView.SetLineWaitNextStateActivate();
 		}
 
-		private void OnFSMChangingStateEnd(FSM fSM, FSMState prevState, FSMState nextState)
+		private void OnFSMChangingStateEnd(FSM fsm, FSMState prevState, FSMState nextState)
 		{
+			if (fsm != _CurrSelectedFSM)
+				return;
 			_GraphView.SetLineStateChangingFinished();
 		}
 
@@ -141,6 +148,7 @@ namespace Icy.Base.Editor
 			if (_CurrSelectedFSM != null && _CurrSelectedFSM == fsm)
 				return;
 
+			_CurrSelectedFSM = fsm;
 			_GraphView.ClearNodes();
 			_GraphView.AddNodesOfFSM(fsm);
 
