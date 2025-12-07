@@ -143,10 +143,26 @@ namespace Icy.Base.Editor
 			_GraphView.ClearNodes();
 			_GraphView.AddNodesOfFSM(fsm);
 
-			//切换到某FSM后，立刻显示前一个切换
-			FSMState prev = fsm.PrevState;
-			FSMState next = fsm.IsChangingState ? fsm.NextState : fsm.CurrState;
-			OnFSMStateChangingStarted(fsm, prev, next);
+			//切换到某FSM后，立刻显示当前切换
+			if (fsm.IsChangingState)
+			{
+				FSMState prev = fsm.PrevState;
+				FSMState next = fsm.IsChangingState ? fsm.NextState : fsm.CurrState;
+				OnFSMStateChangingStarted(fsm, prev, next);
+				if (fsm.IsPrevStateDeactivated)
+					OnFSMPrevStateDeactivated(fsm, prev, next);
+			}
+			else
+			{
+				string currStateName = fsm.CurrState.GetType().Name;
+				if (fsm.PrevState != null)
+				{
+					string prevStateName = fsm.PrevState.GetType().Name;
+					_GraphView.ConnectNodes(prevStateName, currStateName);
+					_GraphView.SetLineStateChangingFinished();
+				}
+				_GraphView.HighlightNode(currStateName);
+			}
 		}
 
 		private void OnPlayModeChanged(PlayModeStateChange state)
