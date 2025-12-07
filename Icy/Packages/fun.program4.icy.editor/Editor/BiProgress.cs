@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+using Icy.Base;
 using System;
 using System.Reflection;
 using UnityEditor;
@@ -31,6 +32,10 @@ namespace Icy.Editor
 	{
 		private const string PROGRESS_ID_KEY = "_Icy_ProgressID";
 		private const string PROGRESS_NAME_KEY = "_Icy_ProgressName";
+		/// <summary>
+		/// 当前正在监视的Procedure
+		/// </summary>
+		private static Procedure _CurrMonitoringProcedure;
 
 
 		/// <summary>
@@ -94,7 +99,47 @@ namespace Icy.Editor
 				ReflectCloseMethod();
 			}
 
+			ClearMonitoringProcedure();
 			EditorUtility.ClearProgressBar();
+		}
+
+		/// <summary>
+		/// BiProgress可以选择监视一个Procedure，在Procedure完成或中断时自动关闭；
+		/// 注意：应在Procedure.Start之前调用
+		/// </summary>
+		/// <param name="procedure"></param>
+		/// <param name="useProcedureStepAsDesc">如果为true，会以ProcedureStep的名字做为Desc、以Procedure的进度作为progress </param>
+		public static void MonitorProcedure(Procedure procedure, bool useProcedureStepAsDesc = true)
+		{
+			if (procedure != null)
+			{
+				if (useProcedureStepAsDesc)
+					procedure.OnChangeStep += OnProcedureChangeStep;
+				procedure.OnFinish += OnProcedureFinish;
+				_CurrMonitoringProcedure = procedure;
+			}
+			else
+				Log.Error("Procedure is null", nameof(BiProgress));
+		}
+
+		private static void OnProcedureChangeStep(ProcedureStep step)
+		{
+			Show(_CurrMonitoringProcedure.Name, "Running " + step.GetType().Name, _CurrMonitoringProcedure.Progress);
+		}
+
+		public static void ClearMonitoringProcedure()
+		{
+			if (_CurrMonitoringProcedure != null)
+			{
+				_CurrMonitoringProcedure.OnChangeStep -= OnProcedureChangeStep;
+				_CurrMonitoringProcedure.OnFinish -= OnProcedureFinish;
+			}
+			_CurrMonitoringProcedure = null;
+		}
+
+		private static void OnProcedureFinish(bool finished)
+		{
+			Hide();
 		}
 
 		private static int StartProgress(string name, string desc)

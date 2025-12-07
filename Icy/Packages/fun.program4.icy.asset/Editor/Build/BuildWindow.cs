@@ -158,6 +158,8 @@ namespace Icy.Asset.Editor
 			base.Update();
 			if (_BuildSetting == null)
 				LoadBuildSetting(_CurrPlatformName);
+			if (_AssetSetting == null)
+				LoadAssetSetting();
 		}
 
 		protected override void OnChangePlatformTab(string tabName, BuildTarget buildTarget)
@@ -295,6 +297,7 @@ namespace Icy.Asset.Editor
 			}
 
 			Procedure procedure = new Procedure("HybridCLRGenerateAll");
+			BiProgress.MonitorProcedure(procedure);
 			List<string> allSteps = GetHybridCLRGenerateAllStepNames();
 			for (int i = 0; i < allSteps.Count; i++)
 			{
