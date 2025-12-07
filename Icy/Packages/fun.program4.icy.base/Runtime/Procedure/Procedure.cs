@@ -230,9 +230,9 @@ namespace Icy.Base
 			_FSM.Dispose();
 
 			if (isAbort)
-				Log.Info($"Procedure {_FSM.Name} aborted", nameof(Procedure));
+				Log.Info($"Procedure {Name} aborted", nameof(Procedure));
 			else
-				Log.Info($"Procedure {_FSM.Name} finished", nameof(Procedure));
+				Log.Info($"Procedure {Name} finished", nameof(Procedure));
 		}
 	}
 }
