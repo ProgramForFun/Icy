@@ -47,6 +47,11 @@ namespace Icy.Base
 		/// </summary>
 		public bool IsChangingState { get; protected set; }
 		/// <summary>
+		/// 是否前一个状态已Deactivate、在等待下一个状态Activate；
+		/// 只在IsChangingState == true时有效
+		/// </summary>
+		public bool IsPrevStateDeactivated { get; protected set; }
+		/// <summary>
 		/// 开始切换状态的事件，<所属FSM，旧State，新State>
 		/// </summary>
 		public event Action<FSM, FSMState, FSMState> OnStateChangingStarted;
@@ -84,6 +89,7 @@ namespace Icy.Base
 		{
 			Name = name;
 			IsChangingState = false;
+			IsPrevStateDeactivated = false;
 			IsDisposed = false;
 
 			Blackboard = new Blackboard();
@@ -185,6 +191,7 @@ namespace Icy.Base
 			if (CurrState != null)
 			{
 				await CurrState.Deactivate();
+				IsPrevStateDeactivated = true;
 				OnPrevStateDeactivated?.Invoke(this, CurrState, newState);
 				CurrState = null;
 			}
@@ -212,6 +219,7 @@ namespace Icy.Base
 		{
 			OnChangingStateEnd?.Invoke(this, PrevState, CurrState);
 			IsChangingState = false;
+			IsPrevStateDeactivated = false;
 			NextState = null;
 		}
 
