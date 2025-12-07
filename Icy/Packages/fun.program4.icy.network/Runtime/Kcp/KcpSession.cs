@@ -124,7 +124,7 @@ namespace Icy.Network
 
 			if (syn == null || syn.Length < 4)
 			{
-				Exception e = new Exception($"Invalide syn argument");
+				Exception e = new Exception($"Invalid syn argument");
 				Log.Error($"Connect exception : {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.ConnectFailed, e);
 				return;

@@ -40,7 +40,7 @@ namespace Icy.UI
 		/// <summary>
 		/// SetActive(false);
 		/// </summary>
-		Deactive,
+		Deactivate,
 		/// <summary>
 		/// 移动到屏幕外面
 		/// </summary>

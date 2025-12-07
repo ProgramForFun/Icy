@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-//这里仅做测试用途，如果要开启请在PlayerSeting中配置Define Symbol
+//这里仅做测试用途，如果要开启请在PlayerSetting中配置Define Symbol
 //#define USE_HTTP_CLIENT
 
 //HttpClient不支持WebGL平台，WebGL平台下强制使用UnityWebRequest

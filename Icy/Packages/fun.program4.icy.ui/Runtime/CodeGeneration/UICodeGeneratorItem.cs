@@ -94,7 +94,7 @@ namespace Icy.UI
 				}
 				_AllComponents.Sort(SortComponents);
 
-				//Transfrom/RectTransform和GameObject放在选项最后
+				//Transform/RectTransform和GameObject放在选项最后
 				_AllComponents.Add(Object.transform is RectTransform ? "RectTransform" : "Transform", Object.transform);
 				_AllComponents.Add("GameObject", Object);
 

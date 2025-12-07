@@ -33,7 +33,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 当前池里还缓存有多少个对象可用
 		/// </summary>
-		public int CacheCount { get { return _InPool.Count; } }
+		public int CacheCount => _InPool.Count;
 
 
 		public ObjectPool(int defaultSize = 16)
@@ -59,9 +59,9 @@ namespace Icy.Base
 			}
 			else
 			{
-				T newIntance = InstantiateOne();
-				_OutPool.Add(newIntance);
-				return newIntance;
+				T newInstance = InstantiateOne();
+				_OutPool.Add(newInstance);
+				return newInstance;
 			}
 		}
 

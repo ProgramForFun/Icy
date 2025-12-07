@@ -269,7 +269,7 @@ namespace Icy.UI
 		/// </summary>
 		public void HideToPrev()
 		{
-			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
+			UIBase ui = GetHideableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
 				//Dialog才需要开前一个界面，Popup的前一个Dialog不会关闭，不需要打开前一个
@@ -293,7 +293,7 @@ namespace Icy.UI
 		/// </summary>
 		public void DestroyToPrev()
 		{
-			UIBase ui = GetHidableOrDestroyableUIFromStackTop();
+			UIBase ui = GetHideableOrDestroyableUIFromStackTop();
 			if (ui != null)
 			{
 				//Dialog才需要开前一个界面，Popup的前一个Dialog不会关闭，不需要打开前一个
@@ -556,7 +556,7 @@ namespace Icy.UI
 			return null;
 		}
 
-		private UIBase GetHidableOrDestroyableUIFromStackTop()
+		private UIBase GetHideableOrDestroyableUIFromStackTop()
 		{
 			UIData top = _Stack.Peek();
 			UIBase ui = GetFromUIMap(top.Type);

@@ -83,7 +83,7 @@ namespace Icy.UI
 				return _LayerGameObjMap[layer];
 			else
 			{
-				Log.Error($"Unexpected UIlayer = {layer}", nameof(UIRoot));
+				Log.Error($"Unexpected UI layer = {layer}", nameof(UIRoot));
 				return _LayerGameObjMap[UILayer.Medium];
 			}
 		}

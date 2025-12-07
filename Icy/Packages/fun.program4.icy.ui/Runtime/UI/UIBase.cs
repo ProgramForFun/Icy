@@ -20,8 +20,6 @@ using Icy.Base;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
 using System.Threading;
-using System.Collections.Generic;
-using System;
 
 namespace Icy.UI
 {
@@ -117,7 +115,7 @@ namespace Icy.UI
 			gameObject.GetOrAddComponent<GraphicRaycaster>();
 			_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
 
-			HideType = UIHideType.Deactive;
+			HideType = UIHideType.Deactivate;
 			IsShowing = false;
 			IsDestroyed = false;
 			_OriginalAlpha = _CanvasGroup.alpha;
@@ -136,7 +134,7 @@ namespace Icy.UI
 
 			switch (HideType)
 			{
-				case UIHideType.Deactive:
+				case UIHideType.Deactivate:
 					gameObject.SetActive(true);
 					break;
 				case UIHideType.MoveOutScreen:
@@ -169,7 +167,7 @@ namespace Icy.UI
 		{
 			switch (HideType)
 			{
-				case UIHideType.Deactive:
+				case UIHideType.Deactivate:
 					gameObject.SetActive(false);
 					break;
 				case UIHideType.MoveOutScreen:

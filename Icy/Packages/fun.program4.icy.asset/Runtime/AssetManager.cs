@@ -185,14 +185,14 @@ namespace Icy.Asset
 			else
 				return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #else
-        if (Application.platform == RuntimePlatform.Android)
-            return $"{hostServerAddress}/CDN/Android/{appVersion}";
-        else if (Application.platform == RuntimePlatform.IPhonePlayer)
-            return $"{hostServerAddress}/CDN/IPhone/{appVersion}";
-        else if (Application.platform == RuntimePlatform.WebGLPlayer)
-            return $"{hostServerAddress}/CDN/WebGL/{appVersion}";
-        else
-            return $"{hostServerAddress}/CDN/PC/{appVersion}";
+			if (Application.platform == RuntimePlatform.Android)
+				return $"{hostServerAddress}/CDN/Android/{appVersion}";
+			else if (Application.platform == RuntimePlatform.IPhonePlayer)
+				return $"{hostServerAddress}/CDN/IPhone/{appVersion}";
+			else if (Application.platform == RuntimePlatform.WebGLPlayer)
+				return $"{hostServerAddress}/CDN/WebGL/{appVersion}";
+			else
+				return $"{hostServerAddress}/CDN/PC/{appVersion}";
 #endif
 		}
 

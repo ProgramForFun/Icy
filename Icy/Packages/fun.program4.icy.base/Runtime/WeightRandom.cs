@@ -28,7 +28,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 由多少个权重分布构成的
 		/// </summary>
-		public int WeightCount { get { return _WeightDistribute.Count; } }
+		public int WeightCount => _WeightDistribute.Count;
 		/// <summary>
 		/// 权重总和
 		/// </summary>

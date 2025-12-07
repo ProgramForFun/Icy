@@ -92,7 +92,7 @@ namespace Icy.Protobuf.Editor
 					FileName = batFilePath,					// 批处理文件名
 					WorkingDirectory = "",					// 工作目录
 					CreateNoWindow = true,					// 不创建新窗口（后台运行）
-					UseShellExecute = false,				// 不使用系统Shell（用于重定向输出）
+					UseShellExecute = false,					// 不使用系统Shell（用于重定向输出）
 					Arguments = $"\"{outputDirFullPath}\"",	//Proto编译后的代码的输出目录，传入bat
 
 					// 重定向输入/输出
@@ -189,7 +189,7 @@ namespace Icy.Protobuf.Editor
 		{
 			EditorApplication.delayCall += () =>
 			{
-				//有编译错误时，关闭ProgressBar，避免卡死edtior
+				//有编译错误时，关闭ProgressBar，避免卡死editor
 				if (CommonUtility.HasCompileErrors() && _IsProgressBarDisplaying)
 					Clear();
 			};

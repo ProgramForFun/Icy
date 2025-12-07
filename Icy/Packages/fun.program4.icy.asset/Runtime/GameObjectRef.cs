@@ -24,7 +24,7 @@ using UnityEngine.SceneManagement;
 namespace Icy.Asset
 {
 	/// <summary>
-	/// 基于AssetRef封装的GameObejctRef，方便使用
+	/// 基于AssetRef封装的GameObjectRef，方便使用
 	/// </summary>
 	public class GameObjectRef
 	{

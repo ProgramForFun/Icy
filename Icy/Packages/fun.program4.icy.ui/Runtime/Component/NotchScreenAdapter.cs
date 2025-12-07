@@ -15,7 +15,6 @@
  */
 
 
-using Icy.Base;
 using UnityEngine;
 
 namespace Icy.UI
@@ -60,7 +59,7 @@ namespace Icy.UI
 		{
 			_LastSafeArea = r;
 
-			// Convert safe area rectangle from absolute pixels to normalised anchor coordinates
+			// Convert safe area rectangle from absolute pixels to normalize anchor coordinates
 			Vector2 anchorMin = r.position;
 			Vector2 anchorMax = r.position + r.size;
 			anchorMin.x /= Screen.width;
@@ -70,7 +69,7 @@ namespace Icy.UI
 			_rectTrans.anchorMin = anchorMin;
 			_rectTrans.anchorMax = anchorMax;
 
-			Log.Info($"New safe area applied to {name}: x={r.x}, y={r.y}, w={r.width}, h={r.height} on full extents w={Screen.width}, h={Screen.height}", "NotchScreenAdapter");
+			//Base.Log.Info($"New safe area applied to {name}: x={r.x}, y={r.y}, w={r.width}, h={r.height} on full extents w={Screen.width}, h={Screen.height}", "NotchScreenAdapter");
 		}
 	}
 }
