@@ -50,23 +50,29 @@ namespace Icy.Base
 		/// 所有的FSM
 		/// </summary>
 		private List<FSM> _AllFSMs;
+		/// <summary>
+		/// 切换到每个FSM状态的时间戳
+		/// </summary>
+		private Dictionary<FSM, Dictionary<FSMState, long>> _FSMStateStartTimestamps;
 
 
 		protected override void OnInitialized()
 		{
 			base.OnInitialized();
 			_AllFSMs = new List<FSM>();
+			_FSMStateStartTimestamps = new Dictionary<FSM, Dictionary<FSMState, long>>();
 		}
 
 		internal void AddFSM(FSM fsm)
 		{
 			if (_AllFSMs.Contains(fsm))
 			{
-				Log.Error("Add a duplicate FSM " + fsm.Name);
+				Log.Error("Add a duplicate FSM " + fsm.Name, nameof(FSMManager));
 				return;
 			}
 
 			_AllFSMs.Add(fsm);
+			_FSMStateStartTimestamps.Add(fsm, new Dictionary<FSMState, long>());
 			fsm.OnStateChangingStarted += OnStateChangingStarted;
 			fsm.OnPrevStateDeactivated += OnPrevStateDeactivated;
 			fsm.OnChangingStateEnd += OnChangingStateEnd;
@@ -81,11 +87,13 @@ namespace Icy.Base
 				fsm.OnPrevStateDeactivated -= OnPrevStateDeactivated;
 				fsm.OnChangingStateEnd -= OnChangingStateEnd;
 				OnRemoveFSM?.Invoke(fsm);
+				_FSMStateStartTimestamps.Remove(fsm);
 			}
 		}
 
 		protected void OnStateChangingStarted(FSM fsm, FSMState prevState, FSMState nextState)
 		{
+			_FSMStateStartTimestamps[fsm][nextState] = DateTime.Now.TotalSeconds();
 			OnFSMStateChangingStarted?.Invoke(fsm, prevState, nextState);
 		}
 
@@ -99,9 +107,32 @@ namespace Icy.Base
 			OnFSMChangingStateEnd?.Invoke(fsm, prevState, nextState);
 		}
 
+		/// <summary>
+		/// 获取所有FSM列表
+		/// </summary>
 		public List<FSM> GetAllFSMs()
 		{
 			return _AllFSMs;
+		}
+
+		/// <summary>
+		/// 获取指定FSM的指定State的开始时间戳
+		/// </summary>
+		public long GetFSMStateStartTimestamp(FSM fsm, FSMState state)
+		{
+			if (!_FSMStateStartTimestamps.ContainsKey(fsm))
+			{
+				Log.Error($"Invalid FSM {fsm}", nameof(FSMManager));
+				return 0;
+			}
+
+			if (!_FSMStateStartTimestamps[fsm].ContainsKey(state))
+			{
+				Log.Error($"Invalid FSMState {state}", nameof(FSMManager));
+				return 0;
+			}
+
+			return _FSMStateStartTimestamps[fsm][state];
 		}
 
 		public string Dump()

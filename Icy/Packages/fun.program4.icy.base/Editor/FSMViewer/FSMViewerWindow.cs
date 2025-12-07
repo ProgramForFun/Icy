@@ -115,7 +115,8 @@ namespace Icy.Base.Editor
 			_GraphView.RemovePrevConnectLine();
 			_GraphView.UnHighlightNode(prevStateName);
 			_GraphView.ConnectNodes(prevStateName, nextStateName);
-			_GraphView.HighlightNode(nextStateName);
+			long startTimestamp = FSMManager.Instance.GetFSMStateStartTimestamp(fsm, nextState);
+			_GraphView.HighlightNode(nextStateName, startTimestamp);
 
 			_GraphView.SetLineWaitPrevStateDeactivate();
 		}
@@ -161,7 +162,8 @@ namespace Icy.Base.Editor
 					_GraphView.ConnectNodes(prevStateName, currStateName);
 					_GraphView.SetLineStateChangingFinished();
 				}
-				_GraphView.HighlightNode(currStateName);
+				long startTimestamp = FSMManager.Instance.GetFSMStateStartTimestamp(fsm, fsm.CurrState);
+				_GraphView.HighlightNode(currStateName, startTimestamp);
 			}
 		}
 

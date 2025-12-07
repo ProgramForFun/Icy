@@ -112,7 +112,7 @@ namespace Icy.Base.Editor
 			//RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
 		}
 
-		public void SetStartTime(long timestamp)
+		public void SetStartTimestamp(long timestamp)
 		{
 			//插入到标题和输入输出Port之间
 			mainContainer.Insert(1, _HorizontalContainer);

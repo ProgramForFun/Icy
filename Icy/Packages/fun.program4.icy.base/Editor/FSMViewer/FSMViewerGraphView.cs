@@ -253,11 +253,11 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 高亮一个节点，以示当前状态在此节点
 		/// </summary>
-		public void HighlightNode(string stateName)
+		public void HighlightNode(string stateName, long startTimestamp)
 		{
 			if (_CurrNodes.TryGetValue(stateName, out FSMStateNode node))
 			{
-				node.SetStartTime(DateTime.Now.TotalSeconds());
+				node.SetStartTimestamp(startTimestamp);
 				node.SetColor(Color.cyan);
 			}
 		}
