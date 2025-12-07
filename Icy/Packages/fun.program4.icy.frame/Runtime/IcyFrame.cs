@@ -35,24 +35,23 @@ namespace Icy.Frame
 		/// </summary>
 		/// <param name="assetMode">资源系统的运行模式</param>
 		/// <param name="writeLog2File">是否将Log写入文件</param>
-		public async UniTask Init(EPlayMode assetMode, bool writeLog2File = true)
+		/// <param name="autoUnloadUnusedAssetsInterval">每间隔这个秒数，YooAsset卸载一次没有引用的资源</param>
+		public async UniTask Init(EPlayMode assetMode, bool writeLog2File = true, int autoUnloadUnusedAssetsInterval = 30)
 		{
 #if UNITY_EDITOR
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
 #endif
+			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
+			//监听UniTask中未处理的异常
+			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
 
 			//尽可能早的初始化Log
 			Log.Init(writeLog2File);
 
-			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
-
-			//监听UniTask中未处理的异常
-			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
-
 			HybridCLRRunner.DetermineWhetherHybridCLRIsEnabled();
 
-			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, "DefaultPackage", 30);
+			bool assetMgrInitSucceed = await AssetManager.Instance.Init(assetMode, "DefaultPackage", autoUnloadUnusedAssetsInterval);
 			if (!assetMgrInitSucceed)
 			{
 				Log.Assert(false, "AssetManager init failed!");
