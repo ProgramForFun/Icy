@@ -82,6 +82,7 @@ namespace Icy.Asset.Editor
 
 			List<string> allSteps = GetAllStepNamesImpl();
 			Procedure procedure = new Procedure("BuildAssetBundle");
+			BiProgress.MonitorProcedure(procedure);
 			for (int i = 0; i < allSteps.Count; i++)
 			{
 				string typeWithNameSpace = allSteps[i];
@@ -99,7 +100,6 @@ namespace Icy.Asset.Editor
 			procedure.Blackboard.WriteInt("BuildTarget", (int)buildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", buildSetting);
 			procedure.Blackboard.WriteString("BuildPackage", "DefaultPackage");
-			procedure.OnChangeStep += OnChangeBuildStep;
 			procedure.OnFinish += OnBuildAssetBundleProcedureFinish;
 			procedure.Start();
 		}
@@ -125,15 +125,8 @@ namespace Icy.Asset.Editor
 			return rtn;
 		}
 
-		protected static void OnChangeBuildStep(ProcedureStep step)
-		{
-			string info = $"Current build asset bundle step : {step.GetType().Name}";
-			BiProgress.Show("Build AssetBundle", info, step.OwnerProcedure.Progress);
-		}
-
 		protected static void OnBuildAssetBundleProcedureFinish(bool succeed)
 		{
-			BiProgress.Hide();
 			_BuildCallback?.Invoke(succeed);
 		}
 

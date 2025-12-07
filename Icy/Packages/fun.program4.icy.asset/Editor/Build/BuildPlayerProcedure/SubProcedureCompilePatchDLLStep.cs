@@ -71,6 +71,7 @@ namespace Icy.Asset.Editor
 
 			List<string> allSteps = GetAllStepNamesImpl();
 			Procedure procedure = new Procedure("CompilePatchDLL");
+			BiProgress.MonitorProcedure(procedure);
 			for (int i = 0; i < allSteps.Count; i++)
 			{
 				string typeWithNameSpace = allSteps[i];
@@ -86,7 +87,6 @@ namespace Icy.Asset.Editor
 			}
 
 			procedure.Blackboard.WriteInt("BuildTarget", (int)buildTarget);
-			procedure.OnChangeStep += OnChangeBuildStep;
 			procedure.OnFinish += OnCompilePatchDLLProcedureFinish;
 			procedure.Start();
 		}
@@ -112,15 +112,8 @@ namespace Icy.Asset.Editor
 			return rtn;
 		}
 
-		protected static void OnChangeBuildStep(ProcedureStep step)
-		{
-			string info = $"Current compile patch dll step : {step.GetType().Name}";
-			BiProgress.Show("Compile Patch DLL", info, step.OwnerProcedure.Progress);
-		}
-
 		protected static void OnCompilePatchDLLProcedureFinish(bool succeed)
 		{
-			BiProgress.Hide();
 			_CompileCallback?.Invoke(succeed);
 		}
 

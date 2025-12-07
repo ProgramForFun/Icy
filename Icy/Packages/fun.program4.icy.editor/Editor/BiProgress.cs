@@ -124,7 +124,8 @@ namespace Icy.Editor
 
 		private static void OnProcedureChangeStep(ProcedureStep step)
 		{
-			Show(_CurrMonitoringProcedure.Name, "Running " + step.GetType().Name, _CurrMonitoringProcedure.Progress);
+			//Log.Error($"Running {step.GetType().Name}, progress = {step.OwnerProcedure.Progress}");
+			Show(step.OwnerProcedure.Name, "Running " + step.GetType().Name, step.OwnerProcedure.Progress);
 		}
 
 		public static void ClearMonitoringProcedure()

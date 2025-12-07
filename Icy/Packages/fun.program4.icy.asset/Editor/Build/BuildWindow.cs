@@ -345,6 +345,7 @@ namespace Icy.Asset.Editor
 
 
 			Procedure procedure = new Procedure("BuildPlayer");
+			BiProgress.MonitorProcedure(procedure);
 			List<string> allSteps = GetBuildPlayerStepNames();
 			for (int i = 0; i < allSteps.Count; i++)
 			{
@@ -362,8 +363,6 @@ namespace Icy.Asset.Editor
 
 			procedure.Blackboard.WriteInt("BuildTarget", (int)_CurrBuildTarget);
 			procedure.Blackboard.WriteObject("BuildSetting", _BuildSetting);
-			procedure.OnChangeStep += OnChangeBuildStep;
-			procedure.OnFinish += OnBuildPlayerProcedureFinish;
 			procedure.Start();
 		}
 
@@ -410,17 +409,6 @@ namespace Icy.Asset.Editor
 		protected bool IsHybridCLREnabled()
 		{
 			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable;
-		}
-
-		protected virtual void OnChangeBuildStep(ProcedureStep step)
-		{
-			string info = $"Current build step : {step.GetType().Name}";
-			BiProgress.Show("Build Player", info, step.OwnerProcedure.Progress);
-		}
-
-		protected virtual void OnBuildPlayerProcedureFinish(bool _)
-		{
-			BiProgress.Hide();
 		}
 	}
 }
