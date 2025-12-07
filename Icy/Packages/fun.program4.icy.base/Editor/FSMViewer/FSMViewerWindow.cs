@@ -96,7 +96,8 @@ namespace Icy.Base.Editor
 		private void OnRemoveFSM(FSM fsm)
 		{
 			_GraphView.RemoveSingleFSM(fsm);
-			_GraphView.ClearNodes();
+			if (fsm == _CurrSelectedFSM)
+				_GraphView.ClearNodes();
 		}
 
 		private void OnFSMStateChangingStarted(FSM fsm, FSMState prevState, FSMState nextState)
