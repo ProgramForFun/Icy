@@ -61,7 +61,7 @@ namespace Icy.Base
 		/// <summary>
 		/// 获取归一化的执行进度，跳转Step也包括
 		/// </summary>
-		public float Progress => (_CurrStepIdx + 1) / _Steps.Count;
+		public float Progress => (float)(_CurrStepIdx + 1) / _Steps.Count;
 		/// <summary>
 		/// 当前Step
 		/// </summary>
