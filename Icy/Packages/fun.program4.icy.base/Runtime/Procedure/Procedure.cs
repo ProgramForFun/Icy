@@ -106,9 +106,18 @@ namespace Icy.Base
 		/// </summary>
 		public void Start()
 		{
-			State = StateType.Running;
-			_CurrStepIdx = 0;
-			_FSM.Start();
+			try
+			{
+				State = StateType.Running;
+				_CurrStepIdx = 0;
+				_FSM.Start();
+				OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
+			}
+			catch (Exception e)
+			{
+				Abort();
+				throw e;
+			}
 		}
 
 		/// <summary>
@@ -116,21 +125,29 @@ namespace Icy.Base
 		/// </summary>
 		public async UniTask NextStep()
 		{
-			if (State == StateType.Finishing || State == StateType.Finished)
-				return;
-
-			_CurrStepIdx++;
-			if (_CurrStepIdx < _Steps.Count)
+			try
 			{
-				OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
-				_FSM.ChangeState(_Steps[_CurrStepIdx]);
+				if (State == StateType.Finishing || State == StateType.Finished)
+					return;
+
+				_CurrStepIdx++;
+				if (_CurrStepIdx < _Steps.Count)
+				{
+					OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
+					_FSM.ChangeState(_Steps[_CurrStepIdx]);
+				}
+				else
+				{
+					//执行最后一步的Deactivate
+					await _Steps[_CurrStepIdx - 1].Deactivate();
+
+					End(false);
+				}
 			}
-			else
+			catch (Exception e)
 			{
-				//执行最后一步的Deactivate
-				await _Steps[_CurrStepIdx - 1].Deactivate();
-
-				End(false);
+				Abort();
+				throw e;
 			}
 		}
 
@@ -168,15 +185,23 @@ namespace Icy.Base
 
 		private void DoGotoStep(int gotoIdx, string gotoName)
 		{
-			if (gotoIdx == -1)
+			try
 			{
-				Log.Error($"{gotoName} is not belonged to Procedure {Name}", nameof(Procedure));
-				return;
-			}
+				if (gotoIdx == -1)
+				{
+					Log.Error($"{gotoName} is not belonged to Procedure {Name}", nameof(Procedure));
+					return;
+				}
 
-			_CurrStepIdx = gotoIdx;
-			OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
-			_FSM.ChangeState(_Steps[_CurrStepIdx]);
+				_CurrStepIdx = gotoIdx;
+				OnChangeStep?.Invoke(_Steps[_CurrStepIdx]);
+				_FSM.ChangeState(_Steps[_CurrStepIdx]);
+			}
+			catch (Exception e)
+			{
+				Abort();
+				throw e;
+			}
 		}
 
 		/// <summary>
