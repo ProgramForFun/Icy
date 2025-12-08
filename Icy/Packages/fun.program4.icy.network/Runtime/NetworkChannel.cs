@@ -151,7 +151,7 @@ namespace Icy.Network
 		{
 			_Syn = syn;
 
-			Session.OnReceive = _Receiver.Decode;
+			Session.OnReceive = OnReceived;
 			//await Session.Connect(syn);
 
 			_SendQueue1 = new Queue<T>();
@@ -231,63 +231,71 @@ namespace Icy.Network
 		/// </summary>
 		protected async UniTaskVoid SendLoop()
 		{
-			while (!IsConnected && !_CancellationToken.IsCancellationRequested)
-				await Task.Delay(16).ConfigureAwait(false);	//帧率60的每帧时间，这个等待总体不会太长
-
-			while (!_CancellationToken.IsCancellationRequested)
+			try
 			{
-				//TODO：想办法避免Task.Delay的GC Alloc
-				while (_ToSendCount == 0 && !_CancellationToken.IsCancellationRequested)
-					await Task.Delay(16).ConfigureAwait(false);
+				while (!IsConnected && !_CancellationToken.IsCancellationRequested)
+					await Task.Delay(16).ConfigureAwait(false); //帧率60的每帧时间，这个等待总体不会太长
 
-				if (_SendQueue1.Count > 0)
+				while (!_CancellationToken.IsCancellationRequested)
 				{
-					T toSend;
-					lock (_SendLock)
-					{
-						toSend = _SendQueue1.Dequeue();
-						_ToSendCount--;
-					}
-					await _Sender.Encode(toSend);
-					continue;
-				}
+					//TODO：想办法避免Task.Delay的GC Alloc
+					while (_ToSendCount == 0 && !_CancellationToken.IsCancellationRequested)
+						await Task.Delay(16).ConfigureAwait(false);
 
-				if (_SendQueue2.Count > 0)
-				{
-					ValueTuple<int, T> toSend;
-					lock (_SendLock)
+					if (_SendQueue1.Count > 0)
 					{
-						toSend = _SendQueue2.Dequeue();
-						_ToSendCount--;
+						T toSend;
+						lock (_SendLock)
+						{
+							toSend = _SendQueue1.Dequeue();
+							_ToSendCount--;
+						}
+						await _Sender.Encode(toSend);
+						continue;
 					}
-					await _Sender.Encode(toSend.Item1, toSend.Item2);
-					continue;
-				}
 
-				if (_SendQueue3.Count > 0)
-				{
-					ValueTuple<int, int, T> toSend;
-					lock (_SendLock)
+					if (_SendQueue2.Count > 0)
 					{
-						toSend = _SendQueue3.Dequeue();
-						_ToSendCount--;
+						ValueTuple<int, T> toSend;
+						lock (_SendLock)
+						{
+							toSend = _SendQueue2.Dequeue();
+							_ToSendCount--;
+						}
+						await _Sender.Encode(toSend.Item1, toSend.Item2);
+						continue;
 					}
-					await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
-					_ToSendCount--;
-					continue;
-				}
 
-				if (_SendQueue4.Count > 0)
-				{
-					ValueTuple<int, int, int, T> toSend;
-					lock (_SendLock)
+					if (_SendQueue3.Count > 0)
 					{
-						toSend = _SendQueue4.Dequeue();
+						ValueTuple<int, int, T> toSend;
+						lock (_SendLock)
+						{
+							toSend = _SendQueue3.Dequeue();
+							_ToSendCount--;
+						}
+						await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3);
 						_ToSendCount--;
+						continue;
 					}
-					await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
-					continue;
+
+					if (_SendQueue4.Count > 0)
+					{
+						ValueTuple<int, int, int, T> toSend;
+						lock (_SendLock)
+						{
+							toSend = _SendQueue4.Dequeue();
+							_ToSendCount--;
+						}
+						await _Sender.Encode(toSend.Item1, toSend.Item2, toSend.Item3, toSend.Item4);
+						continue;
+					}
 				}
+			}
+			catch (Exception e)
+			{
+				//Log.Error("Send error: " + e.ToString(), nameof(NetworkChannel<T>));
+				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 		}
 
@@ -300,6 +308,19 @@ namespace Icy.Network
 
 			if (!_CancellationToken.IsCancellationRequested)
 				await Session.Listen();
+		}
+
+		protected void OnReceived(byte[] arg1, int arg2, int arg3)
+		{
+			try
+			{
+				_Receiver.Decode(arg1, arg2, arg3);
+			}
+			catch (Exception e)
+			{
+				//Log.Error("Receive error: " + e.ToString(), nameof(NetworkChannel<T>));
+				OnError?.Invoke(NetworkError.ReceiveFailed, e);
+			}
 		}
 
 		protected bool CheckSendable()

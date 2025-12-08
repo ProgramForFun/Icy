@@ -18,7 +18,7 @@ namespace Icy.Network
 		{
 			_MessageResult = new TestMessageResult();
 
-			WebSocketSession session = new WebSocketSession("ws://localhost", 12888);
+			WebSocketSession session = new WebSocketSession("ws://localhost", 12888); //wss://echo.websocket.org
 			_WebSocketChannel = new NetworkChannel<IMessage>(session, new ProtoSender(), new ProtoReceiver());
 			_WebSocketChannel.OnConnected = OnConnect;
 			_WebSocketChannel.OnDisconnected += OnDisconnect;
@@ -74,7 +74,7 @@ namespace Icy.Network
 			//	} 
 			//}
 
-			//Ã¿Ö¡·¢ËÍ£¬Ä£Äâ´óÁ¿ÍøÂçIOµÄÇé¿ö
+			//æ¯å¸§å‘é€ï¼Œæ¨¡æ‹Ÿå¤§é‡ç½‘ç»œIOçš„æƒ…å†µ
 			if (_WebSocketChannel != null && _WebSocketChannel.IsConnected)
 			{
 				_MessageResult.ErrorCode = 0;
