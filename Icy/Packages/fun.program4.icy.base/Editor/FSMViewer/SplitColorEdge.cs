@@ -70,8 +70,8 @@ namespace Icy.Base.Editor
 			painter.lineCap = LineCap.Round;
 
 			// 分割点取所有点中，距离两个Port距离最平均的
-			Vector2 startPos = _Edge.output.GetGlobalCenter();
-			Vector2 endPos = _Edge.input.GetGlobalCenter();
+			Vector2 startPos = edgePoints[0];
+			Vector2 endPos = edgePoints[edgePoints.Count - 1];
 			int midPointIndex = 0;
 			float minDistDiff = float.MaxValue;
 			for (int i = 0; i < edgePoints.Count; i++)
