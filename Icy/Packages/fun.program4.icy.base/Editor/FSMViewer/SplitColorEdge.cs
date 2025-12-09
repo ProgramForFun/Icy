@@ -28,12 +28,12 @@ namespace Icy.Base.Editor
 	/// </summary>
 	public class SplitColorEdgeOverlay : VisualElement
 	{
-		private Edge _Edge;
+		private SplitColorEdge _Edge;
 		private float _LineWidth;
 		private Color _FirstColor;
 		private Color _SecondColor;
 
-		public SplitColorEdgeOverlay(Edge targetEdge, Color first, Color second)
+		public SplitColorEdgeOverlay(SplitColorEdge targetEdge, Color first, Color second)
 		{
 			_Edge = targetEdge;
 			_LineWidth = 3.0f;
@@ -86,21 +86,22 @@ namespace Icy.Base.Editor
 				}
 			}
 
+			float scale = _Edge.GetGraphViewScale();
 			// 绘制前半段
 			painter.strokeColor = _FirstColor;
-			painter.MoveTo(edgePoints[0]);
+			painter.MoveTo(edgePoints[0] / scale);
 
 			for (int i = 1; i <= midPointIndex; i++)
-				painter.LineTo(edgePoints[i]);
+				painter.LineTo(edgePoints[i] / scale);
 			painter.Stroke();
 
 			// 绘制后半段
 			painter.BeginPath();
 			painter.strokeColor = _SecondColor;
-			painter.MoveTo(edgePoints[midPointIndex]);
+			painter.MoveTo(edgePoints[midPointIndex] / scale);
 
 			for (int i = midPointIndex + 1; i < edgePoints.Count; i++)
-				painter.LineTo(edgePoints[i]);
+				painter.LineTo(edgePoints[i] / scale);
 			painter.Stroke();
 		}
 
@@ -143,6 +144,7 @@ namespace Icy.Base.Editor
 		private SplitColorEdgeOverlay _SplitColorEdgeOverlay;
 		private Color _FirstColor;
 		private Color _SecondColor;
+		private GraphView _GraphView;
 
 		public SplitColorEdge()
 		{
@@ -168,6 +170,16 @@ namespace Icy.Base.Editor
 		public void UpdateEdge()
 		{
 			_SplitColorEdgeOverlay?.MarkDirtyRepaint();
+		}
+
+		public void SetGraphView(GraphView owner)
+		{
+			_GraphView = owner;
+		}
+
+		public float GetGraphViewScale()
+		{
+			return _GraphView.viewTransform.scale.x;
 		}
 
 		private void OnCustomStyleResolved(CustomStyleResolvedEvent evt)

@@ -266,6 +266,7 @@ namespace Icy.Base.Editor
 				Port toNodeInput = toNode.inputContainer[0] as Port;
 
 				_ConnectLine = fromNodeOutput.ConnectTo<SplitColorEdge>(toNodeInput);
+				_ConnectLine.SetGraphView(this);
 				AddElement(_ConnectLine);
 			}
 		}
