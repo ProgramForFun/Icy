@@ -39,6 +39,10 @@ namespace Icy.Base.Editor
 		/// </summary>
 		private FSMListView _ListView;
 		/// <summary>
+		/// 圆形布局半径的Slider
+		/// </summary>
+		private Slider _RadiusSlider;
+		/// <summary>
 		/// 当前点选的FSM所属的所有状态节点
 		/// </summary>
 		private Dictionary<string, FSMStateNode> _CurrNodes;
@@ -52,6 +56,10 @@ namespace Icy.Base.Editor
 		private readonly Vector2 NODES_CENTER = new Vector2(600, 300);
 		/// <summary>
 		/// 创建圆形排列的状态节点时，圆的半径
+		/// </summary>
+		private float _NodesCircleRadius;
+		/// <summary>
+		/// 创建圆形排列的状态节点时，圆的默认半径
 		/// </summary>
 		private const float NODES_CIRCLE_RADIUS = 200.0f;
 		/// <summary>
@@ -109,11 +117,13 @@ namespace Icy.Base.Editor
 			this.AddManipulator(new SelectionDragger());
 			//允许框选
 			this.AddManipulator(new RectangleSelector());
+			this.AddManipulator(new ContentZoomer());
 
 			//监听节点创建事件
 			nodeCreationRequest += OnNodeCreationRequest;
 			//监听右键菜单事件
 			RegisterCallback<ContextualMenuPopulateEvent>(OnGraphViewContextMenu);
+			//RegisterCallback<WheelEvent>(OnWheel);
 
 			_CurrNodes = new Dictionary<string, FSMStateNode>();
 		}
@@ -154,13 +164,32 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void AddNodesOfFSM(FSM fsm)
 		{
-			Vector2 startDir = new Vector2(NODES_CIRCLE_RADIUS, 0);
-			int count = fsm.AllStates.Count;
 			_IsInProcedure = fsm.Name.EndsWith($"({nameof(Procedure)})");
-			for (int i = 0; i < count; i++)
+
+			if (!_IsInProcedure)
+			{
+				_NodesCircleRadius = NODES_CIRCLE_RADIUS;
+				AddRadiusSlider();
+			}
+
+			for (int i = 0; i < fsm.AllStates.Count; i++)
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
 				FSMStateNode newNode = AddNode(fsm.AllStates[i], _IsInProcedure);
+
+				_CurrNodes.Add(stateName, newNode);
+			}
+
+			if (!_IsInProcedure)
+				CircleNodes();
+		}
+
+		private void CircleNodes()
+		{
+			Vector2 startDir = new Vector2(_NodesCircleRadius, 0);
+			int i = 0;
+			foreach (KeyValuePair<string, FSMStateNode> item in _CurrNodes)
+			{
 				Vector2 pos;
 				if (_IsInProcedure)
 				{
@@ -171,10 +200,10 @@ namespace Icy.Base.Editor
 				else
 				{
 					// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
-					pos = CommonUtility.RotateVector2(startDir, -360.0f / count * i) + NODES_CENTER;
+					pos = CommonUtility.RotateVector2(startDir, -360.0f / _CurrNodes.Count * i) + NODES_CENTER;
 				}
-				newNode.SetPosition(new Rect(pos.x, pos.y, 0, 0));
-				_CurrNodes.Add(stateName, newNode);
+				item.Value.SetPosition(new Rect(pos.x, pos.y, 0, 0));
+				i++;
 			}
 		}
 
@@ -213,6 +242,12 @@ namespace Icy.Base.Editor
 			_ConnectLine = null;
 
 			_CurrNodes.Clear();
+
+			if (_RadiusSlider != null)
+			{
+				Remove(_RadiusSlider);
+				_RadiusSlider = null;
+			}
 		}
 
 		/// <summary>
@@ -324,6 +359,24 @@ namespace Icy.Base.Editor
 		}
 
 		/// <summary>
+		/// 添加调整圆形布局半径的Slider
+		/// </summary>
+		private void AddRadiusSlider()
+		{
+			_RadiusSlider = new Slider("布局半径：", NODES_CIRCLE_RADIUS, 500);
+			_RadiusSlider.style.fontSize = 14;
+			_RadiusSlider.labelElement.style.paddingLeft = 40;
+			_RadiusSlider.style.position = Position.Absolute;
+			_RadiusSlider.style.width = 300;
+			_RadiusSlider.style.marginTop = 10;
+			_RadiusSlider.style.marginLeft = 200;
+			_RadiusSlider.showInputField = true;
+			_RadiusSlider.RegisterValueChangedCallback(OnRadiusSliderValueChanged);
+			Add(_RadiusSlider);
+			_RadiusSlider.BringToFront();
+		}
+
+		/// <summary>
 		/// 由菜单创建节点
 		/// </summary>
 		private void OnNodeCreationRequest(NodeCreationContext context)
@@ -352,6 +405,20 @@ namespace Icy.Base.Editor
 					node.BuildContextualMenu(evt);
 			}
 		}
+
+		/// <summary>
+		/// 拖动半径Slider时，按新半径重新布局节点
+		/// </summary>
+		private void OnRadiusSliderValueChanged(ChangeEvent<float> evt)
+		{
+			_NodesCircleRadius = evt.newValue;
+			CircleNodes();
+		}
+
+		//private void OnWheel(WheelEvent evt)
+		//{
+		//	_ConnectLine.UpdateEdge();
+		//}
 
 		/// <summary>
 		/// 把屏幕坐标转换到GraphView坐标下；
