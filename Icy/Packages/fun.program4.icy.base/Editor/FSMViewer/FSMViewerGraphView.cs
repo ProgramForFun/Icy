@@ -82,14 +82,6 @@ namespace Icy.Base.Editor
 		/// 当前选中的FSM，是不是Procedure内部的FSM
 		/// </summary>
 		private bool _IsInProcedure = false;
-		///// <summary>
-		///// 前一个状态的名字
-		///// </summary>
-		//private string _FromStateName;
-		///// <summary>
-		///// 下一个状态的名字
-		///// </summary>
-		//private string _ToStateName;
 
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
@@ -123,7 +115,6 @@ namespace Icy.Base.Editor
 			nodeCreationRequest += OnNodeCreationRequest;
 			//监听右键菜单事件
 			RegisterCallback<ContextualMenuPopulateEvent>(OnGraphViewContextMenu);
-			//RegisterCallback<WheelEvent>(OnWheel);
 
 			_CurrNodes = new Dictionary<string, FSMStateNode>();
 		}
@@ -255,9 +246,6 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void ConnectNodes(string fromStateName, string toStateName)
 		{
-			//_FromStateName = fromStateName;
-			//_ToStateName = toStateName;
-
 			if (fromStateName != "Null" && _CurrNodes.ContainsKey(fromStateName) && _CurrNodes.ContainsKey(toStateName))
 			{
 				FSMStateNode fromNode = _CurrNodes[fromStateName];
@@ -316,11 +304,7 @@ namespace Icy.Base.Editor
 		public void SetLineWaitPrevStateDeactivate()
 		{
 			if (_ConnectLine != null)
-			{
-				//_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
-				//_ConnectLine.output.portColor = Color.cyan;
 				_ConnectLine.SetSplitColor(Color.cyan, DEFAULT_PORT_COLOR);
-			}
 		}
 
 		/// <summary>
@@ -329,13 +313,7 @@ namespace Icy.Base.Editor
 		public void SetLineWaitNextStateActivate()
 		{
 			if (_ConnectLine != null)
-			{
-				//_ConnectLine.input.portColor = Color.cyan;
-				//_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
-				//RemovePrevConnectLine();
-				//ConnectNodes(_FromStateName, _ToStateName);
 				_ConnectLine.SetSplitColor(DEFAULT_PORT_COLOR, Color.cyan);
-			}
 		}
 
 		/// <summary>
@@ -344,13 +322,7 @@ namespace Icy.Base.Editor
 		public void SetLineStateChangingFinished()
 		{
 			if (_ConnectLine != null)
-			{
-				//_ConnectLine.input.portColor = DEFAULT_PORT_COLOR;
-				//_ConnectLine.output.portColor = DEFAULT_PORT_COLOR;
-				//RemovePrevConnectLine();
-				//ConnectNodes(_FromStateName, _ToStateName);
 				_ConnectLine.SetSplitColor(DEFAULT_PORT_COLOR, DEFAULT_PORT_COLOR);
-			}
 		}
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -415,11 +387,6 @@ namespace Icy.Base.Editor
 			_NodesCircleRadius = evt.newValue;
 			CircleNodes();
 		}
-
-		//private void OnWheel(WheelEvent evt)
-		//{
-		//	_ConnectLine.UpdateEdge();
-		//}
 
 		/// <summary>
 		/// 把屏幕坐标转换到GraphView坐标下；

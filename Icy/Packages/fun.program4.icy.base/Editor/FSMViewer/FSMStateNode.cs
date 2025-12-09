@@ -109,7 +109,6 @@ namespace Icy.Base.Editor
 
 			RegisterCallback<DetachFromPanelEvent>(OnRemoved);
 			RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-			//RegisterCallback<MouseMoveEvent>(OnMouseMove, TrickleDown.TrickleDown);
 		}
 
 		public void SetStartTimestamp(long timestamp)
@@ -173,12 +172,6 @@ namespace Icy.Base.Editor
 			ClearStartTime();
 			UnregisterCallback<DetachFromPanelEvent>(OnRemoved);
 		}
-
-		//private void OnMouseMove(MouseMoveEvent evt)
-		//{
-		//	if (resolvedStyle != null)
-		//		NotifyConnectedEdges();
-		//}
 
 		private void OnGeometryChanged(GeometryChangedEvent evt)
 		{
