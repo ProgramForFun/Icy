@@ -81,7 +81,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 当前选中的FSM，是不是Procedure内部的FSM
 		/// </summary>
-		private bool _IsInProcedure = false;
+		private bool _IsFSMInProcedure = false;
 
 
 		public FSMViewerGraphView(EditorWindow editorWindow)
@@ -155,9 +155,9 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void AddNodesOfFSM(FSM fsm)
 		{
-			_IsInProcedure = fsm.Name.EndsWith($"({nameof(Procedure)})");
+			_IsFSMInProcedure = fsm.Name.EndsWith($"({nameof(Procedure)})");
 
-			if (!_IsInProcedure)
+			if (!_IsFSMInProcedure)
 			{
 				_NodesCircleRadius = NODES_CIRCLE_RADIUS;
 				AddRadiusSlider();
@@ -166,33 +166,42 @@ namespace Icy.Base.Editor
 			for (int i = 0; i < fsm.AllStates.Count; i++)
 			{
 				string stateName = fsm.AllStates[i].GetType().Name;
-				FSMStateNode newNode = AddNode(fsm.AllStates[i], _IsInProcedure);
+				FSMStateNode newNode = AddNode(fsm.AllStates[i], _IsFSMInProcedure);
 
 				_CurrNodes.Add(stateName, newNode);
 			}
 
-			if (!_IsInProcedure)
+			if (_IsFSMInProcedure)
+				LineUpNodes();
+			else
 				CircleNodes();
 		}
 
+		/// <summary>
+		/// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
+		/// </summary>
 		private void CircleNodes()
 		{
 			Vector2 startDir = new Vector2(_NodesCircleRadius, 0);
 			int i = 0;
 			foreach (KeyValuePair<string, FSMStateNode> item in _CurrNodes)
 			{
-				Vector2 pos;
-				if (_IsInProcedure)
-				{
-					// 把Procedure内FSM的所有状态，按从左到右的顺序，生成Node
-					float x = NODES_LINE_START_POS_X + NODES_LINE_INTERVAL_X * i;
-					pos = new Vector2(x, NODES_LINE_POS_Y);
-				}
-				else
-				{
-					// 把一个FSM的所有状态，按逆时针方向圆形排列，生成Node
-					pos = CommonUtility.RotateVector2(startDir, -360.0f / _CurrNodes.Count * i) + NODES_CENTER;
-				}
+				Vector2 pos = CommonUtility.RotateVector2(startDir, -360.0f / _CurrNodes.Count * i) + NODES_CENTER;
+				item.Value.SetPosition(new Rect(pos.x, pos.y, 0, 0));
+				i++;
+			}
+		}
+
+		/// <summary>
+		/// 把Procedure内FSM的所有状态，按从左到右的顺序，生成Node
+		/// </summary>
+		private void LineUpNodes()
+		{
+			int i = 0;
+			foreach (KeyValuePair<string, FSMStateNode> item in _CurrNodes)
+			{
+				float x = NODES_LINE_START_POS_X + NODES_LINE_INTERVAL_X * i;
+				Vector2 pos = new Vector2(x, NODES_LINE_POS_Y);
 				item.Value.SetPosition(new Rect(pos.x, pos.y, 0, 0));
 				i++;
 			}
