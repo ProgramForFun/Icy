@@ -35,7 +35,6 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			Log.Info($"Activate {nameof(DownloadAssetPatchStep)}", nameof(AssetPatcher));
 			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher), true) as AssetPatcher;
 			PreDownload();
 			await UniTask.CompletedTask;
@@ -56,7 +55,7 @@ namespace Icy.Asset
 
 			if (_Downloader.TotalDownloadCount == 0)
 			{
-				Log.Info($"AssetPatchFinish, no assets needs to patch", nameof(AssetPatcher));
+				Log.Info($"AssetPatchFinish, no assets needs to patch", nameof(AssetPatcher), true);
 
 				EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
 				eventParam.Value = false;
@@ -70,6 +69,7 @@ namespace Icy.Asset
 				long totalDownloadBytes = _Downloader.TotalDownloadBytes;
 				if (HasEnoughDiskSpace(totalDownloadBytes))
 				{
+					Log.Info($"Ready to download patch", nameof(AssetPatcher), true);
 					Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
 					eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
 					eventParam.About2DownloadCount = _Downloader.TotalDownloadCount;
@@ -78,6 +78,7 @@ namespace Icy.Asset
 				}
 				else
 				{
+					Log.Error($"Disk space not enough", nameof(AssetPatcher));
 					EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
 					eventParam.Value = PreDownload;
 					EventManager.Trigger(EventDefine.NotEnoughDiskSpace2PatchAsset, eventParam);

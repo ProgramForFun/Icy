@@ -272,7 +272,7 @@ namespace Icy.Network
 				}
 
 				retry++;
-				Log.Info($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
+				Log.Info($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester), true);
 			} while (retry < _RetryTimes && !_Disposed);
 
 			if (!_Disposed)
@@ -316,7 +316,7 @@ namespace Icy.Network
 			foreach (UnityWebRequest item in _CurRequests)
 				item?.Dispose();
 #endif
-			Log.Info($"{nameof(HttpRequester)} disposed");
+			Log.Info($"Disposed", nameof(HttpRequester), true);
 		}
 	}
 }

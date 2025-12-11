@@ -118,6 +118,7 @@ namespace Icy.Network
 
 			IsConnected = false;
 			OnDisconnected?.Invoke();
+			Log.Info("Disconnected", nameof(WebSocketSession), true);
 		}
 
 		private void OnWebSocketError(string errorMsg)
@@ -130,6 +131,7 @@ namespace Icy.Network
 		{
 			IsConnected = true;
 			OnConnected?.Invoke();
+			Log.Info("Connected", nameof(WebSocketSession), true);
 		}
 
 		public override async UniTask Send(byte[] msg, int startIdx, int length)
@@ -179,7 +181,7 @@ namespace Icy.Network
 #endif
 			if (IsConnected)
 				Disconnect().Forget();
-			Log.Info("Dispose", nameof(WebSocketSession));
+			Log.Info("Dispose", nameof(WebSocketSession), true);
 		}
 
 		public void Update(float delta)

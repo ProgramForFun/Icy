@@ -73,7 +73,7 @@ namespace Icy.Network
 				_Stream = _TcpClient.GetStream();
 				IsConnected = true;
 				OnConnected?.Invoke();
-				Log.Info("Connected", nameof(TcpSession));
+				Log.Info("Connected", nameof(TcpSession), true);
 			}
 			catch (Exception ex)
 			{
@@ -154,7 +154,7 @@ namespace Icy.Network
 			_TcpClient.Close();
 			_TcpClient = null;
 			OnDisconnected?.Invoke();
-			Log.Info("Disconnect", nameof(TcpSession));
+			Log.Info("Disconnect", nameof(TcpSession), true);
 			await UniTask.CompletedTask;
 		}
 
@@ -204,7 +204,7 @@ namespace Icy.Network
 		{
 			if (IsConnected)
 				Disconnect().Forget();
-			Log.Info("Dispose", nameof(TcpSession));
+			Log.Info("Dispose", nameof(TcpSession), true);
 		}
 	}
 }

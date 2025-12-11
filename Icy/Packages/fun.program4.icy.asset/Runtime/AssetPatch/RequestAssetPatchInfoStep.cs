@@ -31,7 +31,6 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			Log.Info($"Activate {nameof(RequestAssetPatchInfoStep)}", nameof(AssetPatcher));
 			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher), true) as AssetPatcher;
 			await UpdatePackageVersion();
 		}
@@ -51,7 +50,7 @@ namespace Icy.Asset
 
 			if (operation.Status == EOperationStatus.Succeed)
 			{
-				Log.Info($"{nameof(UpdatePackageVersion)} succeed", nameof(AssetPatcher));
+				Log.Info($"{nameof(UpdatePackageVersion)} succeed", nameof(AssetPatcher), true);
 				_PackageVersion = operation.PackageVersion;
 				await UpdatePackageManifest();
 			}
@@ -73,7 +72,7 @@ namespace Icy.Asset
 
 			if (operation.Status == EOperationStatus.Succeed)
 			{
-				Log.Info($"{nameof(UpdatePackageManifest)} succeed", nameof(AssetPatcher));
+				Log.Info($"{nameof(UpdatePackageManifest)} succeed", nameof(AssetPatcher), true);
 				Finish();
 			}
 			else

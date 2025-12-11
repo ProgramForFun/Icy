@@ -348,6 +348,7 @@ namespace Icy.Network
 					{
 						IsConnected = true;
 						OnConnected?.Invoke();
+						Log.Info("Connected", nameof(KcpSession), true);
 					}
 					else
 						OnReceive?.Invoke(buffer, 0, n);
@@ -402,6 +403,7 @@ namespace Icy.Network
 
 				IsConnected = false;
 				OnDisconnected?.Invoke();
+				Log.Info("Disconnected", nameof(KcpSession), true);
 			}
 			catch (Exception e)
 			{
@@ -426,7 +428,7 @@ namespace Icy.Network
 				// ignored
 			}
 
-			Log.Info("Dispose", nameof(KcpSession));
+			Log.Info("Dispose", nameof(KcpSession), true);
 		}
 
 		protected bool IsDisconnectOperationFinished()

@@ -182,7 +182,7 @@ namespace Icy.Asset
 			{
 #if AssetRef_Log
 				Log.SetColorOnce(Color.yellow);
-				Log.Info($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", nameof(AssetRef));
+				Log.Info($"Asset {_AssetHandle.GetAssetInfo().Address} RefCount <= 0, released", nameof(AssetRef), true);
 #endif
 				AssetManager.Instance.ReleaseAsset(_AssetHandle);
 			}
@@ -201,7 +201,7 @@ namespace Icy.Asset
 			_OnFinish?.Invoke(this);
 #if AssetRef_Log
 			Log.SetColorOnce(Color.yellow);
-			Log.Info($"Asset {handle.GetAssetInfo().Address} loaded", nameof(AssetRef));
+			Log.Info($"Asset {handle.GetAssetInfo().Address} loaded", nameof(AssetRef), true);
 #endif
 		}
 	}

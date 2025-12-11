@@ -472,8 +472,6 @@ namespace Icy.UI
 			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
 			eventParam.Value = uiData.Type;
 			EventManager.Trigger(EventDefine.UIShown, eventParam);
-
-			Log.Info($"Show {ui.UIName}", nameof(UIManager));
 		}
 
 		internal void Hide(UIBase ui)

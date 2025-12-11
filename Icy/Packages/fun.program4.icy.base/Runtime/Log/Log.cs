@@ -332,7 +332,7 @@ namespace Icy.Base
 						sw.Flush();
 					}
 				}
-				Info("Write to file thread stopped", nameof(Log));
+				Info("Write to file thread stopped", nameof(Log), true);
 			}
 			catch (Exception ex)
 			{

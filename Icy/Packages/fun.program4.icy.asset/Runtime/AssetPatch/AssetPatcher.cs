@@ -48,7 +48,7 @@ namespace Icy.Asset
 			patchProcedure.AddStep(new AssetPatchFinishStep());
 			patchProcedure.Blackboard.WriteObject(nameof(AssetPatcher), this);
 			patchProcedure.Start();
-			Log.Info($"Start asset patch procedure", nameof(AssetPatcher));
+			Log.Info($"Start asset patch procedure", nameof(AssetPatcher), true);
 
 			while (!patchProcedure.IsFinished)
 				await UniTask.NextFrame();

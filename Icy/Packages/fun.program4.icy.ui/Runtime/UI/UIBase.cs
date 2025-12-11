@@ -149,6 +149,7 @@ namespace Icy.UI
 			SetExternalToken(_CancelTokenSourceOnHide.Token);
 
 			UIManager.Instance.Show(this, param);
+			Log.Info($"{UIName} shown", "UI", true);
 		}
 
 		public virtual void Hide()
@@ -177,6 +178,7 @@ namespace Icy.UI
 					Log.Error($"Invalid HideType {HideType}", nameof(UIBase));
 					break;
 			}
+			Log.Info($"{UIName} hid", "UI", true);
 		}
 
 		public virtual void Destroy()
@@ -194,6 +196,7 @@ namespace Icy.UI
 			UIManager.Instance.Destroy(this);
 
 			UnityEngine.Object.Destroy(this.gameObject);
+			Log.Info($"{UIName} destroyed", "UI", true);
 		}
 
 		protected void OnDestroy()

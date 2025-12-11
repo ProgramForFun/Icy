@@ -30,7 +30,6 @@ namespace Icy.Asset
 
 		public override async UniTask Activate()
 		{
-			Log.Info($"Activate {nameof(AssetPatchFinishStep)}", nameof(AssetPatcher));
 			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher), true) as AssetPatcher;
 			await Clear();
 		}
@@ -49,7 +48,6 @@ namespace Icy.Asset
 			eventParam.Value = true;
 			EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
 
-			Log.Info($"AssetPatchFinish, patches patched", nameof(AssetPatcher));
 			Finish();
 		}
 	}

@@ -155,7 +155,7 @@ namespace Icy.Asset
 
 			_Cached = new Dictionary<string, AssetRef>();
 
-			Log.Info($"{nameof(AssetManager)} init end, {initializationOperation.Status}", nameof(AssetManager));
+			Log.Info($"{nameof(AssetManager)} init end, {initializationOperation.Status}", nameof(AssetManager), true);
 			bool initSucceed = initializationOperation.Status == EOperationStatus.Succeed;
 
 			return initSucceed;
@@ -449,9 +449,9 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Package.ClearCacheFilesAsync(clearMode);
 			await operation.ToUniTask();
 			if (operation.Status == EOperationStatus.Succeed)
-				Log.Info($"ClearCachedFiles succeed, mode = {clearMode}", nameof(AssetManager));
+				Log.Info($"ClearCachedFiles succeed, mode = {clearMode}", nameof(AssetManager), true);
 			else
-				Log.Error($"ClearCachedFiles failed, mode = {clearMode}", nameof(AssetManager));
+				Log.Error($"ClearCachedFiles failed, mode = {clearMode}", nameof(AssetManager), true);
 			return operation.Status == EOperationStatus.Succeed;
 		}
 		#endregion

@@ -953,9 +953,9 @@ namespace Icy.Base
 		public static bool IsLowEndDevice()
 		{
 			string operatorSystem = SystemInfo.operatingSystem;
-			Log.Info("[Device] OperatorSystem = " + operatorSystem);
+			Log.Info("[Device] OperatorSystem = " + operatorSystem, nameof(IsLowEndDevice), true);
 			int ramMB = SystemInfo.systemMemorySize;
-			Log.Info("[Device] RAM in MB = " + ramMB);
+			Log.Info("[Device] RAM in MB = " + ramMB, nameof(IsLowEndDevice), true);
 #if UNITY_ANDROID
 			//string operatorSystem = "Android OS 13 / API-33 (TQ2A.230305.008.C1/9619669)";
 			bool succeed = int.TryParse(operatorSystem.Substring(11, 2), out int androidVersion);
