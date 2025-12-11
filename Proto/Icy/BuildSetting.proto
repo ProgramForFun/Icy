@@ -21,20 +21,22 @@ message BuildSetting
 	bool AutoSigning = 7;
 	//KeyStore密码（Android）
 	string KeyStorePassword = 8;
+	//是否导出Android Project（Android）
+	bool ExportAndroidProject = 9;
 
 	//打Dev版本
-	bool DevelopmentBuild = 9;
+	bool DevelopmentBuild = 20;
 	//允许调试代码
-	bool ScriptDebugging = 10;
+	bool ScriptDebugging = 21;
 	//启动时自动连接Profiler
-	bool AutoConnectProfiler = 11;
+	bool AutoConnectProfiler = 22;
 	//开启Deep Profiling
-	bool DeepProfiling = 12;
+	bool DeepProfiling = 23;
 
 	//是否打包AssetBundle
-	bool BuildAssetBundle = 13;
+	bool BuildAssetBundle = 31;
 	//是否清除缓存、打全量AssetBundle
-	bool ClearAssetBundleCache = 14;
+	bool ClearAssetBundleCache = 32;
 	//是否启动AssetBundle加密
-	bool EncryptAssetBundle = 15;
+	bool EncryptAssetBundle = 33;
 }

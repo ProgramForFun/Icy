@@ -24,20 +24,21 @@ namespace Icy.Asset {
     static BuildSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKCAwoMQnVpbGRTZXR0",
+            "ChJCdWlsZFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCKgAwoMQnVpbGRTZXR0",
             "aW5nEh0KFUFwcGxpY2F0aW9uSWRlbnRpZmllchgBIAEoCRITCgtQcm9kdWN0",
             "TmFtZRgCIAEoCRITCgtDb21wYW55TmFtZRgDIAEoCRIVCg1CdW5kbGVWZXJz",
             "aW9uGAQgASgJEhQKDEJ1bmRsZU51bWJlchgFIAEoBRIRCglPdXRwdXREaXIY",
             "BiABKAkSEwoLQXV0b1NpZ25pbmcYByABKAgSGAoQS2V5U3RvcmVQYXNzd29y",
-            "ZBgIIAEoCRIYChBEZXZlbG9wbWVudEJ1aWxkGAkgASgIEhcKD1NjcmlwdERl",
-            "YnVnZ2luZxgKIAEoCBIbChNBdXRvQ29ubmVjdFByb2ZpbGVyGAsgASgIEhUK",
-            "DURlZXBQcm9maWxpbmcYDCABKAgSGAoQQnVpbGRBc3NldEJ1bmRsZRgNIAEo",
-            "CBIdChVDbGVhckFzc2V0QnVuZGxlQ2FjaGUYDiABKAgSGgoSRW5jcnlwdEFz",
-            "c2V0QnVuZGxlGA8gASgIYgZwcm90bzM="));
+            "ZBgIIAEoCRIcChRFeHBvcnRBbmRyb2lkUHJvamVjdBgJIAEoCBIYChBEZXZl",
+            "bG9wbWVudEJ1aWxkGBQgASgIEhcKD1NjcmlwdERlYnVnZ2luZxgVIAEoCBIb",
+            "ChNBdXRvQ29ubmVjdFByb2ZpbGVyGBYgASgIEhUKDURlZXBQcm9maWxpbmcY",
+            "FyABKAgSGAoQQnVpbGRBc3NldEJ1bmRsZRgfIAEoCBIdChVDbGVhckFzc2V0",
+            "QnVuZGxlQ2FjaGUYICABKAgSGgoSRW5jcnlwdEFzc2V0QnVuZGxlGCEgASgI",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword", "DevelopmentBuild", "ScriptDebugging", "AutoConnectProfiler", "DeepProfiling", "BuildAssetBundle", "ClearAssetBundleCache", "EncryptAssetBundle" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.BuildSetting), global::Icy.Asset.BuildSetting.Parser, new[]{ "ApplicationIdentifier", "ProductName", "CompanyName", "BundleVersion", "BundleNumber", "OutputDir", "AutoSigning", "KeyStorePassword", "ExportAndroidProject", "DevelopmentBuild", "ScriptDebugging", "AutoConnectProfiler", "DeepProfiling", "BuildAssetBundle", "ClearAssetBundleCache", "EncryptAssetBundle" }, null, null, null, null)
           }));
     }
     #endregion
@@ -87,6 +88,7 @@ namespace Icy.Asset {
       outputDir_ = other.outputDir_;
       autoSigning_ = other.autoSigning_;
       keyStorePassword_ = other.keyStorePassword_;
+      exportAndroidProject_ = other.exportAndroidProject_;
       developmentBuild_ = other.developmentBuild_;
       scriptDebugging_ = other.scriptDebugging_;
       autoConnectProfiler_ = other.autoConnectProfiler_;
@@ -223,8 +225,23 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "ExportAndroidProject" field.</summary>
+    public const int ExportAndroidProjectFieldNumber = 9;
+    private bool exportAndroidProject_;
+    /// <summary>
+    ///是否导出Android Project（Android）
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ExportAndroidProject {
+      get { return exportAndroidProject_; }
+      set {
+        exportAndroidProject_ = value;
+      }
+    }
+
     /// <summary>Field number for the "DevelopmentBuild" field.</summary>
-    public const int DevelopmentBuildFieldNumber = 9;
+    public const int DevelopmentBuildFieldNumber = 20;
     private bool developmentBuild_;
     /// <summary>
     ///打Dev版本
@@ -239,7 +256,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "ScriptDebugging" field.</summary>
-    public const int ScriptDebuggingFieldNumber = 10;
+    public const int ScriptDebuggingFieldNumber = 21;
     private bool scriptDebugging_;
     /// <summary>
     ///允许调试代码
@@ -254,7 +271,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "AutoConnectProfiler" field.</summary>
-    public const int AutoConnectProfilerFieldNumber = 11;
+    public const int AutoConnectProfilerFieldNumber = 22;
     private bool autoConnectProfiler_;
     /// <summary>
     ///启动时自动连接Profiler
@@ -269,7 +286,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "DeepProfiling" field.</summary>
-    public const int DeepProfilingFieldNumber = 12;
+    public const int DeepProfilingFieldNumber = 23;
     private bool deepProfiling_;
     /// <summary>
     ///开启Deep Profiling
@@ -284,7 +301,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "BuildAssetBundle" field.</summary>
-    public const int BuildAssetBundleFieldNumber = 13;
+    public const int BuildAssetBundleFieldNumber = 31;
     private bool buildAssetBundle_;
     /// <summary>
     ///是否打包AssetBundle
@@ -299,7 +316,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "ClearAssetBundleCache" field.</summary>
-    public const int ClearAssetBundleCacheFieldNumber = 14;
+    public const int ClearAssetBundleCacheFieldNumber = 32;
     private bool clearAssetBundleCache_;
     /// <summary>
     ///是否清除缓存、打全量AssetBundle
@@ -314,7 +331,7 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "EncryptAssetBundle" field.</summary>
-    public const int EncryptAssetBundleFieldNumber = 15;
+    public const int EncryptAssetBundleFieldNumber = 33;
     private bool encryptAssetBundle_;
     /// <summary>
     ///是否启动AssetBundle加密
@@ -351,6 +368,7 @@ namespace Icy.Asset {
       if (OutputDir != other.OutputDir) return false;
       if (AutoSigning != other.AutoSigning) return false;
       if (KeyStorePassword != other.KeyStorePassword) return false;
+      if (ExportAndroidProject != other.ExportAndroidProject) return false;
       if (DevelopmentBuild != other.DevelopmentBuild) return false;
       if (ScriptDebugging != other.ScriptDebugging) return false;
       if (AutoConnectProfiler != other.AutoConnectProfiler) return false;
@@ -373,6 +391,7 @@ namespace Icy.Asset {
       if (OutputDir.Length != 0) hash ^= OutputDir.GetHashCode();
       if (AutoSigning != false) hash ^= AutoSigning.GetHashCode();
       if (KeyStorePassword.Length != 0) hash ^= KeyStorePassword.GetHashCode();
+      if (ExportAndroidProject != false) hash ^= ExportAndroidProject.GetHashCode();
       if (DevelopmentBuild != false) hash ^= DevelopmentBuild.GetHashCode();
       if (ScriptDebugging != false) hash ^= ScriptDebugging.GetHashCode();
       if (AutoConnectProfiler != false) hash ^= AutoConnectProfiler.GetHashCode();
@@ -430,32 +449,36 @@ namespace Icy.Asset {
         output.WriteRawTag(66);
         output.WriteString(KeyStorePassword);
       }
-      if (DevelopmentBuild != false) {
+      if (ExportAndroidProject != false) {
         output.WriteRawTag(72);
+        output.WriteBool(ExportAndroidProject);
+      }
+      if (DevelopmentBuild != false) {
+        output.WriteRawTag(160, 1);
         output.WriteBool(DevelopmentBuild);
       }
       if (ScriptDebugging != false) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(168, 1);
         output.WriteBool(ScriptDebugging);
       }
       if (AutoConnectProfiler != false) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(176, 1);
         output.WriteBool(AutoConnectProfiler);
       }
       if (DeepProfiling != false) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(184, 1);
         output.WriteBool(DeepProfiling);
       }
       if (BuildAssetBundle != false) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(248, 1);
         output.WriteBool(BuildAssetBundle);
       }
       if (ClearAssetBundleCache != false) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(128, 2);
         output.WriteBool(ClearAssetBundleCache);
       }
       if (EncryptAssetBundle != false) {
-        output.WriteRawTag(120);
+        output.WriteRawTag(136, 2);
         output.WriteBool(EncryptAssetBundle);
       }
       if (_unknownFields != null) {
@@ -500,32 +523,36 @@ namespace Icy.Asset {
         output.WriteRawTag(66);
         output.WriteString(KeyStorePassword);
       }
-      if (DevelopmentBuild != false) {
+      if (ExportAndroidProject != false) {
         output.WriteRawTag(72);
+        output.WriteBool(ExportAndroidProject);
+      }
+      if (DevelopmentBuild != false) {
+        output.WriteRawTag(160, 1);
         output.WriteBool(DevelopmentBuild);
       }
       if (ScriptDebugging != false) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(168, 1);
         output.WriteBool(ScriptDebugging);
       }
       if (AutoConnectProfiler != false) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(176, 1);
         output.WriteBool(AutoConnectProfiler);
       }
       if (DeepProfiling != false) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(184, 1);
         output.WriteBool(DeepProfiling);
       }
       if (BuildAssetBundle != false) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(248, 1);
         output.WriteBool(BuildAssetBundle);
       }
       if (ClearAssetBundleCache != false) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(128, 2);
         output.WriteBool(ClearAssetBundleCache);
       }
       if (EncryptAssetBundle != false) {
-        output.WriteRawTag(120);
+        output.WriteRawTag(136, 2);
         output.WriteBool(EncryptAssetBundle);
       }
       if (_unknownFields != null) {
@@ -562,26 +589,29 @@ namespace Icy.Asset {
       if (KeyStorePassword.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(KeyStorePassword);
       }
-      if (DevelopmentBuild != false) {
+      if (ExportAndroidProject != false) {
         size += 1 + 1;
+      }
+      if (DevelopmentBuild != false) {
+        size += 2 + 1;
       }
       if (ScriptDebugging != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (AutoConnectProfiler != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (DeepProfiling != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (BuildAssetBundle != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (ClearAssetBundleCache != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (EncryptAssetBundle != false) {
-        size += 1 + 1;
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -618,6 +648,9 @@ namespace Icy.Asset {
       }
       if (other.KeyStorePassword.Length != 0) {
         KeyStorePassword = other.KeyStorePassword;
+      }
+      if (other.ExportAndroidProject != false) {
+        ExportAndroidProject = other.ExportAndroidProject;
       }
       if (other.DevelopmentBuild != false) {
         DevelopmentBuild = other.DevelopmentBuild;
@@ -692,30 +725,34 @@ namespace Icy.Asset {
             break;
           }
           case 72: {
+            ExportAndroidProject = input.ReadBool();
+            break;
+          }
+          case 160: {
             DevelopmentBuild = input.ReadBool();
             break;
           }
-          case 80: {
+          case 168: {
             ScriptDebugging = input.ReadBool();
             break;
           }
-          case 88: {
+          case 176: {
             AutoConnectProfiler = input.ReadBool();
             break;
           }
-          case 96: {
+          case 184: {
             DeepProfiling = input.ReadBool();
             break;
           }
-          case 104: {
+          case 248: {
             BuildAssetBundle = input.ReadBool();
             break;
           }
-          case 112: {
+          case 256: {
             ClearAssetBundleCache = input.ReadBool();
             break;
           }
-          case 120: {
+          case 264: {
             EncryptAssetBundle = input.ReadBool();
             break;
           }
@@ -771,30 +808,34 @@ namespace Icy.Asset {
             break;
           }
           case 72: {
+            ExportAndroidProject = input.ReadBool();
+            break;
+          }
+          case 160: {
             DevelopmentBuild = input.ReadBool();
             break;
           }
-          case 80: {
+          case 168: {
             ScriptDebugging = input.ReadBool();
             break;
           }
-          case 88: {
+          case 176: {
             AutoConnectProfiler = input.ReadBool();
             break;
           }
-          case 96: {
+          case 184: {
             DeepProfiling = input.ReadBool();
             break;
           }
-          case 104: {
+          case 248: {
             BuildAssetBundle = input.ReadBool();
             break;
           }
-          case 112: {
+          case 256: {
             ClearAssetBundleCache = input.ReadBool();
             break;
           }
-          case 120: {
+          case 264: {
             EncryptAssetBundle = input.ReadBool();
             break;
           }

@@ -100,6 +100,12 @@ namespace Icy.Asset.Editor
 		[OnValueChanged(nameof(SaveSetting))]
 		public string OutputDir;
 
+		[TabGroup("", "Android")]
+		[Title("导出Android Project")]
+		[ShowInInspector]
+		[OnValueChanged(nameof(SaveSetting))]
+		public bool ExportAndroidProject;
+
 		[FoldoutGroup("打包步骤", Expanded = false)]
 		[ReadOnly]
 		public List<string> BuildSteps;
@@ -187,6 +193,7 @@ namespace Icy.Asset.Editor
 				KeyStorePassword = _BuildSetting.KeyStorePassword;
 				AutoSigning = _BuildSetting.AutoSigning;
 				OutputDir = _BuildSetting.OutputDir;
+				ExportAndroidProject = _BuildSetting.ExportAndroidProject;
 
 				DevOptions = 0;
 				if (_BuildSetting.DevelopmentBuild)
@@ -256,6 +263,7 @@ namespace Icy.Asset.Editor
 			_BuildSetting.KeyStorePassword = KeyStorePassword.ToString();
 			_BuildSetting.AutoSigning = AutoSigning;
 			_BuildSetting.OutputDir = OutputDir;
+			_BuildSetting.ExportAndroidProject = ExportAndroidProject;
 
 			_BuildSetting.DevelopmentBuild = (DevOptions & BuildOptionDev.DevelopmentBuild) == BuildOptionDev.DevelopmentBuild;
 			_BuildSetting.ScriptDebugging = (DevOptions & BuildOptionDev.ScriptDebugging) == BuildOptionDev.ScriptDebugging;
