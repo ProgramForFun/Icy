@@ -69,7 +69,7 @@ namespace Icy.Base.Editor
 		/// <summary>
 		/// 创建直线排列的状态节点时，每个节点之间间隔
 		/// </summary>
-		private const float NODES_LINE_INTERVAL_X = 260.0f;
+		private const float NODES_LINE_INTERVAL_X = 100.0f;
 		/// <summary>
 		/// 创建直线排列的状态节点时，y轴的位置
 		/// </summary>
@@ -172,7 +172,7 @@ namespace Icy.Base.Editor
 			}
 
 			if (_IsFSMInProcedure)
-				LineUpNodes();
+				schedule.Execute(() => { LineUpNodes(); }).ExecuteLater(18);
 			else
 				CircleNodes();
 		}
@@ -198,11 +198,13 @@ namespace Icy.Base.Editor
 		private void LineUpNodes()
 		{
 			int i = 0;
+			float preNodePosX = NODES_LINE_START_POS_X;
 			foreach (KeyValuePair<string, FSMStateNode> item in _CurrNodes)
 			{
-				float x = NODES_LINE_START_POS_X + NODES_LINE_INTERVAL_X * i;
+				float x = preNodePosX + NODES_LINE_INTERVAL_X;
 				Vector2 pos = new Vector2(x, NODES_LINE_POS_Y);
 				item.Value.SetPosition(new Rect(pos.x, pos.y, 0, 0));
+				preNodePosX = x + item.Value.resolvedStyle.width;
 				i++;
 			}
 		}

@@ -73,8 +73,10 @@ namespace Icy.Base
 		}
 
 		private class ProcedureStep_1 : FSMTestProcedureStep { }
-		private class ProcedureStep_2 : FSMTestProcedureStep { }
+		private class ProcedureStep_2_LoooooooooooooooongName : FSMTestProcedureStep { }
 		private class ProcedureStep_3 : FSMTestProcedureStep { }
+		private class ProcedureStep_4_LoooooooooooooooongName : FSMTestProcedureStep { }
+		private class ProcedureStep_5 : FSMTestProcedureStep { }
 
 
 		private static FSM _FSM1;
@@ -123,8 +125,10 @@ namespace Icy.Base
 			//Procedure
 			Procedure procedure = new Procedure("FSMTest");
 			procedure.AddStep(new ProcedureStep_1());
-			procedure.AddStep(new ProcedureStep_2());
+			procedure.AddStep(new ProcedureStep_2_LoooooooooooooooongName());
 			procedure.AddStep(new ProcedureStep_3());
+			procedure.AddStep(new ProcedureStep_4_LoooooooooooooooongName());
+			procedure.AddStep(new ProcedureStep_5());
 			procedure.Start();
 		}
 
