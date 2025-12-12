@@ -22,6 +22,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using Google.Protobuf;
+using System.Threading.Tasks;
 
 namespace Icy.Asset.Editor
 {
@@ -36,7 +37,7 @@ namespace Icy.Asset.Editor
 		public override async UniTask Activate()
 		{
 			//确保HybridCLRGenerate/AOTGenericReferences.cs生成完成
-			await UniTask.WaitForSeconds(1);
+			await Task.Delay(1000);
 			_Setting = OwnerProcedure.Blackboard.ReadObject(nameof(AssetSetting), true) as AssetSetting;
 
 			string metaDataDllListPath = Path.Combine("Assets", HybridCLR.Editor.Settings.HybridCLRSettings.Instance.outputAOTGenericReferenceFile);
