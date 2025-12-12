@@ -64,6 +64,8 @@ namespace Icy.Asset.Editor
 				}
 			}
 
+			EditorUserBuildSettings.exportAsGoogleAndroidProject = _BuildSetting.ExportAndroidProject;
+
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 
