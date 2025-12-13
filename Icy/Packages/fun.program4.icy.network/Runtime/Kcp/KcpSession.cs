@@ -232,7 +232,7 @@ namespace Icy.Network
 			{
 				if (len == 0)
 				{
-					Log.LogError($"Kcp output 0", nameof(KcpSession));
+					Log.Error($"Kcp output 0", nameof(KcpSession));
 					return;
 				}
 
@@ -241,7 +241,7 @@ namespace Icy.Network
 			}
 			catch (Exception e)
 			{
-				Log.LogError($"Send failed, {e}", nameof(KcpSession));
+				Log.Error($"Send failed, {e}", nameof(KcpSession));
 				OnError?.Invoke(NetworkError.SendFailed, e);
 			}
 		}

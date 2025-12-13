@@ -65,7 +65,7 @@ namespace Icy.Base
 				//	return b;
 				//};
 				//Blackboard b = classObjectPool.Get();
-				//Log.LogInfo("float = " + b.ReadFloat("Test"));
+				//Log.Info("float = " + b.ReadFloat("Test"));
 				//classObjectPool.Put(b);
 			}
 

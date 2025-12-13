@@ -1129,7 +1129,7 @@ namespace Icy.Base
 				}));
 			}
 #else
-		Log.LogError("Call ShowAndroidToast from Non-Android platform");
+			Log.Error("Call ShowAndroidToast from Non-Android platform");
 #endif
 		}
 
@@ -1161,12 +1161,11 @@ namespace Icy.Base
 			return false;
 		}
 
-
 		/// <summary>
 		/// 当前运行的Player，是否运行在PC平台下；
 		/// PC泛指个人电脑，包括Windows、Mac OSX、Linux
 		/// </summary>
-		/// <param name="includeUnityEditor">如果为true的话，eidtor下也算是PC平台；默认为false</param>
+		/// <param name="includeUnityEditor">如果为true的话，editor下也算是PC平台；默认为false</param>
 		/// <returns></returns>
 		public static bool IsPCPlatformPlayer(bool includeUnityEditor = false)
 		{

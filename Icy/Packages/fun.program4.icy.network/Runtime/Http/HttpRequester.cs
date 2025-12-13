@@ -185,7 +185,7 @@ namespace Icy.Network
 					else
 					{
 						string error = $"{nameof(HttpRequester)} does NOT support method {method} yet";
-						Log.LogError(error, nameof(HttpRequester));
+						Log.Error(error, nameof(HttpRequester));
 						return new HttpResponse() { Code = -1, Content = error };
 					}
 
@@ -200,17 +200,17 @@ namespace Icy.Network
 				catch (Exception e)
 				{
 					lastError = e.Message;
-					Log.LogWarning($"{nameof(HttpRequester)} failed, url = {url}" +
+					Log.Warn($"{nameof(HttpRequester)} failed, url = {url}" +
 									$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 				}
 
 				retry++;
-				Log.LogInfo($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
+				Log.Info($"{nameof(HttpRequester)} {method} retry {retry}", nameof(HttpRequester));
 			} while (retry < _RetryTimes && !_Disposed);
 
 			if (!_Disposed)
 			{
-				Log.LogError($"{nameof(HttpRequester)} failed, url = {url}" +
+				Log.Error($"{nameof(HttpRequester)} failed, url = {url}" +
 							$", responseCode = {lastResponseCode}, error = {lastError}", nameof(HttpRequester));
 			}
 

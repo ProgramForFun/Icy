@@ -189,7 +189,7 @@ namespace Icy.Network
 					//TODO：其实应该搞一个环形buffer，避免Copy，更高效
 					if (_BufferRemain > 0 && _CurMsgStartIdx > 0)
 					{
-						//Log.LogInfo("Move " + _BufferRemain);
+						//Log.Info("Move " + _BufferRemain);
 						Buffer.BlockCopy(_ReceiveBuffer, _CurMsgStartIdx, _ReceiveBuffer, 0, _BufferRemain);
 						_CurMsgStartIdx = 0;
 					}

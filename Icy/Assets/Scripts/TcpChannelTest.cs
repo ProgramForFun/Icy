@@ -48,7 +48,7 @@ namespace Icy.Network
 			Log.Info("[ProtoReceiver] Is MainThread =  " + CommonUtility.IsMainThread());
 			//解析int类型的消息ID
 			int msgID = BitConverter.ToInt32(data, startIdx);
-			//Log.LogInfo($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
+			//Log.Info($"Receive msg ID = {BitConverter.ToInt32(data, startIdx)}");
 
 			//解析protobuf消息本体
 			int protoStartIdx = startIdx + sizeof(int);

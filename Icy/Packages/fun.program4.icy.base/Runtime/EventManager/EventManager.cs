@@ -267,7 +267,7 @@ namespace Icy.Base
 				while (_EventQueue.Count > 0)
 				{
 					KeyValuePair<int, IEventParam> e = _EventQueue.Dequeue();
-					//Log.LogInfo($"Trigger from queue, event id = {e.Key}");
+					//Log.Info($"Trigger from queue, event id = {e.Key}");
 					DoTrigger(e.Key, e.Value);
 				}
 			}

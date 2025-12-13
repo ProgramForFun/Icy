@@ -51,7 +51,7 @@ namespace Icy.UI
 
 		private Rect GetSafeArea()
 		{
-			// Log.LogInfo("safe area = " + Screen.safeArea.ToString());
+			// Log.Info("safe area = " + Screen.safeArea.ToString());
 			return Screen.safeArea;
 		}
 

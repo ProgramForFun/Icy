@@ -59,7 +59,7 @@ namespace Icy.Base
 				EventManager.AddListener(2, WorkerThreadEventCallback);
 				for (int i = 0; i < 10; i++)
 				{
-					//Log.LogInfo("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
+					//Log.Info("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
 					Log.Info("Trigger event = " + i);
 					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
 					eventParam.Value = i;
@@ -72,7 +72,7 @@ namespace Icy.Base
 			{
 				for (int i = 100; i < 110; i++)
 				{
-					//Log.LogWarning("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
+					//Log.Warn("Current trigger event thread ID = " + Thread.CurrentThread.ManagedThreadId);
 					Log.Warn("Trigger event = " + i);
 					EventParam_Int eventParam = EventManager.GetParam<EventParam_Int>();
 					eventParam.Value = i;

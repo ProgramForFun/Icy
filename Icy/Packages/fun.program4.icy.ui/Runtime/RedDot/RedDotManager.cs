@@ -151,7 +151,7 @@ namespace Icy.UI
 					if (_IDDotMap.TryGetValue(parentID, out RedDot parentRedDot))
 					{
 						int count = parentRedDot._CountChildren - prevCount + newCount;
-						//Log.LogInfo($"{parentID} be set -{prevCount} + {newCount}");
+						//Log.Info($"{parentID} be set -{prevCount} + {newCount}");
 						parentRedDot.SetCountChildren(count);
 						parentRedDot.Refresh();
 					}
