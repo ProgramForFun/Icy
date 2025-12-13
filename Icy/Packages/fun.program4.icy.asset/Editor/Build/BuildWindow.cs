@@ -36,7 +36,7 @@ namespace Icy.Asset.Editor
 	{
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
-		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
+		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "#00BCF2")]
 		[Title("包名")]
 		[ShowInInspector]
 		[Delayed]
@@ -295,7 +295,7 @@ namespace Icy.Asset.Editor
 
 		[ShowIf("IsHybridCLREnabled")]
 		[HorizontalGroup("BuildHybridCLR")]
-		[Button("HybridCLR Generate All", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		[Button("HybridCLR Generate All", Icon = SdfIconType.Stack, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void HybridCLRGenerateAll()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
@@ -327,7 +327,7 @@ namespace Icy.Asset.Editor
 
 		[ShowIf("IsHybridCLREnabled")]
 		[HorizontalGroup("BuildHybridCLR")]
-		[Button("Compile HybridCLR DLL", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		[Button("Compile HybridCLR DLL", Icon = SdfIconType.CodeSlash, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void CompileHybridCLRDLL()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
@@ -340,7 +340,7 @@ namespace Icy.Asset.Editor
 		}
 
 		[PropertySpace(5)]
-		[Button("Build", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		[Button("Build", Icon = SdfIconType.Hammer, ButtonHeight = (int)ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
