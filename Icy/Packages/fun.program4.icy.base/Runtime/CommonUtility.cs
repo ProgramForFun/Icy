@@ -213,101 +213,6 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 复制目录
-		/// </summary>
-		/// <param name="sourceDir">要复制的目录</param>
-		/// <param name="destDir">复制到的目标目录</param>
-		/// <param name="copySubDirs">是否复制子文件夹</param>
-		public static bool CopyDir(string sourceDir, string destDir, bool copySubDirs = true)
-		{
-			DirectoryInfo source = new DirectoryInfo(sourceDir);
-
-			if (!source.Exists)
-			{
-				Log.Error(sourceDir + " does not exist", "CopyDir");
-				return false;
-			}
-
-			Directory.CreateDirectory(destDir);
-
-			foreach (FileInfo file in source.GetFiles())
-			{
-				string destFilePath = Path.Combine(destDir, file.Name);
-				file.CopyTo(destFilePath, true); // 覆盖已存在文件
-			}
-
-			if (copySubDirs)
-			{
-				foreach (DirectoryInfo subDir in source.GetDirectories())
-				{
-					string destSubDirPath = Path.Combine(destDir, subDir.Name);
-					CopyDir(subDir.FullName, destSubDirPath, copySubDirs);
-				}
-			}
-			return true;
-		}
-
-		/// <summary>
-		/// Copy指定文件名的文件，到指定目录
-		/// </summary>
-		/// <param name="sourceDir">要复制的目录</param>
-		/// <param name="targetDir">复制到的目标目录</param>
-		/// <param name="nameSet">指定的文件名</param>
-		/// <param name="overwrite">是否允许覆盖同名文件</param>
-		public static void CopyFilesByNames(string sourceDir, string targetDir, HashSet<string> nameSet, bool overwrite = true)
-		{
-			if (!Directory.Exists(sourceDir))
-			{
-				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
-				return;
-			}
-
-			Directory.CreateDirectory(targetDir);
-
-			string[] allFiles = Directory.GetFiles(sourceDir);
-			for (int i = 0; i < allFiles.Length; i++)
-			{
-				string filePath = allFiles[i];
-				string fileName = Path.GetFileName(filePath);
-				if (nameSet.Contains(fileName))
-				{
-					string destPath = Path.Combine(targetDir, fileName);
-					File.Copy(filePath, destPath, overwrite);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Copy指定扩展名的文件，到指定目录
-		/// </summary>
-		/// <param name="sourceDir">要复制的目录</param>
-		/// <param name="targetDir">复制到的目标目录</param>
-		/// <param name="extensionWithDotPrefix">带“点”的扩展名，比如".txt"</param>
-		/// <param name="overwrite">是否允许覆盖同名文件</param>
-		public static void CopyFilesByExtension(string sourceDir, string targetDir, string extensionWithDotPrefix, bool overwrite = true)
-		{
-			if (!Directory.Exists(sourceDir))
-			{
-				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
-				return;
-			}
-
-			Directory.CreateDirectory(targetDir);
-
-			string[] allFiles = Directory.GetFiles(sourceDir);
-			for (int i = 0; i < allFiles.Length; i++)
-			{
-				string filePath = allFiles[i];
-				string fileExtension = Path.GetExtension(filePath);
-				if (fileExtension == extensionWithDotPrefix)
-				{
-					string destPath = Path.Combine(targetDir, Path.GetFileName(filePath));
-					File.Copy(filePath, destPath, overwrite);
-				}
-			}
-		}
-
-		/// <summary>
 		/// 逐byte异或一个byte数组
 		/// </summary>
 		/// <param name="array">要异或的byte数组</param>
@@ -918,6 +823,153 @@ namespace Icy.Base
 			return ToTimestampInMs(s) / 1000L;
 		}
 		#endregion
+
+		#endregion
+
+		#region Directory & File
+		/// <summary>
+		/// 复制目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="destDir">复制到的目标目录</param>
+		/// <param name="copySubDirs">是否复制子文件夹</param>
+		public static bool CopyDir(string sourceDir, string destDir, bool copySubDirs = true)
+		{
+			DirectoryInfo source = new DirectoryInfo(sourceDir);
+
+			if (!source.Exists)
+			{
+				Log.Error(sourceDir + " does not exist", "CopyDir");
+				return false;
+			}
+
+			Directory.CreateDirectory(destDir);
+
+			foreach (FileInfo file in source.GetFiles())
+			{
+				string destFilePath = Path.Combine(destDir, file.Name);
+				file.CopyTo(destFilePath, true); // 覆盖已存在文件
+			}
+
+			if (copySubDirs)
+			{
+				foreach (DirectoryInfo subDir in source.GetDirectories())
+				{
+					string destSubDirPath = Path.Combine(destDir, subDir.Name);
+					CopyDir(subDir.FullName, destSubDirPath, copySubDirs);
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Copy指定文件名的文件，到指定目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="targetDir">复制到的目标目录</param>
+		/// <param name="nameSet">指定的文件名</param>
+		/// <param name="overwrite">是否允许覆盖同名文件</param>
+		public static void CopyFilesByNames(string sourceDir, string targetDir, HashSet<string> nameSet, bool overwrite = true)
+		{
+			if (!Directory.Exists(sourceDir))
+			{
+				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
+				return;
+			}
+
+			Directory.CreateDirectory(targetDir);
+
+			string[] allFiles = Directory.GetFiles(sourceDir);
+			for (int i = 0; i < allFiles.Length; i++)
+			{
+				string filePath = allFiles[i];
+				string fileName = Path.GetFileName(filePath);
+				if (nameSet.Contains(fileName))
+				{
+					string destPath = Path.Combine(targetDir, fileName);
+					File.Copy(filePath, destPath, overwrite);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Copy指定扩展名的文件，到指定目录
+		/// </summary>
+		/// <param name="sourceDir">要复制的目录</param>
+		/// <param name="targetDir">复制到的目标目录</param>
+		/// <param name="extensionWithDotPrefix">带“点”的扩展名，比如".txt"</param>
+		/// <param name="overwrite">是否允许覆盖同名文件</param>
+		public static void CopyFilesByExtension(string sourceDir, string targetDir, string extensionWithDotPrefix, bool overwrite = true)
+		{
+			if (!Directory.Exists(sourceDir))
+			{
+				Log.Error(sourceDir + " does not exist", "CopyFilesByNameList");
+				return;
+			}
+
+			Directory.CreateDirectory(targetDir);
+
+			string[] allFiles = Directory.GetFiles(sourceDir);
+			for (int i = 0; i < allFiles.Length; i++)
+			{
+				string filePath = allFiles[i];
+				string fileExtension = Path.GetExtension(filePath);
+				if (fileExtension == extensionWithDotPrefix)
+				{
+					string destPath = Path.Combine(targetDir, Path.GetFileName(filePath));
+					File.Copy(filePath, destPath, overwrite);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 删除指定目录下，符合指定pattern的文件；
+		/// pattern：
+		///		"*"：匹配所有文件
+		///		"*.txt"：匹配所有扩展名为txt的文件
+		///		更具体的见 System.IO.Directory.GetFiles 的文档
+		/// </summary>
+		/// <param name="directory">指定目录</param>
+		/// <param name="searchPattern">搜索文件的pattern</param>
+		/// <param name="recursive">是否递归删除子目录中的文件</param>
+		public static void DeleteFilesWithPattern(string directory, string searchPattern = "*", bool recursive = true)
+		{
+			if (!Directory.Exists(directory))
+			{
+				Log.Error($"{directory} not exist", nameof(DeleteFilesWithPattern));
+				return;
+			}
+
+			// 支持通配符，例如："*.txt", "temp*.*", "*"
+			string[] files = Directory.GetFiles(directory, searchPattern);
+
+			for (int i = 0; i < files.Length; i++)
+			{
+				try
+				{
+					if (File.Exists(files[i]))
+						File.Delete(files[i]);
+				}
+				catch (UnauthorizedAccessException)
+				{
+					//权限不足？
+					Log.Error($"UnauthorizedAccessException when delete {files[i]}", nameof(DeleteFilesWithPattern));
+				}
+				catch (IOException)
+				{
+					//文件被占用？
+					Log.Error($"IOException when delete {files[i]}", nameof(DeleteFilesWithPattern));
+				}
+			}
+
+			// 递归删除子目录中的文件
+			if (recursive)
+			{
+				string[] subDirectories = Directory.GetDirectories(directory);
+				for (int i = 0; i < files.Length; i++)
+					DeleteFilesWithPattern(subDirectories[i], searchPattern, true);
+			}
+		}
 
 		#endregion
 
