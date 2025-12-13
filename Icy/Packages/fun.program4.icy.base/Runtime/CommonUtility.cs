@@ -972,6 +972,72 @@ namespace Icy.Base
 
 		#endregion
 
+		#region Formatter
+		/// <summary>
+		/// 格式化数字，添加千位分隔符
+		/// </summary>
+		/// <param name="number">要格式化的数字</param>
+		/// <param name="decimalPlaces">小数位数，默认为不保留小数</param>
+		public static string FormatWithCommas(int number, int decimalPlaces = 0)		{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(uint number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(long number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(ulong number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(short number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(ushort number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(byte number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(sbyte number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(float number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(double number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(decimal number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+
+		/// <summary>
+		/// 格式化数字，根据大小加上K/M/B/T/Q后缀，支持指定小数位数
+		/// </summary>
+		/// <param name="number">要格式化的数字</param>
+		/// <param name="decimalPlaces">小数位数，默认为不保留小数</param>
+		public static string FormatWithSuffix(long number, int decimalPlaces = 0)
+		{
+			if (number == 0)
+				return decimalPlaces > 0 ? "0".PadRight(3 + decimalPlaces, '0').Insert(1, ".") : "0";
+
+			bool isNegative = number < 0;
+			long absValue = number < 0 ? -number : number;
+
+			(double divisor, string suffix) = absValue switch
+			{
+				>= 1_000_000_000_000_000L => (1_000_000_000_000_000.0, "Q"),
+				>= 1_000_000_000_000L => (1_000_000_000_000.0, "T"),
+				>= 1_000_000_000L => (1_000_000_000.0, "B"),
+				>= 1_000_000L => (1_000_000.0, "M"),
+				>= 1_000L => (1_000.0, "K"),
+				_ => (1L, "")
+			};
+
+			if (divisor > 1)
+			{
+				double formattedValue = absValue / divisor;
+
+				if (decimalPlaces == 0)
+				{
+					// 小数位数为0时四舍五入到整数
+					long roundedValue = (long)Math.Round(formattedValue, MidpointRounding.AwayFromZero);
+					return $"{(isNegative ? "-" : "")}{roundedValue}{suffix}";
+				}
+				else
+				{
+					// 指定小数位数
+					return $"{(isNegative ? "-" : "")}{formattedValue.ToString($"F{decimalPlaces}")}{suffix}";
+				}
+			}
+
+			// 无后缀的情况
+			if (decimalPlaces == 0)
+				return $"{(isNegative ? "-" : "")}{absValue:F0}";
+			else
+				return $"{(isNegative ? "-" : "")}{absValue.ToString($"F{decimalPlaces}")}";
+		}
+		#endregion
+
 		#region Platform
 		/// <summary>
 		/// 使用Android Toast显示文本消息
