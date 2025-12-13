@@ -1040,28 +1040,28 @@ namespace Icy.Base
 		/// <summary>
 		/// 将秒数格式化为 分:秒 (mm:ss)
 		/// </summary>
-		public static string FormatTime_mmss(double totalSeconds)
+		public static string FormatTime_mmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{(int)timeSpan.TotalMinutes:D2}:{timeSpan.Seconds:D2}";
+			return $"{(int)timeSpan.TotalMinutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
 		/// 将秒数格式化为 时:分:秒 (hh:mm:ss)
 		/// </summary>
-		public static string FormatTime_hhmmss(double totalSeconds)
+		public static string FormatTime_hhmmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{(int)timeSpan.TotalHours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+			return $"{(int)timeSpan.TotalHours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
 		/// 将秒数格式化为 天:时:分:秒 (d:hh:mm:ss)
 		/// </summary>
-		public static string FormatTime_dhhmmss(double totalSeconds)
+		public static string FormatTime_dhhmmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{timeSpan.Days}:{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+			return $"{timeSpan.Days}:{timeSpan.Hours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
@@ -1070,16 +1070,16 @@ namespace Icy.Base
 		/// 小于1天：	时:分:秒
 		/// 大于等于1天：	天:时:分:秒
 		/// </summary>
-		public static string FormatTime_Auto(double totalSeconds)
+		public static string FormatTime_Auto(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
 
 			if (timeSpan.TotalDays >= 1)
-				return FormatTime_dhhmmss(totalSeconds);
+				return FormatTime_dhhmmss(totalSeconds, separator);
 			else if (timeSpan.TotalHours >= 1)
-				return FormatTime_hhmmss(totalSeconds);
+				return FormatTime_hhmmss(totalSeconds, separator);
 			else
-				return FormatTime_mmss(totalSeconds);
+				return FormatTime_mmss(totalSeconds, separator);
 		}
 
 		/// <summary>
