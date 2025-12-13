@@ -965,7 +965,7 @@ namespace Icy.Base
 			if (recursive)
 			{
 				string[] subDirectories = Directory.GetDirectories(directory);
-				for (int i = 0; i < files.Length; i++)
+				for (int i = 0; i < subDirectories.Length; i++)
 					DeleteFilesWithPattern(subDirectories[i], searchPattern, true);
 			}
 		}
