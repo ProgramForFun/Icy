@@ -1,6 +1,6 @@
 # Icy
 Icy Unity Framework，提供Unity商业项目必备的各种基础设施，集成业界常用高质量插件/工具；  
-HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + NativeWebSocket + Protobuf + Odin + DOTween + SRDebugger + UIParticle + UIEffect + ZString；  
+HybridCLR + YooAsset + UniTask + Luban + Obfuz + KCP + NativeWebSocket + Protobuf + Odin + LitMotion + SRDebugger + UIParticle + UIEffect + ZString；  
 更具体的见[Features & Roadmap](#features--roadmap)
 
 ![](https://img.shields.io/badge/Unity%20Version-2022.3-blue.svg?style=flat)
@@ -45,7 +45,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |---|---|:---:|
 |集成[UniTask](https://github.com/Cysharp/UniTask)|GC Free async/await方案|✔️|
 |集成[Protobuf](https://github.com/ProgramForFun/protobuf_unity)|高效二进制序列化|✔️|
-|集成[DOTween](https://dotween.demigiant.com/)|强大的缓动效果库|✔️|
+|集成[LitMotion](https://github.com/annulusgames/LitMotion)|高性能、Zero GC Alloc缓动效果库|✔️|
 |集成[Luban](https://github.com/focus-creative-games/luban)|打表工具天花板|✔️|
 |集成[HybridCLR](https://github.com/focus-creative-games/hybridclr)|特性完整、高性能的全平台原生C#热更新方案|✔️|
 |集成[Obfuz](https://github.com/focus-creative-games/obfuz)|和Unity深度集成的代码混淆方案|待开始|
