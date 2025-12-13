@@ -1036,6 +1036,76 @@ namespace Icy.Base
 			else
 				return $"{(isNegative ? "-" : "")}{absValue.ToString($"F{decimalPlaces}")}";
 		}
+
+		/// <summary>
+		/// 将秒数格式化为 分:秒 (mm:ss)
+		/// </summary>
+		public static string FormatTime_mmss(double totalSeconds)
+		{
+			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+			return $"{(int)timeSpan.TotalMinutes:D2}:{timeSpan.Seconds:D2}";
+		}
+
+		/// <summary>
+		/// 将秒数格式化为 时:分:秒 (hh:mm:ss)
+		/// </summary>
+		public static string FormatTime_hhmmss(double totalSeconds)
+		{
+			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+			return $"{(int)timeSpan.TotalHours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+		}
+
+		/// <summary>
+		/// 将秒数格式化为 天:时:分:秒 (d:hh:mm:ss)
+		/// </summary>
+		public static string FormatTime_dhhmmss(double totalSeconds)
+		{
+			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+			return $"{timeSpan.Days}:{timeSpan.Hours:D2}:{timeSpan.Minutes:D2}:{timeSpan.Seconds:D2}";
+		}
+
+		/// <summary>
+		/// 将秒数自动格式化合适的时间格式；
+		/// 小于1小时：	分:秒
+		/// 小于1天：	时:分:秒
+		/// 大于等于1天：	天:时:分:秒
+		/// </summary>
+		public static string FormatTime_Auto(double totalSeconds)
+		{
+			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+
+			if (timeSpan.TotalDays >= 1)
+				return FormatTime_dhhmmss(totalSeconds);
+			else if (timeSpan.TotalHours >= 1)
+				return FormatTime_hhmmss(totalSeconds);
+			else
+				return FormatTime_mmss(totalSeconds);
+		}
+
+		/// <summary>
+		/// 将秒数转换为可读的时间字符串；
+		/// 例如：3665秒 -> "1小时1分5秒"；
+		/// </summary>
+		public static string FormatTime_Readable(double totalSeconds, string day, string hour, string minute, string second)
+		{
+			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
+
+			_FormatTime_ReadableList.Value.Clear();
+			if (timeSpan.Days > 0)
+				_FormatTime_ReadableList.Value.Add($"{timeSpan.Days}{day}");
+
+			if (timeSpan.Hours > 0)
+				_FormatTime_ReadableList.Value.Add($"{timeSpan.Hours}{hour}");
+
+			if (timeSpan.Minutes > 0)
+				_FormatTime_ReadableList.Value.Add($"{timeSpan.Minutes}{minute}");
+
+			if (timeSpan.Seconds > 0 || _FormatTime_ReadableList.Value.Count == 0)
+				_FormatTime_ReadableList.Value.Add($"{timeSpan.Seconds}{second}");
+
+			return string.Join("", _FormatTime_ReadableList.Value);
+		}
+		private static ThreadLocal<List<string>> _FormatTime_ReadableList = new() { Value = new List<string>(4)};
 		#endregion
 
 		#region Platform
