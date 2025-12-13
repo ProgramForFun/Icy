@@ -378,7 +378,6 @@ namespace Icy.Base
 		/// 在一个Rect范围内随机一个点
 		/// </summary>
 		/// <param name="rect"></param>
-		/// <returns></returns>
 		public static Vector2 RandomInRect(Rect rect)
 		{
 			float x = Random.Range(rect.xMin, rect.xMax);
@@ -402,7 +401,8 @@ namespace Icy.Base
 		/// 计算贝塞尔曲线上指定t的一点（两个控制点）
 		/// </summary>
 		/// <param name="start">曲线的起始位置</param>
-		/// <param name="control">决定曲线形状的控制点</param>
+		/// <param name="ctrl1">决定曲线形状的控制点1</param>
+		/// <param name="ctrl2">决定曲线形状的控制点2</param>
 		/// <param name="end">曲线的终点</param>
 		/// <param name="t">0到1的值，0获取曲线的起点，1获得曲线的终点</param>
 		public static Vector3 CalculateBezierPoint2(Vector3 start, Vector3 ctrl1, Vector3 ctrl2, Vector3 end, float t)
@@ -425,7 +425,6 @@ namespace Icy.Base
 		/// <param name="from"></param>
 		/// <param name="to"></param>
 		/// <param name="up">用于参考的上方向</param>
-		/// <returns></returns>
 		public static float AnglePlusOrMinus(Vector3 from, Vector3 to, Vector3 up)
 		{
 			float rtn = Vector3.Angle(from, to);
@@ -439,7 +438,6 @@ namespace Icy.Base
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <param name="angle">正数顺时针，反之逆时针</param>
-		/// <returns></returns>
 		public static Vector2 Rotate(ref this Vector2 vector, float angle)
 		{
 			float rad = angle * Mathf.Deg2Rad;
@@ -458,7 +456,6 @@ namespace Icy.Base
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <param name="angle">正数顺时针，反之逆时针</param>
-		/// <returns></returns>
 		public static Vector2 RotateVector2(Vector2 vector, float angle)
 		{
 			float rad = angle * Mathf.Deg2Rad;
@@ -470,10 +467,16 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// Vector3扩展，方便转换成xy平面的Vector2
+		/// </summary>
+		public static Vector2 xy(this Vector3 vec3)
+		{
+			return new Vector2(vec3.x, vec3.y);
+		}
+
+		/// <summary>
 		/// Vector3扩展，方便转换成xz平面的Vector2
 		/// </summary>
-		/// <param name="vec3"></param>
-		/// <returns></returns>
 		public static Vector2 xz(this Vector3 vec3)
 		{
 			return new Vector2(vec3.x, vec3.z);
@@ -482,8 +485,6 @@ namespace Icy.Base
 		/// <summary>
 		/// Vector2扩展，方便把Vector2转换成(x, 0, y)的Vector3
 		/// </summary>
-		/// <param name="vec2"></param>
-		/// <returns></returns>
 		public static Vector3 x0y(this Vector2 vec2)
 		{
 			return new Vector3(vec2.x, 0.0f, vec2.y);
@@ -492,8 +493,6 @@ namespace Icy.Base
 		/// <summary>
 		/// Vector3扩展，方便把y轴归零
 		/// </summary>
-		/// <param name="vec3"></param>
-		/// <returns></returns>
 		public static Vector3 x0z(this Vector3 vec3)
 		{
 			return new Vector3(vec3.x, 0.0f, vec3.z);
