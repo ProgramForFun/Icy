@@ -105,6 +105,9 @@ namespace Icy.Asset.Editor
 				return false;
 			}
 
+			//先清空目录，防止不再需要了的DLL一直存在
+			CommonUtility.DeleteFilesWithPattern(copy2Dir);
+
 			for (int i = 0; i < _MetaDataDLLs.Count; i++)
 			{
 				string dllPath = Path.Combine(srcDir, _MetaDataDLLs[i]);

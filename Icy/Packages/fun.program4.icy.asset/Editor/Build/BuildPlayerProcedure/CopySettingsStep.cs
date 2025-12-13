@@ -29,8 +29,9 @@ namespace Icy.Asset.Editor
 	{
 		public override async UniTask Activate()
 		{
-			string dest = Path.Combine(Application.streamingAssetsPath, SettingsHelper.GetSettingDir());
-			bool succeed = CommonUtility.CopyDir(SettingsHelper.GetSettingDir(), dest, false);
+			string copy2Dir = Path.Combine(Application.streamingAssetsPath, SettingsHelper.GetSettingDir());
+			CommonUtility.DeleteFilesWithPattern(copy2Dir);
+			bool succeed = CommonUtility.CopyDir(SettingsHelper.GetSettingDir(), copy2Dir, false);
 			if (!succeed)
 			{
 				Log.Assert(false, "Copy setting files failed", nameof(CopySettingsStep));
