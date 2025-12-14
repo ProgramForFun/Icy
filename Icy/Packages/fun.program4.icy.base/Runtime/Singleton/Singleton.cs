@@ -40,10 +40,6 @@ namespace Icy.Base
         {
             get
             {
-#if UNITY_EDITOR
-				UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-				UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-#endif
 				if (instance == null)
                 {
                     //ensure that only one thread can execute
@@ -107,6 +103,7 @@ namespace Icy.Base
 
         public static void DestroyInstance()
         {
+			//Log.Error(typeof(T).Name + $" DestroyInstance");
             if (instance == null)
             {
                 return;
@@ -117,14 +114,5 @@ namespace Icy.Base
 		}
 
 		#endregion
-
-#if UNITY_EDITOR
-		private static void OnPlayModeStateChanged(UnityEditor.PlayModeStateChange state)
-		{
-			UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-			if (state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
-				DestroyInstance();
-		}
-#endif
 	}
 }
