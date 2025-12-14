@@ -18,7 +18,6 @@ using Icy.Base;
 using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Icy.UI
 {
