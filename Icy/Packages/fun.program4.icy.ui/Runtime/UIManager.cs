@@ -162,10 +162,10 @@ namespace Icy.UI
 		/// 显示UI（async await风格）；
 		/// </summary>
 		/// <param name="param">UI显示时传入的参数</param>
-		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
-		public async UniTask<T> ShowAsync<T>(IUIParam param = null, bool blockInteract = true) where T : UIBase
+		/// <param name="blockInteractUntilUIShown">是否屏蔽输入，直到UI打开</param>
+		public async UniTask<T> ShowAsync<T>(IUIParam param = null, bool blockInteractUntilUIShown = true) where T : UIBase
 		{
-			if (blockInteract)
+			if (blockInteractUntilUIShown)
 				BlockInteract();
 			T ui = await GetAsync<T>();
 
@@ -182,7 +182,7 @@ namespace Icy.UI
 			finally
 			{
 				//保证一定会解除block
-				if (blockInteract)
+				if (blockInteractUntilUIShown)
 					CancelBlockInteract();
 			}
 			return null;
@@ -194,7 +194,7 @@ namespace Icy.UI
 		/// <param name="param">UI显示时传入的参数</param>
 		/// <param name="blockInteract">是否屏蔽输入，直到UI打开</param>
 		/// <param name="callback">UI打开后的回调函数，如果Show UI出现异常，会返回null</param>
-		public void Show<T>(IUIParam param = null, bool blockInteract = true, Action<UIBase> callback = null) where T : UIBase
+		public void Show<T>(IUIParam param = null, Action<UIBase> callback = null, bool blockInteract = true) where T : UIBase
 		{
 			if (blockInteract)
 				BlockInteract();
