@@ -15,6 +15,7 @@
  */
 
 
+using Cysharp.Text;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
@@ -1013,6 +1014,7 @@ namespace Icy.Base
 				_ => (1L, "")
 			};
 
+			string sign = isNegative ? "-" : "";
 			if (divisor > 1)
 			{
 				double formattedValue = absValue / divisor;
@@ -1021,20 +1023,20 @@ namespace Icy.Base
 				{
 					// 小数位数为0时四舍五入到整数
 					long roundedValue = (long)Math.Round(formattedValue, MidpointRounding.AwayFromZero);
-					return $"{(isNegative ? "-" : "")}{roundedValue}{suffix}";
+					return ZString.Format("{0}{1}{2}", sign, roundedValue, suffix);
+					//return $"{sign}{roundedValue}{suffix}";
 				}
 				else
 				{
 					// 指定小数位数
-					return $"{(isNegative ? "-" : "")}{formattedValue.ToString($"F{decimalPlaces}")}{suffix}";
+					return ZString.Format("{0}{1}{2}", sign, formattedValue.ToString($"F{decimalPlaces}"), suffix);
+					//return $"{sign}{formattedValue.ToString($"F{decimalPlaces}")}{suffix}";
 				}
 			}
 
 			// 无后缀的情况
-			if (decimalPlaces == 0)
-				return $"{(isNegative ? "-" : "")}{absValue:F0}";
-			else
-				return $"{(isNegative ? "-" : "")}{absValue.ToString($"F{decimalPlaces}")}";
+			return ZString.Format("{0}{1}", sign, absValue);
+			//return $"{sign}{absValue:F0}";
 		}
 
 		/// <summary>
@@ -1043,7 +1045,8 @@ namespace Icy.Base
 		public static string FormatTime_mmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{(int)timeSpan.TotalMinutes:D2}{separator}{timeSpan.Seconds:D2}";
+			return ZString.Format("{0:D2}{1}{2:D2}", (long)timeSpan.TotalMinutes, separator, timeSpan.Seconds);
+			//return $"{(int)timeSpan.TotalMinutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
@@ -1052,7 +1055,8 @@ namespace Icy.Base
 		public static string FormatTime_hhmmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{(int)timeSpan.TotalHours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
+			return ZString.Format("{0:D2}{1}{2:D2}{3}{4:D2}", (long)timeSpan.TotalHours, separator, timeSpan.Minutes, separator, timeSpan.Seconds);
+			//return $"{(int)timeSpan.TotalHours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
@@ -1061,7 +1065,8 @@ namespace Icy.Base
 		public static string FormatTime_dhhmmss(double totalSeconds, string separator = ":")
 		{
 			TimeSpan timeSpan = TimeSpan.FromSeconds(totalSeconds);
-			return $"{timeSpan.Days}:{timeSpan.Hours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
+			return ZString.Format("{0}{1}{2:D2}{3}{4:D2}{5}{6:D2}", (long)timeSpan.TotalDays, separator, timeSpan.Hours, separator, timeSpan.Minutes, separator, timeSpan.Seconds);
+			//return $"{timeSpan.Days}{separator}{timeSpan.Hours:D2}{separator}{timeSpan.Minutes:D2}{separator}{timeSpan.Seconds:D2}";
 		}
 
 		/// <summary>
@@ -1092,18 +1097,18 @@ namespace Icy.Base
 
 			_FormatTime_ReadableList.Value.Clear();
 			if (timeSpan.Days > 0)
-				_FormatTime_ReadableList.Value.Add($"{timeSpan.Days}{day}");
+				_FormatTime_ReadableList.Value.Add(ZString.Format("{0}{1}", timeSpan.Days, day));
 
 			if (timeSpan.Hours > 0)
-				_FormatTime_ReadableList.Value.Add($"{timeSpan.Hours}{hour}");
+				_FormatTime_ReadableList.Value.Add(ZString.Format("{0}{1}", timeSpan.Hours, hour));
 
 			if (timeSpan.Minutes > 0)
-				_FormatTime_ReadableList.Value.Add($"{timeSpan.Minutes}{minute}");
+				_FormatTime_ReadableList.Value.Add(ZString.Format("{0}{1}", timeSpan.Minutes, minute));
 
 			if (timeSpan.Seconds > 0 || _FormatTime_ReadableList.Value.Count == 0)
-				_FormatTime_ReadableList.Value.Add($"{timeSpan.Seconds}{second}");
+				_FormatTime_ReadableList.Value.Add(ZString.Format("{0}{1}", timeSpan.Seconds, second));
 
-			return string.Join("", _FormatTime_ReadableList.Value);
+			return ZString.Join("", _FormatTime_ReadableList.Value);
 		}
 		private static ThreadLocal<List<string>> _FormatTime_ReadableList = new() { Value = new List<string>(4)};
 		#endregion
