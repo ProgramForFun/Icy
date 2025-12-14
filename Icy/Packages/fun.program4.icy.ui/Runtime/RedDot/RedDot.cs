@@ -39,8 +39,8 @@ namespace Icy.UI
 		/// 数量Text
 		/// TODO ：替换为自定义的UIText
 		/// </summary>
-		[ShowIf("Type", RedDotType.DotWithCount)]
-		public Text CountText;
+		[ShowIf(nameof(Type), RedDotType.DotWithCount)]
+		public TextEx CountText;
 
 		/// <summary>
 		/// 红点ID
