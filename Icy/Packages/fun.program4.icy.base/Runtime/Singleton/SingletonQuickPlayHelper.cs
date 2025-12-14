@@ -35,6 +35,9 @@ namespace Icy.Base
 			DestroyAllSingletonInstance();
 		}
 
+		/// <summary>
+		/// TODO：C#代码量上来之后，此处性能有待观察
+		/// </summary>
 		public static void DestroyAllSingletonInstance()
 		{
 			if (!EditorSettings.enterPlayModeOptionsEnabled)
@@ -43,19 +46,31 @@ namespace Icy.Base
 			if (!EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload))
 				return;
 
-			// TODO：C#代码量上来之后，此处性能有待观察
+			//带where38个程序集
+			IEnumerable<Assembly> allAssemblies = AppDomain.CurrentDomain.GetAssemblies()
+				.Where(asm =>
+				{
+					string fullName = asm.FullName;
+					return !fullName.StartsWith("System") && !fullName.StartsWith("Unity")
+						&& !fullName.StartsWith("YooAsset") && !fullName.StartsWith("UniTask")
+						&& !fullName.StartsWith("Coffee") && !fullName.StartsWith("Sirenix")
+						&& !fullName.StartsWith("nunit") && !fullName.StartsWith("dnlib")
+						&& !fullName.StartsWith("Mono") && !fullName.StartsWith("mscorlib")
+						&& !fullName.StartsWith("LitMotion");
+				});
+
 			Type interfaceType = typeof(ISingleton);
-			List<Type> allDerivedTypes = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(a => a.GetTypes())
-				.Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t))
-				.ToList();
+			//不带where大约2100
+			IEnumerable<Type> allDerivedTypes = allAssemblies
+				.SelectMany(asm => asm.GetTypes())
+				.Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t));
 
 			Type baseType = typeof(Singleton<>);
-			for (int i = 0; i < allDerivedTypes.Count; i++)
+			foreach (Type type in allDerivedTypes)
 			{
-				if (CommonUtility.IsSubclassOfRawGeneric(allDerivedTypes[i], baseType))
+				if (CommonUtility.IsSubclassOfRawGeneric(type, baseType))
 				{
-					MethodInfo method = allDerivedTypes[i].GetMethod("DestroyInstance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+					MethodInfo method = type.GetMethod("DestroyInstance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 					method.Invoke(null, null);
 				}
 			}
