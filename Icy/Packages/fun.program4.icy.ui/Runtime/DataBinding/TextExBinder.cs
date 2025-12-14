@@ -17,30 +17,29 @@
 
 using Icy.Base;
 using System;
-using UnityEngine.UI;
 
 namespace Icy.UI
 {
 	/// <summary>
-	/// Ugui Image的Bind扩展
+	/// TextEx的Bind扩展
 	/// </summary>
-	public static class UguiImageBinder
+	public static class TextExBinder
 	{
-		public static void BindTo(this Image image, BindableData<string> bindableData)
+		public static void BindTo<T>(this TextEx textEx, BindableData<T> bindableData)
 		{
-			Action<string> listener = (string newValue) => { image.SetSprite(newValue); };
-			UguiBindManager.Instance.BindTo(image, bindableData, listener);
+			Action<T> listener = (T newValue) => { textEx.text = newValue.ToString(); };
+			UguiBindManager.Instance.BindTo(textEx, bindableData, listener);
 		}
 
-		public static void BindTo<T>(this Image image, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
+		public static void BindTo<T>(this TextEx textEx, BindableData<T> bindableData, Func<BindableData<T>, string> predicate)
 		{
-			Action<T> listener = (T newValue) => { image.SetSprite(predicate(bindableData)); };
-			UguiBindManager.Instance.BindTo(image, bindableData, listener);
+			Action<T> listener = (T newValue) => { textEx.text = predicate(bindableData); };
+			UguiBindManager.Instance.BindTo(textEx, bindableData, listener);
 		}
 
-		public static void UnbindTo<T>(this Image image, BindableData<T> bindableData)
+		public static void UnbindTo<T>(this TextEx textEx, BindableData<T> bindableData)
 		{
-			UguiBindManager.Instance.UnbindTo(image, bindableData);
+			UguiBindManager.Instance.UnbindTo(textEx, bindableData);
 		}
 	}
 }
