@@ -43,17 +43,21 @@ namespace Icy.Base
 			if (!EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload))
 				return;
 
-			Type baseType = typeof(Singleton<>);
+			// TODO：C#代码量上来之后，此处性能有待观察
+			Type interfaceType = typeof(ISingleton);
 			List<Type> allDerivedTypes = AppDomain.CurrentDomain.GetAssemblies()
 				.SelectMany(a => a.GetTypes())
-				.Where(t => t.IsClass && !t.IsAbstract)
-				.Where(t => CommonUtility.IsSubclassOfRawGeneric(t, baseType))
+				.Where(t => t.IsClass && !t.IsAbstract && interfaceType.IsAssignableFrom(t))
 				.ToList();
 
+			Type baseType = typeof(Singleton<>);
 			for (int i = 0; i < allDerivedTypes.Count; i++)
 			{
-				MethodInfo method = allDerivedTypes[i].GetMethod("DestroyInstance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-				method?.Invoke(null, null);
+				if (CommonUtility.IsSubclassOfRawGeneric(allDerivedTypes[i], baseType))
+				{
+					MethodInfo method = allDerivedTypes[i].GetMethod("DestroyInstance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+					method.Invoke(null, null);
+				}
 			}
 		}
 	}
