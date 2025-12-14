@@ -106,20 +106,20 @@ namespace Icy.Asset.Editor
 		[OnValueChanged(nameof(SaveSetting))]
 		public bool ExportAndroidProject;
 
-		[FoldoutGroup("打包步骤", Expanded = false)]
+		[FoldoutGroup("☰ 打包步骤", Expanded = false)]
 		[ReadOnly]
 		public List<string> BuildSteps;
 
 		[BoxGroup("AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
-		[InlineButton(nameof(SwitchAssetBundleOptionsTips), "?")]
+		[InlineButton(nameof(SwitchAssetBundleOptionsTips), " ? ")]
 		[EnumToggleButtons]
 		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionAssetBundle AssetBundleOptions;
 
 		[BoxGroup("调试选项")]
 		[InfoBox("是否打Dev版本  ┃  是否允许调试代码  ┃  是否启动时自动连接Profiler  ┃  是否开启Deep Profiling", "_ShowDevOptionsTips")]
-		[InlineButton(nameof(SwitchDevOptionsTips), "?")]
+		[InlineButton(nameof(SwitchDevOptionsTips), " ? ")]
 		[EnumToggleButtons]
 		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionDev DevOptions;
