@@ -974,22 +974,25 @@ namespace Icy.Base
 		#endregion
 
 		#region Formatter
+		private static string[] _DecimalPlacesF = new string[] { "{0:F0}", "{0:F1}", "{0:F2}", "{0:F3}", "{0:F4}", "{0:F5}", "{0:F6}", "{0:F7}", "{0:F8}", "{0:F9}", "{0:F10}" };
+		private static string[] _DecimalPlacesN = new string[] { "{0:N0}", "{0:N1}", "{0:N2}", "{0:N3}", "{0:N4}", "{0:N5}", "{0:N6}", "{0:N7}", "{0:N8}", "{0:N9}", "{0:N10}" };
+
 		/// <summary>
 		/// 格式化数字，添加千位分隔符
 		/// </summary>
 		/// <param name="number">要格式化的数字</param>
 		/// <param name="decimalPlaces">小数位数，默认为不保留小数</param>
-		public static string FormatWithCommas(int number, int decimalPlaces = 0)		{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(uint number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(long number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(ulong number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(short number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(ushort number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(byte number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(sbyte number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(float number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(double number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
-		public static string FormatWithCommas(decimal number, int decimalPlaces = 0)	{ return number.ToString($"N{decimalPlaces}"); }
+		public static string FormatWithCommas(int number, int decimalPlaces = 0)		{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(uint number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(long number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(ulong number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(short number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(ushort number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(byte number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(sbyte number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(float number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(double number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(decimal number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 
 		/// <summary>
 		/// 格式化数字，根据大小加上K/M/B/T/Q后缀，支持指定小数位数
@@ -999,7 +1002,11 @@ namespace Icy.Base
 		public static string FormatWithSuffix(long number, int decimalPlaces = 0)
 		{
 			if (number == 0)
-				return decimalPlaces > 0 ? "0".PadRight(3 + decimalPlaces, '0').Insert(1, ".") : "0";
+			{
+				int idx = Math.Clamp(decimalPlaces, 0, _DecimalPlacesF.Length - 1);
+				return ZString.Format(_DecimalPlacesF[idx], 0);
+				//return decimalPlaces > 0 ? "0".PadRight(3 + decimalPlaces, '0').Insert(1, ".") : "0";
+			}
 
 			bool isNegative = number < 0;
 			long absValue = number < 0 ? -number : number;
@@ -1029,7 +1036,9 @@ namespace Icy.Base
 				else
 				{
 					// 指定小数位数
-					return ZString.Format("{0}{1}{2}", sign, formattedValue.ToString($"F{decimalPlaces}"), suffix);
+					int idx = Math.Clamp(decimalPlaces, 0, _DecimalPlacesF.Length - 1);
+					string formattedValueStr = ZString.Format(_DecimalPlacesF[idx], formattedValue);
+					return ZString.Format("{0}{1}{2}", sign, formattedValueStr, suffix);
 					//return $"{sign}{formattedValue.ToString($"F{decimalPlaces}")}{suffix}";
 				}
 			}
