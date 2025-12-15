@@ -274,7 +274,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 将UniTask绑定到指定GameObject，GameObejct销毁时，UniTask会被中断
+		/// 将UniTask绑定到指定GameObject，GameObject销毁时，UniTask会被中断
 		/// </summary>
 		public static UniTask AttachToGameObject(this UniTask uniTask, GameObject go)
 		{
@@ -287,7 +287,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 将UniTask<T>绑定到指定GameObject，GameObejct销毁时，UniTask会被中断
+		/// 将UniTask<T>绑定到指定GameObject，GameObject销毁时，UniTask会被中断
 		/// </summary>
 		public static UniTask<T> AttachToGameObject<T>(this UniTask<T> uniTask, GameObject go)
 		{
