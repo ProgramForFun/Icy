@@ -36,7 +36,6 @@ namespace Icy.UI
 		public GameObject Dot;
 		/// <summary>
 		/// 数量Text
-		/// TODO ：替换为自定义的UIText
 		/// </summary>
 		[ShowIf(nameof(Type), RedDotType.DotWithCount)]
 		public TextEx CountText;
