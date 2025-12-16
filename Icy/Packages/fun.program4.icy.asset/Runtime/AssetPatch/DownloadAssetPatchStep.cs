@@ -19,6 +19,7 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using SimpleDiskUtils;
 using System;
+using UnityEngine;
 using YooAsset;
 
 namespace Icy.Asset
@@ -70,11 +71,19 @@ namespace Icy.Asset
 				if (HasEnoughDiskSpace(totalDownloadBytes))
 				{
 					Log.Info($"Ready to download patch", nameof(AssetPatcher), true);
-					Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
-					eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
-					eventParam.About2DownloadCount = _Downloader.TotalDownloadCount;
-					eventParam.StartDownload = Download;
-					EventManager.Trigger(EventDefine.Ready2DownloadAssetPatch, eventParam);
+
+					int downloadConfirmThesholdMB = AssetManager.Instance.AssetSetting.AssetDownloadConfirmTheshold;
+					if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork
+						&& totalDownloadBytes > downloadConfirmThesholdMB * 1024 * 1024) //如果更新大小在5MB以内，即使是没有WIFI也直接下载
+					{
+						Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
+						eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
+						eventParam.About2DownloadCount = _Downloader.TotalDownloadCount;
+						eventParam.StartDownload = Download;
+						EventManager.Trigger(EventDefine.Ready2DownloadAssetPatch, eventParam);
+					}
+					else
+						Download();
 				}
 				else
 				{

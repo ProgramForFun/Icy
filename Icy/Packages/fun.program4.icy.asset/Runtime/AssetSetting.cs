@@ -24,16 +24,16 @@ namespace Icy.Asset {
     static AssetSettingReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCK7AQoMQXNzZXRTZXR0",
+            "ChJBc3NldFNldHRpbmcucHJvdG8SCUljeS5Bc3NldCLhAQoMQXNzZXRTZXR0",
             "aW5nEiIKGkFzc2V0SG9zdFNlcnZlckFkZHJlc3NNYWluGAEgASgJEiUKHUFz",
             "c2V0SG9zdFNlcnZlckFkZHJlc3NTdGFuZGJ5GAIgASgJEhkKEVBhdGNoRExM",
             "Q29weVRvRGlyGAMgASgJEhwKFE1ldGFEYXRhRExMQ29weVRvRGlyGAQgASgJ",
-            "EhEKCVBhdGNoRExMcxgFIAMoCRIUCgxNZXRhRGF0YURMTHMYBiADKAliBnBy",
-            "b3RvMw=="));
+            "EiQKHEFzc2V0RG93bmxvYWRDb25maXJtVGhlc2hvbGQYBSABKAUSEQoJUGF0",
+            "Y2hETExzGA4gAygJEhQKDE1ldGFEYXRhRExMcxgPIAMoCWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir", "PatchDLLs", "MetaDataDLLs" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Icy.Asset.AssetSetting), global::Icy.Asset.AssetSetting.Parser, new[]{ "AssetHostServerAddressMain", "AssetHostServerAddressStandby", "PatchDLLCopyToDir", "MetaDataDLLCopyToDir", "AssetDownloadConfirmTheshold", "PatchDLLs", "MetaDataDLLs" }, null, null, null, null)
           }));
     }
     #endregion
@@ -79,6 +79,7 @@ namespace Icy.Asset {
       assetHostServerAddressStandby_ = other.assetHostServerAddressStandby_;
       patchDLLCopyToDir_ = other.patchDLLCopyToDir_;
       metaDataDLLCopyToDir_ = other.metaDataDLLCopyToDir_;
+      assetDownloadConfirmTheshold_ = other.assetDownloadConfirmTheshold_;
       patchDLLs_ = other.patchDLLs_.Clone();
       metaDataDLLs_ = other.metaDataDLLs_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -150,10 +151,25 @@ namespace Icy.Asset {
       }
     }
 
+    /// <summary>Field number for the "AssetDownloadConfirmTheshold" field.</summary>
+    public const int AssetDownloadConfirmThesholdFieldNumber = 5;
+    private int assetDownloadConfirmTheshold_;
+    /// <summary>
+    ///在非WIFI、非网线的网络环境下，下载资源量大于此值时，通知业务侧是否要开始下载，否则直接开始下载，单位MB
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int AssetDownloadConfirmTheshold {
+      get { return assetDownloadConfirmTheshold_; }
+      set {
+        assetDownloadConfirmTheshold_ = value;
+      }
+    }
+
     /// <summary>Field number for the "PatchDLLs" field.</summary>
-    public const int PatchDLLsFieldNumber = 5;
+    public const int PatchDLLsFieldNumber = 14;
     private static readonly pb::FieldCodec<string> _repeated_patchDLLs_codec
-        = pb::FieldCodec.ForString(42);
+        = pb::FieldCodec.ForString(114);
     private readonly pbc::RepeatedField<string> patchDLLs_ = new pbc::RepeatedField<string>();
     /// <summary>
     ///HybridCLR热更DLL列表
@@ -165,9 +181,9 @@ namespace Icy.Asset {
     }
 
     /// <summary>Field number for the "MetaDataDLLs" field.</summary>
-    public const int MetaDataDLLsFieldNumber = 6;
+    public const int MetaDataDLLsFieldNumber = 15;
     private static readonly pb::FieldCodec<string> _repeated_metaDataDLLs_codec
-        = pb::FieldCodec.ForString(50);
+        = pb::FieldCodec.ForString(122);
     private readonly pbc::RepeatedField<string> metaDataDLLs_ = new pbc::RepeatedField<string>();
     /// <summary>
     ///HybridCLR补充元数据DLL列表
@@ -197,6 +213,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressStandby != other.AssetHostServerAddressStandby) return false;
       if (PatchDLLCopyToDir != other.PatchDLLCopyToDir) return false;
       if (MetaDataDLLCopyToDir != other.MetaDataDLLCopyToDir) return false;
+      if (AssetDownloadConfirmTheshold != other.AssetDownloadConfirmTheshold) return false;
       if(!patchDLLs_.Equals(other.patchDLLs_)) return false;
       if(!metaDataDLLs_.Equals(other.metaDataDLLs_)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -210,6 +227,7 @@ namespace Icy.Asset {
       if (AssetHostServerAddressStandby.Length != 0) hash ^= AssetHostServerAddressStandby.GetHashCode();
       if (PatchDLLCopyToDir.Length != 0) hash ^= PatchDLLCopyToDir.GetHashCode();
       if (MetaDataDLLCopyToDir.Length != 0) hash ^= MetaDataDLLCopyToDir.GetHashCode();
+      if (AssetDownloadConfirmTheshold != 0) hash ^= AssetDownloadConfirmTheshold.GetHashCode();
       hash ^= patchDLLs_.GetHashCode();
       hash ^= metaDataDLLs_.GetHashCode();
       if (_unknownFields != null) {
@@ -246,6 +264,10 @@ namespace Icy.Asset {
         output.WriteRawTag(34);
         output.WriteString(MetaDataDLLCopyToDir);
       }
+      if (AssetDownloadConfirmTheshold != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(AssetDownloadConfirmTheshold);
+      }
       patchDLLs_.WriteTo(output, _repeated_patchDLLs_codec);
       metaDataDLLs_.WriteTo(output, _repeated_metaDataDLLs_codec);
       if (_unknownFields != null) {
@@ -274,6 +296,10 @@ namespace Icy.Asset {
         output.WriteRawTag(34);
         output.WriteString(MetaDataDLLCopyToDir);
       }
+      if (AssetDownloadConfirmTheshold != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(AssetDownloadConfirmTheshold);
+      }
       patchDLLs_.WriteTo(ref output, _repeated_patchDLLs_codec);
       metaDataDLLs_.WriteTo(ref output, _repeated_metaDataDLLs_codec);
       if (_unknownFields != null) {
@@ -297,6 +323,9 @@ namespace Icy.Asset {
       }
       if (MetaDataDLLCopyToDir.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(MetaDataDLLCopyToDir);
+      }
+      if (AssetDownloadConfirmTheshold != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(AssetDownloadConfirmTheshold);
       }
       size += patchDLLs_.CalculateSize(_repeated_patchDLLs_codec);
       size += metaDataDLLs_.CalculateSize(_repeated_metaDataDLLs_codec);
@@ -323,6 +352,9 @@ namespace Icy.Asset {
       }
       if (other.MetaDataDLLCopyToDir.Length != 0) {
         MetaDataDLLCopyToDir = other.MetaDataDLLCopyToDir;
+      }
+      if (other.AssetDownloadConfirmTheshold != 0) {
+        AssetDownloadConfirmTheshold = other.AssetDownloadConfirmTheshold;
       }
       patchDLLs_.Add(other.patchDLLs_);
       metaDataDLLs_.Add(other.metaDataDLLs_);
@@ -361,11 +393,15 @@ namespace Icy.Asset {
             MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
-          case 42: {
+          case 40: {
+            AssetDownloadConfirmTheshold = input.ReadInt32();
+            break;
+          }
+          case 114: {
             patchDLLs_.AddEntriesFrom(input, _repeated_patchDLLs_codec);
             break;
           }
-          case 50: {
+          case 122: {
             metaDataDLLs_.AddEntriesFrom(input, _repeated_metaDataDLLs_codec);
             break;
           }
@@ -404,11 +440,15 @@ namespace Icy.Asset {
             MetaDataDLLCopyToDir = input.ReadString();
             break;
           }
-          case 42: {
+          case 40: {
+            AssetDownloadConfirmTheshold = input.ReadInt32();
+            break;
+          }
+          case 114: {
             patchDLLs_.AddEntriesFrom(ref input, _repeated_patchDLLs_codec);
             break;
           }
-          case 50: {
+          case 122: {
             metaDataDLLs_.AddEntriesFrom(ref input, _repeated_metaDataDLLs_codec);
             break;
           }

@@ -59,6 +59,11 @@ namespace Icy.Asset.Editor
 		[OnValueChanged(nameof(SaveSetting))]
 		public string MetaDataDLLCopyToDir;
 
+		[Title("在非WIFI、非网线的网络环境下，下载资源量大于此值时，通知业务侧是否要开始下载，否则直接开始下载，单位MB")]
+		[PropertyRange(0, 100)]
+		[OnValueChanged(nameof(SaveSetting))]
+		public int AssetDownloadConfirmTheshold;
+
 		[FoldoutGroup("热更DLL列表", Expanded = false)]
 		[HorizontalGroup("热更DLL列表/PatchDLLs")]
 		[InfoBox("可拖动调整顺序，被依赖的在上，依赖的在下，HybridCLR运行时根据从上到下的顺序加载DLL")]
@@ -103,6 +108,7 @@ namespace Icy.Asset.Editor
 			AssetHostServerAddressStandby = _Setting.AssetHostServerAddressStandby;
 			PatchDLLCopyToDir = _Setting.PatchDLLCopyToDir;
 			MetaDataDLLCopyToDir = _Setting.MetaDataDLLCopyToDir;
+			AssetDownloadConfirmTheshold = _Setting.AssetDownloadConfirmTheshold;
 
 			PatchDLLs = new List<string>();
 			for (int i = 0; i < _Setting.PatchDLLs.Count; i++)
@@ -129,6 +135,7 @@ namespace Icy.Asset.Editor
 			_Setting.AssetHostServerAddressStandby = AssetHostServerAddressStandby;
 			_Setting.PatchDLLCopyToDir = PatchDLLCopyToDir;
 			_Setting.MetaDataDLLCopyToDir = MetaDataDLLCopyToDir;
+			_Setting.AssetDownloadConfirmTheshold = AssetDownloadConfirmTheshold;
 
 			_Setting.PatchDLLs.Clear();
 			for (int i = 0; i < PatchDLLs.Count; i++)
