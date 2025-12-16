@@ -121,6 +121,7 @@ namespace Icy.Asset
 			if (_Downloader.Status != EOperationStatus.Succeed)
 				return;
 
+			Log.Info($"{nameof(DownloadAssetPatchStep)} succeed", nameof(AssetPatcher), true);
 			Finish();
 		}
 
