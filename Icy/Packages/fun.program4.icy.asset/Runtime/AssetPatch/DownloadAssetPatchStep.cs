@@ -107,8 +107,15 @@ namespace Icy.Asset
 		{
 			_Downloader.DownloadErrorCallback = OnDownloadError;
 			_Downloader.DownloadUpdateCallback = OnDownloadProgressUpdate;
-			_Downloader.BeginDownload();
-			await _Downloader.ToUniTask();
+			try
+			{
+				_Downloader.BeginDownload();
+				await _Downloader.ToUniTask();
+			}
+			catch(Exception)
+			{
+				//Log和处理在下边OnDownloadError
+			}
 
 			// 检测下载结果
 			if (_Downloader.Status != EOperationStatus.Succeed)
@@ -128,6 +135,7 @@ namespace Icy.Asset
 			eventParam.ErrorInfo = data.ErrorInfo;
 			eventParam.Retry = PreDownload;
 			EventManager.Trigger(EventDefine.AssetPatchDownloadError, eventParam);
+			Log.Error($"Asset download failed, package = {data.PackageName}, file = {data.FileName}, error = {data.ErrorInfo}", nameof(AssetPatcher));
 		}
 
 		/// <summary>

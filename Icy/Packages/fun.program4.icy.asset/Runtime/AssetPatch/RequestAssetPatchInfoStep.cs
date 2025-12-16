@@ -17,6 +17,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System;
 using YooAsset;
 
 namespace Icy.Asset
@@ -32,7 +33,9 @@ namespace Icy.Asset
 		public override async UniTask Activate()
 		{
 			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher), true) as AssetPatcher;
-			await UpdatePackageVersion();
+			bool updatePackageVersionSucceed = await UpdatePackageVersion();
+			if (updatePackageVersionSucceed)
+				await UpdatePackageManifest();
 		}
 
 		public override async UniTask Deactivate()
@@ -43,16 +46,22 @@ namespace Icy.Asset
 		/// <summary>
 		/// 获取资源版本号
 		/// </summary>
-		private async UniTask UpdatePackageVersion()
+		private async UniTask<bool> UpdatePackageVersion()
 		{
 			RequestPackageVersionOperation operation = _Patcher.Package.RequestPackageVersionAsync();
-			await operation.ToUniTask();
+			try
+			{
+				await operation.ToUniTask();
+			}
+			catch(Exception)
+			{
+				//Log和处理在下边
+			}
 
 			if (operation.Status == EOperationStatus.Succeed)
 			{
 				Log.Info($"{nameof(UpdatePackageVersion)} succeed", nameof(AssetPatcher), true);
 				_PackageVersion = operation.PackageVersion;
-				await UpdatePackageManifest();
 			}
 			else
 				Log.Error($"{nameof(UpdatePackageVersion)} failed, error = {operation.Error}", nameof(AssetPatcher));
@@ -60,6 +69,8 @@ namespace Icy.Asset
 			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
 			eventParam.Value = operation.Status == EOperationStatus.Succeed;
 			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, eventParam);
+
+			return eventParam.Value;
 		}
 
 		/// <summary>
@@ -68,7 +79,14 @@ namespace Icy.Asset
 		private async UniTask UpdatePackageManifest()
 		{
 			UpdatePackageManifestOperation operation = _Patcher.Package.UpdatePackageManifestAsync(_PackageVersion);
-			await operation.ToUniTask();
+			try
+			{
+				await operation.ToUniTask();
+			}
+			catch (Exception)
+			{
+				//Log和处理在下边
+			}
 
 			if (operation.Status == EOperationStatus.Succeed)
 			{
