@@ -173,7 +173,7 @@ namespace Icy.Asset
 				Log.Error("Asset host server address is empty, open Icy/Asset/Setting to set it");
 				return null;
 			}
-			string appVersion = "v1.0";
+			string appVersion = "v" + Application.version;
 
 #if UNITY_EDITOR
 			if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
