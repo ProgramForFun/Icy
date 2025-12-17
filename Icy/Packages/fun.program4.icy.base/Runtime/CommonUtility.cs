@@ -982,7 +982,7 @@ namespace Icy.Base
 		/// </summary>
 		/// <param name="number">要格式化的数字</param>
 		/// <param name="decimalPlaces">小数位数，默认为不保留小数</param>
-		public static string FormatWithCommas(int number, int decimalPlaces = 0)		{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(int number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 		public static string FormatWithCommas(uint number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 		public static string FormatWithCommas(long number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 		public static string FormatWithCommas(ulong number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
@@ -992,7 +992,7 @@ namespace Icy.Base
 		public static string FormatWithCommas(sbyte number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 		public static string FormatWithCommas(float number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 		public static string FormatWithCommas(double number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
-		public static string FormatWithCommas(decimal number, int decimalPlaces = 0)	{ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
+		public static string FormatWithCommas(decimal number, int decimalPlaces = 0){ return ZString.Format(_DecimalPlacesN[Math.Clamp(decimalPlaces, 0, _DecimalPlacesN.Length - 1)], number); }
 
 		/// <summary>
 		/// 格式化数字，根据大小加上K/M/B/T/Q后缀，支持指定小数位数

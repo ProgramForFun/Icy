@@ -37,7 +37,7 @@ namespace Icy.Asset
 		public override async UniTask Activate()
 		{
 			_Patcher = OwnerProcedure.Blackboard.ReadObject(nameof(AssetPatcher), true) as AssetPatcher;
-			PreDownload();
+			PrepareToDownload();
 			await UniTask.CompletedTask;
 		}
 
@@ -49,14 +49,14 @@ namespace Icy.Asset
 		/// <summary>
 		/// 开始下载前的准备工作
 		/// </summary>
-		private void PreDownload()
+		private void PrepareToDownload()
 		{
 			if (_Downloader == null)
 				_Downloader = _Patcher.Package.CreateResourceDownloader(DOWNLOADING_MAX_NUM, FAILED_TRY_AGAIN);
 
 			if (_Downloader.TotalDownloadCount == 0)
 			{
-				Log.Info($"AssetPatchFinish, no assets needs to patch", nameof(AssetPatcher), true);
+				Log.Info($"{nameof(DownloadAssetPatchStep)} abort, no assets need to patch", nameof(AssetPatcher), true);
 
 				EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
 				eventParam.Value = false;
@@ -70,11 +70,11 @@ namespace Icy.Asset
 				long totalDownloadBytes = _Downloader.TotalDownloadBytes;
 				if (HasEnoughDiskSpace(totalDownloadBytes))
 				{
-					Log.Info($"Ready to download patch", nameof(AssetPatcher), true);
+					Log.Info($"Ready to download patch {CommonUtility.FormatWithCommas(totalDownloadBytes)} bytes", nameof(AssetPatcher), true);
 
 					int downloadConfirmThesholdMB = AssetManager.Instance.AssetSetting.AssetDownloadConfirmTheshold;
 					if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork
-						&& totalDownloadBytes > downloadConfirmThesholdMB * 1024 * 1024) //如果更新大小在5MB以内，即使是没有WIFI也直接下载
+						&& totalDownloadBytes > downloadConfirmThesholdMB * 1024 * 1024) //如果更新大小在设置阈值以内，即使是没有WIFI也直接下载
 					{
 						Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
 						eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
@@ -89,7 +89,7 @@ namespace Icy.Asset
 				{
 					Log.Error($"Disk space not enough", nameof(AssetPatcher));
 					EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
-					eventParam.Value = PreDownload;
+					eventParam.Value = PrepareToDownload;
 					EventManager.Trigger(EventDefine.NotEnoughDiskSpace2PatchAsset, eventParam);
 				}
 			}
@@ -134,7 +134,7 @@ namespace Icy.Asset
 			eventParam.PackageName = data.PackageName;
 			eventParam.FileName = data.FileName;
 			eventParam.ErrorInfo = data.ErrorInfo;
-			eventParam.Retry = PreDownload;
+			eventParam.Retry = PrepareToDownload;
 			EventManager.Trigger(EventDefine.AssetPatchDownloadError, eventParam);
 			Log.Error($"Asset download failed, package = {data.PackageName}, file = {data.FileName}, error = {data.ErrorInfo}", nameof(AssetPatcher));
 		}

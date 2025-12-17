@@ -5,7 +5,7 @@ import os
 PORT = 12666
 DIRECTORY = "C:/Users/dd/Desktop/AssetCDN"
 #完整路径应为：C:/Users/dd/Desktop/AssetCDN/CDN/Android/v1.0
-#v1.0目录内，为YooAsset单次打包出来的那个以日期命名的目录
+#v1.0目录内，为YooAsset单次打包出来的那个以日期命名的目录中的内容
 
 os.chdir(DIRECTORY)
 Handler = http.server.SimpleHTTPRequestHandler
