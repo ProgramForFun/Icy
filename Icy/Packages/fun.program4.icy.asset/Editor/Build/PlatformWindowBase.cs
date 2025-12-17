@@ -90,5 +90,15 @@ namespace Icy.Asset.Editor
 		}
 
 		protected abstract void OnChangePlatformTab(string tabName, BuildTarget buildTarget);
+
+		protected bool IsPlayMode()
+		{
+			return EditorApplication.isPlaying;
+		}
+
+		protected bool IsNotPlayMode()
+		{
+			return !EditorApplication.isPlaying;
+		}
 	}
 }

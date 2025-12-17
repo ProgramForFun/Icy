@@ -293,7 +293,7 @@ namespace Icy.Asset.Editor
 			return SettingsHelper.GetBuildSettingNameEditor(_CurrBuildTarget);
 		}
 
-		[ShowIf("IsHybridCLREnabled")]
+		[ShowIf(nameof(IsHybridCLREnabled))]
 		[HorizontalGroup("BuildHybridCLR")]
 		[Button("HybridCLR Generate All", Icon = SdfIconType.Stack, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void HybridCLRGenerateAll()
@@ -325,7 +325,7 @@ namespace Icy.Asset.Editor
 			procedure.Start();
 		}
 
-		[ShowIf("IsHybridCLREnabled")]
+		[ShowIf(nameof(IsHybridCLREnabled))]
 		[HorizontalGroup("BuildHybridCLR")]
 		[Button("Compile HybridCLR DLL", Icon = SdfIconType.CodeSlash, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected virtual void CompileHybridCLRDLL()
@@ -339,6 +339,7 @@ namespace Icy.Asset.Editor
 			SubProcedureCompilePatchDLLStep.Compile(_CurrBuildTarget, null);
 		}
 
+		[ShowIf(nameof(IsNotPlayMode))]
 		[PropertySpace(5)]
 		[Button("Build", Icon = SdfIconType.Hammer, ButtonHeight = (int)ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
@@ -373,6 +374,12 @@ namespace Icy.Asset.Editor
 			procedure.Blackboard.WriteObject("BuildSetting", _BuildSetting);
 			procedure.Start();
 		}
+
+		[ShowIf(nameof(IsPlayMode))]
+		[HideLabel]
+		[DisplayAsString(false, 18, TextAlignment.Center, true)]
+		[ShowInInspector]
+		protected string InPlayModeHint = "<b><color=#A0A0A0>Play 模式下无法进行 Build</color></b>";
 
 		/// <summary>
 		/// 获取所有的打包Player的步骤类名
@@ -416,7 +423,7 @@ namespace Icy.Asset.Editor
 
 		protected bool IsHybridCLREnabled()
 		{
-			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable;
+			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable && IsNotPlayMode();
 		}
 	}
 }

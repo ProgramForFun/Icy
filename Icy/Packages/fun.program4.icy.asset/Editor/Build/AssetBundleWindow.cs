@@ -23,6 +23,7 @@ using Icy.Base;
 using Google.Protobuf;
 using System.Collections.Generic;
 using Sirenix.OdinInspector.Editor;
+using UnityEngine;
 
 namespace Icy.Asset.Editor
 {
@@ -33,7 +34,7 @@ namespace Icy.Asset.Editor
 	{
 		[TabGroup("", "Android", SdfIconType.Robot, TextColor = "green")]
 		[TabGroup("", "iOS", SdfIconType.Apple)]
-		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "blue")]
+		[TabGroup("", "Win64", SdfIconType.Windows, TextColor = "#00BCF2")]
 		[Title("AssetBundle补丁包列表")]
 		[HideLabel]
 		[TableList(ShowIndexLabels = true, AlwaysExpanded = true)]
@@ -168,6 +169,7 @@ namespace Icy.Asset.Editor
 		}
 
 		[Title("打包Asset Bundle")]
+		[ShowIf(nameof(IsNotPlayMode))]
 		[Button("Build Asset Bundle", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void BuildAssetBundle()
 		{
@@ -181,6 +183,13 @@ namespace Icy.Asset.Editor
 
 			SubProcedureBuildAssetBundleStep.Build(_CurrBuildTarget, _Setting, OnBuildFinish);
 		}
+
+		[ShowIf(nameof(IsPlayMode))]
+		[HideLabel]
+		[DisplayAsString(false, 18, TextAlignment.Center, true)]
+		[ShowInInspector]
+		[PropertySpace(25)]
+		protected string InPlayModeHint = "<b><color=#A0A0A0>Play 模式下无法 Build AssetBundle</color></b>";
 
 		protected void OnBuildFinish(bool succeed)
 		{
