@@ -34,7 +34,7 @@ namespace Icy.Editor
 		static void Init()
 		{
 			ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
-			EditorApplication.playModeStateChanged += ClearPlayMode;
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 
 			if (_QuickPlayIcon == null)
 				_QuickPlayIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/fun.program4.icy.editor/Editor/Res/QuickIcon.png");
@@ -77,12 +77,15 @@ namespace Icy.Editor
 		}
 
 		/// <summary>
-		/// 不 进行Domain Reload，直接进入Play状态；
+		/// 不 进行Domain Reload，直接进入or退出Play状态；
 		/// 使用这个功能需要知道其原理和限制，否则请不要使用这个功能
 		/// </summary>
+		[MenuItem("Help/QuickPlay _F5")] //主要从Toolbar的按钮或快捷键触发，菜单藏到Help里了
 		static void QuickPlay()
 		{
-			if (EditorApplication.isPlaying == false)
+			if (EditorApplication.isPlaying)
+				EditorApplication.ExitPlaymode();
+			else
 			{
 				EditorSettings.enterPlayModeOptionsEnabled = true;
 				EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.DisableDomainReload;
@@ -102,7 +105,7 @@ namespace Icy.Editor
 			}
 		}
 
-		static void ClearPlayMode(PlayModeStateChange state)
+		static void OnPlayModeStateChanged(PlayModeStateChange state)
 		{
 			if (state == PlayModeStateChange.ExitingPlayMode)
 			{
@@ -112,8 +115,7 @@ namespace Icy.Editor
 					EditorSettings.enterPlayModeOptions = EnterPlayModeOptions.None;
 				}
 			}
-
-			if (state == PlayModeStateChange.EnteredEditMode)
+			else if (state == PlayModeStateChange.EnteredEditMode)
 			{
 				if (_IsRequestingRePlay)
 				{
