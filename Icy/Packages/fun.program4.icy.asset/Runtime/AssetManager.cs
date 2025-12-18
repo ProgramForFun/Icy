@@ -130,7 +130,7 @@ namespace Icy.Asset
 				IRemoteServices remoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 				HostPlayModeParameters createParameters = new HostPlayModeParameters();
 				createParameters.BuildinFileSystemParameters = FileSystemParameters.CreateDefaultBuildinFileSystemParameters(decryptionServices);
-				createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices);
+				createParameters.CacheFileSystemParameters = FileSystemParameters.CreateDefaultCacheFileSystemParameters(remoteServices, decryptionServices);
 				initializationOperation = _Package.InitializeAsync(createParameters);
 			}
 
