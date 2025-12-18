@@ -6,7 +6,7 @@ PORT = 12666
 DIRECTORY = "C:/Users/dd/Desktop/AssetCDN"
 #完整路径应为：C:/Users/dd/Desktop/AssetCDN/CDN/Android/v1.0
 #其中的1.0应该为底包中的版本号，也就UnityEngine.Application.version
-#v1.0目录内，为YooAsset单次打包出来的那个以日期命名的目录中的内容
+#v1.0目录内，为打Bundle后，StreamingAssets/yoo/DefaultPackage目录中的内容，直接copy覆盖进来
 
 os.chdir(DIRECTORY)
 Handler = http.server.SimpleHTTPRequestHandler
