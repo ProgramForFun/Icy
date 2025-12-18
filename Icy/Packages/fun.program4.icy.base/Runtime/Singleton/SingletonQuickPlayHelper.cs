@@ -17,6 +17,7 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -46,6 +47,7 @@ namespace Icy.Base
 			if (!EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload))
 				return;
 
+			Stopwatch stopwatch = Stopwatch.StartNew();
 			//带where38个程序集
 			IEnumerable<Assembly> allAssemblies = AppDomain.CurrentDomain.GetAssemblies()
 				.Where(asm =>
@@ -74,6 +76,9 @@ namespace Icy.Base
 					method.Invoke(null, null);
 				}
 			}
+
+			stopwatch.Stop();
+			Log.Info($"{nameof(DestroyAllSingletonInstance)} cost {stopwatch.ElapsedMilliseconds} ms", nameof(SingletonQuickPlayHelper));
 		}
 	}
 }
