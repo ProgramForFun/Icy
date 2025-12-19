@@ -96,7 +96,7 @@ namespace Icy.Editor
 				RemoveKey();
 
 				//关闭Progress Detail窗口
-				ReflectCloseMethod();
+				ClearProgressWindow.Clear();
 			}
 
 			ClearMonitoringProcedure();
@@ -151,21 +151,6 @@ namespace Icy.Editor
 			//打开Progress Detail窗口
 			Progress.ShowDetails();
 			return newProgressID;
-		}
-
-		private static void ReflectCloseMethod()
-		{
-			try
-			{
-				Type progressWindowType = Type.GetType("UnityEditor.ProgressWindow, UnityEditor");
-				MethodInfo closeMethod = progressWindowType.GetMethod("HideDetails",
-										BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-				closeMethod.Invoke(null, null);
-			}
-			catch (Exception e)
-			{
-				Debug.LogException(e);
-			}
 		}
 
 		private static string ColorString(string str)
