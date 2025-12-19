@@ -15,7 +15,6 @@
  */
 
 
-using Icy.Base;
 using System;
 using System.Reflection;
 using UnityEditor;
@@ -23,13 +22,22 @@ using UnityEditor;
 namespace Icy.Editor
 {
 	/// <summary>
-	/// 用反射调用内部类，清空Unity editor右下角的ProgressWindow窗口
+	/// 清空并关闭Unity editor右下角的ProgressWindow窗口
 	/// </summary>
 	public static class ClearProgressWindow
 	{
 		[MenuItem("Icy/Tools/Clear ProgressWindow", false, 21)]
 		public static void Clear()
 		{
+			//清空所有显示的Progress
+			int count = Progress.GetCount();
+			for (int i = 0; i < count; i++)
+			{
+				int id = Progress.GetId(i);
+				Progress.Remove(id);
+			}
+
+			//反射关闭窗口
 			Type progressWindowType = Type.GetType("UnityEditor.ProgressWindow, UnityEditor");
 			MethodInfo closeMethod = progressWindowType.GetMethod("HideDetails",
 									BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
