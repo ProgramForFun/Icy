@@ -41,6 +41,11 @@ namespace Icy.UI
 
 		[Tooltip("模糊之后叠加的颜色")]
 		public Color BlurColor = new Color(180f / 255f, 180f / 255f, 180f / 255f, 1f);
+
+		/// <summary>
+		/// 挂载的Canvas
+		/// </summary>
+		public Canvas Canvas { get; private set; }
 		/// <summary>
 		/// 渲染RT的RawImage
 		/// </summary>
@@ -65,6 +70,7 @@ namespace Icy.UI
 
 		protected void Awake()
 		{
+			Canvas = GetComponent<Canvas>();
 			if (_RawImage == null)
 				_RawImage = GetComponent<UnityEngine.UI.RawImage>();
 			_RawImage.enabled = false;

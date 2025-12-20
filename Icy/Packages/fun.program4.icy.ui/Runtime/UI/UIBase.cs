@@ -46,6 +46,17 @@ namespace Icy.UI
 		public UILayer UILayer => _Layer;
 		[SerializeField] protected UILayer _Layer = UILayer.Medium;
 		/// <summary>
+		/// 是否是全屏界面
+		/// </summary>
+		public bool IsFullScreen => _IsFullScreen;
+		[SerializeField] protected bool _IsFullScreen = false;
+		/// <summary>
+		/// 背景模糊
+		/// </summary>
+		public bool BlurBackground => _BlurBackground;
+		[HideIf(nameof(_IsFullScreen))]
+		[SerializeField] protected bool _BlurBackground = false;
+		/// <summary>
 		/// 当前界面的隐藏类型，如果没有隐藏过，为HideType.NotSet
 		/// </summary>
 		public UIHideType HideType { get; set; }

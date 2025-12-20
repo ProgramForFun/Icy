@@ -472,6 +472,9 @@ namespace Icy.UI
 			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
 			eventParam.Value = uiData.Type;
 			EventManager.Trigger(EventDefine.UIShown, eventParam);
+
+			if (!ui.IsFullScreen && ui.BlurBackground)
+				UIRoot.Instance.SetBlurToUI(ui);
 		}
 
 		internal void Hide(UIBase ui)
@@ -483,6 +486,9 @@ namespace Icy.UI
 			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
 			eventParam.Value = uiData.Type;
 			EventManager.Trigger(EventDefine.UIHid, eventParam);
+
+			if (!ui.IsFullScreen && ui.BlurBackground)
+				UIRoot.Instance.CloseBlur();
 		}
 
 		internal void ShowPrev(Action<UIBase> callbackBeforePrevUIShow)
@@ -520,6 +526,9 @@ namespace Icy.UI
 				EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
 				eventParam.Value = uiData.Type;
 				EventManager.Trigger(EventDefine.UIDestroyed, eventParam);
+
+				if (!ui.IsFullScreen && ui.BlurBackground)
+					UIRoot.Instance.CloseBlur();
 			}
 
 			if (_SpriteTextureOfUI.ContainsKey(ui))

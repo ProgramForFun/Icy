@@ -32,8 +32,8 @@ namespace Icy.UI
 		/// <summary>
 		/// 所有UI的根Canvas
 		/// </summary>
-		public Canvas RootCanvas => _Cavas;
-		[SerializeField] private Canvas _Cavas;
+		public Canvas RootCanvas => _Canvas;
+		[SerializeField] private Canvas _Canvas;
 
 		/// <summary>
 		/// UI相机
@@ -46,6 +46,12 @@ namespace Icy.UI
 		/// </summary>
 		public EventSystem EventSystem => _EventSystem;
 		[SerializeField] private EventSystem _EventSystem;
+
+		/// <summary>
+		/// UI的背景模糊
+		/// </summary>
+		public UIBlur Blur => _Blur;
+		[SerializeField] private UIBlur _Blur;
 
 		private Dictionary<UILayer, GameObject> _LayerGameObjMap;
 
@@ -62,7 +68,7 @@ namespace Icy.UI
 				object value = renderQueues.GetValue(i);
 				string layerName = Enum.GetName(UILayerType, value);
 				GameObject layerGo = new GameObject(layerName);
-				CommonUtility.SetParent(_Cavas.gameObject, layerGo);
+				CommonUtility.SetParent(_Canvas.gameObject, layerGo);
 				_LayerGameObjMap[(UILayer)value] = layerGo;
 
 				//全屏
@@ -99,7 +105,6 @@ namespace Icy.UI
 				return;
 			}
 
-
 			UniversalAdditionalCameraData baseCameraData = baseCamera.GetUniversalAdditionalCameraData();
 			if (baseCameraData.renderType != CameraRenderType.Base)
 			{
@@ -123,7 +128,6 @@ namespace Icy.UI
 				return;
 			}
 
-
 			UniversalAdditionalCameraData baseCameraData = baseCamera.GetUniversalAdditionalCameraData();
 			if (!baseCameraData.cameraStack.Contains(UICamera))
 			{
@@ -131,6 +135,30 @@ namespace Icy.UI
 				return;
 			}
 			baseCameraData.cameraStack.Remove(UICamera);
+		}
+
+		/// <summary>
+		/// 为指定UI添加背景模糊
+		/// </summary>
+		public void SetBlurToUI(UIBase ui)
+		{
+			Blur.gameObject.SetActive(true);
+
+			Blur.transform.SetParent(ui.transform.parent);
+			Blur.transform.SetSiblingIndex(ui.transform.GetSiblingIndex());
+
+			int order = ui.Canvas.sortingOrder;
+			Blur.Canvas.sortingOrder = order - 1;
+		}
+
+		/// <summary>
+		/// 关闭背景模糊
+		/// </summary>
+		public void CloseBlur()
+		{
+			Blur.gameObject.SetActive(false);
+			Blur.transform.SetParent(RootCanvas.transform);
+			Blur.transform.SetAsFirstSibling();
 		}
 	}
 }
