@@ -95,10 +95,5 @@ namespace Icy.Asset.Editor
 		{
 			return EditorApplication.isPlaying;
 		}
-
-		protected bool IsNotPlayMode()
-		{
-			return !EditorApplication.isPlaying;
-		}
 	}
 }

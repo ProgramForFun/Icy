@@ -339,7 +339,7 @@ namespace Icy.Asset.Editor
 			SubProcedureCompilePatchDLLStep.Compile(_CurrBuildTarget, null);
 		}
 
-		[ShowIf(nameof(IsNotPlayMode))]
+		[HideIf(nameof(IsPlayMode))]
 		[PropertySpace(5)]
 		[Button("Build", Icon = SdfIconType.Hammer, ButtonHeight = (int)ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void Build()
@@ -423,7 +423,7 @@ namespace Icy.Asset.Editor
 
 		protected bool IsHybridCLREnabled()
 		{
-			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable && IsNotPlayMode();
+			return HybridCLR.Editor.Settings.HybridCLRSettings.Instance.enable && !IsPlayMode();
 		}
 	}
 }

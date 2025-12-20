@@ -169,7 +169,7 @@ namespace Icy.Asset.Editor
 		}
 
 		[Title("打包Asset Bundle")]
-		[ShowIf(nameof(IsNotPlayMode))]
+		[HideIf(nameof(IsPlayMode))]
 		[Button("Build Asset Bundle", ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void BuildAssetBundle()
 		{
