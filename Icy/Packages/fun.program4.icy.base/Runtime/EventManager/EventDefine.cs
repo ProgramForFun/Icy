@@ -52,24 +52,5 @@ namespace Icy.Base
 		/// </summary>
 		public static readonly int HybridCLRRunnerFinish = -1106;
 		#endregion
-
-		#region UI
-		/// <summary>
-		/// 一个UI加载完成
-		/// </summary>
-		public static readonly int UILoaded = -1200;
-		/// <summary>
-		/// 一个UI调用Show显示
-		/// </summary>
-		public static readonly int UIShown = -1201;
-		/// <summary>
-		/// 一个UI调用Hide隐藏
-		/// </summary>
-		public static readonly int UIHid = -1202;
-		/// <summary>
-		/// 一个UI调用Destroy销毁
-		/// </summary>
-		public static readonly int UIDestroyed = -1203;
-		#endregion
 	}
 }

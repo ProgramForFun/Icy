@@ -48,7 +48,7 @@ namespace Icy.UI
 		{
 			base.OnInitialized();
 			_BindDataList = new List<BindData>(DEFAULT_LIST_SIZE);
-			EventManager.AddListener(EventDefine.UIHid, OnUIHid);
+			UIManager.Instance.OnUIEvent += OnUIHid;
 		}
 
 		/// <summary>
@@ -141,21 +141,18 @@ namespace Icy.UI
 		/// <summary>
 		/// UI隐藏时，自动Unbind该UI所属UI组件
 		/// </summary>
-		private void OnUIHid(int eventID, IEventParam param)
+		private void OnUIHid(UIEvent eventID, Type uiType)
 		{
-			if (param is EventParam_Type paramType)
+			string uiName = uiType.Name;
+			int i = _BindDataList.Count - 1;
+			for (; i >= 0; i--)
 			{
-				string uiName = paramType.Value.Name;
-				int i = _BindDataList.Count - 1;
-				for (; i >= 0; i--)
+				if (_BindDataList[i].UIName == uiName)
 				{
-					if (_BindDataList[i].UIName == uiName)
-					{
-						BindData bindData = _BindDataList[i];
-						dynamic bindableData = bindData.BindableData;
-						bindableData.Unbind((dynamic)bindData.Listener);
-						_BindDataList.RemoveAt(i);
-					}
+					BindData bindData = _BindDataList[i];
+					dynamic bindableData = bindData.BindableData;
+					bindableData.Unbind((dynamic)bindData.Listener);
+					_BindDataList.RemoveAt(i);
 				}
 			}
 		}

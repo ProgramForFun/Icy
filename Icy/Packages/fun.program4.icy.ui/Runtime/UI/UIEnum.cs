@@ -60,4 +60,31 @@ namespace Icy.UI
 		Top = 3000,
 		Sky = 3500,
 	}
+
+	/// <summary>
+	/// UI相关的事件
+	/// </summary>
+	public enum UIEvent
+	{
+		/// <summary>
+		/// 刚开始走一个UI的Get流程，可能去加载AB，也可能直接读取缓存的UI
+		/// </summary>
+		Abort2Get,
+		/// <summary>
+		/// 一个UI的Get流程执行完毕，可能刚刚把UI加载到内存中，也可能直接读取缓存的UI
+		/// </summary>
+		Got,
+		/// <summary>
+		/// 一个UI的显示流程执行完毕，UI已经显示出来
+		/// </summary>
+		Shown,
+		/// <summary>
+		/// 一个UI的隐藏流程执行完毕，UI已经隐藏
+		/// </summary>
+		Hid,
+		/// <summary>
+		/// 一个UI的销毁流程执行完毕，UI已经被销毁
+		/// </summary>
+		Destroyed,
+	}
 }

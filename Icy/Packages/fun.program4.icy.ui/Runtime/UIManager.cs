@@ -58,6 +58,10 @@ namespace Icy.UI
 		/// </summary>
 		public Camera UICamera => UIRoot.Instance.UICamera;
 		/// <summary>
+		/// UI打开/关闭/销毁的事件，方便业务侧在指定时机执行逻辑
+		/// </summary>
+		public event Action<UIEvent, Type> OnUIEvent;
+		/// <summary>
 		/// 在UI初始化和打开的过程中，如果有报错，会触发这个事件；
 		/// 方便业务侧决定后续处理，比如说直接销毁这个UI，避免卡住整个流程；
 		/// </summary>
@@ -74,6 +78,10 @@ namespace Icy.UI
 		/// 辅助回退栈的栈
 		/// </summary>
 		private Stack<UIData> _StackTmp;
+		/// <summary>
+		/// UIBase的Type
+		/// </summary>
+		private Type _UIBaseType;
 		/// <summary>
 		/// 在回退栈中一直存在的UI，一般就是游戏主界面
 		/// </summary>
@@ -104,6 +112,7 @@ namespace Icy.UI
 
 		protected override void OnInitialized()
 		{
+			_UIBaseType = typeof(UIBase);
 			_UIMap = new Dictionary<UIBase, UIData>();
 			_Stack = new Stack<UIData>();
 			_StackTmp = new Stack<UIData>();
@@ -141,11 +150,19 @@ namespace Icy.UI
 		public async UniTask<T> GetAsync<T>() where T : UIBase
 		{
 			Type uiType = typeof(T);
+			return await GetAsync(uiType) as T;
+		}
+		public async UniTask<UIBase> GetAsync(Type uiType)
+		{
+			OnUIEvent?.Invoke(UIEvent.Abort2Get, uiType);
 			UIBase ui = GetFromUIMap(uiType);
 			if (ui != null)
-				return ui as T;
+			{
+				OnUIEvent?.Invoke(UIEvent.Got, uiType);
+				return ui;
+			}
 
-			return await LoadUI(uiType) as T;
+			return await LoadUI(uiType);
 		}
 
 		/// <summary>
@@ -156,6 +173,25 @@ namespace Icy.UI
 		{
 			Type uiType = typeof(T);
 			Get(uiType, callback);
+		}
+		public void Get(Type uiType, Action<UIBase> callback)
+		{
+			if (!uiType.IsSubclassOf(_UIBaseType))
+			{
+				Log.Error($"Invalid arg to UIManager.Get, arg = {uiType.Name}");
+				callback?.Invoke(null);
+				return;
+			}
+
+			OnUIEvent?.Invoke(UIEvent.Abort2Get, uiType);
+			UIBase ui = GetFromUIMap(uiType);
+			if (ui == null)
+				LoadUI(uiType, callback).Forget();
+			else
+			{
+				OnUIEvent?.Invoke(UIEvent.Got, uiType);
+				callback?.Invoke(ui);
+			}
 		}
 
 		/// <summary>
@@ -302,15 +338,6 @@ namespace Icy.UI
 			}
 		}
 
-		private void Get(Type uiType, Action<UIBase> callback)
-		{
-			UIBase ui = GetFromUIMap(uiType);
-			if (ui == null)
-				LoadUI(uiType, callback).Forget();
-			else
-				callback?.Invoke(ui);
-		}
-
 		/// <summary>
 		/// 根据UI类型从UIMap中获取UI实例
 		/// </summary>
@@ -326,6 +353,7 @@ namespace Icy.UI
 
 		private async UniTask<UIBase> LoadUI(Type uiType, Action<UIBase> callback = null)
 		{
+			OnUIEvent?.Invoke(UIEvent.Abort2Get, uiType);
 			string uiName = uiType.Name;
 			AssetRef assetRef = AssetManager.Instance.LoadAssetAsync(uiName);
 			await assetRef.ToUniTask();
@@ -341,10 +369,7 @@ namespace Icy.UI
 				Log.Error($"{uiName} is Not a UI prefab", nameof(UIManager));
 			InitUI(uiType, uiBase, assetRef);
 			callback?.Invoke(uiBase);
-
-			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
-			eventParam.Value = uiType;
-			EventManager.Trigger(EventDefine.UILoaded, eventParam);
+			OnUIEvent?.Invoke(UIEvent.Got, uiType);
 
 			return uiBase;
 		}
@@ -469,9 +494,7 @@ namespace Icy.UI
 			ui.Canvas.sortingOrder = (int)ui.UILayer + _SortingOrderOffset[ui.UILayer];
 			_SortingOrderOffset[ui.UILayer] += SORTING_ORDER_OFFSET_PER_UI;
 
-			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
-			eventParam.Value = uiData.Type;
-			EventManager.Trigger(EventDefine.UIShown, eventParam);
+			OnUIEvent?.Invoke(UIEvent.Shown, uiData.Type);
 
 			if (!ui.IsFullScreen && ui.BlurBackground)
 				UIRoot.Instance.SetBlurToUI(ui);
@@ -482,10 +505,7 @@ namespace Icy.UI
 			DecreaseSortingOrderOffset(ui.UILayer);
 
 			UIData uiData = _UIMap[ui];
-
-			EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
-			eventParam.Value = uiData.Type;
-			EventManager.Trigger(EventDefine.UIHid, eventParam);
+			OnUIEvent?.Invoke(UIEvent.Hid, uiData.Type);
 
 			if (!ui.IsFullScreen && ui.BlurBackground)
 				UIRoot.Instance.CloseBlur();
@@ -522,10 +542,7 @@ namespace Icy.UI
 				UIData uiData = _UIMap[ui];
 				_UIMap.Remove(ui);
 				uiData.AssetRef.Release();
-
-				EventParam_Type eventParam = EventManager.GetParam<EventParam_Type>();
-				eventParam.Value = uiData.Type;
-				EventManager.Trigger(EventDefine.UIDestroyed, eventParam);
+				OnUIEvent?.Invoke(UIEvent.Destroyed, uiData.Type);
 
 				if (!ui.IsFullScreen && ui.BlurBackground)
 					UIRoot.Instance.CloseBlur();
