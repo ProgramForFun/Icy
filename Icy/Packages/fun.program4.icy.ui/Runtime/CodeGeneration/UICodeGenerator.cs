@@ -74,13 +74,13 @@ namespace Icy.UI
 			}
 
 			//检查类名和prefab是否一致
-			UIBase uiBase = gameObject.GetComponent<UIBase>();
-			if (uiBase != null)
-			{
-				string className = uiBase.GetType().Name;
-				if (goName != className)
-					Log.Assert(false, $"UI Prefab and UI class must have the same name, prefab = {goName}, class = {className}");
-			}
+			//UIBase uiBase = gameObject.GetComponent<UIBase>();
+			//if (uiBase != null)
+			//{
+			//	string className = uiBase.GetType().Name;
+			//	if (goName != className)
+			//		Log.Assert(false, $"UI Prefab and UI class must have the same name, prefab = {goName}, class = {className}");
+			//}
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
