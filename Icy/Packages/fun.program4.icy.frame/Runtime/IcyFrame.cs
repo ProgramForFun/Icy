@@ -22,6 +22,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 using YooAsset;
+using Icy.UI;
 
 namespace Icy.Frame
 {
@@ -41,6 +42,7 @@ namespace Icy.Frame
 #if UNITY_EDITOR
 			EventManager.ClearAll();
 			LocalPrefs.ClearKeyPrefix();
+			UIBlurRenderPass.ClearEvent();
 #endif
 			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
 			//监听UniTask中未处理的异常
