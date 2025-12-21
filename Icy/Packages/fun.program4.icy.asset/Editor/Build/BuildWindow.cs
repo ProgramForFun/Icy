@@ -135,6 +135,7 @@ namespace Icy.Asset.Editor
 
 		protected bool _ShowDevOptionsTips = false;
 		protected virtual void SwitchDevOptionsTips() => _ShowDevOptionsTips = !_ShowDevOptionsTips;
+		protected static Type[] WindowDockNextToArg = new Type[] { typeof(BuildWindow) };
 
 		protected static string BUILD_PLAYER_PROCEDURE_CFG_NAME = "BuildPlayerProcedureCfg.json";
 		protected static string ICY_BUILD_PLAYER_PROCEDURE_CFG_PATH = "Packages/fun.program4.icy.asset/Editor/Build/BuildPlayerProcedure/" + BUILD_PLAYER_PROCEDURE_CFG_NAME;
@@ -157,6 +158,9 @@ namespace Icy.Asset.Editor
 		public static void Open()
 		{
 			CreateWindow();
+			GetWindow<AssetBundleWindow>("Asset Bundle", false, WindowDockNextToArg);
+			GetWindow<AssetSettingWindow>("Asset Setting", false, WindowDockNextToArg);
+			_Window.Focus();
 		}
 
 		protected override void Update()
@@ -327,8 +331,8 @@ namespace Icy.Asset.Editor
 
 		[ShowIf(nameof(IsHybridCLREnabled))]
 		[HorizontalGroup("BuildHybridCLR")]
-		[Button("Compile HybridCLR DLL", Icon = SdfIconType.CodeSlash, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		protected virtual void CompileHybridCLRDLL()
+		[Button("Compile HotUpdate DLL", Icon = SdfIconType.CodeSlash, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		protected virtual void CompileHotUpdateDLL()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
 			{

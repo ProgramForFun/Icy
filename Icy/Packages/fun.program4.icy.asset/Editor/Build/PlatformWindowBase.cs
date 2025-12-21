@@ -42,11 +42,12 @@ namespace Icy.Asset.Editor
 		/// </summary>
 		protected string _CurrPlatformName;
 
-		protected static void CreateWindow()
+		protected static T CreateWindow()
 		{
 			if (_Window != null)
 				_Window.Close();
 			_Window = GetWindow<T>();
+			return _Window;
 		}
 
 		protected virtual void Update() 
