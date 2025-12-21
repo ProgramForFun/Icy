@@ -64,27 +64,29 @@ namespace Icy.Asset.Editor
 		[OnValueChanged(nameof(SaveSetting))]
 		public int AssetDownloadConfirmTheshold;
 
-		[FoldoutGroup("热更DLL列表", Expanded = false)]
-		[HorizontalGroup("热更DLL列表/PatchDLLs")]
+		[FoldoutGroup("☰ 热更DLL列表", Expanded = true)]
+		[HorizontalGroup("☰ 热更DLL列表/PatchDLLs")]
 		[InfoBox("可拖动调整顺序，被依赖的在上，依赖的在下，HybridCLR运行时根据从上到下的顺序加载DLL")]
+		[ListDrawerSettings(DefaultExpandedState = true)]
 		[OnValueChanged(nameof(SaveSetting))]
 		public List<string> PatchDLLs;
 
 		[Button("Clear", ButtonSizes.Medium)]
-		[HorizontalGroup("热更DLL列表/PatchDLLs", Width = 100)]
+		[HorizontalGroup("☰ 热更DLL列表/PatchDLLs", Width = 100)]
 		void ClearPatchDLLs()
 		{
 			PatchDLLs.Clear();
 			SaveSetting();
 		}
 
-		[FoldoutGroup("补充元数据DLL列表", Expanded = false)]
-		[HorizontalGroup("补充元数据DLL列表/MetaDataDLLs")]
+		[FoldoutGroup("☰ 补充元数据DLL列表", Expanded = true)]
+		[HorizontalGroup("☰ 补充元数据DLL列表/MetaDataDLLs")]
+		[ListDrawerSettings(DefaultExpandedState = true)]
 		[ReadOnly]
 		public List<string> MetaDataDLLs;
 
 		[Button("Clear", ButtonSizes.Medium)]
-		[HorizontalGroup("补充元数据DLL列表/MetaDataDLLs", Width = 100)]
+		[HorizontalGroup("☰ 补充元数据DLL列表/MetaDataDLLs", Width = 100)]
 		void ClearMetaDataDLLs()
 		{
 			MetaDataDLLs.Clear();
