@@ -96,7 +96,7 @@ namespace Icy.Editor
 				RemoveKey();
 
 				//关闭Progress Detail窗口
-				ClearProgressWindow.Clear();
+				ClearProgressWindow.Close();
 			}
 
 			ClearMonitoringProcedure();
