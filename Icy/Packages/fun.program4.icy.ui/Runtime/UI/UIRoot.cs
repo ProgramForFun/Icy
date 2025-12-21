@@ -142,13 +142,14 @@ namespace Icy.UI
 		/// </summary>
 		public void SetBlurToUI(UIBase ui)
 		{
-			Blur.Activate();
-
+			Blur.gameObject.SetActive(true);
 			Blur.transform.SetParent(ui.transform.parent);
 			Blur.transform.SetSiblingIndex(ui.transform.GetSiblingIndex());
 
 			int order = ui.Canvas.sortingOrder;
 			Blur.Canvas.sortingOrder = order - 1;
+
+			Blur.Activate();
 		}
 
 		/// <summary>

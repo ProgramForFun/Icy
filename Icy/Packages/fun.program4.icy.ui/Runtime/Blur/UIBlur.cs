@@ -88,7 +88,6 @@ namespace Icy.UI
 		{
 			enabled = true;
 			UIBlurRenderPass.OnExecute += RenderBlur;
-			gameObject.SetActive(true);
 		}
 
 		public void Deactivate()
