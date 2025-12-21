@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a24457db6758d54f9cb8bb4ca2b2d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShaderName: UI/UIBlur
+  Shader: {fileID: 4800000, guid: 7b03632407c800b44aa1278db7b2d2e3, type: 3}
   DownSampleNum: 2
   BlurSpreadSize: 5
   BlurIterations: 1

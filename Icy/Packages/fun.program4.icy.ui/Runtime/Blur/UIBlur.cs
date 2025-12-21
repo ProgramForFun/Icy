@@ -27,8 +27,8 @@ namespace Icy.UI
 	[RequireComponent(typeof(UnityEngine.UI.RawImage))]
 	public class UIBlur : MonoBehaviour
 	{
-		[Tooltip("使用的Shader（Shader文件里的名字）")]
-		public string ShaderName = "UI/UIBlur";
+		[Tooltip("使用的Shader")]
+		public Shader Shader;
 
 		[Range(0, 6), Tooltip("[降采样次数] 向下采样的次数；此值越大，则采样间隔越大，需要处理的像素点越少，运行速度越快")]
 		public int DownSampleNum = 2;
@@ -89,7 +89,7 @@ namespace Icy.UI
 		{
 			if (_Material == null)
 			{
-				_Material = new Material(Shader.Find(ShaderName));
+				_Material = new Material(Shader);
 				_Material.hideFlags = HideFlags.HideAndDontSave;
 			}
 			return _Material;
