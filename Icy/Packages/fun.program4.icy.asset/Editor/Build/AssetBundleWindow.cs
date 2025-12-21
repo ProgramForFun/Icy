@@ -41,13 +41,13 @@ namespace Icy.Asset.Editor
 		[OnCollectionChanged(nameof(OnTableListChanged))]
 		public List<AssetBundleWindowItem> _BundleVersionList;
 
-		[FoldoutGroup("打包步骤", Expanded = false)]
+		[FoldoutGroup("☰ 打Bundle步骤", Expanded = false)]
 		[ReadOnly]
 		public List<string> BuildBundleSteps;
 
-		[BoxGroup("AssetBundle选项")]
+		[BoxGroup("❖ AssetBundle选项")]
 		[InfoBox("是否打包Bundle  ┃  是否清除缓存、打全量Bundle  ┃  是否加密Bundle", "_ShowAssetBundleOptionsTips")]
-		[InlineButton(nameof(SwitchAssetBundleOptionsTips), "?")]
+		[InlineButton(nameof(SwitchAssetBundleOptionsTips), " ? ")]
 		[EnumToggleButtons]
 		[OnValueChanged(nameof(SaveSetting))]
 		public BuildOptionAssetBundle AssetBundleOptions;
@@ -170,7 +170,7 @@ namespace Icy.Asset.Editor
 
 		[Title("打包Asset Bundle")]
 		[HideIf(nameof(IsPlayMode))]
-		[Button("Build Asset Bundle", ButtonSizes.Large), GUIColor(0, 1, 0)]
+		[Button("Build Asset Bundle", Icon = SdfIconType.Boxes, ButtonHeight = (int)ButtonSizes.Large), GUIColor(0, 1, 0)]
 		protected virtual void BuildAssetBundle()
 		{
 			if (_CurrBuildTarget != EditorUserBuildSettings.activeBuildTarget)
