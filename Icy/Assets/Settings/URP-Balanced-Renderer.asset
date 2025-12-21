@@ -116,4 +116,4 @@ MonoBehaviour:
   m_Name: UIBlurRenderFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  RenderPassEvent: 1000
+  RenderPassEvent: 0

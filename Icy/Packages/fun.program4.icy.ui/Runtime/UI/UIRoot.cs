@@ -142,7 +142,7 @@ namespace Icy.UI
 		/// </summary>
 		public void SetBlurToUI(UIBase ui)
 		{
-			Blur.gameObject.SetActive(true);
+			Blur.Activate();
 
 			Blur.transform.SetParent(ui.transform.parent);
 			Blur.transform.SetSiblingIndex(ui.transform.GetSiblingIndex());
@@ -156,7 +156,7 @@ namespace Icy.UI
 		/// </summary>
 		public void CloseBlur()
 		{
-			Blur.gameObject.SetActive(false);
+			Blur.Deactivate();
 			Blur.transform.SetParent(RootCanvas.transform);
 			Blur.transform.SetAsFirstSibling();
 		}

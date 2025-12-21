@@ -84,10 +84,21 @@ namespace Icy.UI
 			_CmdBuffer = new CommandBuffer() { name = "BlurCmd" };
 		}
 
-		protected void Start()
+		public void Activate()
 		{
 			enabled = true;
 			UIBlurRenderPass.OnExecute += RenderBlur;
+			gameObject.SetActive(true);
+		}
+
+		public void Deactivate()
+		{
+			_RawImage.texture = null;
+			if (_MainTexture != null)
+				RenderTexture.ReleaseTemporary(_MainTexture);
+			_RawImage.color = Color.clear;
+			_MainTexture = null;
+			gameObject.SetActive(false);
 		}
 
 		private Material GetMat()
@@ -155,11 +166,11 @@ namespace Icy.UI
 
 		private void Cleanup()
 		{
-			if (_Material)
+			if (_Material != null)
 				Object.DestroyImmediate(_Material);
 			_Material = null;
 
-			if (_MainTexture)
+			if (_MainTexture != null)
 				RenderTexture.ReleaseTemporary(_MainTexture);
 			_MainTexture = null;
 
