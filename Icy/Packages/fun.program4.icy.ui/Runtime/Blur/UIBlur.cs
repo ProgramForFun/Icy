@@ -47,6 +47,10 @@ namespace Icy.UI
 		/// </summary>
 		public Canvas Canvas { get; private set; }
 		/// <summary>
+		/// 渲染逻辑用到的CommandBuffer
+		/// </summary>
+		private CommandBuffer _CmdBuffer;
+		/// <summary>
 		/// 渲染RT的RawImage
 		/// </summary>
 		private UnityEngine.UI.RawImage _RawImage;
@@ -77,6 +81,7 @@ namespace Icy.UI
 			if (!SystemInfo.SupportsRenderTextureFormat(_RTFormat))
 				_RTFormat = RenderTextureFormat.DefaultHDR;
 			_DownSampleValueID = Shader.PropertyToID("_DownSampleValue");
+			_CmdBuffer = new CommandBuffer() { name = "BlurCmd" };
 		}
 
 		protected void Start()
@@ -105,11 +110,10 @@ namespace Icy.UI
 
 			Material mat = GetMat();
 
-			CommandBuffer cmdBuffer = new CommandBuffer();
-			cmdBuffer.name = "BlurCmd";
+			_CmdBuffer.Clear();
 
 			RenderTexture rt = RenderTexture.GetTemporary(Screen.width, Screen.height);
-			cmdBuffer.Blit(BuiltinRenderTextureType.CurrentActive, rt);
+			_CmdBuffer.Blit(BuiltinRenderTextureType.CurrentActive, rt);
 
 			int renderWidth = Screen.width >> DownSampleNum;
 			int renderHeight = Screen.height >> DownSampleNum;
@@ -118,7 +122,7 @@ namespace Icy.UI
 
 			float widthMod = 1.0f / (1.0f * (1 << DownSampleNum));
 			mat.SetFloat(_DownSampleValueID, BlurSpreadSize * widthMod);
-			cmdBuffer.Blit(rt, _MainTexture, mat, 0);
+			_CmdBuffer.Blit(rt, _MainTexture, mat, 0);
 
 			for (int i = 0; i < BlurIterations; i++)
 			{
@@ -126,18 +130,18 @@ namespace Icy.UI
 				mat.SetFloat(_DownSampleValueID, BlurSpreadSize * widthMod + iterationOffs);
 
 				RenderTexture tempBuffer = RenderTexture.GetTemporary(renderWidth, renderHeight, 0, _RTFormat);
-				cmdBuffer.Blit(_MainTexture, tempBuffer, mat, 1);
+				_CmdBuffer.Blit(_MainTexture, tempBuffer, mat, 1);
 				RenderTexture.ReleaseTemporary(_MainTexture);
 				_MainTexture = tempBuffer;
 
 				tempBuffer = RenderTexture.GetTemporary(renderWidth, renderHeight, 0, _RTFormat);
-				cmdBuffer.Blit(_MainTexture, tempBuffer, mat, 2);
+				_CmdBuffer.Blit(_MainTexture, tempBuffer, mat, 2);
 				RenderTexture.ReleaseTemporary(_MainTexture);
 				_MainTexture = tempBuffer;
 			}
 
-			context.ExecuteCommandBuffer(cmdBuffer);
-			cmdBuffer.Dispose();
+			context.ExecuteCommandBuffer(_CmdBuffer);
+			_CmdBuffer.Clear();
 
 			_RawImage.texture = _MainTexture;
 			_RawImage.color = BlurColor;
@@ -165,6 +169,7 @@ namespace Icy.UI
 		protected void OnDestroy()
 		{
 			Cleanup();
+			_CmdBuffer.Dispose();
 		}
 	}
 }

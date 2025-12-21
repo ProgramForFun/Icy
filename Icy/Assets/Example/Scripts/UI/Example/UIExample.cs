@@ -17,13 +17,12 @@ public class UIExample : UIBase
 	public override void Init()
 	{
 		base.Init();
-
+		_ScrollView.InitListView(128, OnItem);
 	}
 
 	public override void Show(IUIParam param = null)
 	{
 		base.Show(param);
-		_ScrollView.InitListView(128, OnItem);
 	}
 
 	private LoopListViewItem2 OnItem(LoopListView2 view, int arg2)
