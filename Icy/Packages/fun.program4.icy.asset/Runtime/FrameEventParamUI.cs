@@ -64,7 +64,7 @@ namespace Icy.Asset
 		/// </summary>
 		public string ErrorInfo;
 		/// <summary>
-		/// 重拾的回调
+		/// 重试的回调
 		/// </summary>
 		public Action Retry;
 

@@ -110,4 +110,27 @@ namespace Icy.Base
 			Value = default;
 		}
 	}
+
+	public class EventParam_Reuslt<PayloadT> : IEventParam
+	{
+		/// <summary>
+		/// 结果是成功还是失败
+		/// </summary>
+		public bool Succeed;
+		/// <summary>
+		/// 如果失败了，这里是报错
+		/// </summary>
+		public string Error;
+		/// <summary>
+		/// 其他附带的数据
+		/// </summary>
+		public PayloadT Payload;
+
+		public void Reset()
+		{
+			Succeed = default;
+			Error = null;
+			Payload	= default;
+		}
+	}
 }
