@@ -111,7 +111,7 @@ namespace Icy.Base
 		}
 	}
 
-	public class EventParam_Reuslt<PayloadT> : IEventParam
+	public class EventParam_Reuslt : IEventParam
 	{
 		/// <summary>
 		/// 结果是成功还是失败
@@ -121,15 +121,24 @@ namespace Icy.Base
 		/// 如果失败了，这里是报错
 		/// </summary>
 		public string Error;
+
+		public virtual void Reset()
+		{
+			Succeed = default;
+			Error = null;
+		}
+	}
+
+	public class EventParam_Reuslt<PayloadT> : EventParam_Reuslt
+	{
 		/// <summary>
 		/// 其他附带的数据
 		/// </summary>
 		public PayloadT Payload;
 
-		public void Reset()
+		public override void Reset()
 		{
-			Succeed = default;
-			Error = null;
+			base.Reset();
 			Payload	= default;
 		}
 	}
