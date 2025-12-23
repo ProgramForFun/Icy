@@ -50,6 +50,34 @@ namespace Icy.UI
 		private bool _Disposed = false;
 
 
+		[Space(10)]
+		[InfoBox("UI name is just the UI prefab name without prefix 'UI'")]
+		[LabelText("UI Name :")]
+		[LabelWidth(80)]
+		[ReadOnly]
+		public string UIName;
+
+		[Button("Generate Logic Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		public void GenerateLogicCode()
+		{
+			MethodInfo method = ReflectGetMethod("GenerateUILogicCode");
+			method.Invoke(null, new object[1] { this });
+		}
+
+		[Button("Generate UI Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		public void GenerateUICode()
+		{
+			MethodInfo method = ReflectGetMethod("GenerateUICode");
+			method.Invoke(null, new object[1] { this });
+		}
+
+		[Button("Generate Both", ButtonSizes.Medium), GUIColor(0, 1, 0)]
+		public void GenerateBoth()
+		{
+			MethodInfo method = ReflectGetMethod("GenerateBoth");
+			method.Invoke(null, new object[1] { this });
+		}
+
 		private void OnInspectorInit()
 		{
 			if (!_Inited)
@@ -72,15 +100,26 @@ namespace Icy.UI
 				CommonUtility.SafeDisplayDialog("Error", "UI prefab的命名应该以UI作为前缀", "这就改", LogLevel.Error);
 				UIName = "UI prefab的命名应该以UI作为前缀";
 			}
+		}
 
+		[InitializeOnLoadMethod]
+		static void InitOnEditor()
+		{
+			PrefabStage.prefabStageOpened -= OnPrefabStageOpened;
+			PrefabStage.prefabStageOpened += OnPrefabStageOpened;
+		}
+
+		private static void OnPrefabStageOpened(PrefabStage stage)
+		{
 			//检查类名和prefab是否一致
-			//UIBase uiBase = gameObject.GetComponent<UIBase>();
-			//if (uiBase != null)
-			//{
-			//	string className = uiBase.GetType().Name;
-			//	if (goName != className)
-			//		Log.Assert(false, $"UI Prefab and UI class must have the same name, prefab = {goName}, class = {className}");
-			//}
+			string prefabName = stage.prefabContentsRoot.name;
+			UIBase uiBase = stage.prefabContentsRoot.GetComponent<UIBase>();
+			if (uiBase != null)
+			{
+				string className = uiBase.GetType().Name;
+				if (prefabName != className)
+					Log.Assert(false, $"UI Prefab and UI class must have the same name, prefab = {prefabName}, class = {className}");
+			}
 		}
 
 		private void OnTableListChanged(CollectionChangeInfo info, object value)
@@ -91,13 +130,6 @@ namespace Icy.UI
 					ValidateName(Components[0]);
 			}
 		}
-
-		[Space(10)]
-		[InfoBox("UI name is just the UI prefab name without prefix 'UI'")]
-		[LabelText("UI Name :")]
-		[LabelWidth(80)]
-		[ReadOnly]
-		public string UIName;
 
 		/// <summary>
 		/// 有字段重名时，红色提示
@@ -127,27 +159,6 @@ namespace Icy.UI
 						_ForDuplicateName.Add(name, Components[i]);
 				}
 			}
-		}
-
-		[Button("Generate Logic Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		public void GenerateLogicCode()
-		{
-			MethodInfo method = ReflectGetMethod("GenerateUILogicCode");
-			method.Invoke(null, new object[1] { this });
-		}
-
-		[Button("Generate UI Code", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		public void GenerateUICode()
-		{
-			MethodInfo method = ReflectGetMethod("GenerateUICode");
-			method.Invoke(null, new object[1] { this });
-		}
-
-		[Button("Generate Both", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		public void GenerateBoth()
-		{
-			MethodInfo method = ReflectGetMethod("GenerateBoth");
-			method.Invoke(null, new object[1] { this });
 		}
 
 		private MethodInfo ReflectGetMethod(string methodName)
