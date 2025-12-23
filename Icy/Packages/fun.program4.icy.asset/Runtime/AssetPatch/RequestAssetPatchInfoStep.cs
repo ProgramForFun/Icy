@@ -66,11 +66,11 @@ namespace Icy.Asset
 			else
 				Log.Error($"{nameof(UpdatePackageVersion)} failed, error = {operation.Error}", nameof(AssetPatcher));
 
-			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
-			eventParam.Value = operation.Status == EOperationStatus.Succeed;
-			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, eventParam);
+			bool succeed = operation.Status == EOperationStatus.Succeed;
+			if (!succeed)
+				AssetManager.Instance.AssetPatcher.TriggerRequestAssetPatchInfoEnd(succeed, operation.Error);
 
-			return eventParam.Value;
+			return succeed;
 		}
 
 		/// <summary>
@@ -96,9 +96,7 @@ namespace Icy.Asset
 			else
 				Log.Error($"{nameof(UpdatePackageManifest)} failed, error = {operation.Error}", nameof(AssetPatcher));
 
-			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
-			eventParam.Value = operation.Status == EOperationStatus.Succeed;
-			EventManager.Trigger(EventDefine.RequestAssetPatchInfoEnd, eventParam);
+			AssetManager.Instance.AssetPatcher.TriggerRequestAssetPatchInfoEnd(operation.Status == EOperationStatus.Succeed, operation.Error);
 		}
 	}
 }

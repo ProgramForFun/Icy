@@ -24,18 +24,6 @@ namespace Icy.Base
 	{
 		#region 资源
 		/// <summary>
-		/// 从远端更新资源版本信息结束
-		/// </summary>
-		public static readonly int RequestAssetPatchInfoEnd = -1100;
-		/// <summary>
-		/// 磁盘空间不足以更新资源
-		/// </summary>
-		public static readonly int NotEnoughDiskSpace2PatchAsset = -1101;
-		/// <summary>
-		/// 下载资源前的条件都已经准备好，可以开始下载
-		/// </summary>
-		public static readonly int Ready2DownloadAssetPatch = -1102;
-		/// <summary>
 		/// 下载资源出错
 		/// </summary>
 		public static readonly int AssetPatchDownloadError = -1103;

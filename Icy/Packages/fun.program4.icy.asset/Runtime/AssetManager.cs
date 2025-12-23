@@ -41,13 +41,13 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetSetting AssetSetting { get; private set; }
 		/// <summary>
+		/// 负责资源更新
+		/// </summary>
+		public AssetPatcher AssetPatcher { get; private set; }
+		/// <summary>
 		/// YooAsset Package
 		/// </summary>
 		private ResourcePackage _Package;
-		/// <summary>
-		/// 资源更新脚本
-		/// </summary>
-		private AssetPatcher _AssetPatcher;
 		/// <summary>
 		/// HybridCLR运行时加载
 		/// </summary>
@@ -251,8 +251,8 @@ namespace Icy.Asset
 		/// </summary>
 		public async UniTask StartAssetPatch()
 		{
-			_AssetPatcher = new AssetPatcher(_Package);
-			await _AssetPatcher.Start();
+			AssetPatcher = new AssetPatcher(_Package);
+			await AssetPatcher.Start();
 
 			//启动无限次的间隔执行UnloadUnusedAssets
 			Timer.RepeatByTime(UnloadUnusedAssetsWrap, _AutoUnloadUnusedAssetsInterval, -1);

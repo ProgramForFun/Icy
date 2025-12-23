@@ -76,11 +76,7 @@ namespace Icy.Asset
 					if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork
 						&& totalDownloadBytes > downloadConfirmThesholdMB * 1024 * 1024) //如果更新大小在设置阈值以内，即使是没有WIFI也直接下载
 					{
-						Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
-						eventParam.About2DownloadBytes = _Downloader.TotalDownloadBytes;
-						eventParam.About2DownloadCount = _Downloader.TotalDownloadCount;
-						eventParam.StartDownload = Download;
-						EventManager.Trigger(EventDefine.Ready2DownloadAssetPatch, eventParam);
+						AssetManager.Instance.AssetPatcher.TriggerReady2DownloadAssetPatch(totalDownloadBytes, totalDownloadCount, Download);
 					}
 					else
 						Download();
@@ -88,9 +84,7 @@ namespace Icy.Asset
 				else
 				{
 					Log.Error($"Disk space not enough", nameof(AssetPatcher));
-					EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
-					eventParam.Value = PrepareToDownload;
-					EventManager.Trigger(EventDefine.NotEnoughDiskSpace2PatchAsset, eventParam);
+					AssetManager.Instance.AssetPatcher.TriggerNotEnoughDiskSpace2PatchAsset(PrepareToDownload);
 				}
 			}
 		}

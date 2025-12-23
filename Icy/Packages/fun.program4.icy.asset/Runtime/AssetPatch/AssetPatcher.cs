@@ -16,6 +16,7 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
+using System;
 using YooAsset;
 
 namespace Icy.Asset
@@ -23,7 +24,7 @@ namespace Icy.Asset
 	/// <summary>
 	/// 负责资源的热更新
 	/// </summary>
-	internal sealed class AssetPatcher
+	public sealed class AssetPatcher
 	{
 		/// <summary>
 		/// 要更新的Package
@@ -33,6 +34,18 @@ namespace Icy.Asset
 		/// 是否完成
 		/// </summary>
 		public bool IsFinished { get; internal set; }
+		/// <summary>
+		/// 从远端更新资源版本信息结束
+		/// </summary>
+		public event Action<EventParam_Reuslt> OnRequestAssetPatchInfoEnd;
+		/// <summary>
+		/// 磁盘空间不足以更新资源
+		/// </summary>
+		public event Action<EventParam<Action>> OnNotEnoughDiskSpace2PatchAsset;
+		/// <summary>
+		/// 
+		/// </summary>
+		public event Action<Ready2DownloadAssetPatchParam> OnReady2DownloadAssetPatch;
 
 		internal AssetPatcher(ResourcePackage package)
 		{
@@ -54,6 +67,30 @@ namespace Icy.Asset
 				await UniTask.NextFrame();
 
 			IsFinished = true;
+		}
+
+		internal void TriggerRequestAssetPatchInfoEnd(bool succeed, string error)
+		{
+			EventParam_Reuslt eventParam = EventManager.GetParam<EventParam_Reuslt>();
+			eventParam.Succeed = succeed;
+			eventParam.Error = error;
+			OnRequestAssetPatchInfoEnd?.Invoke(eventParam);
+		}
+
+		internal void TriggerNotEnoughDiskSpace2PatchAsset(Action retry)
+		{
+			EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
+			eventParam.Value = retry;
+			OnNotEnoughDiskSpace2PatchAsset?.Invoke(eventParam);
+		}
+
+		internal void TriggerReady2DownloadAssetPatch(long totalBytes, int totalCount, Action startDownload)
+		{
+			Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
+			eventParam.About2DownloadBytes = totalBytes;
+			eventParam.About2DownloadCount = totalCount;
+			eventParam.StartDownload = startDownload;
+			OnReady2DownloadAssetPatch?.Invoke(eventParam);
 		}
 	}
 }
