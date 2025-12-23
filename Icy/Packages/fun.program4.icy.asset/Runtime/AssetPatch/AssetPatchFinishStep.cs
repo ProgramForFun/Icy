@@ -44,10 +44,7 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Patcher.Package.ClearCacheFilesAsync(EFileClearMode.ClearUnusedBundleFiles);
 			await operation.ToUniTask();
 
-			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
-			eventParam.Value = true;
-			EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
-
+			AssetManager.Instance.AssetPatcher.TriggerAssetPatchEnd(true);
 			Finish();
 		}
 	}

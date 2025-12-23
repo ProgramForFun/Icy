@@ -35,17 +35,29 @@ namespace Icy.Asset
 		/// </summary>
 		public bool IsFinished { get; internal set; }
 		/// <summary>
-		/// 从远端更新资源版本信息结束
+		/// 从远端更新资源版本信息结束的事件
 		/// </summary>
 		public event Action<EventParam_Reuslt> OnRequestAssetPatchInfoEnd;
 		/// <summary>
-		/// 磁盘空间不足以更新资源
+		/// 磁盘空间不足以更新资源的事件
 		/// </summary>
 		public event Action<EventParam<Action>> OnNotEnoughDiskSpace2PatchAsset;
 		/// <summary>
-		/// 
+		/// 下载资源前的条件都已经准备好，可以开始下载的事件
 		/// </summary>
 		public event Action<Ready2DownloadAssetPatchParam> OnReady2DownloadAssetPatch;
+		/// <summary>
+		/// 下载资源出错的事件
+		/// </summary>
+		public event Action<AssetPatchDownloadErrorParam> OnDownloadError;
+		/// <summary>
+		/// 下载资源进度变化的事件
+		/// </summary>
+		public event Action<AssetPatchDownloadProgressParam> OnDownloadProgressUpdate;
+		/// <summary>
+		/// 资源更新结束的事件
+		/// </summary>
+		public event Action<EventParam_Bool> OnAssetPatchEnd;
 
 		internal AssetPatcher(ResourcePackage package)
 		{
@@ -91,6 +103,35 @@ namespace Icy.Asset
 			eventParam.About2DownloadCount = totalCount;
 			eventParam.StartDownload = startDownload;
 			OnReady2DownloadAssetPatch?.Invoke(eventParam);
+		}
+
+		internal void TriggerDownloadError(string packageName, string fileName, string error, Action retry)
+		{
+			AssetPatchDownloadErrorParam eventParam = EventManager.GetParam<AssetPatchDownloadErrorParam>();
+			eventParam.PackageName = packageName;
+			eventParam.FileName = fileName;
+			eventParam.ErrorInfo = error;
+			eventParam.Retry = retry;
+			OnDownloadError?.Invoke(eventParam);
+		}
+
+		internal void TriggerDownloadProgressUpdate(string packageName, float progress, int totalCount, int currentDownloadCount, long totalBytes, long currentDownloadBytes)
+		{
+			AssetPatchDownloadProgressParam eventParam = EventManager.GetParam<AssetPatchDownloadProgressParam>();
+			eventParam.PackageName = packageName;
+			eventParam.Progress = progress;
+			eventParam.TotalDownloadCount = totalCount;
+			eventParam.CurrentDownloadCount = currentDownloadCount;
+			eventParam.TotalDownloadBytes = totalBytes;
+			eventParam.CurrentDownloadBytes = currentDownloadBytes;
+			OnDownloadProgressUpdate?.Invoke(eventParam);
+		}
+
+		internal void TriggerAssetPatchEnd(bool succeed)
+		{
+			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
+			eventParam.Value = succeed;
+			OnAssetPatchEnd?.Invoke(eventParam);
 		}
 	}
 }

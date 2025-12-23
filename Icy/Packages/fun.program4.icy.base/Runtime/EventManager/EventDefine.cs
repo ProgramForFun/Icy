@@ -22,23 +22,6 @@ namespace Icy.Base
 	/// </summary>
 	public static class EventDefine
 	{
-		#region 资源
-		/// <summary>
-		/// 下载资源出错
-		/// </summary>
-		public static readonly int AssetPatchDownloadError = -1103;
-		/// <summary>
-		/// 下载资源进度变化
-		/// </summary>
-		public static readonly int AssetPatchDownloadProgress = -1104;
-		/// <summary>
-		/// 资源更新完成
-		/// </summary>
-		public static readonly int AssetPatchFinish = -1105;
-		/// <summary>
-		/// HybridCLRRunner运行完成
-		/// </summary>
-		public static readonly int HybridCLRRunnerFinish = -1106;
-		#endregion
+
 	}
 }

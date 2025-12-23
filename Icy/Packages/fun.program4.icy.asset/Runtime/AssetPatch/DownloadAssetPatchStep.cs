@@ -57,11 +57,7 @@ namespace Icy.Asset
 			if (_Downloader.TotalDownloadCount == 0)
 			{
 				Log.Info($"{nameof(DownloadAssetPatchStep)} abort, no assets need to patch", nameof(AssetPatcher), true);
-
-				EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
-				eventParam.Value = false;
-				EventManager.Trigger(EventDefine.AssetPatchFinish, eventParam);
-
+				AssetManager.Instance.AssetPatcher.TriggerAssetPatchEnd(false);
 				OwnerProcedure.Abort();
 			}
 			else
@@ -124,12 +120,7 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadError(DownloadErrorData data)
 		{
-			AssetPatchDownloadErrorParam eventParam = EventManager.GetParam<AssetPatchDownloadErrorParam>();
-			eventParam.PackageName = data.PackageName;
-			eventParam.FileName = data.FileName;
-			eventParam.ErrorInfo = data.ErrorInfo;
-			eventParam.Retry = PrepareToDownload;
-			EventManager.Trigger(EventDefine.AssetPatchDownloadError, eventParam);
+			AssetManager.Instance.AssetPatcher.TriggerDownloadError(data.PackageName, data.FileName, data.ErrorInfo, PrepareToDownload);
 			Log.Error($"Asset download failed, package = {data.PackageName}, file = {data.FileName}, error = {data.ErrorInfo}", nameof(AssetPatcher));
 		}
 
@@ -138,14 +129,8 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadProgressUpdate(DownloadUpdateData data)
 		{
-			AssetPatchDownloadProgressParam eventParam = EventManager.GetParam<AssetPatchDownloadProgressParam>();
-			eventParam.PackageName = data.PackageName;
-			eventParam.Progress = data.Progress;
-			eventParam.TotalDownloadCount = data.TotalDownloadCount;
-			eventParam.CurrentDownloadCount = data.CurrentDownloadCount;
-			eventParam.TotalDownloadBytes = data.TotalDownloadBytes;
-			eventParam.CurrentDownloadBytes = data.CurrentDownloadBytes;
-			EventManager.Trigger(EventDefine.AssetPatchDownloadProgress, eventParam);
+			AssetManager.Instance.AssetPatcher.TriggerDownloadProgressUpdate(data.PackageName, data.Progress, data.TotalDownloadCount
+																			, data.CurrentDownloadCount, data.TotalDownloadBytes, data.CurrentDownloadBytes);
 		}
 
 		/// <summary>

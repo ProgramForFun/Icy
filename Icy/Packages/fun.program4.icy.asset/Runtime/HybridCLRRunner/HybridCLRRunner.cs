@@ -18,7 +18,6 @@ using Cysharp.Threading.Tasks;
 using Icy.Base;
 using System;
 using System.Reflection;
-using UnityEngine;
 
 namespace Icy.Asset
 {
@@ -35,6 +34,10 @@ namespace Icy.Asset
 		/// 是否完成
 		/// </summary>
 		public bool IsFinished { get; internal set; }
+		/// <summary>
+		/// 整个HybridCLRRunner运行完成的事件（包括_RunPatchCode回调的执行）
+		/// </summary>
+		public event Action OnFinish;
 		/// <summary>
 		/// 强制加载、解密等完成，调用业务侧传入的热更代码入口的执行
 		/// </summary>
@@ -97,9 +100,9 @@ namespace Icy.Asset
 				await UniTask.NextFrame();
 
 			Log.Info($"HybridCLR patch procedure finished", nameof(HybridCLRRunner), true);
-			EventManager.Trigger(EventDefine.HybridCLRRunnerFinish);
 			_RunPatchCode();
 			IsFinished = true;
+			OnFinish?.Invoke();
 		}
 	}
 }
