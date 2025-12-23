@@ -46,9 +46,6 @@ namespace Icy.UI
 		public List<UICodeGeneratorItem> Components = new List<UICodeGeneratorItem>();
 
 		private Dictionary<string, UICodeGeneratorItem> _ForDuplicateName = new Dictionary<string, UICodeGeneratorItem>();
-		private bool _Inited = false;
-		private bool _Disposed = false;
-
 
 		[Space(10)]
 		[InfoBox("UI name is just the UI prefab name without prefix 'UI'")]
@@ -80,12 +77,6 @@ namespace Icy.UI
 
 		private void OnInspectorInit()
 		{
-			if (!_Inited)
-			{
-				_Inited = true;
-				_Disposed = false;
-			}
-
 			if (Components.Count > 0)
 				ValidateName(Components[0]);
 
@@ -171,11 +162,7 @@ namespace Icy.UI
 
 		private void OnInspectorDispose()
 		{
-			if (!_Disposed)
-			{
-				_Disposed = true;
-				_Inited = false;
-			}
+
 		}
 
 		#region 快捷添加
