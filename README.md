@@ -77,7 +77,6 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |UI-状态记录组件|序列化进Prefab的UI状态记录，<br>支持一键切换多个UI节点的状态|待开始|
 |UI-集成[UIEffect](https://github.com/mob-sakai/UIEffect)|各种常用UI效果合集|✔️|
 |UI-集成[UIParticle](https://github.com/mob-sakai/ParticleEffectForUGUI)|在UGUI上渲染粒子的工具|✔️|
-|UI-易于使用的缓动动画系统|便于UI/UX直接使用缓动动画制作效果、<br>并序列化进Prefab，以避免使用<br>Animation/Animator、解放程序员|待开始|
 |UI-新手引导||待开始|
 |Gameplay-基础数值系统||待开始|
 |Gameplay-技能系统||待开始|
