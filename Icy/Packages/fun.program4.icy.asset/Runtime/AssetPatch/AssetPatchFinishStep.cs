@@ -44,7 +44,7 @@ namespace Icy.Asset
 			ClearCacheFilesOperation operation = _Patcher.Package.ClearCacheFilesAsync(EFileClearMode.ClearUnusedBundleFiles);
 			await operation.ToUniTask();
 
-			AssetManager.Instance.AssetPatcher.TriggerAssetPatchEnd(true);
+			AssetManager.Instance.TriggerPatchAssetEnd(true);
 			Finish();
 		}
 	}

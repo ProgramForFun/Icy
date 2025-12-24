@@ -40,10 +40,38 @@ namespace Icy.Asset
 		/// 资源相关设置
 		/// </summary>
 		public AssetSetting AssetSetting { get; private set; }
+
+		#region 资源热更事件
+		/// <summary>
+		/// 从远端更新资源版本信息结束的事件
+		/// </summary>
+		public event Action<EventParam_Reuslt> OnRequestAssetPatchInfoEnd;
+		/// <summary>
+		/// 磁盘空间不足以更新资源的事件
+		/// </summary>
+		public event Action<EventParam<Action>> OnNotEnoughDiskSpace2PatchAsset;
+		/// <summary>
+		/// 下载资源前的条件都已经准备好，可以开始下载的事件
+		/// </summary>
+		public event Action<Ready2DownloadAssetPatchParam> OnReady2DownloadAssetPatch;
+		/// <summary>
+		/// 下载资源出错的事件
+		/// </summary>
+		public event Action<AssetPatchDownloadErrorParam> OnDownloadAssetPatchError;
+		/// <summary>
+		/// 下载资源进度变化的事件
+		/// </summary>
+		public event Action<AssetPatchDownloadProgressParam> OnDownloadAssetPatchProgressChanged;
+		/// <summary>
+		/// 资源更新结束的事件
+		/// </summary>
+		public event Action<EventParam_Bool> OnPatchAssetEnd;
+
+		#endregion
 		/// <summary>
 		/// 负责资源更新
 		/// </summary>
-		public AssetPatcher AssetPatcher { get; private set; }
+		private AssetPatcher _AssetPatcher;
 		/// <summary>
 		/// YooAsset Package
 		/// </summary>
@@ -164,7 +192,7 @@ namespace Icy.Asset
 		/// <summary>
 		/// 获取资源服务器地址
 		/// </summary>
-		/// <param name="isMain">是主地址还是备地址</param>
+		/// <param name="isMain">是主地址还是备用地址</param>
 		private string GetHostServerURL(bool isMain)
 		{
 			string hostServerAddress = isMain ? AssetSetting.AssetHostServerAddressMain : AssetSetting.AssetHostServerAddressStandby;
@@ -251,8 +279,8 @@ namespace Icy.Asset
 		/// </summary>
 		public async UniTask StartAssetPatch()
 		{
-			AssetPatcher = new AssetPatcher(_Package);
-			await AssetPatcher.Start();
+			_AssetPatcher = new AssetPatcher(_Package);
+			await _AssetPatcher.Start();
 
 			//启动无限次的间隔执行UnloadUnusedAssets
 			Timer.RepeatByTime(UnloadUnusedAssetsWrap, _AutoUnloadUnusedAssetsInterval, -1);
@@ -273,6 +301,59 @@ namespace Icy.Asset
 			await _HybridCLR.Run();
 
 			Timer.DelayByTime(UnloadUnusedAssetsWrap, 1);
+		}
+
+		internal void TriggerRequestAssetPatchInfoEnd(bool succeed, string error)
+		{
+			EventParam_Reuslt eventParam = EventManager.GetParam<EventParam_Reuslt>();
+			eventParam.Succeed = succeed;
+			eventParam.Error = error;
+			OnRequestAssetPatchInfoEnd?.Invoke(eventParam);
+		}
+
+		internal void TriggerNotEnoughDiskSpace2PatchAsset(Action retry)
+		{
+			EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
+			eventParam.Value = retry;
+			OnNotEnoughDiskSpace2PatchAsset?.Invoke(eventParam);
+		}
+
+		internal void TriggerReady2DownloadAssetPatch(long totalBytes, int totalCount, Action startDownload)
+		{
+			Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
+			eventParam.About2DownloadBytes = totalBytes;
+			eventParam.About2DownloadCount = totalCount;
+			eventParam.StartDownload = startDownload;
+			OnReady2DownloadAssetPatch?.Invoke(eventParam);
+		}
+
+		internal void TriggerAssetPatchDownloadError(string packageName, string fileName, string error, Action retry)
+		{
+			AssetPatchDownloadErrorParam eventParam = EventManager.GetParam<AssetPatchDownloadErrorParam>();
+			eventParam.PackageName = packageName;
+			eventParam.FileName = fileName;
+			eventParam.ErrorInfo = error;
+			eventParam.Retry = retry;
+			OnDownloadAssetPatchError?.Invoke(eventParam);
+		}
+
+		internal void TriggerDownloadAssetPatchProgressChanged(string packageName, float progress, int totalCount, int currentDownloadCount, long totalBytes, long currentDownloadBytes)
+		{
+			AssetPatchDownloadProgressParam eventParam = EventManager.GetParam<AssetPatchDownloadProgressParam>();
+			eventParam.PackageName = packageName;
+			eventParam.Progress = progress;
+			eventParam.TotalDownloadCount = totalCount;
+			eventParam.CurrentDownloadCount = currentDownloadCount;
+			eventParam.TotalDownloadBytes = totalBytes;
+			eventParam.CurrentDownloadBytes = currentDownloadBytes;
+			OnDownloadAssetPatchProgressChanged?.Invoke(eventParam);
+		}
+
+		internal void TriggerPatchAssetEnd(bool succeed)
+		{
+			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
+			eventParam.Value = succeed;
+			OnPatchAssetEnd?.Invoke(eventParam);
 		}
 		#endregion
 

@@ -68,7 +68,7 @@ namespace Icy.Asset
 
 			bool succeed = operation.Status == EOperationStatus.Succeed;
 			if (!succeed)
-				AssetManager.Instance.AssetPatcher.TriggerRequestAssetPatchInfoEnd(succeed, operation.Error);
+				AssetManager.Instance.TriggerRequestAssetPatchInfoEnd(succeed, operation.Error);
 
 			return succeed;
 		}
@@ -96,7 +96,7 @@ namespace Icy.Asset
 			else
 				Log.Error($"{nameof(UpdatePackageManifest)} failed, error = {operation.Error}", nameof(AssetPatcher));
 
-			AssetManager.Instance.AssetPatcher.TriggerRequestAssetPatchInfoEnd(operation.Status == EOperationStatus.Succeed, operation.Error);
+			AssetManager.Instance.TriggerRequestAssetPatchInfoEnd(operation.Status == EOperationStatus.Succeed, operation.Error);
 		}
 	}
 }

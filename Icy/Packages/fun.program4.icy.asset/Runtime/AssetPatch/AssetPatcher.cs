@@ -16,7 +16,6 @@
 
 using Cysharp.Threading.Tasks;
 using Icy.Base;
-using System;
 using YooAsset;
 
 namespace Icy.Asset
@@ -24,7 +23,7 @@ namespace Icy.Asset
 	/// <summary>
 	/// 负责资源的热更新
 	/// </summary>
-	public sealed class AssetPatcher
+	internal sealed class AssetPatcher
 	{
 		/// <summary>
 		/// 要更新的Package
@@ -34,30 +33,6 @@ namespace Icy.Asset
 		/// 是否完成
 		/// </summary>
 		public bool IsFinished { get; internal set; }
-		/// <summary>
-		/// 从远端更新资源版本信息结束的事件
-		/// </summary>
-		public event Action<EventParam_Reuslt> OnRequestAssetPatchInfoEnd;
-		/// <summary>
-		/// 磁盘空间不足以更新资源的事件
-		/// </summary>
-		public event Action<EventParam<Action>> OnNotEnoughDiskSpace2PatchAsset;
-		/// <summary>
-		/// 下载资源前的条件都已经准备好，可以开始下载的事件
-		/// </summary>
-		public event Action<Ready2DownloadAssetPatchParam> OnReady2DownloadAssetPatch;
-		/// <summary>
-		/// 下载资源出错的事件
-		/// </summary>
-		public event Action<AssetPatchDownloadErrorParam> OnDownloadError;
-		/// <summary>
-		/// 下载资源进度变化的事件
-		/// </summary>
-		public event Action<AssetPatchDownloadProgressParam> OnDownloadProgressUpdate;
-		/// <summary>
-		/// 资源更新结束的事件
-		/// </summary>
-		public event Action<EventParam_Bool> OnAssetPatchEnd;
 
 		internal AssetPatcher(ResourcePackage package)
 		{
@@ -79,59 +54,6 @@ namespace Icy.Asset
 				await UniTask.NextFrame();
 
 			IsFinished = true;
-		}
-
-		internal void TriggerRequestAssetPatchInfoEnd(bool succeed, string error)
-		{
-			EventParam_Reuslt eventParam = EventManager.GetParam<EventParam_Reuslt>();
-			eventParam.Succeed = succeed;
-			eventParam.Error = error;
-			OnRequestAssetPatchInfoEnd?.Invoke(eventParam);
-		}
-
-		internal void TriggerNotEnoughDiskSpace2PatchAsset(Action retry)
-		{
-			EventParam<Action> eventParam = EventManager.GetParam<EventParam<Action>>();
-			eventParam.Value = retry;
-			OnNotEnoughDiskSpace2PatchAsset?.Invoke(eventParam);
-		}
-
-		internal void TriggerReady2DownloadAssetPatch(long totalBytes, int totalCount, Action startDownload)
-		{
-			Ready2DownloadAssetPatchParam eventParam = EventManager.GetParam<Ready2DownloadAssetPatchParam>();
-			eventParam.About2DownloadBytes = totalBytes;
-			eventParam.About2DownloadCount = totalCount;
-			eventParam.StartDownload = startDownload;
-			OnReady2DownloadAssetPatch?.Invoke(eventParam);
-		}
-
-		internal void TriggerDownloadError(string packageName, string fileName, string error, Action retry)
-		{
-			AssetPatchDownloadErrorParam eventParam = EventManager.GetParam<AssetPatchDownloadErrorParam>();
-			eventParam.PackageName = packageName;
-			eventParam.FileName = fileName;
-			eventParam.ErrorInfo = error;
-			eventParam.Retry = retry;
-			OnDownloadError?.Invoke(eventParam);
-		}
-
-		internal void TriggerDownloadProgressUpdate(string packageName, float progress, int totalCount, int currentDownloadCount, long totalBytes, long currentDownloadBytes)
-		{
-			AssetPatchDownloadProgressParam eventParam = EventManager.GetParam<AssetPatchDownloadProgressParam>();
-			eventParam.PackageName = packageName;
-			eventParam.Progress = progress;
-			eventParam.TotalDownloadCount = totalCount;
-			eventParam.CurrentDownloadCount = currentDownloadCount;
-			eventParam.TotalDownloadBytes = totalBytes;
-			eventParam.CurrentDownloadBytes = currentDownloadBytes;
-			OnDownloadProgressUpdate?.Invoke(eventParam);
-		}
-
-		internal void TriggerAssetPatchEnd(bool succeed)
-		{
-			EventParam_Bool eventParam = EventManager.GetParam<EventParam_Bool>();
-			eventParam.Value = succeed;
-			OnAssetPatchEnd?.Invoke(eventParam);
 		}
 	}
 }

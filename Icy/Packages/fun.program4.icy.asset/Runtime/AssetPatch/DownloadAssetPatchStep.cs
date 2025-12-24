@@ -57,7 +57,7 @@ namespace Icy.Asset
 			if (_Downloader.TotalDownloadCount == 0)
 			{
 				Log.Info($"{nameof(DownloadAssetPatchStep)} abort, no assets need to patch", nameof(AssetPatcher), true);
-				AssetManager.Instance.AssetPatcher.TriggerAssetPatchEnd(false);
+				AssetManager.Instance.TriggerPatchAssetEnd(false);
 				OwnerProcedure.Abort();
 			}
 			else
@@ -72,7 +72,7 @@ namespace Icy.Asset
 					if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork
 						&& totalDownloadBytes > downloadConfirmThesholdMB * 1024 * 1024) //如果更新大小在设置阈值以内，即使是没有WIFI也直接下载
 					{
-						AssetManager.Instance.AssetPatcher.TriggerReady2DownloadAssetPatch(totalDownloadBytes, totalDownloadCount, Download);
+						AssetManager.Instance.TriggerReady2DownloadAssetPatch(totalDownloadBytes, totalDownloadCount, Download);
 					}
 					else
 						Download();
@@ -80,7 +80,7 @@ namespace Icy.Asset
 				else
 				{
 					Log.Error($"Disk space not enough", nameof(AssetPatcher));
-					AssetManager.Instance.AssetPatcher.TriggerNotEnoughDiskSpace2PatchAsset(PrepareToDownload);
+					AssetManager.Instance.TriggerNotEnoughDiskSpace2PatchAsset(PrepareToDownload);
 				}
 			}
 		}
@@ -120,7 +120,7 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadError(DownloadErrorData data)
 		{
-			AssetManager.Instance.AssetPatcher.TriggerDownloadError(data.PackageName, data.FileName, data.ErrorInfo, PrepareToDownload);
+			AssetManager.Instance.TriggerAssetPatchDownloadError(data.PackageName, data.FileName, data.ErrorInfo, PrepareToDownload);
 			Log.Error($"Asset download failed, package = {data.PackageName}, file = {data.FileName}, error = {data.ErrorInfo}", nameof(AssetPatcher));
 		}
 
@@ -129,7 +129,7 @@ namespace Icy.Asset
 		/// </summary>
 		private void OnDownloadProgressUpdate(DownloadUpdateData data)
 		{
-			AssetManager.Instance.AssetPatcher.TriggerDownloadProgressUpdate(data.PackageName, data.Progress, data.TotalDownloadCount
+			AssetManager.Instance.TriggerDownloadAssetPatchProgressChanged(data.PackageName, data.Progress, data.TotalDownloadCount
 																			, data.CurrentDownloadCount, data.TotalDownloadBytes, data.CurrentDownloadBytes);
 		}
 
