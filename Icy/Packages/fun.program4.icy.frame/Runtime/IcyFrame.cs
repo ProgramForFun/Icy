@@ -23,6 +23,7 @@ using System.Threading;
 using UnityEngine;
 using YooAsset;
 using Icy.UI;
+using LitMotion;
 
 namespace Icy.Frame
 {
@@ -47,6 +48,8 @@ namespace Icy.Frame
 			CommonUtility.MainThreadID = Thread.CurrentThread.ManagedThreadId;
 			//监听UniTask中未处理的异常
 			UniTaskScheduler.UnobservedTaskException += OnUniTaskUnobservedTaskException;
+			//监听LitMotion中未处理的异常
+			MotionDispatcher.RegisterUnhandledExceptionHandler(OnLitMotionUnobservedTaskException);
 
 			//尽可能早的初始化Log
 			Log.Init(writeLog2File);
@@ -93,6 +96,11 @@ namespace Icy.Frame
 		private void OnUniTaskUnobservedTaskException(Exception ex)
 		{
 			Log.Error(ex.ToString(), "UniTask Unobserved Exception");
+		}
+
+		private void OnLitMotionUnobservedTaskException(Exception ex)
+		{
+			Log.Error(ex.ToString(), "LitMotion Unobserved Exception");
 		}
 
 		private void Update()
