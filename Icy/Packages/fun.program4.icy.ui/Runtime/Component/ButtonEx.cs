@@ -20,10 +20,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 扩展Button
-/// </summary>
-public class ButtonEx : Button
+namespace Icy.UI
 {
-	// TODO
+	/// <summary>
+	/// 扩展Button
+	/// </summary>
+	public class ButtonEx : Button
+	{
+		// TODO
+	}
 }

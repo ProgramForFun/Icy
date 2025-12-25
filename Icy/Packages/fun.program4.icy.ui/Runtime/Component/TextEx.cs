@@ -19,10 +19,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// 扩展TMP
-/// </summary>
-public class TextEx : TMPro.TextMeshProUGUI
+namespace Icy.UI
 {
-	// TODO
+	/// <summary>
+	/// 扩展TMP
+	/// </summary>
+	public class TextEx : TMPro.TextMeshProUGUI
+	{
+		// TODO
+	}
 }

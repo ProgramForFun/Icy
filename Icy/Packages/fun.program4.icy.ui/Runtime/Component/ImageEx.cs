@@ -20,10 +20,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 扩展Image
-/// </summary>
-public class ImageEx : Image
+namespace Icy.UI
 {
-	// TODO
+	/// <summary>
+	/// 扩展Image
+	/// </summary>
+	public class ImageEx : Image
+	{
+		// TODO
+	}
 }
