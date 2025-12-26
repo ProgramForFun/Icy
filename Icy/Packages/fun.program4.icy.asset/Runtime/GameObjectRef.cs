@@ -29,7 +29,10 @@ namespace Icy.Asset
 	public class GameObjectRef
 	{
 		/// <summary>
-		/// 持有的GameObject，命名遵循Unity
+		/// 持有的GameObject，命名遵循Unity；
+		/// 
+		/// 注意：下面便利转发了绝大部分GameObject常用接口，所以不必非得从此属性来访问GameObject，
+		/// 更建议直接用下面的便利转发接口
 		/// </summary>
 		public GameObject gameObject { get; protected set; }
 		#region 便利转发，命名遵循Unity
@@ -74,23 +77,23 @@ namespace Icy.Asset
 		public static GameObject CreatePrimitive(PrimitiveType type) => GameObject.CreatePrimitive(type);
 		#endregion
 		/// <summary>
-		/// 是否已加载结束，不关心成功还是失败
+		/// 是否已准备好、可以开始使用了
 		/// </summary>
-		public bool IsFinish => _AssetRef.IsFinish;
+		public bool IsReady => _AssetRef.IsSucceed;
 		/// <summary>
-		/// 是否已加载成功
+		/// 资源加载的最近错误信息，如果有的话
 		/// </summary>
-		public bool IsSucceed => _AssetRef.IsSucceed;
+		public string LastError => _AssetRef.LastError;
 		/// <summary>
-		/// 加载完成的回调
+		/// 资源加载完成的回调
 		/// </summary>
 		public event Action<bool> OnLoadFinish
 		{
 			add
 			{
 				_OnFinish += value;
-				if (IsFinish)
-					value?.Invoke(IsSucceed);
+				if (_AssetRef.IsFinish)
+					value?.Invoke(IsReady);
 			}
 			remove => _OnFinish -= value;
 		}
@@ -105,11 +108,25 @@ namespace Icy.Asset
 		protected Action<bool> _OnFinish;
 
 
-		public GameObjectRef(string address)
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="address">资源路径</param>
+		/// <param name="syncLoad">同步加载，默认为false</param>
+		public GameObjectRef(string address, bool syncLoad = false)
 		{
-			_AssetRef = AssetManager.Instance.LoadAssetAsync(address);
-			_AssetRef.Retain();
-			_AssetRef.OnFinish += OnAssetRefFinish;
+			if (syncLoad)
+			{
+				_AssetRef = AssetManager.Instance.LoadAsset(address);
+				_AssetRef.Retain();
+				OnAssetRefFinish(_AssetRef);
+			}
+			else
+			{
+				_AssetRef = AssetManager.Instance.LoadAssetAsync(address);
+				_AssetRef.Retain();
+				_AssetRef.OnFinish += OnAssetRefFinish;
+			}
 		}
 
 		/// <summary>

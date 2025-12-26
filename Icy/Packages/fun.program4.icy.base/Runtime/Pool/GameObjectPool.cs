@@ -47,6 +47,11 @@ namespace Icy.Base
 
 		protected override GameObject InstantiateOne()
 		{
+			if (_Template == null)
+			{
+				Log.Error("GameObject template is null", nameof(GameObjectPool));
+				return null;
+			}
 			return UnityEngine.Object.Instantiate(_Template);
 		}
 

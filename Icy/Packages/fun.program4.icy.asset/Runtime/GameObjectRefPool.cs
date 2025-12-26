@@ -28,23 +28,23 @@ namespace Icy.Asset
 	public class GameObjectRefPool : GameObjectPool
 	{
 		/// <summary>
-		/// 是否已加载结束，不关心成功还是失败
+		/// 是否已准备好、可以开始使用了
 		/// </summary>
-		public bool IsFinish => _AssetRef.IsFinish;
+		public bool IsReady => _AssetRef.IsSucceed;
 		/// <summary>
-		/// 是否已加载成功
+		/// 资源加载的最近错误信息，如果有的话
 		/// </summary>
-		public bool IsSucceed => _AssetRef.IsSucceed;
+		public string LastError => _AssetRef.LastError;
 		/// <summary>
-		/// 加载完成的回调
+		/// 资源加载完成的回调
 		/// </summary>
 		public event Action<bool> OnLoadFinish
 		{
 			add
 			{
 				_OnFinish += value;
-				if (IsFinish)
-					value?.Invoke(IsSucceed);
+				if (_AssetRef.IsFinish)
+					value?.Invoke(IsReady);
 			}
 			remove => _OnFinish -= value;
 		}
@@ -59,11 +59,26 @@ namespace Icy.Asset
 		protected Action<bool> _OnFinish;
 
 
-		public GameObjectRefPool(string address, int defaultSize = 16) : base(null, defaultSize)
+		/// <summary>
+		/// 构造函数
+		/// </summary>
+		/// <param name="address">资源路径</param>
+		/// <param name="syncLoad">同步加载，默认为false</param>
+		/// <param name="defaultSize">同步加载，默认为false</param>
+		public GameObjectRefPool(string address, bool syncLoad = false, int defaultSize = 16) : base(null, defaultSize)
 		{
-			_AssetRef = AssetManager.Instance.LoadAssetAsync(address);
-			_AssetRef.Retain();
-			_AssetRef.OnFinish += OnAssetRefFinish;
+			if (syncLoad)
+			{
+				_AssetRef = AssetManager.Instance.LoadAsset(address);
+				_AssetRef.Retain();
+				OnAssetRefFinish(_AssetRef);
+			}
+			else
+			{
+				_AssetRef = AssetManager.Instance.LoadAssetAsync(address);
+				_AssetRef.Retain();
+				_AssetRef.OnFinish += OnAssetRefFinish;
+			}
 		}
 
 		/// <summary>
@@ -83,8 +98,8 @@ namespace Icy.Asset
 
 		public override void Dispose()
 		{
-			_AssetRef.Release();
 			base.Dispose();
+			_AssetRef.Release();
 		}
 	}
 }
