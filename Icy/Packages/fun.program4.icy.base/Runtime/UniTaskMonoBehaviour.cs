@@ -24,9 +24,10 @@ using UnityEngine;
 namespace Icy.Base
 {
 	/// <summary>
-	/// 包装常用UniTask具有CancellationToken形参的API，将其中的CancellationToken参数设置为
-	/// 和MonoBehaviour声明周期相关的Token，以达到GameObject销毁、Disable时，UniTask相关的操作可以自动中断；
-	/// 同时也支持外部传入一个额外的Token；
+	/// 包装UniTask具有CancellationToken形参的常用API，将其中的CancellationToken参数设置为
+	/// 和MonoBehaviour生命周期相关的Token，以达到GameObject Destroy、Disable时，UniTask相关的操作可以自动中断；
+	/// 同时也支持外部传入一个额外的Token，以到达主动控制；
+	/// 注意：派生类如果自己实现了OnEnable、OnDisable、OnDestroy的话，必须调用基类实现
 	/// </summary>
 	public class UniTaskMonoBehaviour : MonoBehaviour
 	{
@@ -56,7 +57,7 @@ namespace Icy.Base
 
 
 		/// <summary>
-		/// 可以外部设置一个额外的CancellationToken，来主动触发中断
+		/// 可以外部设置一个额外的CancellationToken，来主动触发取消
 		/// </summary>
 		public void SetExternalToken(CancellationToken externalToken)
 		{
@@ -72,6 +73,7 @@ namespace Icy.Base
 		protected virtual void OnEnable()
 		{
 			_DisableCancellationTokenSource = new CancellationTokenSource();
+			_AllCancelTokens.Add(_DisableCancellationTokenSource);
 			RefreshTotalToken();
 		}
 
@@ -90,6 +92,7 @@ namespace Icy.Base
 		{
 			CancellationTokenSource cts = new CancellationTokenSource();
 			CancellationTokenSource linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cts.Token, _TotalCancellationToken);
+			_AllCancelTokens.Add(cts);
 			_AllCancelTokens.Add(linkedTokenSource);
 			return linkedTokenSource;
 		}
@@ -348,7 +351,10 @@ namespace Icy.Base
 		}
 		#endregion
 
-		private void OnDestroy()
+		/// <summary>
+		/// 派生类override的话，必须调用基类实现
+		/// </summary>
+		protected virtual void OnDestroy()
 		{
 			for (int i = 0; i < _AllCancelTokens.Count; i++)
 				_AllCancelTokens[i].Dispose();
