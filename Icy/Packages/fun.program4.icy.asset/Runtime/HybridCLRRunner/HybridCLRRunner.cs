@@ -81,7 +81,7 @@ namespace Icy.Asset
 					break;
 				}
 #else
-				TextAsset record = Resources.Load<TextAsset>("HybridCLR_Enable");
+				UnityEngine.TextAsset record = UnityEngine.Resources.Load<UnityEngine.TextAsset>("HybridCLR_Enable");
 				IsHybridCLREnabled = record != null;
 #endif
 			}
