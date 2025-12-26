@@ -57,6 +57,10 @@ namespace Icy.Asset
 		/// </summary>
 		public bool IsValid => _AssetHandle.IsValid;
 		/// <summary>
+		/// 最近的错误信息，如果有的话
+		/// </summary>
+		public string LastError => _AssetHandle.LastError;
+		/// <summary>
 		/// 加载完成的回调
 		/// </summary>
 		public event Action<AssetRef> OnFinish
