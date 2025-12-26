@@ -22,6 +22,9 @@ namespace Icy.Base
 	/// </summary>
 	public static class EventDefine
 	{
-
+		/// <summary>
+		/// HybridCLRRunner运行完成
+		/// </summary>
+		public static readonly int HybridCLRRunnerFinish = -1000;
 	}
 }

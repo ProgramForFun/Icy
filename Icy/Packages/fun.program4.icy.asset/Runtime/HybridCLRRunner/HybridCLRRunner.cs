@@ -31,11 +31,11 @@ namespace Icy.Asset
 		/// </summary>
 		public static bool IsHybridCLREnabled { get; internal set; }
 		/// <summary>
-		/// 是否完成
+		/// 是否完成（不包括_RunPatchCode回调的执行）
 		/// </summary>
 		public bool IsFinished { get; internal set; }
 		/// <summary>
-		/// 整个HybridCLRRunner运行完成的事件（包括_RunPatchCode回调的执行）
+		/// HybridCLRRunner运行完成的事件（不包括_RunPatchCode回调的执行）
 		/// </summary>
 		public event Action OnFinish;
 		/// <summary>
@@ -100,9 +100,11 @@ namespace Icy.Asset
 				await UniTask.NextFrame();
 
 			Log.Info($"HybridCLR patch procedure finished", nameof(HybridCLRRunner), true);
-			_RunPatchCode();
+			EventManager.Trigger(EventDefine.HybridCLRRunnerFinish);
 			IsFinished = true;
 			OnFinish?.Invoke();
+
+			_RunPatchCode();
 		}
 	}
 }
