@@ -16,6 +16,7 @@
 
 
 using Cysharp.Threading.Tasks;
+using Icy.Base;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -140,7 +141,10 @@ namespace Icy.Asset
 		protected void OnAssetRefFinish(AssetRef assetRef)
 		{
 			if (assetRef.IsSucceed)
+			{
 				gameObject = GameObject.Instantiate(assetRef.AssetObject) as GameObject;
+				gameObject.RemoveCloneSuffix();
+			}
 			_OnFinish?.Invoke(assetRef.IsSucceed);
 		}
 

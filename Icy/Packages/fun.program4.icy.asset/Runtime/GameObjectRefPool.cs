@@ -92,7 +92,10 @@ namespace Icy.Asset
 		protected virtual void OnAssetRefFinish(AssetRef assetRef)
 		{
 			if (assetRef.IsSucceed)
+			{
 				_Template = GameObject.Instantiate(assetRef.AssetObject) as GameObject;
+				_Template.RemoveCloneSuffix();
+			}
 			_OnFinish?.Invoke(assetRef.IsSucceed);
 		}
 
