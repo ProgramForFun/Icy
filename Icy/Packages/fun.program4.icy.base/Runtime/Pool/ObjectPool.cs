@@ -42,8 +42,11 @@ namespace Icy.Base
 			_OutPool = new List<T>(defaultSize);
 
 #if UNITY_EDITOR
-			if (typeof(T) == typeof(GameObject) && this.GetType() != typeof(GameObjectPool))
+			if (typeof(T) == typeof(GameObject) && this.GetType() != typeof(GameObjectPool)
+				&& this.GetType().Name != "GameObjectRefPool")
+			{
 				Log.Error($"ObjectPool<GameObject> is unexpected, Use {nameof(GameObjectPool)} instead");
+			}
 #endif
 		}
 
