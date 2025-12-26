@@ -555,12 +555,20 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// 递归设置所有Children的Layer
+		/// 移除GameObject名字里的"(Clone)"后缀，如果有的话
 		/// </summary>
-		/// <param name="layer"></param>
-		public static void SetLayerRecursively(this GameObject go, string layer)
+		/// <param name="go"></param>
+		/// <returns>是否移除了</returns>
+		public static bool RemoveCloneSuffix(this GameObject go)
 		{
-			go.SetLayerRecursively(LayerMask.NameToLayer(layer));
+			string goName = go.name;
+			if (goName.EndsWith("(Clone)"))
+			{
+				//go.name = goName.Substring(0, goName.Length - 7);//"(Clone)"的长度
+				go.name = goName[..^7];
+				return true;
+			}
+			return false;
 		}
 
 		/// <summary>
@@ -641,7 +649,7 @@ namespace Icy.Base
 		}
 
 		/// <summary>
-		/// Transform从子节点到某个父节点的路径
+		/// 获取Transform从子节点到某个父节点的路径
 		/// </summary>
 		/// <param name="parent">找寻到的父节点</param>
 		/// <param name="child">开始逆向找寻子节点</param>
@@ -656,9 +664,7 @@ namespace Icy.Base
 			{
 				Transform p = child.parent;
 				if (p == null || p == parent)
-				{
 					break;
-				}
 				else
 				{
 					strBuilder = strBuilder.Insert(0, $"{p.name}/");
