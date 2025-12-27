@@ -142,14 +142,14 @@ namespace Icy.UI
 		/// </summary>
 		public void SetBlurToUI(UIBase ui)
 		{
-			Blur.gameObject.SetActive(true);
-			Blur.transform.SetParent(ui.transform.parent);
-			Blur.transform.SetSiblingIndex(ui.transform.GetSiblingIndex());
+			_Blur.gameObject.SetActive(true);
+			_Blur.transform.SetParent(ui.transform.parent);
+			_Blur.transform.SetSiblingIndex(ui.transform.GetSiblingIndex());
 
 			int order = ui.Canvas.sortingOrder;
-			Blur.Canvas.sortingOrder = order - 1;
+			_Blur.Canvas.sortingOrder = order - 1;
 
-			Blur.Activate();
+			_Blur.Activate();
 		}
 
 		/// <summary>
@@ -157,9 +157,9 @@ namespace Icy.UI
 		/// </summary>
 		public void CloseBlur()
 		{
-			Blur.Deactivate();
-			Blur.transform.SetParent(RootCanvas.transform);
-			Blur.transform.SetAsFirstSibling();
+			_Blur.Deactivate();
+			_Blur.transform.SetParent(RootCanvas.transform);
+			_Blur.transform.SetAsFirstSibling();
 		}
 	}
 }
