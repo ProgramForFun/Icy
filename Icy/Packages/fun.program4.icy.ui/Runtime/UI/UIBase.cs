@@ -210,13 +210,15 @@ namespace Icy.UI
 			Log.Info($"{UIName} destroyed", "UI", true);
 		}
 
-		protected void OnDestroy()
+		protected override void OnDestroy()
 		{
 			if (!IsDestroyed && !_IsExitingPlayMode)
 				Log.Error($"UI GameObject of {GetType().Name} is unexpected destroyed", nameof(UIBase));
 
 			for (int i = 0; i < _AllCancelTokens.Count; i++)
 				_AllCancelTokens[i].Dispose();
+
+			base.OnDestroy();
 		}
 
 #if UNITY_EDITOR
