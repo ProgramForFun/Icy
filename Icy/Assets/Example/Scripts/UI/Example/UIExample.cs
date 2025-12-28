@@ -13,6 +13,8 @@ public class UIExample : UIBase
 //↓=========================== Generated code area，do NOT put your business code in this ===========================↓
 	[TitleGroup("Components")]
 	[SerializeField, ReadOnly] SuperScrollView.LoopListView2 _ScrollView;
+	[SerializeField, ReadOnly] UnityEngine.UI.Image _Item1;
+	[SerializeField, ReadOnly] UnityEngine.UI.Image _Item2;
 //↑=========================== Generated code area，do NOT put your business code in this ===========================↑
 
 	public override void Init()
@@ -28,7 +30,7 @@ public class UIExample : UIBase
 
 	private LoopListViewItem2 OnItem(LoopListView2 view, int arg2)
 	{
-		LoopListViewItem2 item = _ScrollView.NewListViewItem("Item");
+		LoopListViewItem2 item = _ScrollView.NewListViewItem("Template");
 		Text text = item.transform.GetChild(0).GetComponent<Text>();
 		text.text = arg2.ToString();
 		return item;
