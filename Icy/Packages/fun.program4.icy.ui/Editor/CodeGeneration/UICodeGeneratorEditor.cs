@@ -157,7 +157,8 @@ namespace Icy.UI.Editor
 					for (;lineIdx < oldLines.Length; lineIdx++)
 					{
 						newlines.Add(oldLines[lineIdx]);
-						if (oldLines[lineIdx].StartsWith("//↓="))
+						string line = oldLines[lineIdx].TrimStart();
+						if (line.StartsWith("//↓="))
 							break;
 					}
 
@@ -172,7 +173,8 @@ namespace Icy.UI.Editor
 					bool foundGeneratedAreaEnd = false;
 					for (; lineIdx < oldLines.Length; lineIdx++)
 					{
-						if (oldLines[lineIdx].StartsWith("//↑=") && !foundGeneratedAreaEnd)
+						string line = oldLines[lineIdx].TrimStart();
+						if (line.StartsWith("//↑=") && !foundGeneratedAreaEnd)
 							foundGeneratedAreaEnd = true;
 
 						if (foundGeneratedAreaEnd)
