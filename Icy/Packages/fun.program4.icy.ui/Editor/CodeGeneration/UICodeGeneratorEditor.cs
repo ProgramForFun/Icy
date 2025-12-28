@@ -161,9 +161,14 @@ namespace Icy.UI.Editor
 							break;
 					}
 
+					//把[TitleGroup("Components")]这行也保留
+					lineIdx++;
+					newlines.Add(oldLines[lineIdx]);
+
 					//插入新的组件代码
 					newlines.AddRange(componentCode);
 
+					//继续保留后续的业务代码
 					bool foundGeneratedAreaEnd = false;
 					for (; lineIdx < oldLines.Length; lineIdx++)
 					{

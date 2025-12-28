@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 public class UI{0} : UIBase
 {{
 //↓=========================== Generated code area，do NOT put your business code in this ===========================↓
+	[TitleGroup("Components")]
 {1}
 //↑=========================== Generated code area，do NOT put your business code in this ===========================↑
 {2}

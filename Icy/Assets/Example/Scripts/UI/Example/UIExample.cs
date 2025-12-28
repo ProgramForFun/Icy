@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class UIExample : UIBase
 {
 //↓=========================== Generated code area，do NOT put your business code in this ===========================↓
+	[TitleGroup("Components")]
 	[SerializeField, ReadOnly] SuperScrollView.LoopListView2 _ScrollView;
 //↑=========================== Generated code area，do NOT put your business code in this ===========================↑
 

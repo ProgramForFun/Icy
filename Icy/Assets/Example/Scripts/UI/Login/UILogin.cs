@@ -11,6 +11,7 @@ using Cysharp.Threading.Tasks;
 public class UILogin : UIBase
 {
 //↓=========================== Generated code area，do NOT put your business code in this ===========================↓
+	[TitleGroup("Components")]
 	[SerializeField, ReadOnly] UnityEngine.UI.Image _Bg;
 	[SerializeField, ReadOnly] TMPro.TextMeshProUGUI _Title;
 	[SerializeField, ReadOnly] UnityEngine.UI.Button _Button;

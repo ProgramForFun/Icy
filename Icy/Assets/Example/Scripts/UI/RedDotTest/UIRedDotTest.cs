@@ -9,6 +9,7 @@ using Icy.Base;
 public class UIRedDotTest : UIBase
 {
 //↓=========================== Generated code area，do NOT put your business code in this ===========================↓
+	[TitleGroup("Components")]
 	[SerializeField, ReadOnly] Icy.UI.RedDot _RedDot_1;
 	[SerializeField, ReadOnly] Icy.UI.RedDot _RedDot_2;
 	[SerializeField, ReadOnly] Icy.UI.RedDot _RedDot_3;
