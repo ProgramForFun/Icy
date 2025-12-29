@@ -55,7 +55,10 @@ namespace Icy.UI
 				if (_StatusList[i].Name == _InputName)
 				{
 					string msg = $"重复的Status名字：{_InputName}";
+
+#if UNITY_EDITOR
 					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
+#endif
 					return;
 				}
 			}
@@ -241,7 +244,9 @@ namespace Icy.UI
 			if (_StatusSwitcher.CurrDirtyStatus != null)
 			{
 				string msg = $"先保存{_StatusSwitcher.CurrDirtyStatus}后，再尝试编辑其他状态";
+#if UNITY_EDITOR
 				CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
+#endif
 				return;
 			}
 
