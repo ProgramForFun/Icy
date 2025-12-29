@@ -65,8 +65,8 @@ public static class ProtoMsgIDRegistry
 	public static int GetMsgID<T>() where T : pb.IMessage, new()
 	{
 		Type type = typeof(T);
-		if (_TypeName2MsgID.ContainsKey(type))
-			return _TypeName2MsgID[type];
+		if (_TypeName2MsgID.TryGetValue(type, out int msgID))
+			return msgID;
 		else
 			return -1;
 	}
