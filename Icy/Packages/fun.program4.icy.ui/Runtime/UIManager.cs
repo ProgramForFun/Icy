@@ -535,9 +535,8 @@ namespace Icy.UI
 
 		internal void Destroy(UIBase ui)
 		{
-			if (_UIMap.ContainsKey(ui))
+			if (_UIMap.TryGetValue(ui, out UIData uiData))
 			{
-				UIData uiData = _UIMap[ui];
 				_UIMap.Remove(ui);
 				uiData.AssetRef.Release();
 				OnUIEvent?.Invoke(UIEvent.Destroyed, uiData.Type);
@@ -546,9 +545,9 @@ namespace Icy.UI
 					UIRoot.Instance.CloseBlur();
 			}
 
-			if (_SpriteTextureOfUI.ContainsKey(ui))
+			if (_SpriteTextureOfUI.TryGetValue(ui, out Dictionary<string, AssetRef> dict))
 			{
-				foreach (KeyValuePair<string, AssetRef> item in _SpriteTextureOfUI[ui])
+				foreach (KeyValuePair<string, AssetRef> item in dict)
 					item.Value.Release();
 				_SpriteTextureOfUI.Remove(ui);
 			}
@@ -626,32 +625,50 @@ namespace Icy.UI
 
 		internal Sprite GetSprite(UIBase ui, string spriteName)
 		{
-			if (_SpriteTextureOfUI.ContainsKey(ui) && _SpriteTextureOfUI[ui].ContainsKey(spriteName))
-				return _SpriteTextureOfUI[ui][spriteName].AssetObject as Sprite;
+			bool hasCacheOfUI = _SpriteTextureOfUI.TryGetValue(ui, out Dictionary<string, AssetRef> spritesOfUI);
+			if (hasCacheOfUI)
+			{
+				if (spritesOfUI.TryGetValue(spriteName, out AssetRef assetRef))
+					return assetRef.AssetObject as Sprite;
+			}
+
+			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
+			spriteAsset.Retain();
+			if (hasCacheOfUI)
+				spritesOfUI.Add(spriteName, spriteAsset);
 			else
 			{
-				AssetRef spriteAsset = AssetManager.Instance.LoadAsset(spriteName);
-				spriteAsset.Retain();
-				if (!_SpriteTextureOfUI.ContainsKey(ui))
-					_SpriteTextureOfUI[ui] = new Dictionary<string, AssetRef>();
-				_SpriteTextureOfUI[ui].Add(spriteName, spriteAsset);
-				return spriteAsset.AssetObject as Sprite;
+				Dictionary<string, AssetRef> newDict = new Dictionary<string, AssetRef>
+				{
+					{ spriteName, spriteAsset }
+				};
+				_SpriteTextureOfUI[ui] = newDict;
 			}
+			return spriteAsset.AssetObject as Sprite;
 		}
 
 		internal Texture GetTexture(UIBase ui, string textureName)
 		{
-			if (_SpriteTextureOfUI.ContainsKey(ui) && _SpriteTextureOfUI[ui].ContainsKey(textureName))
-				return _SpriteTextureOfUI[ui][textureName].AssetObject as Texture;
+			bool hasCacheOfUI = _SpriteTextureOfUI.TryGetValue(ui, out Dictionary<string, AssetRef> spritesOfUI);
+			if (hasCacheOfUI)
+			{
+				if (spritesOfUI.TryGetValue(textureName, out AssetRef assetRef))
+					return assetRef.AssetObject as Texture;
+			}
+
+			AssetRef spriteAsset = AssetManager.Instance.LoadAsset(textureName);
+			spriteAsset.Retain();
+			if (hasCacheOfUI)
+				spritesOfUI.Add(textureName, spriteAsset);
 			else
 			{
-				AssetRef textureAsset = AssetManager.Instance.LoadAsset(textureName);
-				textureAsset.Retain();
-				if (!_SpriteTextureOfUI.ContainsKey(ui))
-					_SpriteTextureOfUI[ui] = new Dictionary<string, AssetRef>();
-				_SpriteTextureOfUI[ui].Add(textureName, textureAsset);
-				return textureAsset.AssetObject as Texture;
+				Dictionary<string, AssetRef> newDict = new Dictionary<string, AssetRef>
+				{
+					{ textureName, spriteAsset }
+				};
+				_SpriteTextureOfUI[ui] = newDict;
 			}
+			return spriteAsset.AssetObject as Texture;
 		}
 
 #if UNITY_EDITOR
