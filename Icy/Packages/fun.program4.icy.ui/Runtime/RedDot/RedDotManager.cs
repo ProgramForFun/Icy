@@ -132,8 +132,8 @@ namespace Icy.UI
 			{
 				foreach (string parent in parents)
 				{
-					if (_ParentChildMap.ContainsKey(parent))
-						_ParentChildMap[parent].Remove(redDot.ID);
+					if (_ParentChildMap.TryGetValue(parent, out HashSet<string> hashSet))
+						hashSet.Remove(redDot.ID);
 				}
 				_ChildParentMap.Remove(redDot.ID);
 			}
@@ -172,9 +172,8 @@ namespace Icy.UI
 
 			foreach (KeyValuePair<string, RedDot> item in _IDDotMap)
 			{
-				if (_ChildParentMap.ContainsKey(item.Key))
+				if (_ChildParentMap.TryGetValue(item.Key, out HashSet<string> parents))
 				{
-					HashSet<string> parents = _ChildParentMap[item.Key];
 					builder.Append(item.Key);
 					builder.Append(" --parent--> ");
 					foreach (string parent in parents)

@@ -141,10 +141,10 @@ namespace Icy.UI
 						Components[i].RedName = true;
 
 					//检测重名
-					if (_ForDuplicateName.ContainsKey(name))
+					if (_ForDuplicateName.TryGetValue(name, out UICodeGeneratorItem forDuplicateNameItem))
 					{
 						Components[i].RedName = true;
-						_ForDuplicateName[name].RedName = true;
+						forDuplicateNameItem.RedName = true;
 					}
 					else
 						_ForDuplicateName.Add(name, Components[i]);

@@ -85,8 +85,8 @@ namespace Icy.UI
 		/// </summary>
 		public GameObject GetLayerGameObject(UILayer layer)
 		{
-			if (_LayerGameObjMap.ContainsKey(layer))
-				return _LayerGameObjMap[layer];
+			if (_LayerGameObjMap.TryGetValue(layer, out GameObject go))
+				return go;
 			else
 			{
 				Log.Error($"Unexpected UI layer = {layer}", nameof(UIRoot));
