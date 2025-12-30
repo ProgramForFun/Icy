@@ -230,9 +230,9 @@ namespace Icy.Base
 		{
 			lock (_LevelLock)
 			{
-				if (tag != null && _OverrideMinLogLevelForTag.ContainsKey(tag))
+				if (tag != null && _OverrideMinLogLevelForTag.TryGetValue(tag, out LogLevel overrideMinLogLevel))
 				{
-					if (logLevel < _OverrideMinLogLevelForTag[tag])
+					if (logLevel < overrideMinLogLevel)
 						return false;
 				}
 				else if (logLevel < MinLogLevel)

@@ -120,19 +120,19 @@ namespace Icy.Base
 		/// </summary>
 		public long GetFSMStateStartTimestamp(FSM fsm, FSMState state)
 		{
-			if (!_FSMStateStartTimestamps.ContainsKey(fsm))
+			if (_FSMStateStartTimestamps.TryGetValue(fsm, out Dictionary<FSMState, long> fsmDict))
 			{
-				Log.Error($"Invalid FSM {fsm}", nameof(FSMManager));
-				return 0;
+				if (fsmDict.TryGetValue(state, out long timestamp))
+					return timestamp;
+				else
+				{
+					Log.Error($"Invalid FSMState {state}", nameof(FSMManager));
+					return 0;
+				}
 			}
 
-			if (!_FSMStateStartTimestamps[fsm].ContainsKey(state))
-			{
-				Log.Error($"Invalid FSMState {state}", nameof(FSMManager));
-				return 0;
-			}
-
-			return _FSMStateStartTimestamps[fsm][state];
+			Log.Error($"Invalid FSM {fsm}", nameof(FSMManager));
+			return 0;
 		}
 
 		public string Dump()

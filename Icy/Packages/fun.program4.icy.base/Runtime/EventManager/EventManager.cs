@@ -87,14 +87,15 @@ namespace Icy.Base
 		{
 			lock (_EventLock)
 			{
-				if (!_EventListenerMap.ContainsKey(eventID))
-					return false;
-
-				foreach (var item in _EventListenerMap[eventID])
+				if (_EventListenerMap.TryGetValue(eventID, out HashSet<EventListener> hashSet))
 				{
-					if (item == listener)
-						return true;
+					foreach (EventListener item in hashSet)
+					{
+						if (item == listener)
+							return true;
+					}
 				}
+
 				return false;
 			}
 		}
@@ -113,9 +114,16 @@ namespace Icy.Base
 					return;
 				}
 
-				if (!_EventListenerMap.ContainsKey(eventID))
-					_EventListenerMap[eventID] = new HashSet<EventListener>();
-				_EventListenerMap[eventID].Add(listener);
+				if (_EventListenerMap.TryGetValue(eventID, out HashSet<EventListener> hashSet))
+					hashSet.Add(listener);
+				else
+				{
+					HashSet<EventListener> newHashSet = new HashSet<EventListener>
+					{
+						listener
+					};
+					_EventListenerMap[eventID] = newHashSet;
+				}
 			}
 		}
 
@@ -126,8 +134,8 @@ namespace Icy.Base
 		{
 			lock (_EventLock)
 			{
-				if (_EventListenerMap.ContainsKey(eventID))
-					_EventListenerMap[eventID].Remove(listener);
+				if (_EventListenerMap.TryGetValue(eventID, out HashSet<EventListener> hashSet))
+					hashSet.Remove(listener);
 			}
 		}
 
@@ -199,9 +207,9 @@ namespace Icy.Base
 		{
 			lock (_EventLock)
 			{
-				if (_EventListenerMap.ContainsKey(eventID))
+				if (_EventListenerMap.TryGetValue(eventID, out HashSet<EventListener> hashSet))
 				{
-					foreach (EventListener listener in _EventListenerMap[eventID])
+					foreach (EventListener listener in hashSet)
 						listener(eventID, param);
 				}
 			}

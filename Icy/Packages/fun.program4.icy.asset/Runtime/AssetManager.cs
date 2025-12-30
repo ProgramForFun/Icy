@@ -363,8 +363,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadAssetAsync(string address, uint priority = 0)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.TryGetValue(address, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				AssetHandle handle = _Package.LoadAssetAsync(address, priority);
@@ -377,8 +377,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadAllAssetsAsync(string anyAssetAddressInBundle, uint priority = 0)
 		{
-			if (_Cached.ContainsKey(anyAssetAddressInBundle))
-				return _Cached[anyAssetAddressInBundle];
+			if (_Cached.TryGetValue(anyAssetAddressInBundle, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				AllAssetsHandle handle = _Package.LoadAllAssetsAsync(anyAssetAddressInBundle, priority);
@@ -391,8 +391,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadSubAssetsAsync(string address, uint priority = 0)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.TryGetValue(address, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				SubAssetsHandle handle = _Package.LoadSubAssetsAsync(address, priority);
@@ -405,8 +405,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadSceneAsync(string address, LoadSceneMode sceneMode = LoadSceneMode.Single, LocalPhysicsMode physicsMode = LocalPhysicsMode.None, bool suspendLoad = false, uint priority = 0)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.TryGetValue(address, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				SceneHandle handle = _Package.LoadSceneAsync(address, sceneMode, physicsMode, suspendLoad, priority);
@@ -419,8 +419,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadRawFileAsync(string address, uint priority = 0)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.TryGetValue(address, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				RawFileHandle handle = _Package.LoadRawFileAsync(address, priority);
@@ -433,8 +433,8 @@ namespace Icy.Asset
 		/// </summary>
 		public AssetRef LoadAsset(string address)
 		{
-			if (_Cached.ContainsKey(address))
-				return _Cached[address];
+			if (_Cached.TryGetValue(address, out AssetRef assetRef))
+				return assetRef;
 			else
 			{
 				AssetHandle handle = _Package.LoadAssetSync(address);
