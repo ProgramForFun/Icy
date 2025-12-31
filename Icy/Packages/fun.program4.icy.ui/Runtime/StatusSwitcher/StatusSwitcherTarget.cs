@@ -15,7 +15,8 @@
  */
 
 
-using System.Collections;
+using Icy.Base;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,45 @@ namespace Icy.UI
 {
 	public class StatusSwitcherTarget : MonoBehaviour
 	{
+		/// <summary>
+		/// 受这个StatusSwitcher的控制
+		/// </summary>
+		[Title("所属StatusSwitcher")]
+		[OnInspectorInit(nameof(OnInspectorInit))]
+		[ValueDropdown(nameof(_AllSwithers), IsUniqueList = true, DropdownWidth = 300)]
+		public UnityEngine.Object StatusSwitcher;
 
+		/// <summary>
+		/// 此UI下面所有的StatusSwitcher
+		/// </summary>
+		[HideInInspector]
+		protected List<UnityEngine.Object> _AllSwithers;
+
+		protected void OnInspectorInit()
+		{
+			_AllSwithers = new List<UnityEngine.Object>();
+			Transform uiBaseTrans = CommonUtility.GetAncestor(transform, FindUIBase);
+			if (uiBaseTrans != null)
+			{
+				StatusSwitcher[] switchers = uiBaseTrans.GetComponentsInChildren<StatusSwitcher>();
+				for (int i = 0; i < switchers.Length; i++)
+					_AllSwithers.Add(switchers[i]);
+			}
+		}
+
+		[PropertySpace(10)]
+		[Button("跳转到 StatusSwitcher", Icon = SdfIconType.ReplyFill, ButtonHeight = (int)ButtonSizes.Medium)]
+		protected void Goto()
+		{
+
+		}
+
+		protected bool FindUIBase(Transform trans)
+		{
+			if (trans.GetComponent<UIBase>() != null)
+				return true;
+			return false;
+		}
 	}
 
 	[System.Flags]

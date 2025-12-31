@@ -32,7 +32,7 @@ namespace Icy.UI
 		[BoxGroup("状态列表")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
-		protected List<StatusName> _StatusList = new List<StatusName>();
+		protected List<StatusItem> _StatusList = new List<StatusItem>();
 
 		//新Status的名字
 		[BoxGroup("状态列表")]
@@ -63,7 +63,7 @@ namespace Icy.UI
 				}
 			}
 
-			_StatusList.Add(new StatusName(this, _InputName));
+			_StatusList.Add(new StatusItem(this, _InputName));
 			_InputName = null;
 		}
 
@@ -145,7 +145,7 @@ namespace Icy.UI
 		/// 当前在Dirty状态的Status
 		/// </summary>
 		[NonSerialized]
-		internal StatusName CurrDirtyStatus;
+		internal StatusItem CurrDirtyStatus;
 		/// <summary>
 		/// 当前ObjectPicker窗口里选中的Target
 		/// </summary>
@@ -183,10 +183,15 @@ namespace Icy.UI
 		{
 
 		}
+
+		public override string ToString()
+		{
+			return gameObject.name;
+		}
 	}
 
 	[Serializable]
-	public class StatusName
+	public class StatusItem
 	{
 		/// <summary>
 		/// 状态名字
@@ -217,7 +222,7 @@ namespace Icy.UI
 
 		protected string _DisplayName => _IsDirty? Name + "（Editing...）" : Name;
 
-		public StatusName(StatusSwitcher statusSwitcher, string name)
+		public StatusItem(StatusSwitcher statusSwitcher, string name)
 		{
 			_StatusSwitcher = statusSwitcher;
 			Name = name;
