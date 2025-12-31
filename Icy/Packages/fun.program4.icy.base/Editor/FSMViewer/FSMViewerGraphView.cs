@@ -257,11 +257,10 @@ namespace Icy.Base.Editor
 		/// </summary>
 		public void ConnectNodes(string fromStateName, string toStateName)
 		{
-			if (fromStateName != "Null" && _CurrNodes.ContainsKey(fromStateName) && _CurrNodes.ContainsKey(toStateName))
+			if (fromStateName != "Null" && _CurrNodes.TryGetValue(fromStateName, out FSMStateNode fromNode) 
+				&& _CurrNodes.TryGetValue(toStateName, out FSMStateNode toNode))
 			{
-				FSMStateNode fromNode = _CurrNodes[fromStateName];
 				Port fromNodeOutput = fromNode.outputContainer[0] as Port;
-				FSMStateNode toNode = _CurrNodes[toStateName];
 				Port toNodeInput = toNode.inputContainer[0] as Port;
 
 				_ConnectLine = fromNodeOutput.ConnectTo<SplitColorEdge>(toNodeInput);
