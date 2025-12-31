@@ -585,6 +585,23 @@ namespace Icy.Base
 		}
 
 		/// <summary>
+		/// 获取最近的符合条件的Transform祖先
+		/// </summary>
+		/// <param name="trans"></param>
+		/// <param name="filter"></param>
+		public static Transform GetAncestor(Transform trans, Func<Transform, bool> filter)
+		{
+			Transform parent = trans.parent;
+			while (parent != null)
+			{
+				if (filter(parent))
+					return parent;
+				parent = parent.parent;
+			}
+			return null;
+		}
+
+		/// <summary>
 		/// 获取Transform在Hierarchy中的路径
 		/// </summary>
 		/// <param name="trans"></param>
