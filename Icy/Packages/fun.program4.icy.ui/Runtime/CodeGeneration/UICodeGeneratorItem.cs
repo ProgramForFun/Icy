@@ -32,6 +32,7 @@ namespace Icy.UI
 		/// <summary>
 		/// 忽略掉，不显示在dropdown里的组件
 		/// </summary>
+		[NonSerialized]
 		private static HashSet<string> IGNORE_COMPONENTS = new HashSet<string>() { "CanvasRenderer" };
 
 		/// <summary>

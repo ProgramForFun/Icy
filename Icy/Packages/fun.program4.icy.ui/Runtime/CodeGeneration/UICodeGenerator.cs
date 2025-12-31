@@ -45,6 +45,7 @@ namespace Icy.UI
 		[OnCollectionChanged(nameof(OnTableListChanged))]
 		public List<UICodeGeneratorItem> Components = new List<UICodeGeneratorItem>();
 
+		[NonSerialized]
 		private Dictionary<string, UICodeGeneratorItem> _ForDuplicateName = new Dictionary<string, UICodeGeneratorItem>();
 
 		[Space(10)]
