@@ -76,6 +76,15 @@ namespace Icy.UI
 		[OnInspectorInit(nameof(OnInspectorInit))]
 		private ValueDropdownList<UnityEngine.Object> _AllComponents;
 
+
+		/// <summary>
+		/// 去除空格再用作变量名
+		/// </summary>
+		internal void SetName(string rawName)
+		{
+			Name = rawName.Replace(" ", "");
+		}
+
 		/// <summary>
 		/// 更新Item的数据和显示
 		/// </summary>
@@ -142,7 +151,7 @@ namespace Icy.UI
 		{
 			if (Object != null)
 			{
-				Name = Object.name;
+				SetName(Object.name);
 				OnNameChanged();
 			}
 			else

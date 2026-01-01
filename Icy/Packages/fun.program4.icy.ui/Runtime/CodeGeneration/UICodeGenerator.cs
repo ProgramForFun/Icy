@@ -199,7 +199,7 @@ namespace Icy.UI
 					generator.Components.Add(item);
 					item.Generator = generator;
 					item.Object = allSelect[i];
-					item.Name = allSelect[i].name;
+					item.SetName(allSelect[i].name);
 				}
 			}
 
