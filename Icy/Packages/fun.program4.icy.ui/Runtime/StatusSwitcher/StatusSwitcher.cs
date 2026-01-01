@@ -23,6 +23,11 @@ using UnityEngine;
 
 namespace Icy.UI
 {
+	/// <summary>
+	/// UX可以通过此组件配置多个节点的状态，代码侧就可以一键切换多个UI节点的状态；
+	/// 避免程序员需要通过代码控制一堆节点状态，耗时且容易出错，
+	/// 未来小范围的UI表现变动可能UX自己就能处理，解放程序员
+	/// </summary>
 	[HideMonoScript]
 	public class StatusSwitcher : MonoBehaviour
 	{
@@ -32,9 +37,11 @@ namespace Icy.UI
 		[BoxGroup("状态列表")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
-		protected List<StatusItem> _StatusList = new List<StatusItem>();
+		protected List<StatusItem> _StatusList;
 
-		//新Status的名字
+		/// <summary>
+		/// 新Status的名字
+		/// </summary>
 		[BoxGroup("状态列表")]
 		[HorizontalGroup("状态列表/Add")]
 		[ShowInInspector]
@@ -42,7 +49,9 @@ namespace Icy.UI
 		[NonSerialized]
 		protected string _InputName;
 
-		//点击添加新Status的按钮
+		/// <summary>
+		/// 点击添加新Status的按钮
+		/// </summary>
 		[PropertySpace(0, 20)]
 		[BoxGroup("状态列表")]
 		[EnableIf(nameof(IsValidName))]
@@ -50,6 +59,9 @@ namespace Icy.UI
 		[Button("Add", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
 		protected void AddNewStatus()
 		{
+			if (_StatusList == null)
+				_StatusList = new List<StatusItem>();
+
 			for (int i = 0; i < _StatusList.Count; i++)
 			{
 				if (_StatusList[i].Name == _InputName)
@@ -70,7 +82,7 @@ namespace Icy.UI
 		//控制的所有节点
 		[ShowIf(nameof(NeedShowTargetList))]
 		[FoldoutGroup("控制的节点")]
-		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, DefaultExpandedState = false, HideAddButton = true)]
+		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, DefaultExpandedState = true, HideAddButton = true)]
 		[SerializeField]
 		internal List<StatusSwitcherTarget> SwitcherTargetList;
 
@@ -119,7 +131,11 @@ namespace Icy.UI
 			if (pickerControlID == 666)
 			{
 				UnityEngine.Object obj = UnityEditor.EditorGUIUtility.GetObjectPickerObject();
-				_CurrSelectTarget = (obj as GameObject).GetComponent<StatusSwitcherTarget>();
+				GameObject go = obj == null ? null : obj as GameObject;
+				if (go == null)
+					_CurrSelectTarget = null;
+				else
+					_CurrSelectTarget = go.GetComponent<StatusSwitcherTarget>();
 			}
 
 			if (pickerControlID == 0)
