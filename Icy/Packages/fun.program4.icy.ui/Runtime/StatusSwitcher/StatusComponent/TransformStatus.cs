@@ -15,26 +15,37 @@
  */
 
 
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Icy.UI
 {
-	[System.Serializable]
-	public class TransformStatusData
-	{
-		[SerializeField]
-		public Vector3 LocalPosition;
-		[SerializeField]
-		public Quaternion LocalRotation;
-		[SerializeField]
-		public Vector3 LocalScale;
-	}
-
+	[HideLabel]
 	[System.Serializable]
 	public class TransformStatus : StatusSwitcherStatusBase
 	{
-		protected List<TransformStatusData> _Data = new List<TransformStatusData>();
+		[InlineProperty]
+		[SerializeField]
+		[ReadOnly]
+		public Vector3 LocalPosition;
+
+		[InlineProperty]
+		[SerializeField]
+		[ReadOnly]
+		public Quaternion LocalRotation;
+
+		[InlineProperty]
+		[SerializeField]
+		[ReadOnly]
+		public Vector3 LocalScale;
+
+		protected override void SyncValue()
+		{
+			LocalPosition = Target.transform.localPosition;
+			LocalRotation = Target.transform.localRotation;
+			LocalScale = Target.transform.localScale;
+		}
 	}
 }

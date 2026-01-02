@@ -28,41 +28,74 @@ namespace Icy.UI
 	[HideMonoScript]
 	public class StatusSwitcherTarget : MonoBehaviour
 	{
-		/// <summary>
-		/// 受这个StatusSwitcher的控制
-		/// </summary>
-		[Title("所属StatusSwitcher")]
+		[PropertySpace(10, 10)]
+		[Title("此节点要记录哪些类型的状态")]
 		[OnInspectorInit(nameof(OnInspectorInit))]
-		[ValueDropdown(nameof(_AllSwitchers), IsUniqueList = true, DropdownWidth = 300, DropdownHeight = 20)]
-		public StatusSwitcher StatusSwitcher;
+		[OnInspectorDispose(nameof(OnInspectorDispose))]
+		public StatusSwitcherRecordType RecordTypes;
+
+		[ShowIf(nameof(NeedShowGameObject))]
+		[BoxGroup("GameObject")]
+		public GameObjectStatus GameObjectStatus;
+
+		[ShowIf(nameof(NeedShowTransform))]
+		[BoxGroup("Transform")]
+		public TransformStatus TransformStatus;
 
 		/// <summary>
-		/// 此UI下面所有的StatusSwitcher
+		/// 受这些StatusSwitcher的控制
 		/// </summary>
-		[HideInInspector]
-		protected List<StatusSwitcher> _AllSwitchers;
+		[Title("所属StatusSwitcher列表（双击跳转）")]
+		[ListDrawerSettings(ShowItemCount = true, ShowFoldout = false, IsReadOnly = true)]
+		[PropertySpace(10, 20)]
+		[ShowInInspector]
+		protected List<StatusSwitcher> StatusSwitchers;
+
 
 		protected void OnInspectorInit()
 		{
-			_AllSwitchers = new List<StatusSwitcher>();
+			GameObjectStatus = new GameObjectStatus();
+			GameObjectStatus.Init(this);
+			TransformStatus = new TransformStatus();
+			TransformStatus.Init(this);
+
+			//遍历所属UIBase下所有的StatusSwitcher，找到自己都受哪些StatusSwitcher控制
+			StatusSwitchers = new List<StatusSwitcher>();
 			Transform uiBaseTrans = CommonUtility.GetAncestor(transform, FindUIBase);
 			if (uiBaseTrans != null)
 			{
 				StatusSwitcher[] switchers = uiBaseTrans.GetComponentsInChildren<StatusSwitcher>();
-				for (int i = 0; i < switchers.Length; i++)
-					_AllSwitchers.Add(switchers[i]);
+				for (int sw = 0; sw < switchers.Length; sw++)
+				{
+					List<StatusItem> list = switchers[sw].StatusList;
+					for (int s = 0; s < list.Count; s++)
+					{
+						List<StatusSwitcherTarget> targets = list[s].Targets;
+						for (int t = 0; t < targets.Count; t++)
+						{
+							if (targets[t] == this)
+								StatusSwitchers.Add(switchers[sw]);
+						}
+					}
+				}
 			}
 		}
 
-		[PropertySpace(10)]
-		[Button("跳转到 StatusSwitcher", Icon = SdfIconType.ReplyFill, ButtonHeight = (int)ButtonSizes.Medium)]
-		protected void Goto()
+		protected void OnInspectorDispose()
 		{
-#if UNITY_EDITOR
-			if (StatusSwitcher != null)
-				UnityEditor.Selection.activeGameObject = StatusSwitcher.gameObject;
-#endif
+			GameObjectStatus?.Dispose();
+			TransformStatus?.Dispose();
 		}
+
+//		[PropertySpace(10)]
+//		[Button("跳转到 StatusSwitcher", Icon = SdfIconType.ReplyFill, ButtonHeight = (int)ButtonSizes.Medium)]
+//		protected void Goto()
+//		{
+//#if UNITY_EDITOR
+//			if (StatusSwitcher != null)
+//				UnityEditor.Selection.activeGameObject = StatusSwitcher.gameObject;
+//#endif
+//		}
 
 		protected bool FindUIBase(Transform trans)
 		{
@@ -70,26 +103,59 @@ namespace Icy.UI
 				return true;
 			return false;
 		}
+
+		protected bool NeedShowGameObject()
+		{
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.GameObject);
+		}
+
+		protected bool NeedShowTransform()
+		{
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.Transform);
+		}
+
+		protected bool NeedShowRectTransform()
+		{
+			return RecordTypes.HasFlag(StatusSwitcherRecordType.RectTransform);
+		}
 	}
 
 	[System.Flags]
-	public enum SwitcherComponent
+	[System.Serializable]
+	public enum StatusSwitcherRecordType
 	{
 		None = 0,
 		GameObject = 1 << 0,
 		Transform = 1 << 1,
 		RectTransform = 1 << 2,
-		ImageEx = 1 << 3,
-		TextEx = 1 << 4,
-		ButtonEx = 1 << 5,
-		Everything = ~0,
+		//ImageEx = 1 << 3,
+		//TextEx = 1 << 4,
+		//ButtonEx = 1 << 5,
+		All = ~0,
+	}
+
+	[System.Serializable]
+	public class StatusSwitcherRecord
+	{
+		/// <summary>
+		/// 所属StatusItem
+		/// </summary>
+		public StatusItem StatusItem;
+		/// <summary>
+		/// 都存储了哪些类型的组件数据
+		/// </summary>
+		public StatusSwitcherRecordType RecordTypes;
+		/// <summary>
+		/// 所有组件数据的集合
+		/// </summary>
+		public AllStatusSwitcherComponent AllStatusSwitcherComponent;
 	}
 
 	[System.Serializable]
 	public class AllStatusSwitcherComponent
 	{
-		public GameObjectStatus gameObjectRecord;
-		public TransformStatus transRecord;
+		public GameObjectStatus gameObject;
+		public TransformStatus transform;
 		//public ImageRecord imageRecord;
 		//public RectTransformRecord rectRecord;
 		//public TextRecord textRecord;

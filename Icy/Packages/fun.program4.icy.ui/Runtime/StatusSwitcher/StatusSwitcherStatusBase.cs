@@ -15,6 +15,8 @@
  */
 
 
+using Icy.Base;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,13 +24,57 @@ using UnityEngine;
 namespace Icy.UI
 {
 	[System.Serializable]
-	public abstract class StatusSwitcherStatusBase
+	public abstract class StatusSwitcherStatusBase : IDisposable
 	{
+		/// <summary>
+		/// 所属StatusSwitcherTarget
+		/// </summary>
+		protected StatusSwitcherTarget Target;
 #if UNITY_EDITOR
-		internal virtual void RecordCurrStatus()
-		{
+		/// <summary>
+		/// 用于间隔Update计时
+		/// </summary>
+		private double t;
+		/// <summary>
+		/// Update间隔
+		/// </summary>
+		private const double UPDATE_INTERVAL = 1f;
+		/// <summary>
+		/// Editor启动时间
+		/// </summary>
+		private double _TimeSinceStartup = 0.0;
+#endif
 
+		public void Init(StatusSwitcherTarget target)
+		{
+			Target = target;
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.update -= OnEditorUpdate;
+			UnityEditor.EditorApplication.update += OnEditorUpdate;
+#endif
+		}
+
+#if UNITY_EDITOR
+		private void OnEditorUpdate()
+		{
+			t += (UnityEditor.EditorApplication.timeSinceStartup - _TimeSinceStartup);
+			if (t >= UPDATE_INTERVAL)
+			{
+				if (Target != null && Target.gameObject != null)
+					SyncValue();
+				t = 0.0;
+			}
+			_TimeSinceStartup = UnityEditor.EditorApplication.timeSinceStartup;
 		}
 #endif
+
+		protected abstract void SyncValue();
+
+		public virtual void Dispose()
+		{
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.update -= OnEditorUpdate;
+#endif
+		}
 	}
 }

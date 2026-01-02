@@ -15,22 +15,26 @@
  */
 
 
+using Icy.Base;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Icy.UI
 {
-	[System.Serializable]
-	public class GameObjectStatusData
-	{
-		[SerializeField]
-		public bool ActiveSelf;
-	}
-
+	[HideLabel]
 	[System.Serializable]
 	public class GameObjectStatus : StatusSwitcherStatusBase
 	{
-		protected List<GameObjectStatusData> _Data = new List<GameObjectStatusData>();
+		[InlineProperty]
+		[SerializeField]
+		[ReadOnly]
+		public bool ActiveSelf;
+
+		protected override void SyncValue()
+		{
+			ActiveSelf = Target.gameObject.activeSelf;
+		}
 	}
 }

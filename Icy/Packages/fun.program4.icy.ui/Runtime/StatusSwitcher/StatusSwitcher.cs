@@ -37,7 +37,7 @@ namespace Icy.UI
 		[BoxGroup("状态列表")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
-		protected List<StatusItem> _StatusList;
+		internal List<StatusItem> StatusList;
 
 		/// <summary>
 		/// 新Status的名字
@@ -56,15 +56,15 @@ namespace Icy.UI
 		[BoxGroup("状态列表")]
 		[EnableIf(nameof(IsValidName))]
 		[HorizontalGroup("状态列表/Add")]
-		[Button("Add", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
+		[Button("Add Status", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
 		protected void AddNewStatus()
 		{
-			if (_StatusList == null)
-				_StatusList = new List<StatusItem>();
+			if (StatusList == null)
+				StatusList = new List<StatusItem>();
 
-			for (int i = 0; i < _StatusList.Count; i++)
+			for (int i = 0; i < StatusList.Count; i++)
 			{
-				if (_StatusList[i].Name == _InputName)
+				if (StatusList[i].Name == _InputName)
 				{
 					string msg = $"重复的Status名字：{_InputName}";
 
@@ -75,20 +75,20 @@ namespace Icy.UI
 				}
 			}
 
-			_StatusList.Add(new StatusItem(this, _InputName));
+			StatusList.Add(new StatusItem(this, _InputName));
 			_InputName = null;
 		}
 
 		//控制的所有节点
 		[ShowIf(nameof(NeedShowTargetList))]
 		[FoldoutGroup("控制的节点")]
-		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, DefaultExpandedState = true, HideAddButton = true)]
+		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
 		internal List<StatusSwitcherTarget> SwitcherTargetList;
 
 		[ShowIf(nameof(NeedShowTargetList))]
 		[FoldoutGroup("控制的节点")]
-		[Button("Add", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
+		[Button("Add Target", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
 		protected void AddNewTarget()
 		{
 #if UNITY_EDITOR
@@ -172,17 +172,31 @@ namespace Icy.UI
 		/// <summary>
 		/// 切换到指定名字的状态
 		/// </summary>
-		public void SwitchTo(string statusName)
+		public bool SwitchTo(string statusName)
 		{
-			for (int i = 0; i < _StatusList.Count; i++)
+			for (int i = 0; i < StatusList.Count; i++)
 			{
-				if (_StatusList[i].Name == statusName)
+				if (StatusList[i].Name == statusName)
 				{
 
-					return;
+					return true;
 				}
 			}
 			Log.Error($"Status switching failed, {gameObject.name} has NO status called {statusName}", nameof(StatusSwitcher));
+			return false;
+		}
+
+		/// <summary>
+		/// 是否有指定名字的状态
+		/// </summary>
+		public bool HasStatus(string statusName)
+		{
+			for (int i = 0; i < StatusList.Count; i++)
+			{
+				if (StatusList[i].Name == statusName)
+					return true;
+			}
+			return false;
 		}
 
 		protected bool IsValidName()
