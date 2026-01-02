@@ -143,13 +143,24 @@ namespace Icy.UI
 				StatusSwitcherRecord record = _Records[idx];
 				RecordTypes = record.RecordTypes;
 
-				GameObjectStatus = record.AllStatusSwitcherComponent.gameObject;
-				GameObjectStatus.Init(this);
-				GameObjectStatus.Apply();
+				InitStatus(GameObjectStatus, record.AllStatusSwitcherComponent.gameObject, StatusSwitcherRecordType.GameObject);
+				InitStatus(TransformStatus, record.AllStatusSwitcherComponent.transform, StatusSwitcherRecordType.Transform);
+			}
+		}
 
-				TransformStatus = record.AllStatusSwitcherComponent.transform;
-				TransformStatus.Init(this);
-				TransformStatus.Apply();
+		protected void InitStatus(StatusSwitcherStatusBase status, StatusSwitcherStatusBase serializedStatus
+			, StatusSwitcherRecordType recordType)
+		{
+			if (RecordTypes.HasFlag(recordType))
+			{
+				status.CopyFrom(serializedStatus);
+				status.Init(this);
+				status.Apply();
+			}
+			else
+			{
+				status.Init(this);
+				status.Record();
 			}
 		}
 

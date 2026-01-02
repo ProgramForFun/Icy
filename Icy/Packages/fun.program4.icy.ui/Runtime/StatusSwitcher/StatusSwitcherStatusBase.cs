@@ -68,7 +68,9 @@ namespace Icy.UI
 //		}
 //#endif
 
+		public abstract void Record();
 		public abstract void Apply();
+		public abstract void CopyFrom(StatusSwitcherStatusBase other);
 
 		public virtual void Dispose()
 		{

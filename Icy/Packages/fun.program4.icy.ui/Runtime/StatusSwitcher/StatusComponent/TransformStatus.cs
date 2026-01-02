@@ -29,23 +29,56 @@ namespace Icy.UI
 		[InlineProperty]
 		[SerializeField]
 		[OnValueChanged(nameof(Apply))]
+		[InlineButton(nameof(RecordPos), "Record")]
 		public Vector3 LocalPosition;
 
 		[InlineProperty]
 		[SerializeField]
 		[OnValueChanged(nameof(Apply))]
+		[InlineButton(nameof(RecordRotation), "Record")]
 		public Quaternion LocalRotation;
 
 		[InlineProperty]
 		[SerializeField]
 		[OnValueChanged(nameof(Apply))]
+		[InlineButton(nameof(RecordScale), "Record")]
 		public Vector3 LocalScale;
+
+		private void RecordPos()
+		{
+			LocalPosition = Target.transform.localPosition;
+		}
+
+		private void RecordRotation()
+		{
+			LocalRotation = Target.transform.localRotation;
+		}
+
+		private void RecordScale()
+		{
+			LocalScale = Target.transform.localScale;
+		}
+
+		public override void Record()
+		{
+			RecordPos();
+			RecordRotation();
+			RecordScale();
+		}
 
 		public override void Apply()
 		{
 			Target.transform.localPosition = LocalPosition;
 			Target.transform.localRotation = LocalRotation;
 			Target.transform.localScale = LocalScale;
+		}
+
+		public override void CopyFrom(StatusSwitcherStatusBase other)
+		{
+			TransformStatus otherStatus = other as TransformStatus;
+			LocalPosition = otherStatus.LocalPosition;
+			LocalRotation = otherStatus.LocalRotation;
+			LocalScale = otherStatus.LocalScale;
 		}
 	}
 }

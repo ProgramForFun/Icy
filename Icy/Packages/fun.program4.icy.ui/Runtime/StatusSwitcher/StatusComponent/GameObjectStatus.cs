@@ -30,11 +30,23 @@ namespace Icy.UI
 		[InlineProperty]
 		[SerializeField]
 		[OnValueChanged(nameof(Apply))]
+		[InlineButton(nameof(Record))]
 		public bool ActiveSelf;
+
+		public override void Record()
+		{
+			ActiveSelf = Target.gameObject.activeSelf;
+		}
 
 		public override void Apply()
 		{
 			Target.gameObject.SetActive(ActiveSelf);
+		}
+
+		public override void CopyFrom(StatusSwitcherStatusBase other)
+		{
+			GameObjectStatus otherStatus = other as GameObjectStatus;
+			ActiveSelf = otherStatus.ActiveSelf;
 		}
 	}
 }
