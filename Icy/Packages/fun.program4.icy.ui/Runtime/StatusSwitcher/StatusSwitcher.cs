@@ -242,7 +242,7 @@ namespace Icy.UI
 		/// </summary>
 		[HideInInspector]
 		[SerializeField]
-		protected StatusSwitcher _StatusSwitcher;
+		internal StatusSwitcher StatusSwitcher;
 
 		/// <summary>
 		/// 状态是否在编辑中
@@ -254,7 +254,7 @@ namespace Icy.UI
 
 		public StatusItem(StatusSwitcher statusSwitcher, string name)
 		{
-			_StatusSwitcher = statusSwitcher;
+			StatusSwitcher = statusSwitcher;
 			Name = name;
 		}
 
@@ -276,20 +276,20 @@ namespace Icy.UI
 		[Button("Edit", ButtonSizes.Medium)]
 		protected void Edit()
 		{
-			if (_StatusSwitcher.CurrDirtyStatus != null)
+			if (StatusSwitcher.CurrDirtyStatus != null)
 			{
-				string msg = $"先保存{_StatusSwitcher.CurrDirtyStatus}后，再尝试编辑其他状态";
+				string msg = $"先保存{StatusSwitcher.CurrDirtyStatus}后，再尝试编辑其他状态";
 #if UNITY_EDITOR
 				CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
 #endif
 				return;
 			}
 
-			_StatusSwitcher.CurrDirtyStatus = this;
+			StatusSwitcher.CurrDirtyStatus = this;
 			if (Targets != null)
-				_StatusSwitcher.SwitcherTargetList = Targets;
+				StatusSwitcher.SwitcherTargetList = Targets;
 			else
-				_StatusSwitcher.SwitcherTargetList = new List<StatusSwitcherTarget>();
+				StatusSwitcher.SwitcherTargetList = new List<StatusSwitcherTarget>();
 			_IsDirty = true;
 		}
 
@@ -301,9 +301,9 @@ namespace Icy.UI
 		[Button("Save", ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected void Save()
 		{
-			Targets = _StatusSwitcher.SwitcherTargetList;
-			_StatusSwitcher.SwitcherTargetList = null;
-			_StatusSwitcher.CurrDirtyStatus = null;
+			Targets = StatusSwitcher.SwitcherTargetList;
+			StatusSwitcher.SwitcherTargetList = null;
+			StatusSwitcher.CurrDirtyStatus = null;
 			_IsDirty = false;
 		}
 	}

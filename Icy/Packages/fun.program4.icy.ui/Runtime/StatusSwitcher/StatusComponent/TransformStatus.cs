@@ -28,24 +28,24 @@ namespace Icy.UI
 	{
 		[InlineProperty]
 		[SerializeField]
-		[ReadOnly]
+		[OnValueChanged(nameof(Apply))]
 		public Vector3 LocalPosition;
 
 		[InlineProperty]
 		[SerializeField]
-		[ReadOnly]
+		[OnValueChanged(nameof(Apply))]
 		public Quaternion LocalRotation;
 
 		[InlineProperty]
 		[SerializeField]
-		[ReadOnly]
+		[OnValueChanged(nameof(Apply))]
 		public Vector3 LocalScale;
 
-		protected override void SyncValue()
+		public override void Apply()
 		{
-			LocalPosition = Target.transform.localPosition;
-			LocalRotation = Target.transform.localRotation;
-			LocalScale = Target.transform.localScale;
+			Target.transform.localPosition = LocalPosition;
+			Target.transform.localRotation = LocalRotation;
+			Target.transform.localScale = LocalScale;
 		}
 	}
 }

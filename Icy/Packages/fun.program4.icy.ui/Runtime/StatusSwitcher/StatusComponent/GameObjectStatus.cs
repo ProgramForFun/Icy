@@ -29,12 +29,12 @@ namespace Icy.UI
 	{
 		[InlineProperty]
 		[SerializeField]
-		[ReadOnly]
+		[OnValueChanged(nameof(Apply))]
 		public bool ActiveSelf;
 
-		protected override void SyncValue()
+		public override void Apply()
 		{
-			ActiveSelf = Target.gameObject.activeSelf;
+			Target.gameObject.SetActive(ActiveSelf);
 		}
 	}
 }
