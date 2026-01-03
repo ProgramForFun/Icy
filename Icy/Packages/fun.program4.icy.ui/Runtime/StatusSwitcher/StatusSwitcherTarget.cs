@@ -28,6 +28,7 @@ namespace Icy.UI
 	[HideMonoScript]
 	public class StatusSwitcherTarget : MonoBehaviour
 	{
+#if UNITY_EDITOR
 		/// <summary>
 		/// StatusItem下拉列表的数据源，为拼接的StatusSwitcher + Status名字
 		/// </summary>
@@ -40,30 +41,38 @@ namespace Icy.UI
 		[OnValueChanged(nameof(OnStatusItemDropdownChanged))]
 		[ShowInInspector]
 		protected string StatusItemName = NONE;
+#endif
 
 		[PropertySpace(10, 10)]
 		[Title("此节点要记录哪些类型的状态")]
+#if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowRecordTypes))]
 		[OnInspectorInit(nameof(OnInspectorInit))]
 		[OnInspectorDispose(nameof(OnInspectorDispose))]
+#endif
 		public StatusSwitcherRecordType RecordTypes;
 
 		/// <summary>
 		/// GameObject类型的状态
 		/// </summary>
+#if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowGameObject))]
+#endif
 		[BoxGroup("GameObject")]
 		public GameObjectStatus GameObjectStatus;
 
 		/// <summary>
 		/// Transform类型的状态
 		/// </summary>
+#if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowTransform))]
+#endif
 		[BoxGroup("Transform")]
 		public TransformStatus TransformStatus;
 
 		//New Status stub
 
+#if UNITY_EDITOR
 		/// <summary>
 		/// 受这些StatusSwitcher的控制
 		/// </summary>
@@ -72,6 +81,7 @@ namespace Icy.UI
 		[PropertySpace(10, 20)]
 		[ShowInInspector]
 		protected List<StatusSwitcher> StatusSwitchers;
+#endif
 
 		/// <summary>
 		/// 节点的记录数据
@@ -80,6 +90,33 @@ namespace Icy.UI
 		[ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = false, HideAddButton = true)]
 		protected List<StatusSwitcherRecord> _Records;
 
+
+		/// <summary>
+		/// 切换到指定StatusItem
+		/// </summary>
+		internal bool SwitchTo(StatusSwitcherItem statusItem)
+		{
+			for (int i = 0; i < _Records.Count; i++)
+			{
+				StatusSwitcherItem item = _Records[i].StatusItem;
+				if (item.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
+					&& item.Name == statusItem.Name)
+				{
+					AllStatusSwitcherComponent all = _Records[i].AllStatusSwitcherComponent;
+					all.gameObject.Init(this);
+					all.gameObject.Apply();
+
+					all.transform.Init(this);
+					all.transform.Apply();
+
+					//New Status stub
+					return true;
+				}
+			}
+			return false;
+		}
+
+#if UNITY_EDITOR
 		/// <summary>
 		/// StatusItem下拉列表的空选项
 		/// </summary>
@@ -126,31 +163,6 @@ namespace Icy.UI
 					_StatusItems.Add(key);
 				}
 			}
-		}
-
-		/// <summary>
-		/// 切换到指定StatusItem
-		/// </summary>
-		internal bool SwitchTo(StatusSwitcherItem statusItem)
-		{
-			for (int i = 0; i < _Records.Count; i++)
-			{
-				StatusSwitcherItem item = _Records[i].StatusItem;
-				if (item.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
-					&& item.Name == statusItem.Name)
-				{
-					AllStatusSwitcherComponent all = _Records[i].AllStatusSwitcherComponent;
-					all.gameObject.Init(this);
-					all.gameObject.Apply();
-
-					all.transform.Init(this);
-					all.transform.Apply();
-
-					//New Status stub
-					return true;
-				}
-			}
-			return false;
 		}
 
 		protected void OnStatusItemDropdownChanged()
@@ -200,7 +212,6 @@ namespace Icy.UI
 		[Button("Save", Icon = SdfIconType.SdCardFill, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
 		protected void Save()
 		{
-#if UNITY_EDITOR
 			int idx = _StatusItems.IndexOf(StatusItemName);
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 			StatusSwitcherRecord record = _Records[idx];
@@ -211,7 +222,6 @@ namespace Icy.UI
 				record.AllStatusSwitcherComponent.transform = TransformStatus;
 
 			//New Status stub
-#endif
 		}
 
 		/// <summary>
@@ -276,6 +286,7 @@ namespace Icy.UI
 		{
 
 		}
+#endif
 
 		protected void Clear()
 		{

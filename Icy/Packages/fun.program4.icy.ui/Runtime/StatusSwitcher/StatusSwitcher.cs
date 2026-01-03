@@ -39,6 +39,7 @@ namespace Icy.UI
 		[SerializeField]
 		internal List<StatusSwitcherItem> StatusList;
 
+#if UNITY_EDITOR
 		/// <summary>
 		/// 新Status的名字
 		/// </summary>
@@ -67,10 +68,7 @@ namespace Icy.UI
 				if (StatusList[i].Name == _InputName)
 				{
 					string msg = $"重复的Status名字：{_InputName}";
-
-#if UNITY_EDITOR
 					CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
-#endif
 					return;
 				}
 			}
@@ -78,27 +76,37 @@ namespace Icy.UI
 			StatusList.Add(new StatusSwitcherItem(this, _InputName));
 			_InputName = null;
 		}
+#endif
 
 		//控制的所有节点
+#if UNITY_EDITOR
 		[ShowIf(nameof(NeedShowTargetList))]
+#endif
 		[FoldoutGroup("控制的节点")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
 		internal List<StatusSwitcherTarget> SwitcherTargetList;
 
+		/// <summary>
+		/// 从没切换过状态时，当前状态的取值
+		/// </summary>
+		protected const string Untouched = "_SS_utchd_";
+		/// <summary>
+		/// 当前的状态，默认为Untouched，也就是从没切换过状态，为Prefab的默认状态
+		/// </summary>
+		protected string _CurrStatus = Untouched;
+
+#if UNITY_EDITOR
 		//添加新的Target
 		[ShowIf(nameof(NeedShowTargetList))]
 		[FoldoutGroup("控制的节点")]
 		[Button("Add Target", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
 		protected void AddNewTarget()
 		{
-#if UNITY_EDITOR
 			UnityEditor.EditorApplication.update += OnEditorUpdate;
 			UnityEditor.EditorGUIUtility.ShowObjectPicker<StatusSwitcherTarget>(null, true, "", 666);
-#endif
 		}
 
-#if UNITY_EDITOR
 		[UnityEditor.InitializeOnLoadMethod]
 		static void Init()
 		{
@@ -151,12 +159,8 @@ namespace Icy.UI
 				UnityEditor.EditorApplication.update -= OnEditorUpdate;
 			}
 		}
-#endif
 
-		private bool NeedShowTargetList()
-		{
-			return CurrDirtyStatus != null;
-		}
+
 
 		/// <summary>
 		/// 当前在Dirty状态的Status
@@ -168,15 +172,17 @@ namespace Icy.UI
 		/// </summary>
 		[NonSerialized]
 		protected StatusSwitcherTarget _CurrSelectTarget;
-		/// <summary>
-		/// 从没切换过状态时，当前状态的取值
-		/// </summary>
-		protected const string Untouched = "_SS_utchd_";
-		/// <summary>
-		/// 当前的状态，默认为Untouched，也就是从没切换过状态，为Prefab的默认状态
-		/// </summary>
-		protected string _CurrStatus = Untouched;
 
+		protected bool NeedShowTargetList()
+		{
+			return CurrDirtyStatus != null;
+		}
+
+		protected bool IsValidName()
+		{
+			return !string.IsNullOrEmpty(_InputName);
+		}
+#endif
 
 		/// <summary>
 		/// 切换到指定名字的状态
@@ -187,7 +193,7 @@ namespace Icy.UI
 			{
 				if (StatusList[i].Name == statusName)
 				{
-					StatusList[i].StatusList();
+					StatusList[i].Apply();
 					_CurrStatus = statusName;
 					return true;
 				}
@@ -216,11 +222,6 @@ namespace Icy.UI
 					return true;
 			}
 			return false;
-		}
-
-		protected bool IsValidName()
-		{
-			return !string.IsNullOrEmpty(_InputName);
 		}
 
 		internal void DeleteStatus(string statusName)

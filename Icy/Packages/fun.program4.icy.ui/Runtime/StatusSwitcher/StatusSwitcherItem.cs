@@ -50,6 +50,7 @@ namespace Icy.UI
 		[SerializeField]
 		internal StatusSwitcher StatusSwitcher;
 
+#if UNITY_EDITOR
 		/// <summary>
 		/// 状态是否在编辑中
 		/// </summary>
@@ -63,13 +64,14 @@ namespace Icy.UI
 			StatusSwitcher = statusSwitcher;
 			Name = name;
 		}
+#endif
 
 		/// <summary>
 		/// 状态按钮本体
 		/// </summary>
 		[HorizontalGroup("H")]
 		[Button("$_DisplayName", ButtonSizes.Medium)]
-		internal void StatusList()
+		internal void Apply()
 		{
 			bool succeed = false;
 			if (Targets != null)
@@ -88,6 +90,7 @@ namespace Icy.UI
 #endif
 		}
 
+#if UNITY_EDITOR
 		/// <summary>
 		/// 编辑按钮
 		/// </summary>
@@ -99,9 +102,7 @@ namespace Icy.UI
 			if (StatusSwitcher.CurrDirtyStatus != null)
 			{
 				string msg = $"先保存{StatusSwitcher.CurrDirtyStatus}后，再尝试编辑其他状态";
-#if UNITY_EDITOR
 				CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
-#endif
 				return;
 			}
 
@@ -126,5 +127,6 @@ namespace Icy.UI
 			StatusSwitcher.CurrDirtyStatus = null;
 			_IsDirty = false;
 		}
+#endif
 	}
 }
