@@ -57,6 +57,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Base-Procedure|基于FSM的顺序执行的流程|✔️|
 |Base-Log|提供Log到文件、多线程Log|✔️|
 |Base-PeriodicRecord|方便的设置指定时间后过期的标志|✔️|
+|Base-其他|Timer、Pool、Singleton、Blackboard、Utility<br>、UniTaskMonoBehaviour、MainThreadDispatcher等|✔️|
 |Asset-集成[YooAsset](https://github.com/tuyoogame/YooAsset)|非常好用的资源管理系统|✔️|
 |Asset-可定制的打包流程|配置驱动的打包流程，可插入自定义打包步骤|✔️|
 |Network-集成[NativeWebSocket](https://github.com/ProgramForFun/NativeWebSocket_OptimizedGC)|支持WebGL平台的开源WebSocket库|✔️|
@@ -85,7 +86,7 @@ Icy依赖上述这些强大的付费插件，但为了避免侵权、违反许�
 |Editor-Quick Play|不 重新Reload Domain，快速进入Play，<br>整个Icy框架支持DisableDomainReload|✔️|
 |Editor-集成[Odin](https://assetstore.unity.com/packages/tools/utilities/odin-inspector-and-serializer-89041?srsltid=AfmBOoqnEoW-YXYsMYcC16eMnl5dRPUn6r5arsTQzbamf9GPOZV6fplR)|强大的Editor扩展、Serializer|✔️|
 |Editor-集成[ReferenceFinder](https://github.com/blueberryzzz/ReferenceFinder)|资源引用和依赖查询工具|✔️|
-|Editor-资源托盘|暂存任意工程内文件，便于快速定位|✔️|
+|Editor-资源托盘|暂存任意工程内文件，便于快速定位、打开|✔️|
 |Editor-C#热重载||待开始|
 
 &nbsp;
