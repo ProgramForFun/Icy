@@ -82,7 +82,7 @@ namespace Icy.Asset.Editor
 		[FoldoutGroup("☰ 补充元数据DLL列表", Expanded = true)]
 		[HorizontalGroup("☰ 补充元数据DLL列表/MetaDataDLLs")]
 		[ListDrawerSettings(DefaultExpandedState = true)]
-		[ReadOnly]
+		[OnValueChanged(nameof(SaveSetting))]
 		public List<string> MetaDataDLLs;
 
 		[Button("Clear", ButtonSizes.Medium)]
