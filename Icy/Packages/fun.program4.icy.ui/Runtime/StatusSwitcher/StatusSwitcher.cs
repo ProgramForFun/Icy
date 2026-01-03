@@ -168,6 +168,14 @@ namespace Icy.UI
 		/// </summary>
 		[NonSerialized]
 		protected StatusSwitcherTarget _CurrSelectTarget;
+		/// <summary>
+		/// 从没切换过状态时，当前状态的取值
+		/// </summary>
+		protected const string Untouched = "_SS_utchd_";
+		/// <summary>
+		/// 当前的状态，默认为Untouched，也就是从没切换过状态，为Prefab的默认状态
+		/// </summary>
+		protected string _CurrStatus = Untouched;
 
 
 		/// <summary>
@@ -180,11 +188,21 @@ namespace Icy.UI
 				if (StatusList[i].Name == statusName)
 				{
 					StatusList[i].StatusList();
+					_CurrStatus = statusName;
 					return true;
 				}
 			}
 			Log.Error($"Status switching failed, {gameObject.name} has NO status called {statusName}", nameof(StatusSwitcher));
 			return false;
+		}
+
+		/// <summary>
+		/// 获取当前状态；
+		/// 如果从没调用过SwitchTo，返回StatusSwitcher.Untouched，也就是从没切换过状态，为Prefab的默认状态
+		/// </summary>
+		public string GetCurrStatus()
+		{
+			return _CurrStatus;
 		}
 
 		/// <summary>
