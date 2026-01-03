@@ -26,6 +26,7 @@ using UnityEngine;
 using Icy.Editor;
 using System.Collections.Generic;
 using Icy.Base.Editor;
+using YooAsset;
 
 namespace Icy.Asset.Editor
 {
@@ -354,8 +355,28 @@ namespace Icy.Asset.Editor
 				return;
 			}
 
-			SaveSetting();
+			//检查YooAsset资源模式，如果是Editor模式提前阻断打包
+			//这里获取的是Example中的Bootstrap，业务侧可以在打包前自己拦一下
+			try
+			{
+				GameObject go = GameObject.Find("Bootstrap");
+				if (go != null)
+				{
+					dynamic bootstrap = go.GetComponent("Bootstrap");
+					if (bootstrap != null && bootstrap.AssetMode == EPlayMode.EditorSimulateMode)
+					{
+						Log.Assert(false, $"打包未执行；Bootstrap上的资源模式为Editor模式（EPlayMode.EditorSimulateMode）");
+						return;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				Log.Warn(e, "Build");
+			}
 
+
+			SaveSetting();
 
 			Procedure procedure = new Procedure("BuildPlayer");
 			BiProgress.MonitorProcedure(procedure);

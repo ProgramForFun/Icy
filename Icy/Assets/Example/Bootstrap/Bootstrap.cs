@@ -1,6 +1,5 @@
 using UnityEngine;
 using Icy.Frame;
-using Icy.Base;
 using Icy.UI;
 using Icy.Asset;
 using YooAsset;
@@ -15,6 +14,8 @@ namespace Bootstrap
 	{
 		[SerializeField] private EPlayMode _AssetMode;
 		[SerializeField] private Camera _Camera3D;
+
+		public EPlayMode AssetMode => _AssetMode;
 
 		async void Start()
 		{
