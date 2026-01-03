@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using SuperScrollView;
 using System;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 
@@ -15,6 +16,7 @@ public class UIExample : UIBase
 	[SerializeField, ReadOnly] SuperScrollView.LoopListView2 _ScrollView;
 	[SerializeField, ReadOnly] UnityEngine.UI.Image _Item1;
 	[SerializeField, ReadOnly] UnityEngine.UI.Image _Item2;
+	[SerializeField, ReadOnly] Icy.UI.StatusSwitcher _StatusRoot;
 //↑=========================== Generated code area，do NOT put your business code in this ===========================↑
 
 	public override void Init()
@@ -26,6 +28,23 @@ public class UIExample : UIBase
 	public override void Show(IUIParam param = null)
 	{
 		base.Show(param);
+
+		TestAsync().Forget();
+	}
+
+	private async UniTaskVoid TestAsync()
+	{
+		await WaitForSeconds(1);
+
+		_StatusRoot.SwitchTo("666");
+
+		await WaitForSeconds(1);
+
+		_StatusRoot.SwitchTo("123");
+
+		await WaitForSeconds(1);
+
+		_StatusRoot.SwitchTo("666");
 	}
 
 	private LoopListViewItem2 OnItem(LoopListView2 view, int arg2)

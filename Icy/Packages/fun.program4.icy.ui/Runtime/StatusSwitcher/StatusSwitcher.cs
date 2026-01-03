@@ -178,7 +178,7 @@ namespace Icy.UI
 			{
 				if (StatusList[i].Name == statusName)
 				{
-
+					StatusList[i].StatusList();
 					return true;
 				}
 			}
@@ -263,9 +263,23 @@ namespace Icy.UI
 		/// </summary>
 		[HorizontalGroup("H")]
 		[Button("$_DisplayName", ButtonSizes.Medium)]
-		protected void StatusList()
+		internal void StatusList()
 		{
+			bool succeed = false;
+			if (Targets != null)
+			{
+				for (int i = 0; i < Targets.Count; i++)
+				{
+					bool result = Targets[i].SwitchTo(this);
+					if (!succeed)
+						succeed = true;
+				}
+			}
 
+#if UNITY_EDITOR
+			if (!succeed)
+				Log.Error("未执行任何状态切换，Status = " + Name);
+#endif
 		}
 
 		/// <summary>

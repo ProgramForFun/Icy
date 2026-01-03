@@ -119,17 +119,24 @@ namespace Icy.UI
 			}
 		}
 
-		protected void OnInspectorDispose()
+		internal bool SwitchTo(StatusItem statusItem)
 		{
+			for (int i = 0; i < _Records.Count; i++)
+			{
+				StatusItem item = _Records[i].StatusItem;
+				if (item.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
+					&& item.Name == statusItem.Name)
+				{
+					AllStatusSwitcherComponent all = _Records[i].AllStatusSwitcherComponent;
+					all.gameObject.Init(this);
+					all.gameObject.Apply();
 
-		}
-
-		protected void Clear()
-		{
-			GameObjectStatus?.Dispose();
-			TransformStatus?.Dispose();
-			GameObjectStatus = null;
-			TransformStatus = null;
+					all.transform.Init(this);
+					all.transform.Apply();
+					return true;
+				}
+			}
+			return false;
 		}
 
 		protected void OnStatusItemDropdownChanged()
@@ -143,7 +150,9 @@ namespace Icy.UI
 				StatusSwitcherRecord record = _Records[idx];
 				RecordTypes = record.RecordTypes;
 
+				GameObjectStatus = new GameObjectStatus();
 				InitStatus(GameObjectStatus, record.AllStatusSwitcherComponent.gameObject, StatusSwitcherRecordType.GameObject);
+				TransformStatus = new TransformStatus();
 				InitStatus(TransformStatus, record.AllStatusSwitcherComponent.transform, StatusSwitcherRecordType.Transform);
 			}
 		}
@@ -174,8 +183,10 @@ namespace Icy.UI
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
 			StatusSwitcherRecord record = _Records[idx];
 			record.RecordTypes = RecordTypes;
-			record.AllStatusSwitcherComponent.gameObject = GameObjectStatus;
-			record.AllStatusSwitcherComponent.transform = TransformStatus;
+			if (RecordTypes.HasFlag(StatusSwitcherRecordType.GameObject))
+				record.AllStatusSwitcherComponent.gameObject = GameObjectStatus;
+			if (RecordTypes.HasFlag(StatusSwitcherRecordType.Transform))
+				record.AllStatusSwitcherComponent.transform = TransformStatus;
 #endif
 		}
 
@@ -230,6 +241,19 @@ namespace Icy.UI
 		protected bool NeedShowRectTransform()
 		{
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.RectTransform) && NeedShowRecordTypes();
+		}
+
+		protected void OnInspectorDispose()
+		{
+
+		}
+
+		protected void Clear()
+		{
+			GameObjectStatus?.Dispose();
+			TransformStatus?.Dispose();
+			GameObjectStatus = null;
+			TransformStatus = null;
 		}
 	}
 

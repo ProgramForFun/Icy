@@ -500,6 +500,7 @@ GameObject:
   - component: {fileID: 1059613912594482414}
   - component: {fileID: 5744979878312656070}
   - component: {fileID: 8214692716955697114}
+  - component: {fileID: 503784425645798134}
   m_Layer: 5
   m_Name: Item2
   m_TagString: Untagged
@@ -514,7 +515,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4992283007963601704}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -524,7 +525,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 350, y: -50}
+  m_AnchoredPosition: {x: 380, y: -50}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5744979878312656070
@@ -565,6 +566,54 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &503784425645798134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4992283007963601704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RecordTypes: 2
+  GameObjectStatus:
+    ActiveSelf: 1
+  TransformStatus:
+    LocalPosition: {x: 680, y: -50, z: 0}
+    LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _Records:
+  - StatusItem:
+      Name: 666
+      Targets:
+      - {fileID: 1301465939674304944}
+      - {fileID: 503784425645798134}
+      StatusSwitcher: {fileID: 5236466835000511476}
+    RecordTypes: 2
+    AllStatusSwitcherComponent:
+      gameObject:
+        ActiveSelf: 1
+      transform:
+        LocalPosition: {x: 380, y: -50, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+        LocalScale: {x: 1, y: 1, z: 1}
+  - StatusItem:
+      Name: 123
+      Targets:
+      - {fileID: 1301465939674304944}
+      - {fileID: 503784425645798134}
+      StatusSwitcher: {fileID: 5236466835000511476}
+    RecordTypes: 2
+    AllStatusSwitcherComponent:
+      gameObject:
+        ActiveSelf: 1
+      transform:
+        LocalPosition: {x: 680, y: -50, z: 0}
+        LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+        LocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &5994897256906719396
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +625,7 @@ GameObject:
   - component: {fileID: 1469148007724004249}
   - component: {fileID: 42437849938297577}
   - component: {fileID: 7333153462808719202}
+  - component: {fileID: 1301465939674304944}
   m_Layer: 5
   m_Name: Item1
   m_TagString: Untagged
@@ -600,7 +650,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -350, y: -50}
+  m_AnchoredPosition: {x: -380, y: -50}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &42437849938297577
@@ -641,6 +691,52 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1301465939674304944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5994897256906719396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a1bd3a982620848970ba29c3d8ba80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RecordTypes: 2
+  GameObjectStatus:
+    ActiveSelf: 1
+  TransformStatus:
+    LocalPosition: {x: -680, y: -50, z: 0}
+    LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+    LocalScale: {x: 1, y: 1, z: 1}
+  _Records:
+  - StatusItem:
+      Name: 666
+      Targets:
+      - {fileID: 1301465939674304944}
+      StatusSwitcher: {fileID: 5236466835000511476}
+    RecordTypes: 3
+    AllStatusSwitcherComponent:
+      gameObject:
+        ActiveSelf: 1
+      transform:
+        LocalPosition: {x: -380, y: -50, z: 0}
+        LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+        LocalScale: {x: 1, y: 1, z: 1}
+  - StatusItem:
+      Name: 123
+      Targets:
+      - {fileID: 1301465939674304944}
+      StatusSwitcher: {fileID: 5236466835000511476}
+    RecordTypes: 2
+    AllStatusSwitcherComponent:
+      gameObject:
+        ActiveSelf: 1
+      transform:
+        LocalPosition: {x: -680, y: -50, z: 0}
+        LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+        LocalScale: {x: 1, y: 1, z: 1}
 --- !u!1 &6490976505534475424
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +746,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5367086243965727576}
+  - component: {fileID: 5236466835000511476}
   m_Layer: 5
   m_Name: StatusRoot
   m_TagString: Untagged
@@ -678,6 +775,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5236466835000511476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6490976505534475424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e677019156f154aa5d030901c8e088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StatusList:
+  - Name: 666
+    Targets:
+    - {fileID: 1301465939674304944}
+    - {fileID: 503784425645798134}
+    StatusSwitcher: {fileID: 5236466835000511476}
+  - Name: 123
+    Targets:
+    - {fileID: 1301465939674304944}
+    - {fileID: 503784425645798134}
+    StatusSwitcher: {fileID: 5236466835000511476}
+  SwitcherTargetList: []
 --- !u!1 &6549373054899784437
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,6 +858,7 @@ MonoBehaviour:
   _ScrollView: {fileID: 5240978122594216020}
   _Item1: {fileID: 7333153462808719202}
   _Item2: {fileID: 8214692716955697114}
+  _StatusRoot: {fileID: 5236466835000511476}
 --- !u!114 &3985246323809618410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -762,6 +884,10 @@ MonoBehaviour:
     Object: {fileID: 4992283007963601704}
     Name: Item2
     Component: {fileID: 8214692716955697114}
+  - Generator: {fileID: 3985246323809618410}
+    Object: {fileID: 6490976505534475424}
+    Name: StatusRoot
+    Component: {fileID: 5236466835000511476}
   UIName: Example
 --- !u!1 &8368878764034585410
 GameObject:
