@@ -17,7 +17,6 @@
 
 using Icy.Base;
 using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -49,13 +48,21 @@ namespace Icy.UI
 		[OnInspectorDispose(nameof(OnInspectorDispose))]
 		public StatusSwitcherRecordType RecordTypes;
 
+		/// <summary>
+		/// GameObject类型的状态
+		/// </summary>
 		[ShowIf(nameof(NeedShowGameObject))]
 		[BoxGroup("GameObject")]
 		public GameObjectStatus GameObjectStatus;
 
+		/// <summary>
+		/// Transform类型的状态
+		/// </summary>
 		[ShowIf(nameof(NeedShowTransform))]
 		[BoxGroup("Transform")]
 		public TransformStatus TransformStatus;
+
+		//New Status stub
 
 		/// <summary>
 		/// 受这些StatusSwitcher的控制
@@ -66,6 +73,9 @@ namespace Icy.UI
 		[ShowInInspector]
 		protected List<StatusSwitcher> StatusSwitchers;
 
+		/// <summary>
+		/// 节点的记录数据
+		/// </summary>
 		[SerializeField]
 		[ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = false, HideAddButton = true)]
 		protected List<StatusSwitcherRecord> _Records;
@@ -77,10 +87,6 @@ namespace Icy.UI
 
 		protected void OnInspectorInit()
 		{
-			//RecordTypes = StatusSwitcherRecordType.None;
-			//StatusItemName = null;
-
-
 			StatusSwitchers = new List<StatusSwitcher>();
 			Transform uiBaseTrans = CommonUtility.GetAncestor(transform, FindUIBase);
 			if (uiBaseTrans != null)
@@ -88,7 +94,7 @@ namespace Icy.UI
 				StatusSwitcher[] switchers = uiBaseTrans.GetComponentsInChildren<StatusSwitcher>();
 				for (int sw = 0; sw < switchers.Length; sw++)
 				{
-					List<StatusItem> list = switchers[sw].StatusList;
+					List<StatusSwitcherItem> list = switchers[sw].StatusList;
 					for (int s = 0; s < list.Count; s++)
 					{
 						List<StatusSwitcherTarget> targets = list[s].Targets;
@@ -96,34 +102,40 @@ namespace Icy.UI
 						{
 							if (targets[t] == this)
 							{
+								//所属的StatusSwitcher
 								if (!StatusSwitchers.Contains(switchers[sw]))
 									StatusSwitchers.Add(switchers[sw]);
-								TryToAdd(list[s]);
+
+								//尝试添加一个Record
+								TryToAddRecord(list[s]);
 							}
 						}
 					}
 				}
 			}
 
-
+			//初始化StatusItem下拉列表
 			_StatusItems = new List<string>();
 			_StatusItems.Add(NONE); //以在下拉列表里显示一个可以置空的选项
 			if (_Records != null)
 			{
 				for (int i = 0; i < _Records.Count; i++)
 				{
-					StatusItem item = _Records[i].StatusItem;
+					StatusSwitcherItem item = _Records[i].StatusItem;
 					string key = $"{item.StatusSwitcher.gameObject.name} - {item.Name}";
 					_StatusItems.Add(key);
 				}
 			}
 		}
 
-		internal bool SwitchTo(StatusItem statusItem)
+		/// <summary>
+		/// 切换到指定StatusItem
+		/// </summary>
+		internal bool SwitchTo(StatusSwitcherItem statusItem)
 		{
 			for (int i = 0; i < _Records.Count; i++)
 			{
-				StatusItem item = _Records[i].StatusItem;
+				StatusSwitcherItem item = _Records[i].StatusItem;
 				if (item.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
 					&& item.Name == statusItem.Name)
 				{
@@ -133,6 +145,8 @@ namespace Icy.UI
 
 					all.transform.Init(this);
 					all.transform.Apply();
+
+					//New Status stub
 					return true;
 				}
 			}
@@ -154,9 +168,14 @@ namespace Icy.UI
 				InitStatus(GameObjectStatus, record.AllStatusSwitcherComponent.gameObject, StatusSwitcherRecordType.GameObject);
 				TransformStatus = new TransformStatus();
 				InitStatus(TransformStatus, record.AllStatusSwitcherComponent.transform, StatusSwitcherRecordType.Transform);
+
+				//New Status stub
 			}
 		}
 
+		/// <summary>
+		/// 初始化一个Status
+		/// </summary>
 		protected void InitStatus(StatusSwitcherStatusBase status, StatusSwitcherStatusBase serializedStatus
 			, StatusSwitcherRecordType recordType)
 		{
@@ -173,6 +192,9 @@ namespace Icy.UI
 			}
 		}
 
+		/// <summary>
+		/// 将当前编辑的状态数据序列化存储起来
+		/// </summary>
 		[PropertySpace(10)]
 		[ShowIf(nameof(NeedShowRecordTypes))]
 		[Button("Save", Icon = SdfIconType.SdCardFill, ButtonHeight = (int)ButtonSizes.Medium), GUIColor(0, 1, 0)]
@@ -187,10 +209,15 @@ namespace Icy.UI
 				record.AllStatusSwitcherComponent.gameObject = GameObjectStatus;
 			if (RecordTypes.HasFlag(StatusSwitcherRecordType.Transform))
 				record.AllStatusSwitcherComponent.transform = TransformStatus;
+
+			//New Status stub
 #endif
 		}
 
-		protected void TryToAdd(StatusItem statusItem)
+		/// <summary>
+		/// 尝试添加一个Record
+		/// </summary>
+		protected void TryToAddRecord(StatusSwitcherItem statusItem)
 		{
 			if (_Records == null)
 				_Records = new List<StatusSwitcherRecord>();
@@ -243,6 +270,8 @@ namespace Icy.UI
 			return RecordTypes.HasFlag(StatusSwitcherRecordType.RectTransform) && NeedShowRecordTypes();
 		}
 
+		//New Status stub
+
 		protected void OnInspectorDispose()
 		{
 
@@ -257,6 +286,9 @@ namespace Icy.UI
 		}
 	}
 
+	/// <summary>
+	/// 所有状态的Flag
+	/// </summary>
 	[System.Flags]
 	[System.Serializable]
 	public enum StatusSwitcherRecordType
@@ -268,16 +300,21 @@ namespace Icy.UI
 		//ImageEx = 1 << 3,
 		//TextEx = 1 << 4,
 		//ButtonEx = 1 << 5,
+
+		//New Status stub
 		All = ~0,
 	}
 
+	/// <summary>
+	/// 一条Record，对应一个StatusItem
+	/// </summary>
 	[System.Serializable]
 	public class StatusSwitcherRecord
 	{
 		/// <summary>
 		/// 所属StatusItem
 		/// </summary>
-		public StatusItem StatusItem;
+		public StatusSwitcherItem StatusItem;
 		/// <summary>
 		/// 都存储了哪些类型的组件数据
 		/// </summary>
@@ -288,15 +325,14 @@ namespace Icy.UI
 		public AllStatusSwitcherComponent AllStatusSwitcherComponent;
 	}
 
+	/// <summary>
+	/// 所有组件数据的集合
+	/// </summary>
 	[System.Serializable]
 	public class AllStatusSwitcherComponent
 	{
 		public GameObjectStatus gameObject;
 		public TransformStatus transform;
-		//public ImageRecord imageRecord;
-		//public RectTransformRecord rectRecord;
-		//public TextRecord textRecord;
-		//public ButtonRecord buttonRecord;
-		//public AnimationRecord animationRecord;
+		//New Status stub
 	}
 }

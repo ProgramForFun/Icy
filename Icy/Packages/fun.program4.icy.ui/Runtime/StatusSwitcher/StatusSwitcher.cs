@@ -37,7 +37,7 @@ namespace Icy.UI
 		[BoxGroup("状态列表")]
 		[ListDrawerSettings(ShowItemCount = true, DraggableItems = true, ShowFoldout = false, HideAddButton = true)]
 		[SerializeField]
-		internal List<StatusItem> StatusList;
+		internal List<StatusSwitcherItem> StatusList;
 
 		/// <summary>
 		/// 新Status的名字
@@ -60,7 +60,7 @@ namespace Icy.UI
 		protected void AddNewStatus()
 		{
 			if (StatusList == null)
-				StatusList = new List<StatusItem>();
+				StatusList = new List<StatusSwitcherItem>();
 
 			for (int i = 0; i < StatusList.Count; i++)
 			{
@@ -75,7 +75,7 @@ namespace Icy.UI
 				}
 			}
 
-			StatusList.Add(new StatusItem(this, _InputName));
+			StatusList.Add(new StatusSwitcherItem(this, _InputName));
 			_InputName = null;
 		}
 
@@ -86,6 +86,7 @@ namespace Icy.UI
 		[SerializeField]
 		internal List<StatusSwitcherTarget> SwitcherTargetList;
 
+		//添加新的Target
 		[ShowIf(nameof(NeedShowTargetList))]
 		[FoldoutGroup("控制的节点")]
 		[Button("Add Target", ButtonSizes.Medium, Icon = SdfIconType.PlusCircleFill)]
@@ -161,7 +162,7 @@ namespace Icy.UI
 		/// 当前在Dirty状态的Status
 		/// </summary>
 		[NonSerialized]
-		internal StatusItem CurrDirtyStatus;
+		internal StatusSwitcherItem CurrDirtyStatus;
 		/// <summary>
 		/// 当前ObjectPicker窗口里选中的Target
 		/// </summary>
@@ -209,116 +210,9 @@ namespace Icy.UI
 
 		}
 
-		internal void EditStatus(string statusName)
-		{
-
-		}
-
 		public override string ToString()
 		{
 			return gameObject.name;
-		}
-	}
-
-	[Serializable]
-	public class StatusItem
-	{
-		/// <summary>
-		/// 状态名字
-		/// </summary>
-		[HideInInspector]
-		[SerializeField]
-		public string Name;
-
-		/// <summary>
-		/// 受此状态控制的Target列表
-		/// </summary>
-		[HideInInspector]
-		[SerializeField]
-		public List<StatusSwitcherTarget> Targets;
-
-		/// <summary>
-		/// 所属StatusSwitcher
-		/// </summary>
-		[HideInInspector]
-		[SerializeField]
-		internal StatusSwitcher StatusSwitcher;
-
-		/// <summary>
-		/// 状态是否在编辑中
-		/// </summary>
-		[NonSerialized]
-		protected bool _IsDirty = false;
-
-		protected string _DisplayName => _IsDirty? Name + "（Editing...）" : Name;
-
-		public StatusItem(StatusSwitcher statusSwitcher, string name)
-		{
-			StatusSwitcher = statusSwitcher;
-			Name = name;
-		}
-
-		/// <summary>
-		/// 状态按钮本体
-		/// </summary>
-		[HorizontalGroup("H")]
-		[Button("$_DisplayName", ButtonSizes.Medium)]
-		internal void StatusList()
-		{
-			bool succeed = false;
-			if (Targets != null)
-			{
-				for (int i = 0; i < Targets.Count; i++)
-				{
-					bool result = Targets[i].SwitchTo(this);
-					if (!succeed)
-						succeed = true;
-				}
-			}
-
-#if UNITY_EDITOR
-			if (!succeed)
-				Log.Error("未执行任何状态切换，Status = " + Name);
-#endif
-		}
-
-		/// <summary>
-		/// 编辑按钮
-		/// </summary>
-		[HideIf(nameof(_IsDirty))]
-		[HorizontalGroup("H", 50)]
-		[Button("Edit", ButtonSizes.Medium)]
-		protected void Edit()
-		{
-			if (StatusSwitcher.CurrDirtyStatus != null)
-			{
-				string msg = $"先保存{StatusSwitcher.CurrDirtyStatus}后，再尝试编辑其他状态";
-#if UNITY_EDITOR
-				CommonUtility.SafeDisplayDialog("", msg, "OK", LogLevel.Error);
-#endif
-				return;
-			}
-
-			StatusSwitcher.CurrDirtyStatus = this;
-			if (Targets != null)
-				StatusSwitcher.SwitcherTargetList = Targets;
-			else
-				StatusSwitcher.SwitcherTargetList = new List<StatusSwitcherTarget>();
-			_IsDirty = true;
-		}
-
-		/// <summary>
-		/// 保存按钮
-		/// </summary>
-		[ShowIf(nameof(_IsDirty))]
-		[HorizontalGroup("H", 50)]
-		[Button("Save", ButtonSizes.Medium), GUIColor(0, 1, 0)]
-		protected void Save()
-		{
-			Targets = StatusSwitcher.SwitcherTargetList;
-			StatusSwitcher.SwitcherTargetList = null;
-			StatusSwitcher.CurrDirtyStatus = null;
-			_IsDirty = false;
 		}
 	}
 }

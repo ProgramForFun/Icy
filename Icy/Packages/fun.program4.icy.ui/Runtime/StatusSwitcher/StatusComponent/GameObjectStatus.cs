@@ -15,14 +15,14 @@
  */
 
 
-using Icy.Base;
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Icy.UI
 {
+	/// <summary>
+	/// GameObject状态，只记录是否Active
+	/// </summary>
 	[HideLabel]
 	[System.Serializable]
 	public class GameObjectStatus : StatusSwitcherStatusBase

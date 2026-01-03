@@ -16,12 +16,13 @@
 
 
 using Sirenix.OdinInspector;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Icy.UI
 {
+	/// <summary>
+	/// Transform状态，记录local位置旋转缩放
+	/// </summary>
 	[HideLabel]
 	[System.Serializable]
 	public class TransformStatus : StatusSwitcherStatusBase
