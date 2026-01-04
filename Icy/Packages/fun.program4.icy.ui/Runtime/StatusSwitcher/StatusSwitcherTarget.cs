@@ -88,7 +88,7 @@ namespace Icy.UI
 		/// </summary>
 		[SerializeField]
 		[ListDrawerSettings(ShowFoldout = true, DefaultExpandedState = false, HideAddButton = true)]
-		protected List<StatusSwitcherRecord> _Records;
+		internal List<StatusSwitcherRecord> Records;
 
 
 		/// <summary>
@@ -96,13 +96,12 @@ namespace Icy.UI
 		/// </summary>
 		internal bool SwitchTo(StatusSwitcherItem statusItem)
 		{
-			for (int i = 0; i < _Records.Count; i++)
+			for (int i = 0; i < Records.Count; i++)
 			{
-				StatusSwitcherItem item = _Records[i].StatusItem;
-				if (item.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
-					&& item.Name == statusItem.Name)
+				StatusSwitcherItem item = Records[i].StatusItem;
+				if (item == statusItem)
 				{
-					AllStatusSwitcherComponent all = _Records[i].AllStatusSwitcherComponent;
+					AllStatusSwitcherComponent all = Records[i].AllStatusSwitcherComponent;
 					all.gameObject.Init(this);
 					all.gameObject.Apply();
 
@@ -154,11 +153,11 @@ namespace Icy.UI
 			//初始化StatusItem下拉列表
 			_StatusItems = new List<string>();
 			_StatusItems.Add(NONE); //以在下拉列表里显示一个可以置空的选项
-			if (_Records != null)
+			if (Records != null)
 			{
-				for (int i = 0; i < _Records.Count; i++)
+				for (int i = 0; i < Records.Count; i++)
 				{
-					StatusSwitcherItem item = _Records[i].StatusItem;
+					StatusSwitcherItem item = Records[i].StatusItem;
 					string key = $"{item.StatusSwitcher.gameObject.name} - {item.Name}";
 					_StatusItems.Add(key);
 				}
@@ -173,7 +172,7 @@ namespace Icy.UI
 			{
 				int idx = _StatusItems.IndexOf(StatusItemName);
 				idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
-				StatusSwitcherRecord record = _Records[idx];
+				StatusSwitcherRecord record = Records[idx];
 				RecordTypes = record.RecordTypes;
 
 				GameObjectStatus = new GameObjectStatus();
@@ -214,7 +213,7 @@ namespace Icy.UI
 		{
 			int idx = _StatusItems.IndexOf(StatusItemName);
 			idx -= 1;//因为_StatusItems第一个元素是None，所以这里要减1
-			StatusSwitcherRecord record = _Records[idx];
+			StatusSwitcherRecord record = Records[idx];
 			record.RecordTypes = RecordTypes;
 			if (RecordTypes.HasFlag(StatusSwitcherRecordType.GameObject))
 				record.AllStatusSwitcherComponent.gameObject = GameObjectStatus;
@@ -229,14 +228,13 @@ namespace Icy.UI
 		/// </summary>
 		protected void TryToAddRecord(StatusSwitcherItem statusItem)
 		{
-			if (_Records == null)
-				_Records = new List<StatusSwitcherRecord>();
+			if (Records == null)
+				Records = new List<StatusSwitcherRecord>();
 
 			bool has = false;
-			for (int i = 0; i < _Records.Count; i++)
+			for (int i = 0; i < Records.Count; i++)
 			{
-				if (_Records[i].StatusItem.StatusSwitcher.gameObject.name == statusItem.StatusSwitcher.gameObject.name
-					&& _Records[i].StatusItem.Name == statusItem.Name)
+				if (Records[i].StatusItem == statusItem)
 				{
 					has = true;
 					break;
@@ -249,7 +247,7 @@ namespace Icy.UI
 				newRecord.StatusItem = statusItem;
 				newRecord.RecordTypes = StatusSwitcherRecordType.None;
 				newRecord.AllStatusSwitcherComponent = new AllStatusSwitcherComponent();
-				_Records.Add(newRecord);
+				Records.Add(newRecord);
 			}
 		}
 

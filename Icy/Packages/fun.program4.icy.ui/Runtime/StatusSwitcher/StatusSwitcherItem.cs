@@ -128,5 +128,34 @@ namespace Icy.UI
 			_IsDirty = false;
 		}
 #endif
+
+		public override bool Equals(object obj)
+		{
+			if (obj is StatusSwitcherItem item)
+			{
+				return StatusSwitcher.gameObject.GetInstanceID() == item.StatusSwitcher.gameObject.GetInstanceID()
+					&& Name == item.Name;
+			}
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return HashCode.Combine(StatusSwitcher.gameObject.name, Name);
+		}
+
+		public static bool operator ==(StatusSwitcherItem left, StatusSwitcherItem right)
+		{
+			if (Equals(left, null))
+				return Equals(left, right);
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(StatusSwitcherItem left, StatusSwitcherItem right)
+		{
+			if (Equals(left, null))
+				return !Equals(left, right);
+			return !left.Equals(right);
+		}
 	}
 }
